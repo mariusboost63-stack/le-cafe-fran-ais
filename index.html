@@ -363,6 +363,7 @@ main, .pied { position: relative; z-index: 1; }
 .vocal:hover { background: color-mix(in srgb, var(--lait) 4%, transparent); padding-inline: 14px; }
 .vocal .ico { width: 22px; height: 22px; color: var(--brume); }
 .vocal .nom { font: 700 clamp(19px, 1.8vw, 24px)/1.2 var(--f-titre); letter-spacing: -.01em; min-width: 0; }
+.vocal .v-desc { display: block; margin-top: 4px; font: 400 14px/1.35 var(--f-texte); letter-spacing: 0; color: var(--brume); }
 .vocal .presents { display: inline-flex; margin-left: 10px; vertical-align: middle; }
 .vocal .presents img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--nuit); margin-left: -6px; }
 .eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 22px; }
@@ -480,8 +481,21 @@ main, .pied { position: relative; z-index: 1; }
 .palier::before { content: ""; position: absolute; left: -34px; top: 50%; width: 13px; height: 13px; margin-top: -8px; border-radius: 50%; background: var(--role); border: 3px solid var(--role); transition: background-color .35s, border-color .35s, transform .35s; }
 .p-niv { font: 500 13px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brume); }
 .p-role { font: 800 clamp(24px, 2.6vw, 34px)/1.05 var(--f-titre); letter-spacing: -.02em; color: color-mix(in srgb, var(--role) 88%, var(--lait)); transition: color .35s; min-width: 0; overflow-wrap: anywhere; }
-.p-bonus { grid-column: 2; font-size: 15px; color: var(--brume); }
-.p-bonus:empty { display: none; }
+.p-avantages { grid-column: 2; list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.p-avantages:empty { display: none; }
+.p-avantages li, .cn-avantages li {
+  display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 8px; border-radius: 999px;
+  font-size: 13.5px; line-height: 1.25; color: var(--lait);
+  background: color-mix(in srgb, var(--role) 15%, var(--nuit));
+  border: 1px solid color-mix(in srgb, var(--role) 40%, transparent);
+  transition: color .35s, background-color .35s, border-color .35s;
+}
+.p-avantages svg, .cn-avantages svg { width: 15px; height: 15px; flex: none; color: color-mix(in srgb, var(--role) 75%, var(--lait)); }
+.echelle.en-cours .palier:not(.atteint) .p-avantages li { color: var(--brume); background: transparent; border-color: var(--trait); }
+.echelle.en-cours .palier:not(.atteint) .p-avantages svg { color: var(--brume); }
+.cn-avantages { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.cn-avantages li { --role: var(--role-actif); }
+.cn-avantages li.av-vide { padding-left: 11px; background: transparent; border-color: var(--trait); color: var(--brume); }
 .echelle.en-cours .palier:not(.atteint) .p-role { color: color-mix(in srgb, var(--brume) 70%, var(--nuit)); }
 .echelle.en-cours .palier:not(.atteint)::before { background: var(--nuit); border-color: var(--trait); }
 .palier.actif { background: color-mix(in srgb, var(--role) 13%, transparent); }
@@ -538,6 +552,37 @@ main, .pied { position: relative; z-index: 1; }
 .b-citrouilles i::before { content: ""; position: absolute; left: 50%; top: -4px; width: 3px; height: 5px; margin-left: -1.5px; border-radius: 2px; background: var(--vert); }
 .bareme-barres b { font: 800 22px/1 var(--f-titre); text-align: right; font-variant-numeric: tabular-nums; }
 @media (max-width: 1100px) { .quetes { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.recompenses { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); padding-top: 32px; border-top: 1px solid var(--trait); }
+.recompenses h3 { font: 800 clamp(30px, 3.4vw, 46px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; }
+.recompenses h4 { margin: 0; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--citrouille); }
+.lots, .recolte { display: grid; gap: 20px; align-content: start; min-width: 0; }
+.lots > p, .recolte > p { color: var(--brume); max-width: 46ch; }
+.podium { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 8px; max-width: 480px; }
+.podium li { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.podium li:nth-child(1) { order: 2; }
+.podium li:nth-child(2) { order: 1; }
+.podium li:nth-child(3) { order: 3; }
+.podium .lot { font-size: 14px; line-height: 1.3; color: var(--lait); }
+.podium .lot small { display: block; font: 500 12px/1.3 var(--f-mono); color: var(--brume); }
+.marche { width: 100%; display: grid; justify-items: center; align-content: start; padding-top: 14px; border-radius: 14px 14px 4px 4px; font: 800 32px/1 var(--f-titre); color: var(--nuit); transform-origin: bottom; }
+.podium li:nth-child(1) .marche { height: 128px; background: var(--citrouille); box-shadow: 0 0 40px color-mix(in srgb, var(--citrouille) 45%, transparent); }
+.podium li:nth-child(2) .marche { height: 96px; background: color-mix(in srgb, var(--citrouille) 55%, var(--lait)); }
+.podium li:nth-child(3) .marche { height: 74px; background: color-mix(in srgb, var(--citrouille) 70%, var(--nuit)); }
+.lots-suite { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-width: 480px; }
+.lots-suite li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--trait); }
+.lots-suite span { font: 500 13px/1.35 var(--f-mono); color: var(--citrouille); }
+.recolte-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.recolte-liste li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 2px 14px; }
+.recolte-liste li::before { content: ""; grid-row: 1 / 3; width: 18px; height: 16px; margin-top: 5px; border-radius: 50% 50% 46% 46%; background: var(--citrouille); }
+.recolte-liste b { font: 700 18px/1.3 var(--f-titre); }
+.recolte-liste p { color: var(--brume); }
+.roles-halloween { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.roles-halloween li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; color: var(--brume); }
+.mention { display: inline-block; padding: 3px 8px; border-radius: 6px; font-weight: 600; color: var(--citrouille); background: color-mix(in srgb, var(--citrouille) 16%, transparent); }
+.mention-gris { color: var(--lait); background: color-mix(in srgb, var(--lait) 10%, transparent); }
+.astuce { font-size: 15px; color: var(--brume); padding: 12px 16px; border-radius: 12px; background: color-mix(in srgb, var(--citrouille) 8%, transparent); border: 1px dashed color-mix(in srgb, var(--citrouille) 40%, transparent); }
+@media (max-width: 860px) { .recompenses { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .lots-suite li { grid-template-columns: minmax(0, 1fr); gap: 2px; } .marche { font-size: 26px; } }
 @media (max-width: 860px) { .quetes-tete, .bareme { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 640px) {
   .quetes { grid-template-columns: minmax(0, 1fr); gap: 8px; }
@@ -620,11 +665,15 @@ main, .pied { position: relative; z-index: 1; }
 .badge-rang { font: 500 11.5px/1.2 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--nuit) 62%, var(--lait)); }
 .badge-carte h3 { font: 800 clamp(26px, 2.4vw, 34px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; overflow-wrap: anywhere; }
 .badge-desc { font-size: 15px; line-height: 1.45; color: color-mix(in srgb, var(--nuit) 78%, var(--lait)); }
-.badge-noms { list-style: none; margin: 4px 0 0; padding: 12px 0 0; border-top: 1px dashed color-mix(in srgb, var(--nuit) 25%, transparent); display: flex; flex-wrap: wrap; gap: 8px; }
-.badge-noms:empty { display: none; }
-.badge-noms li { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px; background: color-mix(in srgb, var(--nuit) 8%, var(--lait)); font-weight: 600; font-size: 14px; }
-.badge-noms li:not(:has(img)) { padding-left: 12px; }
-.badge-noms img { width: 24px; height: 24px; border-radius: 50%; }
+.profils { list-style: none; margin: 6px 0 0; padding: 16px 0 0; border-top: 1px dashed color-mix(in srgb, var(--nuit) 25%, transparent); display: grid; gap: 12px; }
+.profil { display: grid; grid-template-columns: 42px minmax(0, 1fr); column-gap: 12px; align-items: center; }
+.profil img {
+  grid-row: 1 / 3; width: 42px; height: 42px; border-radius: 50%; display: block; background: var(--nuit);
+  box-shadow: 0 0 0 2px var(--lait), 0 0 0 4px var(--bande); transition: transform .35s;
+}
+.profil:hover img { transform: rotate(-8deg) scale(1.08); }
+.profil-nom { align-self: end; font: 700 17px/1.15 var(--f-titre); overflow-wrap: anywhere; }
+.profil-pseudo { align-self: start; font: 500 12.5px/1.3 var(--f-mono); color: color-mix(in srgb, var(--nuit) 62%, var(--lait)); overflow-wrap: anywhere; }
 .badge:hover .badge-carte { transform: translateY(-6px) rotate(-1deg); }
 .badge-reste .badge-carte { background: transparent; color: var(--lait); border: 2px dashed var(--trait); box-shadow: none; }
 .badge-reste .badge-carte::before { background: transparent; }
@@ -661,6 +710,9 @@ main, .pied { position: relative; z-index: 1; }
     <symbol id="i-fleche" viewBox="0 0 24 24"><path class="ico-svg" d="M5 12h14M13 6l6 6-6 6"/></symbol>
     <symbol id="i-chevron" viewBox="0 0 24 24"><path class="ico-svg" d="M6 9l6 6 6-6"/></symbol>
     <symbol id="i-copie" viewBox="0 0 24 24"><rect class="ico-svg" x="8.5" y="8.5" width="11" height="11" rx="2.2"/><path class="ico-svg" d="M15.5 8.5V6.2c0-.9-.8-1.7-1.7-1.7H6.2c-.9 0-1.7.8-1.7 1.7v7.6c0 .9.8 1.7 1.7 1.7h2.3"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path class="ico-svg" d="M12 3.5a8.5 8.5 0 1 0 0 17c1.3 0 1.9-.9 1.9-1.8 0-1.2-1-1.7-1-2.7 0-1 .8-1.6 1.8-1.6h2.2c2 0 3.6-1.5 3.6-3.6C20.5 6.6 16.7 3.5 12 3.5Z"/><circle cx="7.6" cy="11.2" r="1.3" fill="currentColor"/><circle cx="10.4" cy="7.4" r="1.3" fill="currentColor"/><circle cx="15" cy="7.6" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-micro" viewBox="0 0 24 24"><rect class="ico-svg" x="9" y="3.5" width="6" height="11" rx="3"/><path class="ico-svg" d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v3M8.5 20.5h7"/></symbol>
+    <symbol id="i-virement" viewBox="0 0 24 24"><path class="ico-svg" d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/></symbol>
     <symbol id="i-cadenas" viewBox="0 0 24 24"><rect class="ico-svg" x="5" y="10.5" width="14" height="10" rx="2.5"/><path class="ico-svg" d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
     <symbol id="i-chauve" viewBox="0 0 48 24"><path fill="currentColor" d="M24 7.2c-1-2.2-2-3.5-2.7-3.6.3 1.3.2 2.5-.3 3.3C18.6 5.6 14.2 3.5 8.8 3.9 4.4 4.2 1.6 6.4 0 9.6c3-1.4 6.1-1.3 7.9.4-1.9.3-3.1 1.6-3.2 3.7 2.2-1.5 4.7-1.6 6.8-.3-1.1 1-1.5 2.5-1.1 4.3 2.6-2.4 6.6-3.6 10.6-2.6.9 1.3 2.2 2.7 3 3.4.8-.7 2.1-2.1 3-3.4 4-1 8 .2 10.6 2.6.4-1.8 0-3.3-1.1-4.3 2.1-1.3 4.6-1.2 6.8.3-.1-2.1-1.3-3.4-3.2-3.7 1.8-1.7 4.9-1.8 7.9-.4-1.6-3.2-4.4-5.4-8.8-5.7-5.4-.4-9.8 1.7-12.2 3-.5-.8-.6-2-.3-3.3-.7.1-1.7 1.4-2.7 3.6Z"/></symbol>
   </defs>
@@ -772,12 +824,12 @@ main, .pied { position: relative; z-index: 1; }
             <ul>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-regles"/></svg><span class="emo" aria-hidden="true">🪦</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon des règles </span>nos-règles</span><span class="desc">Le règlement du café, à lire en arrivant.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>accueil</span><span class="desc">Tout ce qu&#x27;il faut savoir sur le serveur.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🕯️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>annonces</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🕯️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>annonces</span><span class="desc">Les grandes nouvelles du café, à ne pas manquer.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🕸️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>patch-note</span><span class="desc">Les nouveautés et les corrections du serveur.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🍬</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>concours</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">👻</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>événements</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🧙</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>le-petit-savoir</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🧛</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>recrutements</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🍬</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>concours</span><span class="desc">Les concours du serveur et les lots à gagner.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">👻</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>événements</span><span class="desc">Les activités de la communauté : jeux, doublages, concours de dessins…</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🧙</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>le-petit-savoir</span><span class="desc">Une anecdote ou un fait étonnant pour apprendre chaque jour.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🧛</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>recrutements</span><span class="desc">Les candidatures pour rejoindre l&#x27;équipe.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧪</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>support</span><span class="desc">Un problème ou un signalement&nbsp;? Ouvre un ticket.</span></li>
             </ul>
           </div>
@@ -797,11 +849,11 @@ main, .pied { position: relative; z-index: 1; }
             <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Centre de Convivialité</p>
             <ul>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>présentation</span><span class="desc">Présente-toi à la communauté.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🖤</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>discussion</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🦇</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>international</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🖤</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>discussion</span><span class="desc">Le salon principal pour parler de tout et de rien.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🦇</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>international</span><span class="desc">Pour discuter dans d&#x27;autres langues que le français.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🪄</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>suggestions</span><span class="desc">Tes idées pour le serveur, étudiées par l&#x27;équipe.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>soutien</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧪</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>commandes</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>soutien</span><span class="desc">Bump et vote pour faire connaître le serveur.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧪</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>commandes</span><span class="desc">Les commandes des bots, sans encombrer les autres salons.</span></li>
             </ul>
           </div>
         </div>
@@ -821,7 +873,7 @@ main, .pied { position: relative; z-index: 1; }
             <ul>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧹</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>infini</span><span class="desc">Une suite infinie de nombres.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧛‍♀️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>smash-or-pass</span><span class="desc">Donne ton avis sur les membres.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">👁️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>médias</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">👁️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>médias</span><span class="desc">Pour partager tes images et tes vidéos.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕯️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>confessions</span><span class="desc">Tes confessions, de manière anonyme.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🔮</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>mudae</span><span class="desc">Collectionne des personnages avec le bot Mudae.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕷️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span><span class="desc">Gagne des grains avec les commandes du bot.</span></li>
@@ -845,22 +897,23 @@ main, .pied { position: relative; z-index: 1; }
           <b id="cn-valeur">100</b>
           <span class="cn-role" id="cn-role">@Légende</span>
           <span class="cn-barre"><span class="cn-rempli" id="cn-rempli"></span></span>
+          <ul class="cn-avantages" id="cn-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul>
         </div>
-        <p class="niveaux-note">Les boosters du serveur gagnent deux fois plus d'XP. Pendant Halloween, l'expérience est augmentée pour tout le monde.</p>
+        <p class="niveaux-note">Les virements de grains sont limités à 50&nbsp;000 par jour, 100&nbsp;000 dès @Connaisseur et pour les boosters. Les boosters gagnent aussi deux fois plus d'XP, et pendant Halloween l'expérience est augmentée pour tout le monde.</p>
       </div>
       <div class="echelle-bloc">
         <p class="cn-mini" aria-hidden="true">Niv. <b id="cn-mini-valeur">100</b><span id="cn-mini-role">@Légende</span></p>
         <ol class="echelle">
-          <li class="palier" data-niveau="2" style="--role: var(--r-curieux)"><span class="p-niv">Niv. 2</span><span class="p-role">@Curieux</span><span class="p-bonus"></span></li>
-          <li class="palier" data-niveau="5" style="--role: var(--r-decouverte)"><span class="p-niv">Niv. 5</span><span class="p-role">@Découverte</span><span class="p-bonus"></span></li>
-          <li class="palier" data-niveau="10" style="--role: var(--r-debutant)"><span class="p-niv">Niv. 10</span><span class="p-role">@Débutant</span><span class="p-bonus"></span></li>
-          <li class="palier" data-niveau="15" style="--role: var(--r-apprenti)"><span class="p-niv">Niv. 15</span><span class="p-role">@Apprenti</span><span class="p-bonus">Salon Couleurs débloqué · grains ×1,5 en vocal</span></li>
-          <li class="palier" data-niveau="25" style="--role: var(--r-novice)"><span class="p-niv">Niv. 25</span><span class="p-role">@Novice</span><span class="p-bonus"></span></li>
-          <li class="palier" data-niveau="40" style="--role: var(--r-voyageur)"><span class="p-niv">Niv. 40</span><span class="p-role">@Voyageur</span><span class="p-bonus">Grains ×2 en vocal</span></li>
-          <li class="palier" data-niveau="55" style="--role: var(--r-connaisseur)"><span class="p-niv">Niv. 55</span><span class="p-role">@Connaisseur</span><span class="p-bonus">Grains ×2 en vocal</span></li>
-          <li class="palier" data-niveau="70" style="--role: var(--r-philosophe)"><span class="p-niv">Niv. 70</span><span class="p-role">@Philosophe</span><span class="p-bonus">Grains ×3 en vocal</span></li>
-          <li class="palier" data-niveau="85" style="--role: var(--r-maestro)"><span class="p-niv">Niv. 85</span><span class="p-role">@Maestro</span><span class="p-bonus">Grains ×3 en vocal</span></li>
-          <li class="palier" data-niveau="100" style="--role: var(--r-legende)"><span class="p-niv">Niv. 100</span><span class="p-role">@Légende</span><span class="p-bonus">Grains ×3 en vocal · le plus haut rôle du café</span></li>
+          <li class="palier" data-niveau="2" style="--role: var(--r-curieux)"><span class="p-niv">Niv. 2</span><span class="p-role">@Curieux</span><ul class="p-avantages"></ul></li>
+          <li class="palier" data-niveau="5" style="--role: var(--r-decouverte)"><span class="p-niv">Niv. 5</span><span class="p-role">@Découverte</span><ul class="p-avantages"></ul></li>
+          <li class="palier" data-niveau="10" style="--role: var(--r-debutant)"><span class="p-niv">Niv. 10</span><span class="p-role">@Débutant</span><ul class="p-avantages"></ul></li>
+          <li class="palier" data-niveau="15" style="--role: var(--r-apprenti)"><span class="p-niv">Niv. 15</span><span class="p-role">@Apprenti</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×1,5 en vocal</li></ul></li>
+          <li class="palier" data-niveau="25" style="--role: var(--r-novice)"><span class="p-niv">Niv. 25</span><span class="p-role">@Novice</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×1,5 en vocal</li></ul></li>
+          <li class="palier" data-niveau="40" style="--role: var(--r-voyageur)"><span class="p-niv">Niv. 40</span><span class="p-role">@Voyageur</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×2 en vocal</li></ul></li>
+          <li class="palier" data-niveau="55" style="--role: var(--r-connaisseur)"><span class="p-niv">Niv. 55</span><span class="p-role">@Connaisseur</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×2 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
+          <li class="palier" data-niveau="70" style="--role: var(--r-philosophe)"><span class="p-niv">Niv. 70</span><span class="p-role">@Philosophe</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
+          <li class="palier" data-niveau="85" style="--role: var(--r-maestro)"><span class="p-niv">Niv. 85</span><span class="p-role">@Maestro</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
+          <li class="palier" data-niveau="100" style="--role: var(--r-legende)"><span class="p-niv">Niv. 100</span><span class="p-role">@Légende</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
         </ol>
       </div>
     </div>
@@ -889,7 +942,7 @@ main, .pied { position: relative; z-index: 1; }
           <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Halloween 2026</p>
           <ul>
             <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🪦</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>halloween</span><span class="desc">Les quêtes, le barème et le bouton « Mes quêtes ».</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕸️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>les-quêtes</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕸️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>les-quêtes</span><span class="desc">Les 7 jeux d&#x27;Halloween à relever.</span></li>
           </ul>
         </div>
       </div>
@@ -897,7 +950,7 @@ main, .pied { position: relative; z-index: 1; }
     <div class="cadre quetes-bloc">
       <div class="quetes-tete" data-revele>
         <h3 class="quetes-titre">Les quêtes d'Halloween</h3>
-        <p>Elles se font dans l'ordre et l'équipe valide chacune avant de débloquer la suivante. Selon la quête, tu réponds par texte ou par image, avec le bouton «&nbsp;Mes quêtes&nbsp;» dans #halloween.</p>
+        <p>Au programme, 7 jeux&nbsp;: énigmes, rébus, mots mêlés, différences et d'autres épreuves. Ils se font dans l'ordre et l'équipe valide chacun avant de débloquer le suivant. Tu réponds par texte ou par image, avec le bouton «&nbsp;Mes quêtes&nbsp;» dans #halloween.</p>
       </div>
       <ol class="quetes">
         <li class="quete ouverte" data-numero="1" data-ouverture="2026-10-17T00:00:00+02:00" data-jour="samedi 17 octobre"><span class="q-lanterne" aria-hidden="true"><b>1</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 1 : </span>Trouve les 7 différences</span><span class="q-date">sam. 17 oct.</span><span class="q-etat">Ouverte</span></li>
@@ -921,6 +974,35 @@ main, .pied { position: relative; z-index: 1; }
           <li><span class="b-rang">11e et suivants</span><span class="b-citrouilles" aria-hidden="true"><i></i></span><b>1<span class="sr"> citrouille</span></b></li>
         </ul>
       </div>
+      <div class="recompenses">
+        <div class="lots" data-revele>
+          <h3>Les récompenses</h3>
+          <p>Toutes tes citrouilles comptent pour le classement final. Les meilleurs participants repartent avec un lot.</p>
+          <ol class="podium">
+            <li><span class="marche">1</span><span class="lot">Nitro Boost<small>10 €</small></span></li>
+            <li><span class="marche">2</span><span class="lot">Nitro Boost<small>10 €</small></span></li>
+            <li><span class="marche">3</span><span class="lot">Nitro Boost<small>10 €</small></span></li>
+          </ol>
+          <ul class="lots-suite">
+            <li><span>4e au 10e</span>Deux décorations (2 × 5 €)</li>
+            <li><span>11e au 13e</span>Une décoration (5 €)</li>
+          </ul>
+        </div>
+        <div class="recolte" data-revele>
+          <h3>Récolter des citrouilles</h3>
+          <ul class="recolte-liste">
+            <li><b>Les quêtes</b><p>Relève les 7 jeux de #les-quêtes. Plus tu es rapide, plus tu en gagnes.</p></li>
+            <li><b>Le casino</b><p>Achète des citrouilles au #casino.</p></li>
+            <li><b>Les événements</b><p>Threads d'horreur, doublages, jeux d'horreur, concours de profils ou de dessins dans #événements.</p></li>
+          </ul>
+          <h4>Rôles à gagner</h4>
+          <ul class="roles-halloween">
+            <li><span class="mention">@Halloween 2026</span>si tu réagis à l'annonce</li>
+            <li><span class="mention mention-gris">@Jack l'Éventreur</span>si tu participes à la traque aux citrouilles</li>
+          </ul>
+          <p class="astuce">Prends le rôle @Notif Animation dans «&nbsp;Salons et rôles&nbsp;» pour être prévenu de chaque quête et de chaque événement.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -932,12 +1014,12 @@ main, .pied { position: relative; z-index: 1; }
         <p class="chapo">Six salons vocaux, du canapé au gaming. Entre, prends une chaise et allume ton micro quand tu veux.</p>
       </div>
       <ul class="vocaux-liste">
-        <li class="vocal" data-vocal="Ici c&#x27;est Détente !" data-max="0"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="nom">Ici c&#x27;est Détente&nbsp;!<span class="presents"></span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">ouvert à tous</span></li>
-        <li class="vocal" data-vocal="Public" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public<span class="presents"></span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Public²" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public²<span class="presents"></span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Public³" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public³<span class="presents"></span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Musique" data-max="5"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎶</span><span class="nom">Musique<span class="presents"></span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">5 places</span></li>
-        <li class="vocal" data-vocal="Gaming" data-max="15"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="nom">Gaming<span class="presents"></span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">15 places</span></li>
+        <li class="vocal" data-vocal="Ici c&#x27;est Détente !" data-max="0"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="nom">Ici c&#x27;est Détente&nbsp;!<span class="presents"></span><span class="v-desc">Pour se poser et discuter tranquillement.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">ouvert à tous</span></li>
+        <li class="vocal" data-vocal="Public" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public<span class="presents"></span><span class="v-desc">Le vocal ouvert à tous, jusqu&#x27;à 30 personnes.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
+        <li class="vocal" data-vocal="Public²" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public²<span class="presents"></span><span class="v-desc">Un deuxième salon quand le premier est plein.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
+        <li class="vocal" data-vocal="Public³" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public³<span class="presents"></span><span class="v-desc">Un troisième, pour se répartir en petits groupes.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
+        <li class="vocal" data-vocal="Musique" data-max="5"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎶</span><span class="nom">Musique<span class="presents"></span><span class="v-desc">Écouter de la musique ensemble, à 5 maximum.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">5 places</span></li>
+        <li class="vocal" data-vocal="Gaming" data-max="15"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="nom">Gaming<span class="presents"></span><span class="v-desc">Pour jouer en équipe, jusqu&#x27;à 15.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">15 places</span></li>
       </ul>
     </div>
     <div class="cadre grains" id="grains">
@@ -953,7 +1035,7 @@ main, .pied { position: relative; z-index: 1; }
           <fieldset class="bonus">
             <legend>Ton bonus de rôle</legend>
             <input type="radio" name="bonus" id="bonus-1" value="1" checked><label for="bonus-1"><b>×1</b><span>Sans bonus</span></label>
-            <input type="radio" name="bonus" id="bonus-15" value="1.5"><label for="bonus-15"><b>×1,5</b><span>@Apprenti</span></label>
+            <input type="radio" name="bonus" id="bonus-15" value="1.5"><label for="bonus-15"><b>×1,5</b><span>@Apprenti, @Novice</span></label>
             <input type="radio" name="bonus" id="bonus-2" value="2"><label for="bonus-2"><b>×2</b><span>@Votants, @Soutien, @Voyageur, @Connaisseur</span></label>
             <input type="radio" name="bonus" id="bonus-3" value="3"><label for="bonus-3"><b>×3</b><span>@Café Boosters, @Philosophe, @Maestro, @Légende</span></label>
           </fieldset>
@@ -974,9 +1056,9 @@ main, .pied { position: relative; z-index: 1; }
         <p class="chapo">Ils font tourner le café au quotidien. Pour leur parler, ouvre un ticket dans #support.</p>
       </div>
       <ul class="badges">
-        <li class="badge badge-rouge"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Direction</p><h3>Gérants</h3><p class="badge-desc">Ils tiennent la maison et prennent les grandes décisions pour le serveur.</p><ul class="badge-noms" data-poste="gerants"></ul></article></div></li>
-        <li class="badge badge-bleu"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Administration</p><h3>Administrateurs</h3><p class="badge-desc">Ils gèrent le serveur au quotidien : salons, rôles, bots et sécurité.</p><ul class="badge-noms" data-poste="administrateurs"></ul></article></div></li>
-        <li class="badge badge-creme"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Encadrement</p><h3>Responsables</h3><p class="badge-desc">Ils encadrent l'équipe et veillent à la bonne ambiance du café.</p><ul class="badge-noms" data-poste="responsables"></ul></article></div></li>
+        <li class="badge badge-rouge"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Direction</p><h3>Gérants</h3><p class="badge-desc">Ils tiennent la maison et prennent les grandes décisions pour le serveur.</p><ul class="profils" aria-label="Gérants"><li class="profil"><img src="data:image/webp;base64,UklGRsIDAABXRUJQVlA4ILYDAAAQEgCdASowADAAPj0cjESiIaETnASQIAPEsQBWGXsIU0ugj/a4BW37z27rRPQd/YD02/Y6/bb9saMvyS+YfZvigPHfbD9Fw17Vn+Y3yrLltRmj+XX6n87lF4A3zThW6n2bewg7pShi9bH7uWqf5tAZuw9uQNwmZ2+v3El7/fDWGg6JmIGDSxNJeZSFlhtxg1D8XDYQ0hCuZugA/v+5pIFPknXcZomkofeU6cyupUHu3wp4HwO4DSq+vWKnGd1GZeJustIRQtnd/+7ZDa1LSSrLAqoaE+lau337Z/0t4Asj70kk/8lupNCBQZ/M42h8le5lwG8Yf//h5/soHfExaOjsHf/YKzRhH9VE5glh8Bok3uUznsgAKX4zpxn75g02ysXmdN+qrJ28JnL3J9Vw2wivx8uTmHZO7j/6pK9Hk+9OBYcpXIfswxjduBd/a5uq2rlzuCra72PARoOL+3RgUxZiI5Ks7riGWyPzktaXC6gzvDtj+6JrAKx1o/iVDV83uU2yKzEvgDcZtSotEcQc/rS+MHrAVJU0LNiEm6WWrV6sayFFc14hmMwYZmA7K8DZUflsCXc7q4hK7dTsYLBUw7RpLxmfbVPizv8jhn+bPaRDNcBZifgqpAgz1uw3am7i7Fy1/RvfE+aBz+tA4IkushxpEhmcqdnqP+HZx1z3GsGKy3O1G+V5T7Hkn5/Gc2U0YDafkv2Xj/l8ubr02dzw4axa73E8DPYZ3/jFqJ3jZ3x1bRodDhJFuRHSKslQqbE0aapBOz11BKO84/q0D3KVtIXQDA1KWUYdJdLHoTkOS4e2kqNPT1dbmqS6HcZ3OwvlaExhyv4ngVvv/I8X0R+UJF3mYZubg21c5n+OwuHgvKSbGZ7S9SZNpe2VdO1+z1k28lAv8A/Rz48g38rM4zRcIE+hezCUP2Zw7NTAMHFqBfacSyH9WWVxw4m0YaJ8Q7ENlLB72uRYrnpbd97CX2XRHzxPI/4GnIo/vI+Z+HguafLHXdqY7SXM5sV/NKoQkm6UGhqyQtnjg/q0+HLseVwNqkURVbpOpdSB+IYi/V70290RTjcszB2MUUidz537y8RSWzdf7k/qUAl0OZddpInUFUhGylUKgebpFyd/gbhTAVLyv8kTVAKa4BDtoMEbB6KfXt4fj5fHO+a9gVMP+zk8G5utbL1ahnZ+3tWXIfXnYMkSO17W4U825npF5yq8ZiB965xM1LagGtpNM0YVEooxWxTPb9vgqEkSe8Ho4KK16nIt0FPUggAAAA==" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Lithgow</span><span class="profil-pseudo">@lthgw</span></li><li class="profil"><img src="data:image/webp;base64,UklGRh4CAABXRUJQVlA4IBICAACwCgCdASowADAAPjkYh0MiIY1WAqoQAcJZwDADXvwZvom9joED0vyHswFAH3Vz9u07vtx/eR42rQABO8zkq4NIfh4/4gUsRmfPXnKAIHRYFOBiqAvaxL7sjzcpt14AAP7+zUTleIgN/vxqOmq1vgA2WM2++Xt/AaiJcij54rHyQ05+KTZbjbFbjFjPLKtjxO9RyBunOGDqU/zMFSbUpNrvJgEYRPg4adbwwPprU8RXqgFDaIg+Var/z3uDlhuWd5DVvWJdC1tDdncqugtow5BDGIlDv5tcfR0VVh/fN13T+hH+arImMrfOtkbQQ5DZWn68Fs9wCdsCD8CfdPe9a2Svf7vWKls5jHwocHJP/v/pIQk3eZn0+3YmvHPyzXNp1xpcH/gIiWkopr84rDtWCGgnle6IyoTs4qT7QRZKbwxa3B5W2tro/flXTxaWu+8KwPanBOYrD2TdHkOWr5awnKt8vWqL5YCiAl2XKaN2sy09NLnCq7XdFRo5E2YEE5qaaGdgh7C0AYkRiGUlSb5dA0D4EGpGLgble4/kLTE3Jyz3vqS7h9Bq2qddMAtkeiq4N2kVH8UBjvTujBx5s0mUqaF83QLVTMvZahddHYBewuHUc/VAUITQDZzf+v3//dPwrcK2Cu1+DYDuye37mvSwHw/rPH7d15q7sBcK2hfVvUiKDdW3e+aahH/7/ln9cOb5UEAAAA==" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Mvrius</span><span class="profil-pseudo">@mvriuus</span></li><li class="profil"><img src="data:image/webp;base64,UklGRuwBAABXRUJQVlA4IOABAABQCwCdASowADAAPjkWiEMiISEarAaoIAOEoAyI8jYRLsA3m19tVEcAMy9XqnTn/DZ4LpFuX7Pu5bgxOkIEKX1VGX7PW9VOR5O04nf6KWEjOGSsW1Dd+R+3PBypIZsn6pw2JpgA/v/fSggSbyKFCjgz4Iov0Yc0n1nxaa1pdKs7ckoYQxEvA3N4wR2rJT92DuGtobVMr2hzzlxYgRTHfr3bTwb9vwRzqJt/bjbvY2bhZe6FtqsF0VQm577dP4IiL1bhKr54NZJ/6+OLL4HLbdK/bmDT9uP37WX9ArrE/S45G/5wy+d7q5vhA2Afd05vDbeJqDryxwTSxBumrqcpfkGXc+dfmU68G4p+Kv1hcftwGrEhV6JlQRBFAg5VEPwuXsXAebcWgzai08OyAcGmSB4aHvyhMirPEkf4EjD5jkP0DonPhT6x551AVOqo/SNYSoy9/aR0pFLcwQbYGxaccTS/Z+8t9ZzI1UxEKXoZauQW494/dEbSBlVnhMBTgyC6qc745PPCGsjqUS7H5Qx9D8tBM0e2dodeH7HBoW3otZZyHlaPkUSnZ6UJHsZoH3RaY/KZ1nTjkVcNefzsVrWZUDS6qLx56/WmSlQitwsccjgT7lCRkWJ7LdkTN3pYHRNAAAA=" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Ninoo</span><span class="profil-pseudo">@ninoo_</span></li></ul></article></div></li>
+        <li class="badge badge-bleu"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Administration</p><h3>Administrateurs</h3><p class="badge-desc">Ils gèrent le serveur au quotidien : salons, rôles, bots et sécurité.</p><ul class="profils" aria-label="Administrateurs"><li class="profil"><img src="data:image/webp;base64,UklGRkgCAABXRUJQVlA4IDwCAABwDACdASowADAAPj0YiUMiIaEaqqwAIAPEtIAJxR4K+Kr2hHJIz8Nu9OU/EjXTzSleFwh/pneYmkUfFHG8T0f68IwlkHdYgw/DP9pmWrvXEB4JIJH6jXQPFANW1ywqj1bS6dDH7+JQHL2KlAAA/v/+BTpecwC2Tcfm+nnbHjqSWQSHSDGgIeTh1XhqZ1fXWPm0kAdjJSjJ4wL2a7c52R3OfX4cXpc+ZHYQnDFN4k8pU52LXjul3rafF0Md9neghPS3iTA5Z+tyyi3SHi8ow64fTtz9pQVrtJpi+fw0/OwK3MKi3+BKVN/a1ZDFIuLq3WbUMIlnbbEbesqaiXITHKZJFNWoz6t+TVTvOEcHh9eZhD9f9BADg59WMylxEoOThpVUbjO/54D50Zcafzh0Obq2l3mjigXP99Fv1u8zBEMz4PQnuPSINa9a0JVsF5s+Q5PlNQzJu8Y/+rurlo7/XDmXHTqiFlFlF6z+x9mUhH4fhjLyCwi1dJLUk7PP+4bXQopUOidDdLsOb8Yl9fXwav58O5EwM7Azb/X5Vc1P799QMhydQoPYyuBxJf/kDsbn6WmXbo8LqgIAQL2lAQ/mlXUXuQPOWLHSHjN0SGIvq7Qrxb/OkFN0uo+HCRuCuTBlXomx76KrNuYxktqaaqAFD6kgkcxRmdYuKQOTvjtv1kxaDtpdF5g+L1cff7/+h9DyBsvw37Ba6AtDaOqbSb4dnDYIdWx33dHq9Mpc5remprWy6JxpNdpw7UH6o8BwAA==" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Cyrnaxx.</span><span class="profil-pseudo">@cyrnaxx</span></li><li class="profil"><img src="data:image/webp;base64,UklGRh4EAABXRUJQVlA4IBIEAACwFACdASowADAAPj0WikMiISEXGgcwIAPEtgBOmXs7D8t/Df8jPkEob8p+9/5DZaLyX/rfuj7QHmAfpL0ovMR+ynrD+if0AP7f/nesM9ADyv/ZG/a/0pLvL+l+Dfji8peFHIBZDfi+EHai/ym+3wI0ncz/zEJRVbNUvpspF0F2CcGqbaBIsoJDDTRerNr8YBznIL/dbIEI79I8VlIyEaIceJe54oC6Ya/wRuUmAMAA/v72RzlKZsKVxNz3U3LeWSkZG4PnFdveaHvnwj+zLfb+K/kVsbxcA5yfmaxGTvjlF/RdkWjbT+zqE0Lhk8+sb+n/HrzkCUCOtR+kGbImOIfvj4LkfwvbMuCIVeXXiN8GNjfVlXKDwXIJZXhxMveio7QvwkWxn/G3/vorvEn05hzq9FsJDtnXmW2yhqcPJv8i1xZhZcVd6SpXoCPMguTPiZMGx/jF0klPRTv6a9Z2lK8JpYRvx7OXVs9NMMf+Kn3ghuvvH82sTDFJu9xIS6DexqQC19pQca2hShtynDTg+YcBteuz+/YIsIT/pB9LTotdX+DMtCs2tpijAWwGnnXxDz1l9KDCEBXR3oEWB64TIgCXCXwme4iNR+LxZTYTmSmtOTvIn6ReqchPD3vSVzCnY25KFq5p526F8pRShAqklefYD6pPD+R0uxQz4NT114wfzbh7Ui2VCmJ9YjstGRG0bWsHJJ6tWTwTWq5Ew8iKGOG+p3lLkWL4UL5D9BX8mkpZ8WRUvi+hgQd98PqgiuiWi26+GjpmxH//9Vvupf4e01w2HbygM8hKoHuJz5uiq7/tLScc+sb9GrNBN0u9Y5hgObAp/vlxCvmSYFKcg9SHhnVN8T+eqP/pPN//Us6Eiplnj8HP9v2CXi0yCQxdeuHbWJiUIImNvglYGQsojz5+4ptD6yfXlPlst37iW8Qf7/fZpmDo4ksD/Y4of7A3+gdu/jsRrXZh2BDirlMARMplQVfRvr19gTCORuccrZ7jm399jDGrXMXLJQu+YZrAcbzHCC2NsRYDu3UPn5B1V7mlnh3l4qobNaSakKke1N7gXutSbllrf3aKqo0L5AUSiNPFrHCNRWWLn8B49TFjRLOqmI0QBHq67py8+XJS+oEO9lYDYgJCHwqE8rEeAS+5GYtjSsCNX+1x2Rjb/pDrHKo9Yy3lW5vBfPJPMUYZKKFkYYOMH+Se9Mw6dg78exzTGMIeqj9aj3+J4f4OArnc9rP7FCE9sf44ULHX4r/jkI2UUCKJSnR1MjNDyq+A3yBsl7agtYgbUC8O74o++JQCdZK5YustXduM7nPxdd5s8Plb66cM+WOQcbRGiN14qXM07DyYjvjFCxCbuI33A4n8znjYPVErirSlVE3scBzvHwdw2MC4AAAA" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Rodenzo</span><span class="profil-pseudo">@rodenzo</span></li></ul></article></div></li>
+        <li class="badge badge-creme"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Encadrement</p><h3>Responsables</h3><p class="badge-desc">Ils encadrent l'équipe et veillent à la bonne ambiance du café.</p><ul class="profils" aria-label="Responsables"><li class="profil"><img src="data:image/webp;base64,UklGRqACAABXRUJQVlA4IJQCAADwDgCdASowADAAPj0YiUMiIaEXHf2YIAPEtQBOmWEhZkCVt/D/fDehSj13fVhtn/Md0RfJg6xr0T+ld/cOhU8vPqyR5SnwBHVtan+yfu+t8jxkAhyWxS3NY421ssxknjnbuY2ZiCgkNj57LkQHFrCDjApKHvwifW7YfdYqndzQAAD+//4FKy3K4oLNJl6XyIoHAePt1E+CkoNarzram9JSXJcxsDhN8waqcFwScOcrldhOKObQctZY0eSGH6MdnUbyvUFngfe2KsvPTst9PuzzfVY9YlemSRdNLe6Kedl6B6doEVhDC+xvmX/hlH/L7WjsiLKiflAHUEgVM6aOLv1rqsCjzyNU/wymXTuf+bTTDe8BrP1GeAKt8UmYtR37puvO5ue8GmkXiVfuusMpsLjMYFJDzjcVW0sZfA0T8PwTX7muWEU7UaCY49YhBO4pp38iE7UZ95LdlgVWfpzShJ5sLpPX6ryOXJ1yXLBd1PUaITJyzMzK1RbTYaYKCquyGiknSHHV/n1/3F8UpU+bvLg33wp599hMzY2t7P1hgIu9UUcJat1EYAgQy64uuP7ZRVsHRT/m1CgxmM3RnRtaQMHm4YG4xkUfia0tbM+Wd4DKRzOIPtrb4SwwlY/cXtPMySK4AAMMAifEB6Mbj61A6nIIzILhQ0hu+tMnndJpYFJ8FTNA+UTaUBxA0I1iqKBz0v6k15WDJOURX16GYuDFiSOhYaU6QUTtJyshEH//aee2yHkCv8jwLCGNL/4/4n+zVklYaqMPvBY2ypvnWqagPMiDV0vpnSAPLzMtwYiez/TV+06WikjVD826puFEqtbOSEWH9Kwf+B2NkEfipgl0/CwnBCJb8UoA1m2R6MiPQi3vUYt6QAA=" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">dsb</span><span class="profil-pseudo">@boruto.</span></li><li class="profil"><img src="data:image/webp;base64,UklGRiwCAABXRUJQVlA4ICACAABQDACdASowADAAPjkWiEMiISEca24AIAOEtIBi58A+9vrpx7G0O4/5Id9MpQSBe5/AgsWJ8mY8sAtHUAYaRHMGb/abxk0TsS2lVNLopznkSW3MldSNc9gCNqOsTnuVBVR4p/B14Pen4iJugAD+/s1BTxvO7hBvbzEH+B3i707HDiA6HkJf5Epuf+/wNwGB+rXrZpdE/hqscWchUnD03p5oSt/ALX9kekUJJ+1ZreL3kngJeYCIN/wrgSbJD2Ya/7P4AH8Hcf+Kj8Ht0ZLeQj+Gy6Rz2GaQqtxt/KcfvKrjVnGIihJJCpbHZV91s79/cqzBE9vbHScO0L+at9TrU9BBy0MZSuxyDMgjvfSwhIgDk9CCz0qwGd9mIyw6W6QuwVt3IJorV+hwgubSbcO88xA+yFlEU4kiJSjYIjhNHRPMFrE50c6VxRp3mo/DGxgNRGRzsCD4me9rHrJH1vbOm/bP3JgWduYEVXhHXq/VV2PGU7GO4kxJiE5h74Wl5YFpM3FJGVE13jz4poMRduVt8TmoX5mrQ89MP2RLUcOeRxZQjTDs0nM4mZ19/mFRP6SoWcCM4kiFxNGaPd+//HzNihhscMfvmPiBVKgAfz5Wi9J/PLFOz88ZIIvW0UJne2rBIOvNfjAWgO8kX3IpEkqcsXQ550VH6XUlUl4zTUAcGZF+LX+RMfmLFn2pP3EGTNd9nMUz/ALKMsKPyB9vT3j7gAAA" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Lucas</span><span class="profil-pseudo">@_lzcs</span></li><li class="profil"><img src="data:image/webp;base64,UklGRjYDAABXRUJQVlA4ICoDAAAQEACdASowADAAPj0cikMiIaEXHfzMIAPEtABOmWEbR9g8wSlv1/bfCuQpttXzyWmq7zxXTf3Dwb8C/qON2cH9E31HEDtP/4ysKVhHhBp2xeu/a+XMKvc7zuFU/CXCEOHldITu7eNHdPc1ULW3RG+cV45OXVQpuS4GwXynWmnK8PkIQKpqsI5rAAD+//4E9ioARzQXu0sHYOpva65I2fjRF9fDv9zVGn5d2OmaBmEC7TnPNXyjUv7r3KWKr+R0uUEDUNVGFuuZp+YSntNFuOte4TOwFo5I4eX1ryZ2Tkk3Bt7SIUHYJIffIXwmTmslyNDMVj5IZeHRGKh4KWv1Dl88HWt6hqDfRZvM/ar6tdrrqsshYYZwc/XfAOHRy+BcIb+IjGVstqWbs43KrE/yhPACNLbp1QEGk8XrmipmycvWPH5LasOlDpttnvJ6y1dpbA7dmntf4HhhMypMo7yL+l/C7Qukfi4W9kOjjJ0nmTji9Uxg1/GEdey4NB7A8jJ+5qnDxhkwWZO/kJH/sKE7Po72IAEEe+HTiHiza8MgXb/pORdNSFcVCbx5F8Hhu5WKP2O90zubaj9TMSA6c9OVLkvkcDYCHP5lHKAQPBuFI9vclCIQWhDd2eXfjD2ggF/VU+IbNXmIHQwo0hVhAv2673EPzzZYBWGfTSZ9V2NpId/Y9QeeHcd4ivTg3bjmquI+HHtFdVTIyYMzMRozVV+T+rHw1H6Sa24C6ynDHLy1VbdsUz1QV1udYGf7EYdQvTe5OY+ngAWmX+T1wzL1Q1+DaokIWMbEf0XfnC7ZeK1o3TiSWA9nopdrSzlFhF3dabf6rpSpqdZxfyzGJFPQ0NGibcjiYhHca+4R8GEJGc3ziJhUc7wVPHz6i7TqXWflFa35ZRY+qi21kTz6WKprQOIGc4yzPH5lQrhG1NEPnzNZe9R6ZijOf48bXL+MV+ga6vOeto4J1Cl3P8ihn29fNKSY3U9lX3QUkQ5Cju+NlE9Mb77zImXXiIrhPzuhrItUPhXYv+xPf7xxnRZ74e7qe8VI7DmlAu12frKAvwzVo0zgK6itNofLQ9q5BzowwAA=" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Moon</span><span class="profil-pseudo">@moon1pact</span></li></ul></article></div></li>
         <li class="badge badge-reste"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Et tous les autres</p><h3>Le reste de l'équipe</h3><p class="badge-desc">Le reste de l'équipe se trouve sur le Discord. Viens les rencontrer.</p><a class="lien-fleche" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre le Discord<svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article></div></li>
       </ul>
     </div>
@@ -1058,14 +1140,6 @@ main, .pied { position: relative; z-index: 1; }
   const anime = !reduit && !!g && !!ST;
   const nf = new Intl.NumberFormat('fr-FR');
   const WIDGET = 'https://discord.com/api/guilds/829698572927762432/widget.json';
-
-  /* L'équipe affichée sur les badges. Ajoute un membre par ligne, par exemple :
-     { pseudo: 'Pseudo', avatar: 'https://cdn.discordapp.com/avatars/…' }  (l'avatar est facultatif) */
-  const EQUIPE = {
-    gerants: [],
-    administrateurs: [],
-    responsables: [],
-  };
 
   /* Largeur utile, sans la barre de défilement */
   const majVw = () => racine.style.setProperty('--vw', racine.clientWidth + 'px');
@@ -1193,25 +1267,6 @@ main, .pied { position: relative; z-index: 1; }
       io.observe(pluie.parentElement);
     }
   })();
-
-  /* ---------- Équipe : noms sur les badges ---------- */
-  Object.entries(EQUIPE).forEach(([poste, membres]) => {
-    const ul = document.querySelector(`.badge-noms[data-poste="${poste}"]`);
-    if (!ul) return;
-    for (const m of membres) {
-      const li = document.createElement('li');
-      const url = String(m.avatar || '');
-      if (/^https:\/\/cdn\.discordapp\.com\//.test(url)) {
-        const img = new Image();
-        img.src = url; img.alt = ''; img.width = 24; img.height = 24; img.referrerPolicy = 'no-referrer';
-        li.append(img);
-      }
-      const nom = document.createElement('span');
-      nom.textContent = String(m.pseudo || '');
-      li.append(nom);
-      ul.append(li);
-    }
-  });
 
   /* ---------- Widget Discord (fonctionne une fois le site hébergé) ---------- */
   const normaliser = (s) => String(s || '').normalize('NFC').replace(/^[^\p{L}\p{N}]+/u, '').replace(/\s+/g, ' ').trim().toLowerCase();
@@ -1462,6 +1517,7 @@ main, .pied { position: relative; z-index: 1; }
   g.from('#halloween .h-titre .ligne', { yPercent: 60, opacity: .25, duration: 1.1, stagger: .12, ease: 'power4.out', scrollTrigger: { trigger: '#halloween', start: 'top 75%', once: true } });
   g.from('#halloween .rb-temps > span', { y: 30, rotation: -6, opacity: .25, duration: .9, stagger: .08, ease: 'back.out(2)', scrollTrigger: { trigger: '#halloween .rebours', start: 'top 85%', once: true } });
   g.from('.quete', { y: 40, opacity: .25, duration: .8, stagger: .07, ease: 'power3.out', scrollTrigger: { trigger: '.quetes', start: 'top 85%', once: true } });
+  g.from('.marche', { scaleY: .2, duration: 1, stagger: .12, ease: 'elastic.out(1, .6)', scrollTrigger: { trigger: '.podium', start: 'top 90%', once: true } });
   g.from('.b-citrouilles i', { scale: .3, duration: .5, stagger: .025, ease: 'back.out(3)', scrollTrigger: { trigger: '.bareme', start: 'top 85%', once: true } });
 
   /* ---------- Niveaux : on grimpe les paliers en descendant ---------- */
@@ -1469,7 +1525,7 @@ main, .pied { position: relative; z-index: 1; }
   const paliers = $$('.palier', echelle);
   const sectionNiveaux = $('#niveaux');
   const cnVal = $('#cn-valeur'), cnRole = $('#cn-role'), cnRempli = $('#cn-rempli');
-  const miniVal = $('#cn-mini-valeur'), miniRole = $('#cn-mini-role');
+  const miniVal = $('#cn-mini-valeur'), miniRole = $('#cn-mini-role'), cnAvantages = $('#cn-avantages');
   const niv = { v: 0 };
   function palier(i) {
     const p = paliers[i];
@@ -1477,6 +1533,15 @@ main, .pied { position: relative; z-index: 1; }
     const role = p ? $('.p-role', p).textContent : 'Pas encore de rôle';
     paliers.forEach((q, k) => { q.classList.toggle('atteint', k <= i); q.classList.toggle('actif', k === i); });
     cnRole.textContent = role; miniRole.textContent = role;
+    const puces = p ? $$('.p-avantages li', p) : [];
+    cnAvantages.textContent = '';
+    if (puces.length) puces.forEach((li) => cnAvantages.append(li.cloneNode(true)));
+    else {
+      const vide = document.createElement('li');
+      vide.className = 'av-vide';
+      vide.textContent = 'Les avantages commencent au niveau 15.';
+      cnAvantages.append(vide);
+    }
     sectionNiveaux.style.setProperty('--role-actif', p ? p.style.getPropertyValue('--role') : 'var(--brume)');
     g.to(niv, { v: cible, duration: .7, ease: 'power2.out', overwrite: true, onUpdate: () => { const t = Math.round(niv.v); cnVal.textContent = t; miniVal.textContent = t; } });
     g.to(cnRempli, { scaleX: cible / 100, duration: .7, ease: 'power2.out', overwrite: true });
