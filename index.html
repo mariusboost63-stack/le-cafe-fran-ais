@@ -31,6 +31,11 @@
   --citrouille: #ff8a2a;
   --vert: #3fbf6f;
   --ambre: #f0b232;
+  --grain: #8a5a34;     /* grain de café */
+  --grain-fonce: #3f2414;
+  /* couleurs des rôles de niveau, relevées sur le serveur */
+  --r-curieux: #d6dce4; --r-decouverte: #a8a9ad; --r-debutant: #c7cfdd; --r-apprenti: #aac0d6; --r-novice: #90bbe6;
+  --r-voyageur: #68a2dc; --r-connaisseur: #4189d6; --r-philosophe: #2772cf; --r-maestro: #2a65bc; --r-legende: #81d6a1;
   --ombre: #07090f;     /* silhouettes */
 
   --f-titre: "Bricolage Grotesque", "Arial Black", "Helvetica Neue", system-ui, sans-serif;
@@ -126,10 +131,10 @@ main, .pied { position: relative; z-index: 1; }
 .mini-tasse { width: 44px; height: auto; flex: none; overflow: visible; }
 .mini-tasse use { fill: var(--lait); }
 .mini-tasse .niveau { fill: var(--creme); }
-.barre nav { display: flex; gap: 28px; }
+.barre nav { display: flex; gap: 24px; }
 .barre nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--brume); transition: color .2s; }
 .barre nav a:hover { color: var(--lait); }
-@media (max-width: 760px) { .barre nav { display: none; } .marque span { font-size: 15px; } }
+@media (max-width: 960px) { .barre nav { display: none; } .marque span { font-size: 15px; } }
 
 /* Boutons */
 .btn {
@@ -277,7 +282,7 @@ main, .pied { position: relative; z-index: 1; }
 .discord-liste .cat svg { width: 14px; height: 14px; }
 .discord-liste ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .salon {
-  display: grid; grid-template-columns: 20px auto auto minmax(0, 1fr); align-items: center; gap: 10px;
+  display: grid; grid-template-columns: 20px auto auto minmax(0, 1fr); align-items: center; column-gap: 10px; row-gap: 1px;
   padding: 9px 12px; border-radius: 10px;
   font: 500 clamp(16px, 1.3vw, 18.5px)/1.25 var(--f-texte);
   transition: background-color .2s;
@@ -330,9 +335,13 @@ main, .pied { position: relative; z-index: 1; }
 @keyframes flotter { from { transform: translateY(-5px) rotate(-2deg); } to { transform: translateY(6px) rotate(2deg); } }
 .halloween-texte p.chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 44ch; }
 .halloween-cote { display: grid; gap: 22px; min-width: 0; }
-.rebours { display: grid; gap: 6px; padding-bottom: 18px; border-bottom: 2px solid color-mix(in srgb, var(--citrouille) 50%, transparent); }
-.rebours b { font: 800 clamp(72px, 9vw, 136px)/.9 var(--f-titre); font-stretch: 80%; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-.rebours span { color: var(--brume); }
+.rebours { display: grid; gap: 12px; padding-bottom: 20px; border-bottom: 2px solid color-mix(in srgb, var(--citrouille) 50%, transparent); }
+.rb-label { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--citrouille); }
+.rb-temps { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px clamp(12px, 1.6vw, 22px); }
+.rb-temps span { display: inline-flex; align-items: baseline; gap: 5px; }
+.rb-temps b { font: 800 clamp(52px, 6vw, 92px)/.9 var(--f-titre); font-stretch: 80%; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.rb-temps i { font: 500 14px/1 var(--f-mono); font-style: normal; color: var(--brume); }
+.rb-date { color: var(--brume); }
 .chauve { position: absolute; left: 0; top: var(--haut); width: var(--taille); height: auto; color: var(--ombre); z-index: 0; pointer-events: none;
   filter: drop-shadow(0 0 1px var(--citrouille)) drop-shadow(0 0 10px color-mix(in srgb, var(--citrouille) 55%, transparent)); }
 .chauve use { transform-box: fill-box; transform-origin: 50% 40%; animation: battre var(--vol) ease-in-out infinite alternate; }
@@ -439,6 +448,202 @@ main, .pied { position: relative; z-index: 1; }
 .pied .cadre { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; color: var(--brume); font-size: 14px; }
 .pied a { color: var(--lait); }
 
+/* Descriptions des salons */
+.salon .desc { grid-column: 4; font: 400 14px/1.35 var(--f-texte); color: var(--p-doux); }
+@media (max-height: 820px) {
+  .carte.horizontale .salon { padding-block: 6px; }
+  .carte.horizontale .salon .desc { display: none; }
+}
+
+/* Niveaux */
+.niveaux { --role-actif: var(--r-legende); padding-block: clamp(96px, 12vw, 160px); }
+.niveaux-grille { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+.niveaux-panneau { display: grid; gap: 22px; min-width: 0; }
+@media (min-width: 861px) { .niveaux-panneau { position: sticky; top: 96px; } }
+.niveaux-panneau .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 40ch; }
+.compteur-niveau { display: grid; gap: 12px; padding: 24px 26px 26px; border-radius: 22px; background: var(--nuit-2); border: 1px solid var(--trait); }
+.cn-label { font: 500 var(--t-etiquette)/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
+.compteur-niveau b { font: 800 clamp(96px, 10vw, 156px)/.82 var(--f-titre); font-stretch: 80%; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.cn-role, .cn-mini span { color: color-mix(in srgb, var(--role-actif) 88%, var(--lait)); transition: color .4s; }
+.cn-role { font: 800 clamp(24px, 2.4vw, 32px)/1.1 var(--f-titre); letter-spacing: -.01em; }
+.cn-barre { height: 8px; border-radius: 8px; background: var(--trait); overflow: hidden; }
+.cn-rempli { display: block; height: 100%; border-radius: inherit; transform-origin: left center;
+  background: linear-gradient(90deg, var(--r-curieux), var(--r-novice) 35%, var(--r-maestro) 75%, var(--r-legende)); }
+.niveaux-note { color: var(--brume); font-size: 15px; max-width: 44ch; }
+.echelle-bloc { position: relative; min-width: 0; }
+.cn-mini { display: none; }
+.echelle { position: relative; list-style: none; margin: 0; padding: 0 0 0 40px; display: grid; gap: 6px; }
+.echelle::before, .echelle::after { content: ""; position: absolute; left: 11px; top: 30px; bottom: 30px; width: 3px; border-radius: 3px; }
+.echelle::before { background: var(--trait); }
+.echelle::after { background: linear-gradient(var(--r-curieux), var(--r-novice), var(--r-maestro), var(--r-legende)); transform-origin: top; transform: scaleY(var(--p, 1)); }
+.palier { position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: baseline; gap: 4px 14px; padding: 16px 18px; border-radius: 14px; transition: background-color .35s; }
+.palier::before { content: ""; position: absolute; left: -34px; top: 50%; width: 13px; height: 13px; margin-top: -8px; border-radius: 50%; background: var(--role); border: 3px solid var(--role); transition: background-color .35s, border-color .35s, transform .35s; }
+.p-niv { font: 500 13px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brume); }
+.p-role { font: 800 clamp(24px, 2.6vw, 34px)/1.05 var(--f-titre); letter-spacing: -.02em; color: color-mix(in srgb, var(--role) 88%, var(--lait)); transition: color .35s; min-width: 0; overflow-wrap: anywhere; }
+.p-bonus { grid-column: 2; font-size: 15px; color: var(--brume); }
+.p-bonus:empty { display: none; }
+.echelle.en-cours .palier:not(.atteint) .p-role { color: color-mix(in srgb, var(--brume) 70%, var(--nuit)); }
+.echelle.en-cours .palier:not(.atteint)::before { background: var(--nuit); border-color: var(--trait); }
+.palier.actif { background: color-mix(in srgb, var(--role) 13%, transparent); }
+.palier.actif::before { transform: scale(1.4); }
+@media (max-width: 860px) {
+  .niveaux-grille { grid-template-columns: minmax(0, 1fr); }
+  .compteur-niveau { display: none; }
+  .cn-mini {
+    display: flex; align-items: baseline; gap: 10px; width: max-content; max-width: 100%;
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + 80px); z-index: 2; margin: 0 0 14px;
+    padding: 10px 16px; border-radius: 999px; background: var(--nuit-2); border: 1px solid var(--trait);
+    font: 500 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--brume);
+  }
+  .cn-mini b { font: 800 22px/1 var(--f-titre); color: var(--lait); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+  .cn-mini span { font: 700 16px/1 var(--f-titre); letter-spacing: 0; text-transform: none; }
+  .palier { grid-template-columns: 62px minmax(0, 1fr); padding: 14px 12px; }
+}
+
+/* Quêtes d'Halloween */
+.quetes-bloc { position: relative; z-index: 1; display: grid; gap: 28px; margin-top: clamp(56px, 8vw, 96px); }
+.quetes-tete, .bareme { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 14px 48px; align-items: end; }
+.quetes-titre, .bareme h3 { font: 800 clamp(30px, 3.4vw, 46px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; }
+.quetes-tete p, .bareme-tete p { color: var(--brume); max-width: 56ch; }
+.quetes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+.quete {
+  display: grid; grid-template-areas: "l" "t" "d" "e"; gap: 8px; align-content: start; justify-items: start;
+  padding: 18px 14px 16px; border-radius: 16px; min-width: 0;
+  background: color-mix(in srgb, var(--lait) 3%, transparent); border: 1px solid var(--trait);
+}
+.q-lanterne { grid-area: l; position: relative; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--trait); color: var(--brume); }
+.q-lanterne b { font: 800 22px/1 var(--f-titre); }
+.q-lanterne svg { position: absolute; right: -7px; bottom: -5px; width: 24px; height: 24px; padding: 3px; border-radius: 50%; background: var(--nuit); color: var(--brume); }
+.q-titre { grid-area: t; font: 700 17px/1.2 var(--f-titre); overflow-wrap: anywhere; }
+.q-date { grid-area: d; font: 500 12px/1.35 var(--f-mono); color: var(--brume); }
+.q-etat { grid-area: e; font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 5px 8px; border-radius: 999px; border: 1px solid var(--trait); color: var(--brume); }
+.quete.ouverte { border-color: color-mix(in srgb, var(--citrouille) 55%, transparent); background: color-mix(in srgb, var(--citrouille) 10%, transparent); }
+.quete.ouverte .q-lanterne { border-color: var(--citrouille); background: var(--citrouille); color: var(--nuit); animation: vacille 3.2s ease-in-out infinite; }
+.quete.ouverte .q-lanterne svg { display: none; }
+.quete.ouverte .q-etat { color: var(--citrouille); border-color: color-mix(in srgb, var(--citrouille) 50%, transparent); }
+.quete.prochaine { border-style: dashed; border-color: color-mix(in srgb, var(--citrouille) 45%, transparent); }
+.quete.prochaine .q-etat { color: var(--lait); }
+@keyframes vacille {
+  0%, 100% { box-shadow: 0 0 18px color-mix(in srgb, var(--citrouille) 50%, transparent); }
+  35% { box-shadow: 0 0 32px color-mix(in srgb, var(--citrouille) 75%, transparent); }
+  55% { box-shadow: 0 0 12px color-mix(in srgb, var(--citrouille) 40%, transparent); }
+}
+.bareme { align-items: center; padding-top: 28px; border-top: 1px solid var(--trait); }
+.bareme-tete { display: grid; gap: 10px; }
+.bareme-barres { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.bareme-barres li { display: grid; grid-template-columns: 136px minmax(0, 1fr) 36px; align-items: center; gap: 14px; }
+.b-rang { font: 500 13px/1.2 var(--f-mono); color: var(--brume); }
+.b-citrouilles { display: flex; flex-wrap: wrap; gap: 6px; }
+.b-citrouilles i { position: relative; width: 18px; height: 16px; border-radius: 50% 50% 46% 46%; background: var(--citrouille); }
+.b-citrouilles i::before { content: ""; position: absolute; left: 50%; top: -4px; width: 3px; height: 5px; margin-left: -1.5px; border-radius: 2px; background: var(--vert); }
+.bareme-barres b { font: 800 22px/1 var(--f-titre); text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 1100px) { .quetes { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .quetes-tete, .bareme { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .quetes { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .quete { grid-template-areas: "l t e" "l d e"; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; column-gap: 14px; row-gap: 2px; padding: 12px 14px; }
+  .q-etat { align-self: center; }
+  .bareme-barres li { grid-template-columns: 92px minmax(0, 1fr) 28px; gap: 10px; }
+  .b-citrouilles { gap: 5px; }
+  .b-citrouilles i { width: 14px; height: 12px; }
+}
+
+/* Grains */
+.grains { margin-top: clamp(64px, 9vw, 120px); }
+.grains-carte {
+  position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px); padding: clamp(24px, 4vw, 56px); border-radius: 28px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 72%);
+  border: 1px solid color-mix(in srgb, var(--creme) 25%, transparent);
+}
+.grains-pluie { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.grains-texte, .calcul { position: relative; z-index: 1; min-width: 0; }
+.grains-texte { display: grid; gap: 18px; align-content: start; }
+.grains .surtitre { color: var(--creme); }
+.grains-titre { font: 800 clamp(38px, 4.6vw, 68px)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; }
+.grains-texte p:not(.surtitre) { color: var(--brume); max-width: 44ch; }
+.grains-texte b { color: var(--lait); font-variant-numeric: tabular-nums; }
+.calcul { display: grid; gap: 16px; align-content: start; }
+.bonus { position: relative; border: 0; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; min-width: 0; }
+.bonus legend, .duree { padding: 0; margin-bottom: 8px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
+.bonus input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.bonus label {
+  display: grid; gap: 4px; align-content: start; padding: 12px 14px; border-radius: 14px; cursor: pointer;
+  border: 1px solid var(--trait); background: color-mix(in srgb, var(--nuit) 55%, transparent);
+  transition: border-color .2s, background-color .2s;
+}
+.bonus label:hover { border-color: color-mix(in srgb, var(--creme) 60%, transparent); }
+.bonus label b { font: 800 26px/1 var(--f-titre); }
+.bonus label span { font-size: 13px; line-height: 1.35; color: var(--brume); }
+.bonus input:checked + label { border-color: var(--creme); background: color-mix(in srgb, var(--creme) 16%, var(--nuit)); }
+.bonus input:checked + label b { color: var(--creme); }
+.bonus input:focus-visible + label { outline: 3px solid var(--bleu-vif); outline-offset: 2px; }
+.duree { display: flex; justify-content: space-between; align-items: baseline; margin: 6px 0 -6px; }
+.duree output { font: 700 18px/1 var(--f-titre); letter-spacing: 0; text-transform: none; color: var(--lait); }
+#duree { width: 100%; margin: 0; accent-color: var(--creme); }
+.resultat { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding-top: 14px; border-top: 1px solid color-mix(in srgb, var(--creme) 25%, transparent); }
+.resultat b { font: 800 clamp(52px, 5.6vw, 84px)/1 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; font-variant-numeric: tabular-nums; color: var(--creme); }
+.resultat span { color: var(--brume); }
+.calcul .petit { font-size: 14px; color: var(--brume); }
+@media (max-width: 860px) { .grains-carte { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .bonus { grid-template-columns: minmax(0, 1fr); } }
+
+/* Équipe : badges suspendus */
+.equipe { padding-block: clamp(96px, 12vw, 160px); overflow: hidden; }
+.equipe .cadre { display: grid; gap: clamp(32px, 5vw, 56px); }
+.equipe-tete { display: grid; gap: 22px; max-width: 760px; }
+.equipe-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 46ch; }
+.badges { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px clamp(14px, 2vw, 28px); align-items: start; }
+.badge { --bande: var(--rouge-fonce); --bande-texte: var(--lait); position: relative; min-width: 0; }
+.badge-bleu { --bande: var(--bleu); }
+.badge-creme { --bande: var(--creme); --bande-texte: var(--nuit); }
+.balance { position: relative; padding-top: 104px; transform-origin: 50% 0; animation: balance 5s ease-in-out infinite alternate; }
+.badge:nth-child(2) .balance { animation-duration: 4.3s; animation-delay: -1.4s; }
+.badge:nth-child(3) .balance { animation-duration: 5.6s; animation-delay: -2.6s; }
+.badge:nth-child(4) .balance { animation-duration: 4.8s; animation-delay: -.7s; }
+@keyframes balance { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
+.cordon {
+  position: absolute; left: 50%; top: 0; width: 16px; height: 122px; margin-left: -8px; border-radius: 0 0 4px 4px;
+  background: repeating-linear-gradient(180deg, var(--bande) 0 10px, color-mix(in srgb, var(--bande) 70%, var(--nuit)) 10px 12px);
+}
+.cordon::after { content: ""; position: absolute; left: 50%; bottom: -8px; width: 24px; height: 14px; margin-left: -12px; border-radius: 4px; background: var(--brume); }
+.badge-carte {
+  position: relative; display: grid; gap: 10px; padding: 0 22px 24px; border-radius: 18px; overflow: hidden;
+  background: var(--lait); color: var(--nuit);
+  box-shadow: 0 26px 50px color-mix(in srgb, var(--ombre) 55%, transparent);
+  transition: transform .35s ease;
+}
+.badge-carte::before { content: ""; display: block; height: 66px; margin: 0 -22px 6px; background: var(--bande); }
+.badge-trou { position: absolute; top: 14px; left: 50%; width: 36px; height: 8px; margin-left: -18px; border-radius: 6px; background: var(--nuit); }
+.badge-marque { position: absolute; top: 34px; left: 22px; right: 22px; display: flex; align-items: center; gap: 8px; font: 500 11px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--bande-texte); }
+.badge-marque svg { width: 26px; height: auto; flex: none; fill: currentColor; }
+.badge-rang { font: 500 11.5px/1.2 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--nuit) 62%, var(--lait)); }
+.badge-carte h3 { font: 800 clamp(26px, 2.4vw, 34px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.badge-desc { font-size: 15px; line-height: 1.45; color: color-mix(in srgb, var(--nuit) 78%, var(--lait)); }
+.badge-noms { list-style: none; margin: 4px 0 0; padding: 12px 0 0; border-top: 1px dashed color-mix(in srgb, var(--nuit) 25%, transparent); display: flex; flex-wrap: wrap; gap: 8px; }
+.badge-noms:empty { display: none; }
+.badge-noms li { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px; background: color-mix(in srgb, var(--nuit) 8%, var(--lait)); font-weight: 600; font-size: 14px; }
+.badge-noms li:not(:has(img)) { padding-left: 12px; }
+.badge-noms img { width: 24px; height: 24px; border-radius: 50%; }
+.badge:hover .badge-carte { transform: translateY(-6px) rotate(-1deg); }
+.badge-reste .badge-carte { background: transparent; color: var(--lait); border: 2px dashed var(--trait); box-shadow: none; }
+.badge-reste .badge-carte::before { background: transparent; }
+.badge-reste .badge-trou { background: var(--trait); }
+.badge-reste .badge-marque, .badge-reste .badge-rang, .badge-reste .badge-desc { color: var(--brume); }
+.badge-reste .cordon { background: repeating-linear-gradient(180deg, var(--trait) 0 7px, transparent 7px 12px); }
+.lien-fleche { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; font-weight: 700; color: var(--lait); text-decoration: none; }
+.lien-fleche svg { width: 18px; height: 18px; transition: transform .3s; }
+.lien-fleche:hover svg { transform: translateX(4px); }
+@media (max-width: 1000px) { .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .badges { grid-template-columns: minmax(0, 1fr); } .balance { padding-top: 72px; } .cordon { height: 90px; } }
+
+/* Soutenir */
+.soutenir { width: 100%; max-width: 900px; margin-top: clamp(40px, 6vw, 72px); padding-top: 32px; border-top: 1px solid var(--trait); display: grid; gap: 20px; text-align: left; }
+.soutenir ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 44px; }
+.soutenir h3 { font: 700 var(--t-h3)/1.15 var(--f-titre); letter-spacing: -.01em; margin-bottom: 8px; }
+.soutenir p { color: var(--brume); }
+@media (max-width: 640px) { .soutenir ul { grid-template-columns: minmax(0, 1fr); } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -456,6 +661,7 @@ main, .pied { position: relative; z-index: 1; }
     <symbol id="i-fleche" viewBox="0 0 24 24"><path class="ico-svg" d="M5 12h14M13 6l6 6-6 6"/></symbol>
     <symbol id="i-chevron" viewBox="0 0 24 24"><path class="ico-svg" d="M6 9l6 6 6-6"/></symbol>
     <symbol id="i-copie" viewBox="0 0 24 24"><rect class="ico-svg" x="8.5" y="8.5" width="11" height="11" rx="2.2"/><path class="ico-svg" d="M15.5 8.5V6.2c0-.9-.8-1.7-1.7-1.7H6.2c-.9 0-1.7.8-1.7 1.7v7.6c0 .9.8 1.7 1.7 1.7h2.3"/></symbol>
+    <symbol id="i-cadenas" viewBox="0 0 24 24"><rect class="ico-svg" x="5" y="10.5" width="14" height="10" rx="2.5"/><path class="ico-svg" d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
     <symbol id="i-chauve" viewBox="0 0 48 24"><path fill="currentColor" d="M24 7.2c-1-2.2-2-3.5-2.7-3.6.3 1.3.2 2.5-.3 3.3C18.6 5.6 14.2 3.5 8.8 3.9 4.4 4.2 1.6 6.4 0 9.6c3-1.4 6.1-1.3 7.9.4-1.9.3-3.1 1.6-3.2 3.7 2.2-1.5 4.7-1.6 6.8-.3-1.1 1-1.5 2.5-1.1 4.3 2.6-2.4 6.6-3.6 10.6-2.6.9 1.3 2.2 2.7 3 3.4.8-.7 2.1-2.1 3-3.4 4-1 8 .2 10.6 2.6.4-1.8 0-3.3-1.1-4.3 2.1-1.3 4.6-1.2 6.8.3-.1-2.1-1.3-3.4-3.2-3.7 1.8-1.7 4.9-1.8 7.9-.4-1.6-3.2-4.4-5.4-8.8-5.7-5.4-.4-9.8 1.7-12.2 3-.5-.8-.6-2-.3-3.3-.7.1-1.7 1.4-2.7 3.6Z"/></symbol>
   </defs>
 </svg>
@@ -475,8 +681,10 @@ main, .pied { position: relative; z-index: 1; }
     </a>
     <nav aria-label="Sections">
       <a href="#carte">La carte</a>
+      <a href="#niveaux">Niveaux</a>
       <a href="#halloween">Halloween</a>
       <a href="#vocaux">Vocaux</a>
+      <a href="#equipe">Équipe</a>
     </nav>
     <a class="btn btn-plein btn-petit" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre</a>
   </div>
@@ -516,7 +724,7 @@ main, .pied { position: relative; z-index: 1; }
         </svg>
       </span>
     </h1>
-    <p class="accroche hero-revele">Un serveur pour <strong>discuter, jouer et passer du temps</strong> entre francophones. Installe-toi, le café est chaud.</p>
+    <p class="accroche hero-revele">Un serveur communautaire francophone pour <strong>discuter, faire des rencontres et partager tes passions</strong>. Installe-toi, le café est chaud.</p>
     <div class="actions hero-revele">
       <a class="btn btn-plein aimant" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre le serveur<svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
       <a class="btn btn-ligne" href="#carte">Faire le tour</a>
@@ -562,15 +770,15 @@ main, .pied { position: relative; z-index: 1; }
           <div class="discord-liste">
             <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Café Français</p>
             <ul>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-regles"/></svg><span class="emo" aria-hidden="true">🪦</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon des règles </span>nos-règles</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>accueil</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-regles"/></svg><span class="emo" aria-hidden="true">🪦</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon des règles </span>nos-règles</span><span class="desc">Le règlement du café, à lire en arrivant.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>accueil</span><span class="desc">Tout ce qu&#x27;il faut savoir sur le serveur.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🕯️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>annonces</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🕸️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>patch-note</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🕸️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>patch-note</span><span class="desc">Les nouveautés et les corrections du serveur.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🍬</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>concours</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">👻</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>événements</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🧙</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>le-petit-savoir</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">🧛</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>recrutements</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧪</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>support</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧪</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>support</span><span class="desc">Un problème ou un signalement&nbsp;? Ouvre un ticket.</span></li>
             </ul>
           </div>
         </div>
@@ -588,10 +796,10 @@ main, .pied { position: relative; z-index: 1; }
           <div class="discord-liste">
             <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Centre de Convivialité</p>
             <ul>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>présentation</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>présentation</span><span class="desc">Présente-toi à la communauté.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🖤</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>discussion</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🦇</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>international</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🪄</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>suggestions</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🪄</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>suggestions</span><span class="desc">Tes idées pour le serveur, étudiées par l&#x27;équipe.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>soutien</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧪</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>commandes</span></li>
             </ul>
@@ -611,19 +819,51 @@ main, .pied { position: relative; z-index: 1; }
           <div class="discord-liste">
             <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Divertissements</p>
             <ul>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧹</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>infini</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧛‍♀️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>smash-or-pass</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧹</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>infini</span><span class="desc">Une suite infinie de nombres.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🧛‍♀️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>smash-or-pass</span><span class="desc">Donne ton avis sur les membres.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">👁️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>médias</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕯️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>confessions</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🔮</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>mudae</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕷️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">💀</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>memes</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕯️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>confessions</span><span class="desc">Tes confessions, de manière anonyme.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🔮</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>mudae</span><span class="desc">Collectionne des personnages avec le bot Mudae.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕷️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span><span class="desc">Gagne des grains avec les commandes du bot.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">💀</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>memes</span><span class="desc">Les memes les plus drôles de la communauté.</span></li>
             </ul>
           </div>
         </div>
       </article>
     </div>
     <div class="progression" aria-hidden="true">Visite<span class="rail"><span class="rempli"></span></span></div>
+  </section>
+
+  <section class="niveaux" id="niveaux" aria-labelledby="t-niveaux">
+    <div class="cadre niveaux-grille">
+      <div class="niveaux-panneau">
+        <p class="surtitre">Système de niveaux</p>
+        <h2 class="h2" id="t-niveaux">Monte en grade</h2>
+        <p class="chapo">Chaque message et chaque minute en vocal te rapportent de l'XP. Plus tu es actif, plus tu montes, et chaque palier t'apporte un nouveau rôle.</p>
+        <div class="compteur-niveau" aria-hidden="true">
+          <span class="cn-label">Niveau</span>
+          <b id="cn-valeur">100</b>
+          <span class="cn-role" id="cn-role">@Légende</span>
+          <span class="cn-barre"><span class="cn-rempli" id="cn-rempli"></span></span>
+        </div>
+        <p class="niveaux-note">Les boosters du serveur gagnent deux fois plus d'XP. Pendant Halloween, l'expérience est augmentée pour tout le monde.</p>
+      </div>
+      <div class="echelle-bloc">
+        <p class="cn-mini" aria-hidden="true">Niv. <b id="cn-mini-valeur">100</b><span id="cn-mini-role">@Légende</span></p>
+        <ol class="echelle">
+          <li class="palier" data-niveau="2" style="--role: var(--r-curieux)"><span class="p-niv">Niv. 2</span><span class="p-role">@Curieux</span><span class="p-bonus"></span></li>
+          <li class="palier" data-niveau="5" style="--role: var(--r-decouverte)"><span class="p-niv">Niv. 5</span><span class="p-role">@Découverte</span><span class="p-bonus"></span></li>
+          <li class="palier" data-niveau="10" style="--role: var(--r-debutant)"><span class="p-niv">Niv. 10</span><span class="p-role">@Débutant</span><span class="p-bonus"></span></li>
+          <li class="palier" data-niveau="15" style="--role: var(--r-apprenti)"><span class="p-niv">Niv. 15</span><span class="p-role">@Apprenti</span><span class="p-bonus">Salon Couleurs débloqué · grains ×1,5 en vocal</span></li>
+          <li class="palier" data-niveau="25" style="--role: var(--r-novice)"><span class="p-niv">Niv. 25</span><span class="p-role">@Novice</span><span class="p-bonus"></span></li>
+          <li class="palier" data-niveau="40" style="--role: var(--r-voyageur)"><span class="p-niv">Niv. 40</span><span class="p-role">@Voyageur</span><span class="p-bonus">Grains ×2 en vocal</span></li>
+          <li class="palier" data-niveau="55" style="--role: var(--r-connaisseur)"><span class="p-niv">Niv. 55</span><span class="p-role">@Connaisseur</span><span class="p-bonus">Grains ×2 en vocal</span></li>
+          <li class="palier" data-niveau="70" style="--role: var(--r-philosophe)"><span class="p-niv">Niv. 70</span><span class="p-role">@Philosophe</span><span class="p-bonus">Grains ×3 en vocal</span></li>
+          <li class="palier" data-niveau="85" style="--role: var(--r-maestro)"><span class="p-niv">Niv. 85</span><span class="p-role">@Maestro</span><span class="p-bonus">Grains ×3 en vocal</span></li>
+          <li class="palier" data-niveau="100" style="--role: var(--r-legende)"><span class="p-niv">Niv. 100</span><span class="p-role">@Légende</span><span class="p-bonus">Grains ×3 en vocal · le plus haut rôle du café</span></li>
+        </ol>
+      </div>
+    </div>
   </section>
 
   <section class="halloween" id="halloween" aria-labelledby="t-halloween">
@@ -635,19 +875,51 @@ main, .pied { position: relative; z-index: 1; }
     <svg class="chauve" style="--haut:84%;--taille:58px;--vol:.2s" aria-hidden="true" viewBox="0 0 48 24"><use href="#i-chauve"/></svg>
     <div class="cadre halloween-grille">
       <div class="halloween-texte">
-        <p class="surtitre"><span class="pastille" aria-hidden="true"></span>Événement en cours</p>
+        <p class="surtitre"><span class="pastille" aria-hidden="true"></span><span>Événement en cours · <span id="j-moins">J-14 avant le 31 octobre</span></span></p>
         <h2 class="h-titre" id="t-halloween"><span class="sr">Halloween 2026</span><span aria-hidden="true"><span class="ligne"><span class="flotte" style="--i:0">H</span><span class="flotte" style="--i:1">a</span><span class="flotte" style="--i:2">l</span><span class="flotte" style="--i:3">l</span><span class="flotte" style="--i:4">o</span><span class="flotte" style="--i:5">w</span><span class="flotte" style="--i:6">e</span><span class="flotte" style="--i:7">e</span><span class="flotte" style="--i:8">n</span></span><span class="ligne annee">2026</span></span></h2>
-        <p class="chapo">Le café a sorti les citrouilles. Tous les salons ont changé de déguisement, un salon dédié a ouvert et des quêtes t'attendent dans #les-quêtes.</p>
+        <p class="chapo">Le serveur est passé en mode Halloween avec un thème sombre, des salons déguisés et plus d'expérience à gagner. Sept quêtes t'attendent, une nouvelle tous les deux jours.</p>
       </div>
       <div class="halloween-cote">
-        <div class="rebours"><b id="j-moins">J-14</b><span id="j-texte">avant la nuit d'Halloween, le 31&nbsp;octobre.</span></div>
+        <div class="rebours">
+          <span class="rb-label" id="rb-label">Prochaine quête</span>
+          <span class="rb-temps" id="rb-temps"><span><b data-u="j">–</b><i>j</i></span><span><b data-u="h">–</b><i>h</i></span><span><b data-u="m">–</b><i>min</i></span><span><b data-u="s">–</b><i>s</i></span></span>
+          <span class="rb-date" id="rb-date">Quête 2 : lundi 19 octobre à 17 h, heure de Paris</span>
+        </div>
         <div class="discord-liste">
           <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Halloween 2026</p>
           <ul>
-            <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🪦</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>halloween</span></li>
+            <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🪦</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>halloween</span><span class="desc">Les quêtes, le barème et le bouton « Mes quêtes ».</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕸️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>les-quêtes</span></li>
           </ul>
         </div>
+      </div>
+    </div>
+    <div class="cadre quetes-bloc">
+      <div class="quetes-tete" data-revele>
+        <h3 class="quetes-titre">Les quêtes d'Halloween</h3>
+        <p>Elles se font dans l'ordre et l'équipe valide chacune avant de débloquer la suivante. Selon la quête, tu réponds par texte ou par image, avec le bouton «&nbsp;Mes quêtes&nbsp;» dans #halloween.</p>
+      </div>
+      <ol class="quetes">
+        <li class="quete ouverte" data-numero="1" data-ouverture="2026-10-17T00:00:00+02:00" data-jour="samedi 17 octobre"><span class="q-lanterne" aria-hidden="true"><b>1</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 1 : </span>Trouve les 7 différences</span><span class="q-date">sam. 17 oct.</span><span class="q-etat">Ouverte</span></li>
+        <li class="quete prochaine" data-numero="2" data-ouverture="2026-10-19T17:00:00+02:00" data-jour="lundi 19 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>2</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 2 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">lun. 19 oct. · 17 h</span><span class="q-etat">Prochaine</span></li>
+        <li class="quete" data-numero="3" data-ouverture="2026-10-21T17:00:00+02:00" data-jour="mercredi 21 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>3</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 3 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">mer. 21 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="4" data-ouverture="2026-10-23T17:00:00+02:00" data-jour="vendredi 23 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>4</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 4 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">ven. 23 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="5" data-ouverture="2026-10-25T17:00:00+01:00" data-jour="dimanche 25 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>5</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 5 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">dim. 25 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="6" data-ouverture="2026-10-27T17:00:00+01:00" data-jour="mardi 27 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>6</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 6 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">mar. 27 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="7" data-ouverture="2026-10-29T17:00:00+01:00" data-jour="jeudi 29 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>7</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 7 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">jeu. 29 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+      </ol>
+      <div class="bareme">
+        <div class="bareme-tete">
+          <h3>Barème des citrouilles</h3>
+          <p>Plus tu valides vite, plus tu en gagnes. Ton rang compte sur chaque quête.</p>
+        </div>
+        <ul class="bareme-barres">
+          <li><span class="b-rang">1er</span><span class="b-citrouilles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><b>10<span class="sr"> citrouilles</span></b></li>
+          <li><span class="b-rang">2e</span><span class="b-citrouilles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><b>7<span class="sr"> citrouilles</span></b></li>
+          <li><span class="b-rang">3e à 5e</span><span class="b-citrouilles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b>5<span class="sr"> citrouilles</span></b></li>
+          <li><span class="b-rang">6e à 10e</span><span class="b-citrouilles" aria-hidden="true"><i></i><i></i><i></i></span><b>3<span class="sr"> citrouilles</span></b></li>
+          <li><span class="b-rang">11e et suivants</span><span class="b-citrouilles" aria-hidden="true"><i></i></span><b>1<span class="sr"> citrouille</span></b></li>
+        </ul>
       </div>
     </div>
   </section>
@@ -668,6 +940,46 @@ main, .pied { position: relative; z-index: 1; }
         <li class="vocal" data-vocal="Gaming" data-max="15"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="nom">Gaming<span class="presents"></span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">15 places</span></li>
       </ul>
     </div>
+    <div class="cadre grains" id="grains">
+      <div class="grains-carte" data-revele>
+        <canvas class="grains-pluie" aria-hidden="true"></canvas>
+        <div class="grains-texte">
+          <p class="surtitre">Les grains, la monnaie du café</p>
+          <h3 class="grains-titre">5&nbsp;000 grains toutes les 10&nbsp;minutes</h3>
+          <p>Passe du temps en vocal, micro et casque ouverts, avec au moins deux personnes actives dans le salon. Au #casino, tu en gagnes d'autres avec les commandes du bot et tu les dépenses dans la /boutique.</p>
+          <p>À ce rythme, le salon Couleurs (350&nbsp;000 grains) est à toi après <b id="couleurs-temps">11 h 40</b> de vocal.</p>
+        </div>
+        <form class="calcul" id="calcul" aria-label="Calculer les grains gagnés en vocal">
+          <fieldset class="bonus">
+            <legend>Ton bonus de rôle</legend>
+            <input type="radio" name="bonus" id="bonus-1" value="1" checked><label for="bonus-1"><b>×1</b><span>Sans bonus</span></label>
+            <input type="radio" name="bonus" id="bonus-15" value="1.5"><label for="bonus-15"><b>×1,5</b><span>@Apprenti</span></label>
+            <input type="radio" name="bonus" id="bonus-2" value="2"><label for="bonus-2"><b>×2</b><span>@Votants, @Soutien, @Voyageur, @Connaisseur</span></label>
+            <input type="radio" name="bonus" id="bonus-3" value="3"><label for="bonus-3"><b>×3</b><span>@Café Boosters, @Philosophe, @Maestro, @Légende</span></label>
+          </fieldset>
+          <label class="duree" for="duree">Temps en vocal <output id="duree-aff" for="duree">1 h</output></label>
+          <input type="range" id="duree" name="duree" min="10" max="300" step="10" value="60">
+          <p class="resultat"><b id="total-grains">30&#8239;000</b><span>grains gagnés</span></p>
+          <p class="petit">Si tu as plusieurs rôles, seul le bonus le plus élevé compte.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="equipe" id="equipe" aria-labelledby="t-equipe">
+    <div class="cadre">
+      <div class="equipe-tete" data-revele>
+        <p class="surtitre">L'équipe</p>
+        <h2 class="h2" id="t-equipe">Derrière le comptoir</h2>
+        <p class="chapo">Ils font tourner le café au quotidien. Pour leur parler, ouvre un ticket dans #support.</p>
+      </div>
+      <ul class="badges">
+        <li class="badge badge-rouge"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Direction</p><h3>Gérants</h3><p class="badge-desc">Ils tiennent la maison et prennent les grandes décisions pour le serveur.</p><ul class="badge-noms" data-poste="gerants"></ul></article></div></li>
+        <li class="badge badge-bleu"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Administration</p><h3>Administrateurs</h3><p class="badge-desc">Ils gèrent le serveur au quotidien : salons, rôles, bots et sécurité.</p><ul class="badge-noms" data-poste="administrateurs"></ul></article></div></li>
+        <li class="badge badge-creme"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Encadrement</p><h3>Responsables</h3><p class="badge-desc">Ils encadrent l'équipe et veillent à la bonne ambiance du café.</p><ul class="badge-noms" data-poste="responsables"></ul></article></div></li>
+        <li class="badge badge-reste"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Et tous les autres</p><h3>Le reste de l'équipe</h3><p class="badge-desc">Le reste de l'équipe se trouve sur le Discord. Viens les rencontrer.</p><a class="lien-fleche" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre le Discord<svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article></div></li>
+      </ul>
+    </div>
   </section>
 
   <section class="direct" id="direct" hidden aria-labelledby="t-direct">
@@ -685,7 +997,7 @@ main, .pied { position: relative; z-index: 1; }
       <div class="etapes-ligne" aria-hidden="true"><span></span><span></span><span></span></div>
       <ol class="etapes-liste">
         <li data-revele><span class="chiffre" aria-hidden="true">1</span><h3>Rejoins le serveur</h3><p>Clique sur «&nbsp;Rejoindre&nbsp;» ou entre <b>discord.gg/france</b> dans Discord.</p></li>
-        <li data-revele><span class="chiffre" aria-hidden="true">2</span><h3>Lis les règles</h3><p>Tout est dans <b>#nos-règles</b>. Deux minutes de lecture et tu sais comment ça se passe ici.</p></li>
+        <li data-revele><span class="chiffre" aria-hidden="true">2</span><h3>Lis les règles</h3><p>Tout est dans <b>#nos-règles</b> : respect obligatoire, pas de pub ni de spam, pas d'infos personnelles. Deux minutes de lecture.</p></li>
         <li data-revele><span class="chiffre" aria-hidden="true">3</span><h3>Dis bonjour</h3><p>Présente-toi dans <b>#présentation</b>, puis rejoins la conversation dans <b>#discussion</b>.</p></li>
       </ol>
     </div>
@@ -712,6 +1024,13 @@ main, .pied { position: relative; z-index: 1; }
         <code id="lien-invitation">discord.gg/france</code>
         <button class="copier" id="copier" type="button"><svg aria-hidden="true"><use href="#i-copie"/></svg>Copier le lien</button>
         <p class="copie-etat" id="copie-etat" role="status" aria-live="polite"></p>
+      </div>
+      <div class="soutenir" data-revele>
+        <p class="surtitre">Soutenir le café</p>
+        <ul>
+          <li><h3>Booste le serveur</h3><p>Ton boost aide le café à grandir. En échange, tu gagnes deux fois plus d'XP, tu peux envoyer des images dans tous les salons et tu accèdes aux salons privés.</p></li>
+          <li><h3>Bump et vote</h3><p>C'est gratuit. Utilise régulièrement <code>/bump</code> et <code>/vote</code> pour faire connaître le café. Les votants gagnent aussi un bonus de grains ×2 en vocal.</p></li>
+        </ul>
       </div>
     </div>
   </section>
@@ -740,6 +1059,14 @@ main, .pied { position: relative; z-index: 1; }
   const nf = new Intl.NumberFormat('fr-FR');
   const WIDGET = 'https://discord.com/api/guilds/829698572927762432/widget.json';
 
+  /* L'équipe affichée sur les badges. Ajoute un membre par ligne, par exemple :
+     { pseudo: 'Pseudo', avatar: 'https://cdn.discordapp.com/avatars/…' }  (l'avatar est facultatif) */
+  const EQUIPE = {
+    gerants: [],
+    administrateurs: [],
+    responsables: [],
+  };
+
   /* Largeur utile, sans la barre de défilement */
   const majVw = () => racine.style.setProperty('--vw', racine.clientWidth + 'px');
   majVw();
@@ -753,18 +1080,138 @@ main, .pied { position: relative; z-index: 1; }
     g.to(o, { v: cible, duration: duree, ease: 'power3.out', onUpdate: () => { el.textContent = nf.format(Math.round(o.v)); } });
   }
 
-  /* ---------- Compte à rebours Halloween ---------- */
-  (function rebours() {
-    const b = $('#j-moins'), t = $('#j-texte');
+  /* ---------- Halloween : jours restants et quêtes ---------- */
+  (function halloween() {
     const auj = new Date();
     const jour = new Date(auj.getFullYear(), auj.getMonth(), auj.getDate());
-    const cible = new Date(auj.getFullYear(), 9, 31);
-    const j = Math.round((cible - jour) / 864e5);
-    if (j > 1) { b.textContent = 'J-' + j; t.textContent = "avant la nuit d'Halloween, le 31 octobre."; }
-    else if (j === 1) { b.textContent = 'J-1'; t.textContent = "Demain soir, c'est la nuit d'Halloween."; }
-    else if (j === 0) { b.textContent = 'Jour J'; t.textContent = "C'est ce soir. Sors les citrouilles."; }
-    else { b.textContent = 'Fini'; t.textContent = "Halloween est passé. Rendez-vous l'an prochain pour la suite."; }
+    const n = Math.round((new Date(auj.getFullYear(), 9, 31) - jour) / 864e5);
+    $('#j-moins').textContent = n > 1 ? `J-${n} avant le 31 octobre` : n === 1 ? 'Demain, le 31 octobre' : n === 0 ? "C'est ce soir" : 'Terminé pour cette année';
+
+    const quetes = $$('.quete').map((li) => ({ li, t: Date.parse(li.dataset.ouverture), n: li.dataset.numero }));
+    const label = $('#rb-label'), temps = $('#rb-temps'), date = $('#rb-date');
+    const u = { j: $('[data-u="j"]', temps), h: $('[data-u="h"]', temps), m: $('[data-u="m"]', temps), s: $('[data-u="s"]', temps) };
+    const deux = (v) => String(v).padStart(2, '0');
+    let minuterie = 0;
+    function maj() {
+      const now = Date.now();
+      let prochaine = null;
+      for (const q of quetes) {
+        const ouverte = now >= q.t;
+        const estProchaine = !ouverte && !prochaine;
+        if (estProchaine) prochaine = q;
+        q.li.classList.toggle('ouverte', ouverte);
+        q.li.classList.toggle('prochaine', estProchaine);
+        $('.q-etat', q.li).textContent = ouverte ? 'Ouverte' : estProchaine ? 'Prochaine' : 'Verrouillée';
+      }
+      if (prochaine) {
+        let d = Math.max(0, Math.floor((prochaine.t - now) / 1000));
+        const jj = Math.floor(d / 86400); d -= jj * 86400;
+        const hh = Math.floor(d / 3600); d -= hh * 3600;
+        const mm = Math.floor(d / 60);
+        label.textContent = `Quête ${prochaine.n} dans`;
+        u.j.textContent = jj; u.h.textContent = deux(hh); u.m.textContent = deux(mm); u.s.textContent = deux(d - mm * 60);
+        date.textContent = `Ouverture ${prochaine.li.dataset.jour}, heure de Paris`;
+      } else {
+        label.textContent = 'Toutes les quêtes sont ouvertes';
+        temps.hidden = true;
+        date.textContent = 'Les 7 quêtes se jouent dans #halloween.';
+        clearInterval(minuterie);
+      }
+    }
+    maj();
+    minuterie = setInterval(maj, 1000);
   })();
+
+  /* ---------- Grains : calculateur et pluie de grains ---------- */
+  (function grains() {
+    const calc = $('#calcul');
+    const duree = $('#duree'), dureeAff = $('#duree-aff'), total = $('#total-grains'), couleurs = $('#couleurs-temps');
+    const pluie = $('.grains-pluie'), pc = pluie.getContext('2d');
+    const css = getComputedStyle(racine);
+    const teinte = css.getPropertyValue('--grain').trim() || '#8a5a34';
+    const creux = css.getPropertyValue('--grain-fonce').trim() || '#3f2414';
+    let tombent = [], actif = false, ratio = 1;
+    const formatDuree = (min) => {
+      const h = Math.floor(min / 60), m = min % 60;
+      return h ? (m ? `${h} h ${String(m).padStart(2, '0')}` : `${h} h`) : `${m} min`;
+    };
+    function taille() {
+      ratio = Math.min(2, devicePixelRatio || 1);
+      const r = pluie.getBoundingClientRect();
+      pluie.width = Math.round(r.width * ratio); pluie.height = Math.round(r.height * ratio);
+    }
+    function image() {
+      const bas = pluie.height / ratio + 24;
+      pc.setTransform(1, 0, 0, 1, 0, 0);
+      pc.clearRect(0, 0, pluie.width, pluie.height);
+      tombent = tombent.filter((b) => b.y < bas);
+      for (const b of tombent) {
+        b.vy += .14; b.y += b.vy; b.x += b.vx; b.a += b.va;
+        pc.setTransform(ratio * b.e, 0, 0, ratio * b.e, b.x * ratio, b.y * ratio);
+        pc.rotate(b.a);
+        pc.beginPath(); pc.ellipse(0, 0, 6, 8.5, 0, 0, Math.PI * 2); pc.fillStyle = teinte; pc.fill();
+        pc.beginPath(); pc.moveTo(0, -6.5); pc.bezierCurveTo(-2.6, -2, 2.6, 2, 0, 6.5);
+        pc.strokeStyle = creux; pc.lineWidth = 1.6; pc.lineCap = 'round'; pc.stroke();
+      }
+      if (tombent.length) requestAnimationFrame(image); else actif = false;
+    }
+    function verser(n) {
+      if (reduit) return;
+      if (!actif) taille();
+      const larg = pluie.width / ratio;
+      for (let i = 0; i < n; i++) {
+        tombent.push({ x: Math.random() * larg, y: -20 - Math.random() * 280, vx: (Math.random() - .5) * .8, vy: Math.random() * 2,
+          a: Math.random() * 6.3, va: (Math.random() - .5) * .16, e: .75 + Math.random() * .6 });
+      }
+      if (!actif) { actif = true; requestAnimationFrame(image); }
+    }
+    let affiche = 0;
+    const compteur = { v: 0 };
+    function calculer(verse) {
+      const choix = calc.querySelector('input[name="bonus"]:checked');
+      const mult = choix ? parseFloat(choix.value) : 1;
+      const min = +duree.value;
+      const val = Math.floor(min / 10) * 5000 * mult;
+      dureeAff.textContent = formatDuree(min);
+      couleurs.textContent = formatDuree(Math.ceil(350000 / (5000 * mult)) * 10);
+      if (verse && val > affiche) verser(Math.min(90, 10 + Math.round((val - affiche) / 2500)));
+      affiche = val;
+      if (anime && verse) {
+        g.to(compteur, { v: val, duration: .6, ease: 'power2.out', overwrite: true, onUpdate: () => { total.textContent = nf.format(Math.round(compteur.v)); } });
+      } else {
+        compteur.v = val;
+        total.textContent = nf.format(val);
+      }
+    }
+    calc.addEventListener('input', () => calculer(true));
+    calc.addEventListener('submit', (e) => e.preventDefault());
+    calculer(false);
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entrees) => {
+        if (entrees.some((e) => e.isIntersecting)) { verser(46); io.disconnect(); }
+      }, { threshold: .4 });
+      io.observe(pluie.parentElement);
+    }
+  })();
+
+  /* ---------- Équipe : noms sur les badges ---------- */
+  Object.entries(EQUIPE).forEach(([poste, membres]) => {
+    const ul = document.querySelector(`.badge-noms[data-poste="${poste}"]`);
+    if (!ul) return;
+    for (const m of membres) {
+      const li = document.createElement('li');
+      const url = String(m.avatar || '');
+      if (/^https:\/\/cdn\.discordapp\.com\//.test(url)) {
+        const img = new Image();
+        img.src = url; img.alt = ''; img.width = 24; img.height = 24; img.referrerPolicy = 'no-referrer';
+        li.append(img);
+      }
+      const nom = document.createElement('span');
+      nom.textContent = String(m.pseudo || '');
+      li.append(nom);
+      ul.append(li);
+    }
+  });
 
   /* ---------- Widget Discord (fonctionne une fois le site hébergé) ---------- */
   const normaliser = (s) => String(s || '').normalize('NFC').replace(/^[^\p{L}\p{N}]+/u, '').replace(/\s+/g, ' ').trim().toLowerCase();
@@ -1013,7 +1460,35 @@ main, .pied { position: relative; z-index: 1; }
         scrollTrigger: { trigger: '#halloween', start: 'top bottom', end: 'bottom top', scrub: .6 + i * .3, invalidateOnRefresh: true } });
   });
   g.from('#halloween .h-titre .ligne', { yPercent: 60, opacity: .25, duration: 1.1, stagger: .12, ease: 'power4.out', scrollTrigger: { trigger: '#halloween', start: 'top 75%', once: true } });
-  g.from('#halloween .rebours b', { scale: .6, rotation: -6, opacity: .25, duration: 1, ease: 'back.out(2)', scrollTrigger: { trigger: '#halloween .rebours', start: 'top 85%', once: true } });
+  g.from('#halloween .rb-temps > span', { y: 30, rotation: -6, opacity: .25, duration: .9, stagger: .08, ease: 'back.out(2)', scrollTrigger: { trigger: '#halloween .rebours', start: 'top 85%', once: true } });
+  g.from('.quete', { y: 40, opacity: .25, duration: .8, stagger: .07, ease: 'power3.out', scrollTrigger: { trigger: '.quetes', start: 'top 85%', once: true } });
+  g.from('.b-citrouilles i', { scale: .3, duration: .5, stagger: .025, ease: 'back.out(3)', scrollTrigger: { trigger: '.bareme', start: 'top 85%', once: true } });
+
+  /* ---------- Niveaux : on grimpe les paliers en descendant ---------- */
+  const echelle = $('.echelle');
+  const paliers = $$('.palier', echelle);
+  const sectionNiveaux = $('#niveaux');
+  const cnVal = $('#cn-valeur'), cnRole = $('#cn-role'), cnRempli = $('#cn-rempli');
+  const miniVal = $('#cn-mini-valeur'), miniRole = $('#cn-mini-role');
+  const niv = { v: 0 };
+  function palier(i) {
+    const p = paliers[i];
+    const cible = p ? +p.dataset.niveau : 0;
+    const role = p ? $('.p-role', p).textContent : 'Pas encore de rôle';
+    paliers.forEach((q, k) => { q.classList.toggle('atteint', k <= i); q.classList.toggle('actif', k === i); });
+    cnRole.textContent = role; miniRole.textContent = role;
+    sectionNiveaux.style.setProperty('--role-actif', p ? p.style.getPropertyValue('--role') : 'var(--brume)');
+    g.to(niv, { v: cible, duration: .7, ease: 'power2.out', overwrite: true, onUpdate: () => { const t = Math.round(niv.v); cnVal.textContent = t; miniVal.textContent = t; } });
+    g.to(cnRempli, { scaleX: cible / 100, duration: .7, ease: 'power2.out', overwrite: true });
+  }
+  echelle.classList.add('en-cours');
+  echelle.style.setProperty('--p', 0);
+  palier(-1);
+  paliers.forEach((p, i) => ST.create({ trigger: p, start: 'top 60%', onEnter: () => palier(i), onLeaveBack: () => palier(i - 1) }));
+  ST.create({ trigger: echelle, start: 'top 60%', end: 'bottom 60%', onUpdate: (self) => echelle.style.setProperty('--p', self.progress.toFixed(3)) });
+
+  /* ---------- Équipe : les badges tombent et se balancent ---------- */
+  g.from('.badge', { y: -200, rotation: (i) => [-16, 12, -9, 14][i % 4], duration: 1.8, ease: 'elastic.out(1, .4)', stagger: .12, transformOrigin: '50% 0%', scrollTrigger: { trigger: '.badges', start: 'top bottom', once: true } });
 
   /* ---------- Étapes : le ruban tricolore se trace ---------- */
   g.from('.etapes-ligne span', { scaleX: 0, ease: 'none', stagger: .5, scrollTrigger: { trigger: '.etapes', start: 'top 70%', end: 'bottom 75%', scrub: true } });
