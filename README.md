@@ -14,7 +14,9 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - Les grains : toutes les façons d'en gagner (vocal, /journalier, /hebdomadaire, casino, /voler), un calculateur de gains en vocal et la boutique, avec le temps de vocal nécessaire pour chaque article.
 - Les salons vocaux et leurs limites de places.
 - L'équipe, présentée sur des badges suspendus avec les profils de chacun : Gérants, Administrateurs, Responsables, et le reste de l'équipe sur le Discord.
-- Trois étapes pour rejoindre le serveur, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
+- Trois étapes pour rejoindre le serveur, une FAQ, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
+- Un bouton « Ambiance » qui joue un fond sonore de café, créé directement dans la page (aucun fichier audio).
+- Des surprises : cliquer sur la tasse du logo la remplit, taper « café » au clavier fait pleuvoir des grains, taper « boo » lâche des chauves-souris.
 
 ## Données en direct
 
@@ -25,6 +27,25 @@ https://discord.com/api/guilds/829698572927762432/widget.json
 ```
 
 Une fois le site en ligne, elle affiche le nombre de membres connectés, l'occupation de chaque salon vocal et les avatars des personnes en ligne. Le widget doit rester activé dans les paramètres du serveur (Paramètres du serveur → Widget). Si le widget ne répond pas, la page garde les valeurs écrites dans le HTML.
+
+## Saisons
+
+Le site change de tenue selon la saison, réglée tout en haut de `index.html` :
+
+```js
+var SAISON = 'auto';
+```
+
+- `'auto'` : version Halloween en octobre, version normale le reste de l'année. Le changement se fait tout seul le 1er novembre.
+- `'halloween'` ou `'normal'` : force une version.
+
+En version normale, la section Halloween est remplacée par une section « Événements », le lien du menu change, le compteur passe à 28 salons et les emojis d'Halloween des salons sont masqués.
+
+Pour voir une version sans rien changer, ajoute `#saison-halloween` ou `#saison-normale` à la fin de l'adresse du site.
+
+## Aperçu des liens partagés
+
+Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. Les adresses utilisées sont celles de GitHub Pages (`https://mariusboost63-stack.github.io/le-cafe-fran-ais/`). Si tu passes à un nom de domaine, remplace cette adresse dans les balises `og:` et `canonical` en haut de `index.html`.
 
 ## Mettre en ligne avec GitHub Pages
 
