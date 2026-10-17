@@ -35,6 +35,7 @@
   --grain-fonce: #3f2414;
   /* couleurs des rôles de niveau, relevées sur le serveur */
   --r-curieux: #d6dce4; --r-decouverte: #a8a9ad; --r-debutant: #c7cfdd; --r-apprenti: #aac0d6; --r-novice: #90bbe6;
+  --a-couleurs: #ccd6fe; --a-moliere: #e0b793; --a-vip: #e0504f; --a-perso: #8fd3c4; --a-deco: #6b95ff; --a-nitro: #f47fff;
   --r-voyageur: #68a2dc; --r-connaisseur: #4189d6; --r-philosophe: #2772cf; --r-maestro: #2a65bc; --r-legende: #81d6a1;
   --ombre: #07090f;     /* silhouettes */
 
@@ -593,8 +594,62 @@ main, .pied { position: relative; z-index: 1; }
   .b-citrouilles i { width: 14px; height: 12px; }
 }
 
-/* Grains */
-.grains { margin-top: clamp(64px, 9vw, 120px); }
+/* Économie : grains, gains et boutique */
+.economie { padding-block: clamp(96px, 12vw, 160px); }
+.economie > .cadre { display: grid; gap: clamp(40px, 6vw, 72px); }
+.eco-tete { display: grid; gap: 22px; max-width: 760px; }
+.eco-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 48ch; }
+.gains-bloc { display: grid; gap: 16px; }
+.gains { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.gain {
+  display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: 20px; min-width: 0;
+  background: var(--nuit-2); border: 1px solid var(--trait); transition: border-color .3s, box-shadow .3s;
+}
+.gain:hover { border-color: color-mix(in srgb, var(--creme) 50%, transparent); box-shadow: 0 14px 36px color-mix(in srgb, var(--ombre) 45%, transparent); }
+.gain > svg { width: 30px; height: 30px; color: var(--creme); }
+.gain h3 { font: 800 22px/1.15 var(--f-titre); letter-spacing: -.01em; }
+.gain h3 code { font: 500 19px/1.2 var(--f-mono); letter-spacing: 0; color: var(--creme); }
+.gain p { color: var(--brume); }
+.gain-vocal { grid-row: span 2; align-content: space-between; background: linear-gradient(160deg, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 75%); border-color: color-mix(in srgb, var(--creme) 30%, transparent); }
+.gain .gain-chiffre { font: 800 clamp(44px, 4.6vw, 68px)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; color: var(--lait); }
+.gain-chiffre span { display: block; margin-top: 10px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--creme); }
+.virements { color: var(--brume); font-size: 15px; }
+@media (max-width: 900px) { .gains { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gain-vocal { grid-row: auto; grid-column: 1 / -1; } }
+@media (max-width: 560px) { .gains { grid-template-columns: minmax(0, 1fr); } }
+
+.boutique { display: grid; gap: 24px; }
+.boutique-tete { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 14px 48px; align-items: end; }
+.boutique-titre { font: 800 clamp(30px, 3.4vw, 46px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; }
+.boutique-tete p { color: var(--brume); max-width: 58ch; }
+.boutique-tete b { color: var(--creme); font-variant-numeric: tabular-nums; }
+.articles { list-style: none; margin: 0; padding: 0; display: grid; }
+.article {
+  display: grid; grid-template-columns: 52px minmax(0, 1fr) minmax(24px, .3fr) auto; align-items: center; gap: 18px;
+  padding: 20px 8px; border-bottom: 1px solid var(--trait); transition: background-color .25s, padding .25s;
+}
+.article:first-child { border-top: 1px solid var(--trait); }
+.article:hover { background: color-mix(in srgb, var(--a) 7%, transparent); padding-inline: 16px; }
+.a-ico { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; color: var(--a); background: color-mix(in srgb, var(--a) 14%, var(--nuit)); border: 1px solid color-mix(in srgb, var(--a) 40%, transparent); }
+.a-ico svg { width: 26px; height: 26px; }
+.a-texte { min-width: 0; }
+.a-texte h4 { margin: 0 0 4px; font: 800 clamp(20px, 2vw, 26px)/1.15 var(--f-titre); letter-spacing: -.01em; }
+.a-texte h4 span { color: var(--a); }
+.a-texte p { color: var(--brume); font-size: 15.5px; max-width: 54ch; }
+.a-points { height: 0; border-bottom: 2px dotted var(--trait); }
+.a-prix { display: grid; grid-template-columns: auto 22px; align-items: center; justify-items: end; column-gap: 8px; text-align: right; }
+.a-prix b { font: 800 clamp(24px, 2.4vw, 32px)/1 var(--f-titre); letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.a-grain { width: 22px; height: 22px; color: var(--creme); transition: transform .6s; }
+.article:hover .a-grain { transform: rotate(200deg); }
+.a-temps { grid-column: 1 / 3; margin-top: 7px; font: 500 12.5px/1.25 var(--f-mono); color: var(--brume); white-space: nowrap; }
+.a-temps span { color: var(--creme); font-variant-numeric: tabular-nums; }
+@media (max-width: 860px) { .boutique-tete { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 720px) {
+  .article { grid-template-columns: 44px minmax(0, 1fr); gap: 10px 14px; align-items: start; }
+  .a-ico { width: 44px; height: 44px; border-radius: 13px; }
+  .a-points { display: none; }
+  .a-prix { grid-column: 2; justify-items: start; text-align: left; grid-template-columns: auto 20px auto; }
+  .a-temps { grid-column: 3; margin: 0 0 0 6px; }
+}
 .grains-carte {
   position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(28px, 5vw, 72px); padding: clamp(24px, 4vw, 56px); border-radius: 28px;
@@ -604,7 +659,7 @@ main, .pied { position: relative; z-index: 1; }
 .grains-pluie { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 .grains-texte, .calcul { position: relative; z-index: 1; min-width: 0; }
 .grains-texte { display: grid; gap: 18px; align-content: start; }
-.grains .surtitre { color: var(--creme); }
+.grains-carte .surtitre { color: var(--creme); }
 .grains-titre { font: 800 clamp(38px, 4.6vw, 68px)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; }
 .grains-texte p:not(.surtitre) { color: var(--brume); max-width: 44ch; }
 .grains-texte b { color: var(--lait); font-variant-numeric: tabular-nums; }
@@ -713,6 +768,16 @@ main, .pied { position: relative; z-index: 1; }
     <symbol id="i-palette" viewBox="0 0 24 24"><path class="ico-svg" d="M12 3.5a8.5 8.5 0 1 0 0 17c1.3 0 1.9-.9 1.9-1.8 0-1.2-1-1.7-1-2.7 0-1 .8-1.6 1.8-1.6h2.2c2 0 3.6-1.5 3.6-3.6C20.5 6.6 16.7 3.5 12 3.5Z"/><circle cx="7.6" cy="11.2" r="1.3" fill="currentColor"/><circle cx="10.4" cy="7.4" r="1.3" fill="currentColor"/><circle cx="15" cy="7.6" r="1.3" fill="currentColor"/></symbol>
     <symbol id="i-micro" viewBox="0 0 24 24"><rect class="ico-svg" x="9" y="3.5" width="6" height="11" rx="3"/><path class="ico-svg" d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v3M8.5 20.5h7"/></symbol>
     <symbol id="i-virement" viewBox="0 0 24 24"><path class="ico-svg" d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/></symbol>
+    <symbol id="i-grain" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="6.6" ry="9.4" transform="rotate(32 12 12)" fill="currentColor"/><path d="M8.2 5.6c4.2 2.4-1.2 9.6 7.6 12.8" fill="none" style="stroke: var(--nuit)" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-jour" viewBox="0 0 24 24"><rect class="ico-svg" x="4" y="5.5" width="16" height="15" rx="2.5"/><path class="ico-svg" d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/><circle cx="12" cy="15.2" r="1.7" fill="currentColor"/></symbol>
+    <symbol id="i-semaine" viewBox="0 0 24 24"><rect class="ico-svg" x="4" y="5.5" width="16" height="15" rx="2.5"/><path class="ico-svg" d="M4 10h16M8.5 3.5v4M15.5 3.5v4M7.5 14h9M7.5 17h6"/></symbol>
+    <symbol id="i-des" viewBox="0 0 24 24"><rect class="ico-svg" x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.8" cy="8.8" r="1.3" fill="currentColor"/><circle cx="15.2" cy="8.8" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="8.8" cy="15.2" r="1.3" fill="currentColor"/><circle cx="15.2" cy="15.2" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-masque" viewBox="0 0 24 24"><path class="ico-svg" d="M2.8 9.3c3-1.9 6.1-1.6 9.2.6 3.1-2.2 6.2-2.5 9.2-.6-.3 4-2.4 6.2-5.1 6.2-1.8 0-3-1.3-4.1-2.6-1.1 1.3-2.3 2.6-4.1 2.6-2.7 0-4.8-2.2-5.1-6.2Z"/><circle cx="7.6" cy="11.6" r="1.3" fill="currentColor"/><circle cx="16.4" cy="11.6" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-livre" viewBox="0 0 24 24"><path class="ico-svg" d="M12 6.5c-2.6-1.7-5.3-2-8-1v13c2.7-1 5.4-.7 8 1 2.6-1.7 5.3-2 8-1v-13c-2.7-1-5.4-.7-8 1Zm0 0v13"/></symbol>
+    <symbol id="i-etoile" viewBox="0 0 24 24"><path class="ico-svg" d="m12 3.8 2.5 5.2 5.6.8-4.1 3.9 1 5.6-5-2.7-5 2.7 1-5.6-4.1-3.9 5.6-.8Z"/></symbol>
+    <symbol id="i-perso" viewBox="0 0 24 24"><circle class="ico-svg" cx="10" cy="8.5" r="3.5"/><path class="ico-svg" d="M3.5 19.5c.8-3.4 3.4-5.5 6.5-5.5s5.7 2.1 6.5 5.5M18.5 7.5v6M15.5 10.5h6"/></symbol>
+    <symbol id="i-pinceau" viewBox="0 0 24 24"><path class="ico-svg" d="m20 4-8.6 8.6M14.6 5.4l4 4M11.4 12.6c-1.6-1.6-4.2-1.4-5.4.4-1 1.5-.5 3.4-2.5 5.5 3.2.9 6 .3 7.6-1.4 1.4-1.5 1.6-3.2.3-4.5Z"/></symbol>
+    <symbol id="i-gemme" viewBox="0 0 24 24"><path class="ico-svg" d="M7 4.5h10l3.5 5L12 20 3.5 9.5Zm-3.5 5h17M9.5 4.5 8 9.5l4 10.5 4-10.5-1.5-5"/></symbol>
     <symbol id="i-cadenas" viewBox="0 0 24 24"><rect class="ico-svg" x="5" y="10.5" width="14" height="10" rx="2.5"/><path class="ico-svg" d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
     <symbol id="i-chauve" viewBox="0 0 48 24"><path fill="currentColor" d="M24 7.2c-1-2.2-2-3.5-2.7-3.6.3 1.3.2 2.5-.3 3.3C18.6 5.6 14.2 3.5 8.8 3.9 4.4 4.2 1.6 6.4 0 9.6c3-1.4 6.1-1.3 7.9.4-1.9.3-3.1 1.6-3.2 3.7 2.2-1.5 4.7-1.6 6.8-.3-1.1 1-1.5 2.5-1.1 4.3 2.6-2.4 6.6-3.6 10.6-2.6.9 1.3 2.2 2.7 3 3.4.8-.7 2.1-2.1 3-3.4 4-1 8 .2 10.6 2.6.4-1.8 0-3.3-1.1-4.3 2.1-1.3 4.6-1.2 6.8.3-.1-2.1-1.3-3.4-3.2-3.7 1.8-1.7 4.9-1.8 7.9-.4-1.6-3.2-4.4-5.4-8.8-5.7-5.4-.4-9.8 1.7-12.2 3-.5-.8-.6-2-.3-3.3-.7.1-1.7 1.4-2.7 3.6Z"/></symbol>
   </defs>
@@ -735,6 +800,7 @@ main, .pied { position: relative; z-index: 1; }
       <a href="#carte">La carte</a>
       <a href="#niveaux">Niveaux</a>
       <a href="#halloween">Halloween</a>
+      <a href="#grains">Grains</a>
       <a href="#vocaux">Vocaux</a>
       <a href="#equipe">Équipe</a>
     </nav>
@@ -876,7 +942,7 @@ main, .pied { position: relative; z-index: 1; }
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">👁️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>médias</span><span class="desc">Pour partager tes images et tes vidéos.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕯️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>confessions</span><span class="desc">Tes confessions, de manière anonyme.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🔮</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>mudae</span><span class="desc">Collectionne des personnages avec le bot Mudae.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕷️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span><span class="desc">Gagne des grains avec les commandes du bot.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕷️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span><span class="desc">Défis entre membres, roulette, blackjack : mise tes grains.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">💀</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>memes</span><span class="desc">Les memes les plus drôles de la communauté.</span></li>
             </ul>
           </div>
@@ -1006,30 +1072,30 @@ main, .pied { position: relative; z-index: 1; }
     </div>
   </section>
 
-  <section class="vocaux" id="vocaux" aria-labelledby="t-vocaux">
-    <div class="cadre vocaux-grille">
-      <div class="vocaux-texte" data-revele>
-        <p class="surtitre">Salons vocaux</p>
-        <h2 class="h2" id="t-vocaux">Et si on se parlait&nbsp;?</h2>
-        <p class="chapo">Six salons vocaux, du canapé au gaming. Entre, prends une chaise et allume ton micro quand tu veux.</p>
+  <section class="economie" id="grains" aria-labelledby="t-grains">
+    <div class="cadre">
+      <div class="eco-tete" data-revele>
+        <p class="surtitre">L'économie du café</p>
+        <h2 class="h2" id="t-grains">Les grains</h2>
+        <p class="chapo">C'est la monnaie du serveur. Tu en gagnes en parlant, en jouant et en passant chaque jour, puis tu les dépenses dans la boutique.</p>
       </div>
-      <ul class="vocaux-liste">
-        <li class="vocal" data-vocal="Ici c&#x27;est Détente !" data-max="0"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="nom">Ici c&#x27;est Détente&nbsp;!<span class="presents"></span><span class="v-desc">Pour se poser et discuter tranquillement.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">ouvert à tous</span></li>
-        <li class="vocal" data-vocal="Public" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public<span class="presents"></span><span class="v-desc">Le vocal ouvert à tous, jusqu&#x27;à 30 personnes.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Public²" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public²<span class="presents"></span><span class="v-desc">Un deuxième salon quand le premier est plein.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Public³" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public³<span class="presents"></span><span class="v-desc">Un troisième, pour se répartir en petits groupes.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Musique" data-max="5"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎶</span><span class="nom">Musique<span class="presents"></span><span class="v-desc">Écouter de la musique ensemble, à 5 maximum.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">5 places</span></li>
-        <li class="vocal" data-vocal="Gaming" data-max="15"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="nom">Gaming<span class="presents"></span><span class="v-desc">Pour jouer en équipe, jusqu&#x27;à 15.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">15 places</span></li>
-      </ul>
-    </div>
-    <div class="cadre grains" id="grains">
+      <div class="gains-bloc">
+        <ul class="gains">
+          <li class="gain gain-vocal"><svg aria-hidden="true"><use href="#i-micro"/></svg><h3>En vocal</h3><p class="gain-chiffre">5&nbsp;000 grains<span>toutes les 10 minutes</span></p><p>Micro et casque ouverts, avec au moins deux personnes actives dans le salon. Ton bonus de rôle multiplie le gain.</p></li>
+          <li class="gain"><svg aria-hidden="true"><use href="#i-jour"/></svg><h3><code>/journalier</code></h3><p>Ta récompense du jour. Repasse chaque jour pour la récupérer.</p></li>
+          <li class="gain"><svg aria-hidden="true"><use href="#i-semaine"/></svg><h3><code>/hebdomadaire</code></h3><p>Une récompense de plus, à récupérer une fois par semaine.</p></li>
+          <li class="gain"><svg aria-hidden="true"><use href="#i-des"/></svg><h3>Le casino</h3><p>Défis entre membres, roulette, blackjack et d'autres jeux pour miser tes grains dans #casino.</p></li>
+          <li class="gain"><svg aria-hidden="true"><use href="#i-masque"/></svg><h3><code>/voler</code></h3><p>Tente ta chance sur les grains d'un autre membre. Seuls les grains en poche peuvent être volés.</p></li>
+        </ul>
+        <p class="virements">Tu peux aussi envoyer des grains à un autre membre&nbsp;: jusqu'à 50&nbsp;000 par jour, 100&nbsp;000 pour les boosters et dès @Connaisseur.</p>
+      </div>
       <div class="grains-carte" data-revele>
         <canvas class="grains-pluie" aria-hidden="true"></canvas>
         <div class="grains-texte">
-          <p class="surtitre">Les grains, la monnaie du café</p>
-          <h3 class="grains-titre">5&nbsp;000 grains toutes les 10&nbsp;minutes</h3>
-          <p>Passe du temps en vocal, micro et casque ouverts, avec au moins deux personnes actives dans le salon. Au #casino, tu en gagnes d'autres avec les commandes du bot et tu les dépenses dans la /boutique.</p>
-          <p>À ce rythme, le salon Couleurs (350&nbsp;000 grains) est à toi après <b id="couleurs-temps">11 h 40</b> de vocal.</p>
+          <p class="surtitre">Calcule tes gains en vocal</p>
+          <h3 class="grains-titre">Combien tu gagnes en parlant&nbsp;?</h3>
+          <p>Choisis ton bonus de rôle et ton temps en vocal. Le calcul suit la règle du serveur&nbsp;: 5&nbsp;000 grains toutes les 10&nbsp;minutes, multipliés par ton bonus.</p>
+          <p>Les temps affichés dans la boutique, juste en dessous, suivent le bonus que tu choisis ici.</p>
         </div>
         <form class="calcul" id="calcul" aria-label="Calculer les grains gagnés en vocal">
           <fieldset class="bonus">
@@ -1045,6 +1111,38 @@ main, .pied { position: relative; z-index: 1; }
           <p class="petit">Si tu as plusieurs rôles, seul le bonus le plus élevé compte.</p>
         </form>
       </div>
+      <div class="boutique">
+        <div class="boutique-tete" data-revele>
+          <h3 class="boutique-titre">La boutique</h3>
+          <p>Ouvre-la avec <code>/boutique</code> dans #casino. Sous chaque prix, le temps de vocal qu'il te faut avec le bonus <b id="boutique-bonus">×1</b>, sans compter le casino ni les récompenses.</p>
+        </div>
+        <ol class="articles">
+          <li class="article" data-prix="350000" style="--a: var(--a-couleurs)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-palette"/></svg></span><div class="a-texte"><h4>Accès Couleurs</h4><p>Le rôle @Accès Couleurs débloque toutes les couleurs de pseudo du serveur, et tu changes de couleur quand tu veux. Offert dès @Apprenti (niveau 15) et pour les boosters.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>350&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">11 h 40</span> de vocal</span></p></li>
+          <li class="article" data-prix="1000000" style="--a: var(--a-moliere)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-livre"/></svg></span><div class="a-texte"><h4>Rôle <span>@Molière</span></h4><p>Embellis ton profil sur le Café Français avec ce rôle.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>1&#8239;000&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">33 h 20</span> de vocal</span></p></li>
+          <li class="article" data-prix="3000000" style="--a: var(--a-vip)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-etoile"/></svg></span><div class="a-texte"><h4>Rôle <span>@VIP</span></h4><p>Tu es affiché plus haut dans la liste des membres et tu obtiens différents avantages.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>3&#8239;000&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">100 h</span> de vocal</span></p></li>
+          <li class="article" data-prix="5000000" style="--a: var(--a-perso)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-perso"/></svg></span><div class="a-texte"><h4>Rôle personnalisé</h4><p>Crée ton propre rôle, à ton effigie, et partage-le à qui tu veux.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>5&#8239;000&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">166 h 40</span> de vocal</span></p></li>
+          <li class="article" data-prix="7500000" style="--a: var(--a-deco)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-pinceau"/></svg></span><div class="a-texte"><h4>Décoration Discord</h4><p>Une décoration de profil Discord, d'une valeur maximale de 10 €.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>7&#8239;500&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">250 h</span> de vocal</span></p></li>
+          <li class="article" data-prix="10000000" style="--a: var(--a-nitro)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-gemme"/></svg></span><div class="a-texte"><h4>Nitro Boost</h4><p>Un Nitro Boost d'une durée d'un mois.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>10&#8239;000&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">333 h 20</span> de vocal</span></p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="vocaux" id="vocaux" aria-labelledby="t-vocaux">
+    <div class="cadre vocaux-grille">
+      <div class="vocaux-texte" data-revele>
+        <p class="surtitre">Salons vocaux</p>
+        <h2 class="h2" id="t-vocaux">Et si on se parlait&nbsp;?</h2>
+        <p class="chapo">Six salons vocaux, du canapé au gaming. Entre, prends une chaise et allume ton micro. Chaque tranche de 10 minutes à plusieurs te rapporte 5&nbsp;000 grains.</p>
+      </div>
+      <ul class="vocaux-liste">
+        <li class="vocal" data-vocal="Ici c&#x27;est Détente !" data-max="0"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="nom">Ici c&#x27;est Détente&nbsp;!<span class="presents"></span><span class="v-desc">Pour se poser et discuter tranquillement.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">ouvert à tous</span></li>
+        <li class="vocal" data-vocal="Public" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public<span class="presents"></span><span class="v-desc">Le vocal ouvert à tous, jusqu&#x27;à 30 personnes.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
+        <li class="vocal" data-vocal="Public²" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public²<span class="presents"></span><span class="v-desc">Un deuxième salon quand le premier est plein.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
+        <li class="vocal" data-vocal="Public³" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public³<span class="presents"></span><span class="v-desc">Un troisième, pour se répartir en petits groupes.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
+        <li class="vocal" data-vocal="Musique" data-max="5"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎶</span><span class="nom">Musique<span class="presents"></span><span class="v-desc">Écouter de la musique ensemble, à 5 maximum.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">5 places</span></li>
+        <li class="vocal" data-vocal="Gaming" data-max="15"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="nom">Gaming<span class="presents"></span><span class="v-desc">Pour jouer en équipe, jusqu&#x27;à 15.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">15 places</span></li>
+      </ul>
     </div>
   </section>
 
@@ -1056,7 +1154,7 @@ main, .pied { position: relative; z-index: 1; }
         <p class="chapo">Ils font tourner le café au quotidien. Pour leur parler, ouvre un ticket dans #support.</p>
       </div>
       <ul class="badges">
-        <li class="badge badge-rouge"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Direction</p><h3>Gérants</h3><p class="badge-desc">Ils tiennent la maison et prennent les grandes décisions pour le serveur.</p><ul class="profils" aria-label="Gérants"><li class="profil"><img src="data:image/webp;base64,UklGRsIDAABXRUJQVlA4ILYDAAAQEgCdASowADAAPj0cjESiIaETnASQIAPEsQBWGXsIU0ugj/a4BW37z27rRPQd/YD02/Y6/bb9saMvyS+YfZvigPHfbD9Fw17Vn+Y3yrLltRmj+XX6n87lF4A3zThW6n2bewg7pShi9bH7uWqf5tAZuw9uQNwmZ2+v3El7/fDWGg6JmIGDSxNJeZSFlhtxg1D8XDYQ0hCuZugA/v+5pIFPknXcZomkofeU6cyupUHu3wp4HwO4DSq+vWKnGd1GZeJustIRQtnd/+7ZDa1LSSrLAqoaE+lau337Z/0t4Asj70kk/8lupNCBQZ/M42h8le5lwG8Yf//h5/soHfExaOjsHf/YKzRhH9VE5glh8Bok3uUznsgAKX4zpxn75g02ysXmdN+qrJ28JnL3J9Vw2wivx8uTmHZO7j/6pK9Hk+9OBYcpXIfswxjduBd/a5uq2rlzuCra72PARoOL+3RgUxZiI5Ks7riGWyPzktaXC6gzvDtj+6JrAKx1o/iVDV83uU2yKzEvgDcZtSotEcQc/rS+MHrAVJU0LNiEm6WWrV6sayFFc14hmMwYZmA7K8DZUflsCXc7q4hK7dTsYLBUw7RpLxmfbVPizv8jhn+bPaRDNcBZifgqpAgz1uw3am7i7Fy1/RvfE+aBz+tA4IkushxpEhmcqdnqP+HZx1z3GsGKy3O1G+V5T7Hkn5/Gc2U0YDafkv2Xj/l8ubr02dzw4axa73E8DPYZ3/jFqJ3jZ3x1bRodDhJFuRHSKslQqbE0aapBOz11BKO84/q0D3KVtIXQDA1KWUYdJdLHoTkOS4e2kqNPT1dbmqS6HcZ3OwvlaExhyv4ngVvv/I8X0R+UJF3mYZubg21c5n+OwuHgvKSbGZ7S9SZNpe2VdO1+z1k28lAv8A/Rz48g38rM4zRcIE+hezCUP2Zw7NTAMHFqBfacSyH9WWVxw4m0YaJ8Q7ENlLB72uRYrnpbd97CX2XRHzxPI/4GnIo/vI+Z+HguafLHXdqY7SXM5sV/NKoQkm6UGhqyQtnjg/q0+HLseVwNqkURVbpOpdSB+IYi/V70290RTjcszB2MUUidz537y8RSWzdf7k/qUAl0OZddpInUFUhGylUKgebpFyd/gbhTAVLyv8kTVAKa4BDtoMEbB6KfXt4fj5fHO+a9gVMP+zk8G5utbL1ahnZ+3tWXIfXnYMkSO17W4U825npF5yq8ZiB965xM1LagGtpNM0YVEooxWxTPb9vgqEkSe8Ho4KK16nIt0FPUggAAAA==" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Lithgow</span><span class="profil-pseudo">@lthgw</span></li><li class="profil"><img src="data:image/webp;base64,UklGRh4CAABXRUJQVlA4IBICAACwCgCdASowADAAPjkYh0MiIY1WAqoQAcJZwDADXvwZvom9joED0vyHswFAH3Vz9u07vtx/eR42rQABO8zkq4NIfh4/4gUsRmfPXnKAIHRYFOBiqAvaxL7sjzcpt14AAP7+zUTleIgN/vxqOmq1vgA2WM2++Xt/AaiJcij54rHyQ05+KTZbjbFbjFjPLKtjxO9RyBunOGDqU/zMFSbUpNrvJgEYRPg4adbwwPprU8RXqgFDaIg+Var/z3uDlhuWd5DVvWJdC1tDdncqugtow5BDGIlDv5tcfR0VVh/fN13T+hH+arImMrfOtkbQQ5DZWn68Fs9wCdsCD8CfdPe9a2Svf7vWKls5jHwocHJP/v/pIQk3eZn0+3YmvHPyzXNp1xpcH/gIiWkopr84rDtWCGgnle6IyoTs4qT7QRZKbwxa3B5W2tro/flXTxaWu+8KwPanBOYrD2TdHkOWr5awnKt8vWqL5YCiAl2XKaN2sy09NLnCq7XdFRo5E2YEE5qaaGdgh7C0AYkRiGUlSb5dA0D4EGpGLgble4/kLTE3Jyz3vqS7h9Bq2qddMAtkeiq4N2kVH8UBjvTujBx5s0mUqaF83QLVTMvZahddHYBewuHUc/VAUITQDZzf+v3//dPwrcK2Cu1+DYDuye37mvSwHw/rPH7d15q7sBcK2hfVvUiKDdW3e+aahH/7/ln9cOb5UEAAAA==" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Mvrius</span><span class="profil-pseudo">@mvriuus</span></li><li class="profil"><img src="data:image/webp;base64,UklGRuwBAABXRUJQVlA4IOABAABQCwCdASowADAAPjkWiEMiISEarAaoIAOEoAyI8jYRLsA3m19tVEcAMy9XqnTn/DZ4LpFuX7Pu5bgxOkIEKX1VGX7PW9VOR5O04nf6KWEjOGSsW1Dd+R+3PBypIZsn6pw2JpgA/v/fSggSbyKFCjgz4Iov0Yc0n1nxaa1pdKs7ckoYQxEvA3N4wR2rJT92DuGtobVMr2hzzlxYgRTHfr3bTwb9vwRzqJt/bjbvY2bhZe6FtqsF0VQm577dP4IiL1bhKr54NZJ/6+OLL4HLbdK/bmDT9uP37WX9ArrE/S45G/5wy+d7q5vhA2Afd05vDbeJqDryxwTSxBumrqcpfkGXc+dfmU68G4p+Kv1hcftwGrEhV6JlQRBFAg5VEPwuXsXAebcWgzai08OyAcGmSB4aHvyhMirPEkf4EjD5jkP0DonPhT6x551AVOqo/SNYSoy9/aR0pFLcwQbYGxaccTS/Z+8t9ZzI1UxEKXoZauQW494/dEbSBlVnhMBTgyC6qc745PPCGsjqUS7H5Qx9D8tBM0e2dodeH7HBoW3otZZyHlaPkUSnZ6UJHsZoH3RaY/KZ1nTjkVcNefzsVrWZUDS6qLx56/WmSlQitwsccjgT7lCRkWJ7LdkTN3pYHRNAAAA=" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Ninoo</span><span class="profil-pseudo">@ninoo_</span></li></ul></article></div></li>
+        <li class="badge badge-rouge"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Direction</p><h3>Gérants</h3><p class="badge-desc">Ils tiennent la maison et prennent les grandes décisions pour le serveur.</p><ul class="profils" aria-label="Gérants"><li class="profil"><img src="data:image/webp;base64,UklGRuwBAABXRUJQVlA4IOABAABQCwCdASowADAAPjkWiEMiISEarAaoIAOEoAyI8jYRLsA3m19tVEcAMy9XqnTn/DZ4LpFuX7Pu5bgxOkIEKX1VGX7PW9VOR5O04nf6KWEjOGSsW1Dd+R+3PBypIZsn6pw2JpgA/v/fSggSbyKFCjgz4Iov0Yc0n1nxaa1pdKs7ckoYQxEvA3N4wR2rJT92DuGtobVMr2hzzlxYgRTHfr3bTwb9vwRzqJt/bjbvY2bhZe6FtqsF0VQm577dP4IiL1bhKr54NZJ/6+OLL4HLbdK/bmDT9uP37WX9ArrE/S45G/5wy+d7q5vhA2Afd05vDbeJqDryxwTSxBumrqcpfkGXc+dfmU68G4p+Kv1hcftwGrEhV6JlQRBFAg5VEPwuXsXAebcWgzai08OyAcGmSB4aHvyhMirPEkf4EjD5jkP0DonPhT6x551AVOqo/SNYSoy9/aR0pFLcwQbYGxaccTS/Z+8t9ZzI1UxEKXoZauQW494/dEbSBlVnhMBTgyC6qc745PPCGsjqUS7H5Qx9D8tBM0e2dodeH7HBoW3otZZyHlaPkUSnZ6UJHsZoH3RaY/KZ1nTjkVcNefzsVrWZUDS6qLx56/WmSlQitwsccjgT7lCRkWJ7LdkTN3pYHRNAAAA=" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Ninoo</span><span class="profil-pseudo">@ninoo_</span></li><li class="profil"><img src="data:image/webp;base64,UklGRh4CAABXRUJQVlA4IBICAACwCgCdASowADAAPjkYh0MiIY1WAqoQAcJZwDADXvwZvom9joED0vyHswFAH3Vz9u07vtx/eR42rQABO8zkq4NIfh4/4gUsRmfPXnKAIHRYFOBiqAvaxL7sjzcpt14AAP7+zUTleIgN/vxqOmq1vgA2WM2++Xt/AaiJcij54rHyQ05+KTZbjbFbjFjPLKtjxO9RyBunOGDqU/zMFSbUpNrvJgEYRPg4adbwwPprU8RXqgFDaIg+Var/z3uDlhuWd5DVvWJdC1tDdncqugtow5BDGIlDv5tcfR0VVh/fN13T+hH+arImMrfOtkbQQ5DZWn68Fs9wCdsCD8CfdPe9a2Svf7vWKls5jHwocHJP/v/pIQk3eZn0+3YmvHPyzXNp1xpcH/gIiWkopr84rDtWCGgnle6IyoTs4qT7QRZKbwxa3B5W2tro/flXTxaWu+8KwPanBOYrD2TdHkOWr5awnKt8vWqL5YCiAl2XKaN2sy09NLnCq7XdFRo5E2YEE5qaaGdgh7C0AYkRiGUlSb5dA0D4EGpGLgble4/kLTE3Jyz3vqS7h9Bq2qddMAtkeiq4N2kVH8UBjvTujBx5s0mUqaF83QLVTMvZahddHYBewuHUc/VAUITQDZzf+v3//dPwrcK2Cu1+DYDuye37mvSwHw/rPH7d15q7sBcK2hfVvUiKDdW3e+aahH/7/ln9cOb5UEAAAA==" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Mvrius</span><span class="profil-pseudo">@mvriuus</span></li><li class="profil"><img src="data:image/webp;base64,UklGRsIDAABXRUJQVlA4ILYDAAAQEgCdASowADAAPj0cjESiIaETnASQIAPEsQBWGXsIU0ugj/a4BW37z27rRPQd/YD02/Y6/bb9saMvyS+YfZvigPHfbD9Fw17Vn+Y3yrLltRmj+XX6n87lF4A3zThW6n2bewg7pShi9bH7uWqf5tAZuw9uQNwmZ2+v3El7/fDWGg6JmIGDSxNJeZSFlhtxg1D8XDYQ0hCuZugA/v+5pIFPknXcZomkofeU6cyupUHu3wp4HwO4DSq+vWKnGd1GZeJustIRQtnd/+7ZDa1LSSrLAqoaE+lau337Z/0t4Asj70kk/8lupNCBQZ/M42h8le5lwG8Yf//h5/soHfExaOjsHf/YKzRhH9VE5glh8Bok3uUznsgAKX4zpxn75g02ysXmdN+qrJ28JnL3J9Vw2wivx8uTmHZO7j/6pK9Hk+9OBYcpXIfswxjduBd/a5uq2rlzuCra72PARoOL+3RgUxZiI5Ks7riGWyPzktaXC6gzvDtj+6JrAKx1o/iVDV83uU2yKzEvgDcZtSotEcQc/rS+MHrAVJU0LNiEm6WWrV6sayFFc14hmMwYZmA7K8DZUflsCXc7q4hK7dTsYLBUw7RpLxmfbVPizv8jhn+bPaRDNcBZifgqpAgz1uw3am7i7Fy1/RvfE+aBz+tA4IkushxpEhmcqdnqP+HZx1z3GsGKy3O1G+V5T7Hkn5/Gc2U0YDafkv2Xj/l8ubr02dzw4axa73E8DPYZ3/jFqJ3jZ3x1bRodDhJFuRHSKslQqbE0aapBOz11BKO84/q0D3KVtIXQDA1KWUYdJdLHoTkOS4e2kqNPT1dbmqS6HcZ3OwvlaExhyv4ngVvv/I8X0R+UJF3mYZubg21c5n+OwuHgvKSbGZ7S9SZNpe2VdO1+z1k28lAv8A/Rz48g38rM4zRcIE+hezCUP2Zw7NTAMHFqBfacSyH9WWVxw4m0YaJ8Q7ENlLB72uRYrnpbd97CX2XRHzxPI/4GnIo/vI+Z+HguafLHXdqY7SXM5sV/NKoQkm6UGhqyQtnjg/q0+HLseVwNqkURVbpOpdSB+IYi/V70290RTjcszB2MUUidz537y8RSWzdf7k/qUAl0OZddpInUFUhGylUKgebpFyd/gbhTAVLyv8kTVAKa4BDtoMEbB6KfXt4fj5fHO+a9gVMP+zk8G5utbL1ahnZ+3tWXIfXnYMkSO17W4U825npF5yq8ZiB965xM1LagGtpNM0YVEooxWxTPb9vgqEkSe8Ho4KK16nIt0FPUggAAAA==" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Lithgow</span><span class="profil-pseudo">@lthgw</span></li></ul></article></div></li>
         <li class="badge badge-bleu"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Administration</p><h3>Administrateurs</h3><p class="badge-desc">Ils gèrent le serveur au quotidien : salons, rôles, bots et sécurité.</p><ul class="profils" aria-label="Administrateurs"><li class="profil"><img src="data:image/webp;base64,UklGRkgCAABXRUJQVlA4IDwCAABwDACdASowADAAPj0YiUMiIaEaqqwAIAPEtIAJxR4K+Kr2hHJIz8Nu9OU/EjXTzSleFwh/pneYmkUfFHG8T0f68IwlkHdYgw/DP9pmWrvXEB4JIJH6jXQPFANW1ywqj1bS6dDH7+JQHL2KlAAA/v/+BTpecwC2Tcfm+nnbHjqSWQSHSDGgIeTh1XhqZ1fXWPm0kAdjJSjJ4wL2a7c52R3OfX4cXpc+ZHYQnDFN4k8pU52LXjul3rafF0Md9neghPS3iTA5Z+tyyi3SHi8ow64fTtz9pQVrtJpi+fw0/OwK3MKi3+BKVN/a1ZDFIuLq3WbUMIlnbbEbesqaiXITHKZJFNWoz6t+TVTvOEcHh9eZhD9f9BADg59WMylxEoOThpVUbjO/54D50Zcafzh0Obq2l3mjigXP99Fv1u8zBEMz4PQnuPSINa9a0JVsF5s+Q5PlNQzJu8Y/+rurlo7/XDmXHTqiFlFlF6z+x9mUhH4fhjLyCwi1dJLUk7PP+4bXQopUOidDdLsOb8Yl9fXwav58O5EwM7Azb/X5Vc1P799QMhydQoPYyuBxJf/kDsbn6WmXbo8LqgIAQL2lAQ/mlXUXuQPOWLHSHjN0SGIvq7Qrxb/OkFN0uo+HCRuCuTBlXomx76KrNuYxktqaaqAFD6kgkcxRmdYuKQOTvjtv1kxaDtpdF5g+L1cff7/+h9DyBsvw37Ba6AtDaOqbSb4dnDYIdWx33dHq9Mpc5remprWy6JxpNdpw7UH6o8BwAA==" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Cyrnaxx.</span><span class="profil-pseudo">@cyrnaxx</span></li><li class="profil"><img src="data:image/webp;base64,UklGRh4EAABXRUJQVlA4IBIEAACwFACdASowADAAPj0WikMiISEXGgcwIAPEtgBOmXs7D8t/Df8jPkEob8p+9/5DZaLyX/rfuj7QHmAfpL0ovMR+ynrD+if0AP7f/nesM9ADyv/ZG/a/0pLvL+l+Dfji8peFHIBZDfi+EHai/ym+3wI0ncz/zEJRVbNUvpspF0F2CcGqbaBIsoJDDTRerNr8YBznIL/dbIEI79I8VlIyEaIceJe54oC6Ya/wRuUmAMAA/v72RzlKZsKVxNz3U3LeWSkZG4PnFdveaHvnwj+zLfb+K/kVsbxcA5yfmaxGTvjlF/RdkWjbT+zqE0Lhk8+sb+n/HrzkCUCOtR+kGbImOIfvj4LkfwvbMuCIVeXXiN8GNjfVlXKDwXIJZXhxMveio7QvwkWxn/G3/vorvEn05hzq9FsJDtnXmW2yhqcPJv8i1xZhZcVd6SpXoCPMguTPiZMGx/jF0klPRTv6a9Z2lK8JpYRvx7OXVs9NMMf+Kn3ghuvvH82sTDFJu9xIS6DexqQC19pQca2hShtynDTg+YcBteuz+/YIsIT/pB9LTotdX+DMtCs2tpijAWwGnnXxDz1l9KDCEBXR3oEWB64TIgCXCXwme4iNR+LxZTYTmSmtOTvIn6ReqchPD3vSVzCnY25KFq5p526F8pRShAqklefYD6pPD+R0uxQz4NT114wfzbh7Ui2VCmJ9YjstGRG0bWsHJJ6tWTwTWq5Ew8iKGOG+p3lLkWL4UL5D9BX8mkpZ8WRUvi+hgQd98PqgiuiWi26+GjpmxH//9Vvupf4e01w2HbygM8hKoHuJz5uiq7/tLScc+sb9GrNBN0u9Y5hgObAp/vlxCvmSYFKcg9SHhnVN8T+eqP/pPN//Us6Eiplnj8HP9v2CXi0yCQxdeuHbWJiUIImNvglYGQsojz5+4ptD6yfXlPlst37iW8Qf7/fZpmDo4ksD/Y4of7A3+gdu/jsRrXZh2BDirlMARMplQVfRvr19gTCORuccrZ7jm399jDGrXMXLJQu+YZrAcbzHCC2NsRYDu3UPn5B1V7mlnh3l4qobNaSakKke1N7gXutSbllrf3aKqo0L5AUSiNPFrHCNRWWLn8B49TFjRLOqmI0QBHq67py8+XJS+oEO9lYDYgJCHwqE8rEeAS+5GYtjSsCNX+1x2Rjb/pDrHKo9Yy3lW5vBfPJPMUYZKKFkYYOMH+Se9Mw6dg78exzTGMIeqj9aj3+J4f4OArnc9rP7FCE9sf44ULHX4r/jkI2UUCKJSnR1MjNDyq+A3yBsl7agtYgbUC8O74o++JQCdZK5YustXduM7nPxdd5s8Plb66cM+WOQcbRGiN14qXM07DyYjvjFCxCbuI33A4n8znjYPVErirSlVE3scBzvHwdw2MC4AAAA" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Rodenzo</span><span class="profil-pseudo">@rodenzo</span></li></ul></article></div></li>
         <li class="badge badge-creme"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Encadrement</p><h3>Responsables</h3><p class="badge-desc">Ils encadrent l'équipe et veillent à la bonne ambiance du café.</p><ul class="profils" aria-label="Responsables"><li class="profil"><img src="data:image/webp;base64,UklGRqACAABXRUJQVlA4IJQCAADwDgCdASowADAAPj0YiUMiIaEXHf2YIAPEtQBOmWEhZkCVt/D/fDehSj13fVhtn/Md0RfJg6xr0T+ld/cOhU8vPqyR5SnwBHVtan+yfu+t8jxkAhyWxS3NY421ssxknjnbuY2ZiCgkNj57LkQHFrCDjApKHvwifW7YfdYqndzQAAD+//4FKy3K4oLNJl6XyIoHAePt1E+CkoNarzram9JSXJcxsDhN8waqcFwScOcrldhOKObQctZY0eSGH6MdnUbyvUFngfe2KsvPTst9PuzzfVY9YlemSRdNLe6Kedl6B6doEVhDC+xvmX/hlH/L7WjsiLKiflAHUEgVM6aOLv1rqsCjzyNU/wymXTuf+bTTDe8BrP1GeAKt8UmYtR37puvO5ue8GmkXiVfuusMpsLjMYFJDzjcVW0sZfA0T8PwTX7muWEU7UaCY49YhBO4pp38iE7UZ95LdlgVWfpzShJ5sLpPX6ryOXJ1yXLBd1PUaITJyzMzK1RbTYaYKCquyGiknSHHV/n1/3F8UpU+bvLg33wp599hMzY2t7P1hgIu9UUcJat1EYAgQy64uuP7ZRVsHRT/m1CgxmM3RnRtaQMHm4YG4xkUfia0tbM+Wd4DKRzOIPtrb4SwwlY/cXtPMySK4AAMMAifEB6Mbj61A6nIIzILhQ0hu+tMnndJpYFJ8FTNA+UTaUBxA0I1iqKBz0v6k15WDJOURX16GYuDFiSOhYaU6QUTtJyshEH//aee2yHkCv8jwLCGNL/4/4n+zVklYaqMPvBY2ypvnWqagPMiDV0vpnSAPLzMtwYiez/TV+06WikjVD826puFEqtbOSEWH9Kwf+B2NkEfipgl0/CwnBCJb8UoA1m2R6MiPQi3vUYt6QAA=" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">dsb</span><span class="profil-pseudo">@boruto.</span></li><li class="profil"><img src="data:image/webp;base64,UklGRiwCAABXRUJQVlA4ICACAABQDACdASowADAAPjkWiEMiISEca24AIAOEtIBi58A+9vrpx7G0O4/5Id9MpQSBe5/AgsWJ8mY8sAtHUAYaRHMGb/abxk0TsS2lVNLopznkSW3MldSNc9gCNqOsTnuVBVR4p/B14Pen4iJugAD+/s1BTxvO7hBvbzEH+B3i707HDiA6HkJf5Epuf+/wNwGB+rXrZpdE/hqscWchUnD03p5oSt/ALX9kekUJJ+1ZreL3kngJeYCIN/wrgSbJD2Ya/7P4AH8Hcf+Kj8Ht0ZLeQj+Gy6Rz2GaQqtxt/KcfvKrjVnGIihJJCpbHZV91s79/cqzBE9vbHScO0L+at9TrU9BBy0MZSuxyDMgjvfSwhIgDk9CCz0qwGd9mIyw6W6QuwVt3IJorV+hwgubSbcO88xA+yFlEU4kiJSjYIjhNHRPMFrE50c6VxRp3mo/DGxgNRGRzsCD4me9rHrJH1vbOm/bP3JgWduYEVXhHXq/VV2PGU7GO4kxJiE5h74Wl5YFpM3FJGVE13jz4poMRduVt8TmoX5mrQ89MP2RLUcOeRxZQjTDs0nM4mZ19/mFRP6SoWcCM4kiFxNGaPd+//HzNihhscMfvmPiBVKgAfz5Wi9J/PLFOz88ZIIvW0UJne2rBIOvNfjAWgO8kX3IpEkqcsXQ550VH6XUlUl4zTUAcGZF+LX+RMfmLFn2pP3EGTNd9nMUz/ALKMsKPyB9vT3j7gAAA" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Lucas</span><span class="profil-pseudo">@_lzcs</span></li><li class="profil"><img src="data:image/webp;base64,UklGRjYDAABXRUJQVlA4ICoDAAAQEACdASowADAAPj0cikMiIaEXHfzMIAPEtABOmWEbR9g8wSlv1/bfCuQpttXzyWmq7zxXTf3Dwb8C/qON2cH9E31HEDtP/4ysKVhHhBp2xeu/a+XMKvc7zuFU/CXCEOHldITu7eNHdPc1ULW3RG+cV45OXVQpuS4GwXynWmnK8PkIQKpqsI5rAAD+//4E9ioARzQXu0sHYOpva65I2fjRF9fDv9zVGn5d2OmaBmEC7TnPNXyjUv7r3KWKr+R0uUEDUNVGFuuZp+YSntNFuOte4TOwFo5I4eX1ryZ2Tkk3Bt7SIUHYJIffIXwmTmslyNDMVj5IZeHRGKh4KWv1Dl88HWt6hqDfRZvM/ar6tdrrqsshYYZwc/XfAOHRy+BcIb+IjGVstqWbs43KrE/yhPACNLbp1QEGk8XrmipmycvWPH5LasOlDpttnvJ6y1dpbA7dmntf4HhhMypMo7yL+l/C7Qukfi4W9kOjjJ0nmTji9Uxg1/GEdey4NB7A8jJ+5qnDxhkwWZO/kJH/sKE7Po72IAEEe+HTiHiza8MgXb/pORdNSFcVCbx5F8Hhu5WKP2O90zubaj9TMSA6c9OVLkvkcDYCHP5lHKAQPBuFI9vclCIQWhDd2eXfjD2ggF/VU+IbNXmIHQwo0hVhAv2673EPzzZYBWGfTSZ9V2NpId/Y9QeeHcd4ivTg3bjmquI+HHtFdVTIyYMzMRozVV+T+rHw1H6Sa24C6ynDHLy1VbdsUz1QV1udYGf7EYdQvTe5OY+ngAWmX+T1wzL1Q1+DaokIWMbEf0XfnC7ZeK1o3TiSWA9nopdrSzlFhF3dabf6rpSpqdZxfyzGJFPQ0NGibcjiYhHca+4R8GEJGc3ziJhUc7wVPHz6i7TqXWflFa35ZRY+qi21kTz6WKprQOIGc4yzPH5lQrhG1NEPnzNZe9R6ZijOf48bXL+MV+ga6vOeto4J1Cl3P8ihn29fNKSY3U9lX3QUkQ5Cju+NlE9Mb77zImXXiIrhPzuhrItUPhXYv+xPf7xxnRZ74e7qe8VI7DmlAu12frKAvwzVo0zgK6itNofLQ9q5BzowwAA=" alt="" width="42" height="42" loading="lazy"><span class="profil-nom">Moon</span><span class="profil-pseudo">@moon1pact</span></li></ul></article></div></li>
         <li class="badge badge-reste"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Et tous les autres</p><h3>Le reste de l'équipe</h3><p class="badge-desc">Le reste de l'équipe se trouve sur le Discord. Viens les rencontrer.</p><a class="lien-fleche" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre le Discord<svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article></div></li>
@@ -1199,7 +1297,8 @@ main, .pied { position: relative; z-index: 1; }
   /* ---------- Grains : calculateur et pluie de grains ---------- */
   (function grains() {
     const calc = $('#calcul');
-    const duree = $('#duree'), dureeAff = $('#duree-aff'), total = $('#total-grains'), couleurs = $('#couleurs-temps');
+    const duree = $('#duree'), dureeAff = $('#duree-aff'), total = $('#total-grains');
+    const articles = $$('.article'), bonusAff = $('#boutique-bonus');
     const pluie = $('.grains-pluie'), pc = pluie.getContext('2d');
     const css = getComputedStyle(racine);
     const teinte = css.getPropertyValue('--grain').trim() || '#8a5a34';
@@ -1247,7 +1346,8 @@ main, .pied { position: relative; z-index: 1; }
       const min = +duree.value;
       const val = Math.floor(min / 10) * 5000 * mult;
       dureeAff.textContent = formatDuree(min);
-      couleurs.textContent = formatDuree(Math.ceil(350000 / (5000 * mult)) * 10);
+      bonusAff.textContent = '×' + String(mult).replace('.', ',');
+      for (const a of articles) $('.a-duree', a).textContent = formatDuree(Math.ceil(+a.dataset.prix / (5000 * mult)) * 10);
       if (verse && val > affiche) verser(Math.min(90, 10 + Math.round((val - affiche) / 2500)));
       affiche = val;
       if (anime && verse) {
@@ -1519,6 +1619,16 @@ main, .pied { position: relative; z-index: 1; }
   g.from('.quete', { y: 40, opacity: .25, duration: .8, stagger: .07, ease: 'power3.out', scrollTrigger: { trigger: '.quetes', start: 'top 85%', once: true } });
   g.from('.marche', { scaleY: .2, duration: 1, stagger: .12, ease: 'elastic.out(1, .6)', scrollTrigger: { trigger: '.podium', start: 'top 90%', once: true } });
   g.from('.b-citrouilles i', { scale: .3, duration: .5, stagger: .025, ease: 'back.out(3)', scrollTrigger: { trigger: '.bareme', start: 'top 85%', once: true } });
+
+  /* ---------- Grains : cartes de gains et prix qui défilent ---------- */
+  g.from('.gain', { y: 40, opacity: .25, duration: .8, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '.gains', start: 'top 85%', once: true } });
+  $$('.article').forEach((a) => {
+    const b = $('.a-prix b', a), prix = +a.dataset.prix, o = { v: 0 };
+    g.from(a, { y: 30, opacity: .25, duration: .8, ease: 'power3.out', scrollTrigger: { trigger: a, start: 'top 92%', once: true } });
+    ST.create({ trigger: a, start: 'top 92%', once: true, onEnter: () => {
+      g.to(o, { v: prix, duration: 1.4, ease: 'power3.out', onUpdate: () => { b.textContent = nf.format(Math.round(o.v)); } });
+    } });
+  });
 
   /* ---------- Niveaux : on grimpe les paliers en descendant ---------- */
   const echelle = $('.echelle');

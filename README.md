@@ -11,7 +11,8 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - La visite des salles en défilement horizontal bleu, blanc, rouge : le comptoir (Café Français), la terrasse (Centre de Convivialité) et l'arrière-salle (Divertissements), avec la description de chaque salon.
 - Le système de niveaux : un compteur grimpe de palier en palier, de @Curieux (niveau 2) à @Légende (niveau 100), et affiche les avantages débloqués (couleurs de pseudo, bonus de grains, virements).
 - L'événement Halloween 2026 : compte à rebours en direct jusqu'à la prochaine quête, calendrier des 7 quêtes, barème des citrouilles, récompenses et rôles à gagner.
-- Les salons vocaux, puis le calculateur de grains (5 000 grains toutes les 10 minutes, avec les bonus de rôle).
+- Les grains : toutes les façons d'en gagner (vocal, /journalier, /hebdomadaire, casino, /voler), un calculateur de gains en vocal et la boutique, avec le temps de vocal nécessaire pour chaque article.
+- Les salons vocaux et leurs limites de places.
 - L'équipe, présentée sur des badges suspendus avec les profils de chacun : Gérants, Administrateurs, Responsables, et le reste de l'équipe sur le Discord.
 - Trois étapes pour rejoindre le serveur, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
 
@@ -41,4 +42,5 @@ Tout se modifie dans `index.html` :
 - **Équipe** : chaque profil est une ligne `<li class="profil">` dans la liste du badge (`<ul class="profils">`). Pour ajouter quelqu'un, copie une ligne et change le nom, le pseudo et l'image (`src`, une adresse d'image ou une image intégrée).
 - **Quêtes d'Halloween** : chaque quête est une ligne `<li class="quete">`. Sa date d'ouverture est dans `data-ouverture` (heure de Paris). Quand une quête est révélée, remplace `???` par son titre.
 - **Niveaux et grains** : les paliers sont les lignes `<li class="palier">`, leurs avantages sont dans `<ul class="p-avantages">`. Les bonus de grains du calculateur sont dans le formulaire `#calcul`.
+- **Boutique** : chaque article est une ligne `<li class="article">`. Son prix est à la fois dans `data-prix` (sans espaces, il sert au calcul du temps de vocal) et dans le texte affiché.
 - **Après Halloween** : supprime la section `<section class="halloween">` et le lien « Halloween » de la barre de navigation.
