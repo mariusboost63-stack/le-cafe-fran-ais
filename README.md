@@ -81,10 +81,10 @@ Tout se modifie dans `index.html` :
 - **Salons et emojis** : chaque salon est une ligne `<li class="salon">`. Les emojis actuels sont ceux de la saison d'Halloween.
 - **Salons vocaux** : chaque ligne `<li class="vocal">` porte le nom exact du salon dans `data-vocal` (il sert à retrouver le salon dans le widget) et sa limite de places dans `data-max`.
 - **Équipe** : chaque profil est une ligne `<li class="profil">` dans la liste du badge (`<ul class="profils">`). Pour ajouter quelqu'un, copie une ligne et change le nom, le pseudo et l'image (`src`, une adresse d'image ou une image intégrée).
-- **Quêtes d'Halloween** : chaque quête est une ligne `<li class="quete">`. Sa date d'ouverture est dans `data-ouverture` (heure de Paris). Jusqu'à cette heure, la carte affiche `???` ; à l'ouverture, la page affiche toute seule l'emoji, le nom et la consigne de la quête, même si le visiteur est déjà sur le site. Ces textes sont rangés, encodés, dans `data-q` pour ne pas être lisibles dans le code de la page. Pour en changer un, ouvre la console du navigateur sur le site et tape :
+- **Quêtes d'Halloween** : chaque quête est une ligne `<li class="quete">`. Sa date d'ouverture est dans `data-ouverture` (heure de Paris). Jusqu'à cette heure, la carte affiche `???` ; à l'ouverture, la page affiche toute seule le nom et la consigne de la quête, même si le visiteur est déjà sur le site. Ces textes sont rangés, encodés, dans `data-q` pour ne pas être lisibles dans le code de la page. Pour en changer un, ouvre la console du navigateur sur le site et tape :
 
   ```js
-  btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify({ nom: "Mots croisés", emoji: "✏️", consigne: "Remplis la grille de **mots croisés**." }))))
+  btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify({ nom: "Mots croisés", consigne: "Remplis la grille de **mots croisés**." }))))
   ```
 
   puis colle le résultat dans `data-q`. Les mots entre `**` s'affichent en gras.
