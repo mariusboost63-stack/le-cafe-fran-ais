@@ -352,8 +352,9 @@ main, .pied { position: relative; z-index: 1; }
 .halloween { --p-carte: color-mix(in srgb, var(--citrouille) 9%, var(--nuit)); --p-texte: var(--lait); --p-doux: color-mix(in srgb, var(--citrouille) 55%, var(--lait)); --p-survol: color-mix(in srgb, var(--citrouille) 12%, transparent);
   position: relative; overflow: hidden; padding-block: clamp(96px, 13vw, 170px); }
 .lueur {
-  position: absolute; left: 30%; right: -20%; bottom: -45%; height: 110%; z-index: -1;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--citrouille) 32%, transparent), transparent);
+  position: absolute; left: 20%; right: -10%; bottom: 0; height: 70%; z-index: -1; pointer-events: none;
+  /* le dégradé s'éteint avant les bords de la boîte : aucune coupure en bas de section ni sur les côtés */
+  background: radial-gradient(45% 40% at 60% 60%, color-mix(in srgb, var(--citrouille) 32%, transparent), transparent);
   animation: flamme 5s linear infinite;
 }
 @keyframes flamme {
@@ -559,7 +560,7 @@ main, .pied { position: relative; z-index: 1; }
 .quetes-tete p, .bareme-tete p { color: var(--brume); max-width: 56ch; }
 .quetes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
 .quete {
-  display: grid; grid-template-areas: "l" "t" "d" "e"; gap: 8px; align-content: start; justify-items: start;
+  display: grid; grid-template-areas: "l" "t" "c" "d" "e"; gap: 8px; align-content: start; justify-items: start;
   padding: 18px 14px 16px; border-radius: 16px; min-width: 0;
   background: color-mix(in srgb, var(--lait) 3%, transparent); border: 1px solid var(--trait);
 }
@@ -567,6 +568,11 @@ main, .pied { position: relative; z-index: 1; }
 .q-lanterne b { font: 800 22px/1 var(--f-titre); }
 .q-lanterne svg { position: absolute; right: -7px; bottom: -5px; width: 24px; height: 24px; padding: 3px; border-radius: 50%; background: var(--nuit); color: var(--brume); }
 .q-titre { grid-area: t; font: 700 17px/1.2 var(--f-titre); overflow-wrap: anywhere; }
+.q-emoji { margin-right: .25em; font-weight: 400; }
+.q-consigne { grid-area: c; font-size: 13px; line-height: 1.45; color: var(--brume); }
+.q-consigne b { color: var(--lait); font-weight: 600; }
+.quete.revelee .q-titre { animation: revele .7s ease-out both; }
+@keyframes revele { from { opacity: 0; transform: translateY(6px); filter: blur(4px); } }
 .q-date { grid-area: d; font: 500 12px/1.35 var(--f-mono); color: var(--brume); }
 .q-etat { grid-area: e; font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 5px 8px; border-radius: 999px; border: 1px solid var(--trait); color: var(--brume); }
 .quete.ouverte { border-color: color-mix(in srgb, var(--citrouille) 55%, transparent); background: color-mix(in srgb, var(--citrouille) 10%, transparent); }
@@ -624,7 +630,7 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 860px) { .quetes-tete, .bareme { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 640px) {
   .quetes { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-  .quete { grid-template-areas: "l t e" "l d e"; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; column-gap: 14px; row-gap: 2px; padding: 12px 14px; }
+  .quete { grid-template-areas: "l t e" "l c e" "l d e"; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; column-gap: 14px; row-gap: 2px; padding: 12px 14px; }
   .q-etat { align-self: center; }
   .bareme-barres li { grid-template-columns: 92px minmax(0, 1fr) 28px; gap: 10px; }
   .b-citrouilles { gap: 5px; }
@@ -1365,13 +1371,13 @@ main, .pied { position: relative; z-index: 1; }
         <p>Au programme, 7 jeux&nbsp;: énigmes, rébus, mots mêlés, différences et d'autres épreuves. Ils se font dans l'ordre et l'équipe valide chacun avant de débloquer le suivant. Tu réponds par texte ou par image, avec le bouton «&nbsp;Mes quêtes&nbsp;» dans #halloween.</p>
       </div>
       <ol class="quetes">
-        <li class="quete ouverte" data-numero="1" data-ouverture="2026-10-17T00:00:00+02:00" data-jour="samedi 17 octobre"><span class="q-lanterne" aria-hidden="true"><b>1</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 1 : </span>Trouve les 7 différences</span><span class="q-date">sam. 17 oct.</span><span class="q-etat">Ouverte</span></li>
-        <li class="quete prochaine" data-numero="2" data-ouverture="2026-10-19T17:00:00+02:00" data-jour="lundi 19 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>2</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 2 : </span>Les mots croisés d'Halloween</span><span class="q-date">lun. 19 oct. · 17 h</span><span class="q-etat">Prochaine</span></li>
-        <li class="quete" data-numero="3" data-ouverture="2026-10-21T17:00:00+02:00" data-jour="mercredi 21 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>3</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 3 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">mer. 21 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
-        <li class="quete" data-numero="4" data-ouverture="2026-10-23T17:00:00+02:00" data-jour="vendredi 23 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>4</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 4 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">ven. 23 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
-        <li class="quete" data-numero="5" data-ouverture="2026-10-25T17:00:00+01:00" data-jour="dimanche 25 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>5</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 5 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">dim. 25 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
-        <li class="quete" data-numero="6" data-ouverture="2026-10-27T17:00:00+01:00" data-jour="mardi 27 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>6</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 6 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">mar. 27 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
-        <li class="quete" data-numero="7" data-ouverture="2026-10-29T17:00:00+01:00" data-jour="jeudi 29 octobre à 17 h"><span class="q-lanterne" aria-hidden="true"><b>7</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 7 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-date">jeu. 29 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="1" data-ouverture="2026-10-17T00:00:00+02:00" data-jour="samedi 17 octobre" data-q="eyJub20iOiAiVHJvdXZlIGxlcyA3IGRpZmbDqXJlbmNlcyIsICJlbW9qaSI6ICLwn5SNIiwgImNvbnNpZ25lIjogIkNvbXBhcmUgbGVzIGRldXggaW1hZ2VzIGV0IHRyb3V2ZSBsZXMgKio3IGRpZmbDqXJlbmNlcyoqLiJ9"><span class="q-lanterne" aria-hidden="true"><b>1</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 1 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-consigne" hidden></span><span class="q-date">sam. 17 oct.</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="2" data-ouverture="2026-10-19T17:00:00+02:00" data-jour="lundi 19 octobre à 17 h" data-q="eyJub20iOiAiTW90cyBjcm9pc8OpcyIsICJlbW9qaSI6ICLinI/vuI8iLCAiY29uc2lnbmUiOiAiUmVtcGxpcyBsYSBncmlsbGUgZGUgKiptb3RzIGNyb2lzw6lzKiouIn0="><span class="q-lanterne" aria-hidden="true"><b>2</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 2 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-consigne" hidden></span><span class="q-date">lun. 19 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="3" data-ouverture="2026-10-21T17:00:00+02:00" data-jour="mercredi 21 octobre à 17 h" data-q="eyJub20iOiAiRGV2aW5lIGxlcyBvYmpldHMiLCAiZW1vamkiOiAi8J+Vr++4jyIsICJjb25zaWduZSI6ICJSZXRyb3V2ZSBsZSBub20gZGVzICoqMTAgb2JqZXRzKiouIn0="><span class="q-lanterne" aria-hidden="true"><b>3</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 3 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-consigne" hidden></span><span class="q-date">mer. 21 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="4" data-ouverture="2026-10-23T17:00:00+02:00" data-jour="vendredi 23 octobre à 17 h" data-q="eyJub20iOiAiQ29tYmllbiB5IGVuIGEtdC1pbMKgPyIsICJlbW9qaSI6ICLwn5SiIiwgImNvbnNpZ25lIjogIkNvbXB0ZSBsZXMgKipmYW50w7RtZXMqKiwgbGVzICoqY2hhdXZlcy1zb3VyaXMqKiBldCBsZXMgKiphcmFpZ27DqWVzKiogY2FjaMOpcyBkYW5zIGwnaW1hZ2UuIn0="><span class="q-lanterne" aria-hidden="true"><b>4</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 4 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-consigne" hidden></span><span class="q-date">ven. 23 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="5" data-ouverture="2026-10-25T17:00:00+01:00" data-jour="dimanche 25 octobre à 17 h" data-q="eyJub20iOiAiUsOpYnVzIiwgImVtb2ppIjogIvCfp6kiLCAiY29uc2lnbmUiOiAiUsOpc291cyBsZXMgKio5IHLDqWJ1cyoqLiJ9"><span class="q-lanterne" aria-hidden="true"><b>5</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 5 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-consigne" hidden></span><span class="q-date">dim. 25 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="6" data-ouverture="2026-10-27T17:00:00+01:00" data-jour="mardi 27 octobre à 17 h" data-q="eyJub20iOiAiw4luaWdtZXMiLCAiZW1vamkiOiAi8J+miSIsICJjb25zaWduZSI6ICJSw6lzb3VzIGxlcyAqKjkgw6luaWdtZXMqKi4ifQ=="><span class="q-lanterne" aria-hidden="true"><b>6</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 6 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-consigne" hidden></span><span class="q-date">mar. 27 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
+        <li class="quete" data-numero="7" data-ouverture="2026-10-29T17:00:00+01:00" data-jour="jeudi 29 octobre à 17 h" data-q="eyJub20iOiAiTW90cyBtw6psw6lzIiwgImVtb2ppIjogIvCflKQiLCAiY29uc2lnbmUiOiAiUmV0cm91dmUgdG91cyBsZXMgbW90cyBjYWNow6lzIGRhbnMgbGEgZ3JpbGxlLiJ9"><span class="q-lanterne" aria-hidden="true"><b>7</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 7 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-consigne" hidden></span><span class="q-date">jeu. 29 oct. · 17 h</span><span class="q-etat">Verrouillée</span></li>
       </ol>
       <div class="bareme">
         <div class="bareme-tete">
@@ -1651,6 +1657,25 @@ main, .pied { position: relative; z-index: 1; }
     $('#j-moins').textContent = n > 1 ? `J-${n} avant le 31 octobre` : n === 1 ? 'Demain, le 31 octobre' : n === 0 ? "C'est ce soir" : 'Terminé pour cette année';
 
     const quetes = $$('.quete').map((li) => ({ li, t: Date.parse(li.dataset.ouverture), n: li.dataset.numero }));
+    // Titre et consigne de chaque quête : encodés dans data-q, affichés seulement à son ouverture
+    const lire = (code) => {
+      try { return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(code), (c) => c.charCodeAt(0)))); } catch (e) { return null; }
+    };
+    const el = (tag, cls, texte) => Object.assign(document.createElement(tag), { className: cls, textContent: texte });
+    function reveler(q, anime) {
+      const d = lire(q.li.dataset.q || '');
+      if (!d) return;
+      const emoji = el('span', 'q-emoji', d.emoji);
+      emoji.setAttribute('aria-hidden', 'true');
+      $('.q-titre', q.li).replaceChildren(el('span', 'sr', `Quête ${q.n} : `), emoji, d.nom);
+      // **texte** de la consigne mis en gras
+      const consigne = $('.q-consigne', q.li);
+      consigne.replaceChildren(...d.consigne.split(/\*\*(.+?)\*\*/).map((part, i) => (i % 2 ? el('b', '', part) : part)));
+      consigne.hidden = false;
+      q.li.classList.toggle('revelee', anime);
+      q.revelee = true;
+    }
+    let premierPassage = true;
     const label = $('#rb-label'), temps = $('#rb-temps'), date = $('#rb-date');
     const u = { j: $('[data-u="j"]', temps), h: $('[data-u="h"]', temps), m: $('[data-u="m"]', temps), s: $('[data-u="s"]', temps) };
     const deux = (v) => String(v).padStart(2, '0');
@@ -1664,6 +1689,7 @@ main, .pied { position: relative; z-index: 1; }
         if (estProchaine) prochaine = q;
         q.li.classList.toggle('ouverte', ouverte);
         q.li.classList.toggle('prochaine', estProchaine);
+        if (ouverte && !q.revelee) reveler(q, !premierPassage);
         $('.q-etat', q.li).textContent = ouverte ? 'Ouverte' : estProchaine ? 'Prochaine' : 'Verrouillée';
       }
       if (prochaine) {
@@ -1682,6 +1708,7 @@ main, .pied { position: relative; z-index: 1; }
       }
     }
     maj();
+    premierPassage = false;
     minuterie = setInterval(maj, 1000);
   })();
 
