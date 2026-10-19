@@ -1,0 +1,41 @@
+name: Nombre de membres
+
+# Chaque jour, relève le nombre de membres du serveur sur Discord et met à jour index.html et apercu.png
+# (voir outils/membres.js). Lancement à la main : onglet Actions → Nombre de membres → Run workflow.
+on:
+  schedule:
+    - cron: '17 4 * * *' # tous les jours vers 6 h, heure de Paris
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: membres
+
+jobs:
+  membres:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # L'image est dessinée avec le Google Chrome déjà installé sur la machine de GitHub
+      - name: Installer Playwright
+        run: npm install --no-save --no-package-lock playwright-core@1.56.1
+      - name: Relever le nombre de membres
+        run: node outils/membres.js
+      - name: Publier
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- index.html apercu.png; then echo "Déjà à jour"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html apercu.png
+          git commit -m "Nombre de membres mis à jour"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" > /dev/null || true

@@ -9,7 +9,7 @@
 <meta property="og:site_name" content="Le Café Français">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:title" content="Le Café Français">
-<meta property="og:description" content="Serveur Discord communautaire francophone : discussions, jeux, salons vocaux et événements. Rejoins les 9 212 membres sur discord.gg/france.">
+<meta property="og:description" content="Serveur Discord communautaire francophone : discussions, jeux, salons vocaux et événements. Rejoins plus de 9 200 membres sur discord.gg/france.">
 <meta property="og:url" content="https://cafe-fr.com/">
 <meta property="og:image" content="https://cafe-fr.com/apercu.png">
 <meta property="og:image:width" content="1200">
@@ -1200,7 +1200,7 @@ main, .pied { position: relative; z-index: 1; }
       <a class="btn btn-ligne" href="#carte">Faire le tour</a>
     </div>
     <ul class="chiffres hero-revele">
-      <li><b id="nb-membres" data-valeur="9212">9&#8239;212</b><span>membres</span></li>
+      <li><b id="nb-membres" data-valeur="9251">9&#8239;251</b><span>membres</span></li>
       <li class="vivant" id="stat-ligne" hidden><b><span class="pastille" aria-hidden="true"></span><span id="en-ligne">0</span></b><span>en ligne</span></li>
       <li><b><span class="seulement-halloween">30</span><span class="seulement-normal">28</span></b><span>salons</span></li>
       <li><b>6</b><span>salons vocaux</span></li>
@@ -1661,7 +1661,7 @@ main, .pied { position: relative; z-index: 1; }
         <g class="v v3"><g class="ondule"><use href="#p-v3"/></g></g>
       </svg>
       <h2 class="h-final" id="t-final">Ton café est servi.</h2>
-      <p class="chapo"><span id="nb-final">9&#8239;212</span> membres t'attendent déjà au comptoir.</p>
+      <p class="chapo"><span id="nb-final">9&#8239;251</span> membres t'attendent déjà au comptoir.</p>
       <a class="btn btn-plein aimant" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre Le Café Français<svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
       <div class="invitation">
         <code id="lien-invitation">discord.gg/france</code>
@@ -1710,6 +1710,9 @@ main, .pied { position: relative; z-index: 1; }
   const anime = !reduit && !!g && !!ST;
   const nf = new Intl.NumberFormat('fr-FR');
   const WIDGET = 'https://discord.com/api/guilds/829698572927762432/widget.json';
+  const INVITATION = 'https://discord.com/api/v10/invites/france?with_counts=true';
+  // Nombre de membres : celui écrit dans la page (mis à jour chaque jour), remplacé par le nombre exact si Discord répond
+  let nbMembres = Number($('#nb-membres').dataset.valeur) || 0;
   let lancerIntro = () => {};
 
   /* Largeur utile, sans la barre de défilement */
@@ -1718,11 +1721,11 @@ main, .pied { position: relative; z-index: 1; }
   addEventListener('resize', majVw);
 
   /* ---------- Compteurs ---------- */
-  function compter(el, cible, duree = 1.6) {
+  function compter(el, cible, duree = 1.6, depuis = 0) {
     if (!el) return;
     if (!anime) { el.textContent = nf.format(cible); return; }
-    const o = { v: 0 };
-    g.to(o, { v: cible, duration: duree, ease: 'power3.out', onUpdate: () => { el.textContent = nf.format(Math.round(o.v)); } });
+    const o = { v: depuis };
+    el.compte = g.to(o, { v: cible, duration: duree, ease: 'power3.out', onUpdate: () => { el.textContent = nf.format(Math.round(o.v)); } });
   }
 
   /* ---------- Halloween : jours restants et quêtes ---------- */
@@ -2566,6 +2569,23 @@ main, .pied { position: relative; z-index: 1; }
       if (r.ok) appliquerWidget(await r.json());
     } catch (e) { /* hors ligne ou bloqué : on garde les valeurs fixes */ }
   })();
+  // Nombre exact de membres, demandé à Discord par l'invitation publique
+  (async () => {
+    try {
+      const ctrl = new AbortController();
+      setTimeout(() => ctrl.abort(), 7000);
+      const r = await fetch(INVITATION, { signal: ctrl.signal });
+      if (!r.ok) return;
+      const n = Number((await r.json()).approximate_member_count);
+      if (!Number.isInteger(n) || n < 1000 || n === nbMembres) return;
+      nbMembres = n;
+      const el = $('#nb-membres');
+      el.dataset.valeur = n;
+      if (el.compte && el.compte.isActive()) { el.compte.kill(); compter(el, n, .8, Number(el.textContent.replace(/\D/g, '')) || 0); }
+      else el.textContent = nf.format(n);
+      $('#nb-final').textContent = nf.format(n);
+    } catch (e) { /* hors ligne ou bloqué : on garde le nombre écrit dans la page */ }
+  })();
 
   /* ---------- Liens internes : défilement doux ---------- */
   document.addEventListener('click', (e) => {
@@ -2725,7 +2745,7 @@ main, .pied { position: relative; z-index: 1; }
   /* ---------- Sans GSAP ou en mouvement réduit : tout reste visible ---------- */
   if (!anime) {
     racine.classList.remove('intro');
-    compter($('#nb-membres'), 9212);
+    compter($('#nb-membres'), nbMembres);
     return;
   }
 
@@ -2745,8 +2765,8 @@ main, .pied { position: relative; z-index: 1; }
     .from('.hero .surtitre', { y: -16, opacity: 0, duration: .7 }, .2)
     .from(['.hero .accroche', '.hero .actions', '.hero .chiffres li'], { y: 26, opacity: 0, duration: .8, stagger: .08 }, .95);
   racine.classList.remove('intro');
-  lancerIntro = () => { intro.restart(); compter($('#nb-membres'), 9212, 2); };
-  if (!porteFermee) compter($('#nb-membres'), 9212, 2);
+  lancerIntro = () => { intro.restart(); compter($('#nb-membres'), nbMembres, 2); };
+  if (!porteFermee) compter($('#nb-membres'), nbMembres, 2);
 
   /* Le logo s'éloigne quand on quitte l'ouverture */
   g.to('.logo-scene', { yPercent: 22, scale: .88, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });

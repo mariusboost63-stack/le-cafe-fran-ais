@@ -34,6 +34,21 @@ https://discord.com/api/guilds/829698572927762432/widget.json
 
 Une fois le site en ligne, elle affiche le nombre de membres connectés, l'occupation de chaque salon vocal et les avatars des personnes en ligne. Le widget doit rester activé dans les paramètres du serveur (Paramètres du serveur → Widget). Si le widget ne répond pas, la page garde les valeurs écrites dans le HTML.
 
+Le nombre total de membres est demandé à Discord à chaque visite, par l'invitation publique :
+
+```
+https://discord.com/api/v10/invites/france?with_counts=true
+```
+
+## Nombre de membres à jour
+
+Chaque jour vers 6 h, GitHub Actions (`.github/workflows/membres.yml`) lance `outils/membres.js`, qui relève le nombre de membres sur Discord et met à jour :
+
+- dans `index.html`, le compteur de l'ouverture et la phrase de fin de page (nombre exact). Ils servent quand Discord ne répond pas au visiteur ;
+- la description du lien partagé et l'image `apercu.png`, arrondies à la centaine (« plus de 9 200 membres ») : elles restent justes même quand Discord garde un ancien aperçu en mémoire. L'image n'est redessinée que quand la centaine change.
+
+Pour lancer la mise à jour tout de suite : onglet **Actions** du dépôt → **Nombre de membres** → **Run workflow**. En local : `node outils/membres.js` (ou `node outils/membres.js 9300` pour un nombre précis, `--image` pour redessiner l'image), avec Playwright installé.
+
 ## Classement du mini-jeu
 
 Les scores sont enregistrés dans **Firebase Firestore** (Google, gratuit), projet `cafe-fr`. Chaque joueur reçoit une **identité anonyme** (Firebase Authentication), gardée sur son appareil : son score est rangé sous cette identité et personne d'autre ne peut le modifier.
@@ -155,7 +170,7 @@ Pour voir une version sans rien changer, ajoute `#saison-halloween` ou `#saison-
 
 ## Aperçu des liens partagés
 
-Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. Les balises `og:` et `canonical` en haut de `index.html` utilisent l'adresse `https://cafe-fr.com/`. Si le domaine change, remplace-la à ces endroits et dans le fichier `CNAME`.
+Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. L'image est dessinée par `outils/membres.js` (logo de la page, lettres du fond, nombre de membres) : pour changer sa mise en page, modifie ce script puis lance `node outils/membres.js --image`. Les balises `og:` et `canonical` en haut de `index.html` utilisent l'adresse `https://cafe-fr.com/`. Si le domaine change, remplace-la à ces endroits et dans le fichier `CNAME`.
 
 ## Mise en ligne : GitHub Pages et le domaine cafe-fr.com
 
@@ -181,7 +196,7 @@ Le domaine est chez Hostinger, le site est servi par GitHub Pages.
 
 Tout se modifie dans `index.html` :
 
-- **Nombre de membres** : cherche `9212` (il apparaît dans l'ouverture, dans `data-valeur` et dans le compteur JavaScript) et `9&#8239;212` (le texte affiché).
+- **Nombre de membres** : mis à jour tout seul chaque jour (voir « Nombre de membres à jour »), rien à modifier à la main.
 - **Salons et emojis** : chaque salon est une ligne `<li class="salon">`. Les emojis actuels sont ceux de la saison d'Halloween.
 - **Salons vocaux** : chaque ligne `<li class="vocal">` porte le nom exact du salon dans `data-vocal` (il sert à retrouver le salon dans le widget) et sa limite de places dans `data-max`.
 - **Équipe** : chaque profil est une ligne `<li class="profil">` dans la liste du badge (`<ul class="profils">`). Pour ajouter quelqu'un, copie une ligne et change le nom, le pseudo et l'image (`src`, une adresse d'image ou une image intégrée).
