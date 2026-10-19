@@ -522,13 +522,15 @@ main, .pied { position: relative; z-index: 1; }
 .echelle-bloc { position: relative; min-width: 0; }
 .cn-mini { display: none; }
 .echelle { position: relative; list-style: none; margin: 0; padding: 0 0 0 40px; display: grid; gap: 6px; }
-.echelle::before, .echelle::after { content: ""; position: absolute; left: 11px; top: 30px; bottom: 30px; width: 3px; border-radius: 3px; }
+/* La ligne (3 px, centrée à 12,5 px) va du premier au dernier point : positions calculées par le script */
+.echelle::before, .echelle::after { content: ""; position: absolute; left: 11px; top: var(--rail-haut, 30px); bottom: var(--rail-bas, 30px); width: 3px; border-radius: 3px; }
 .echelle::before { background: var(--trait); }
 .echelle::after { background: linear-gradient(var(--r-curieux), var(--r-novice), var(--r-maestro), var(--r-legende)); transform-origin: top; transform: scaleY(var(--p, 1)); }
-.palier { position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: baseline; gap: 4px 14px; padding: 16px 18px; border-radius: 14px; transition: background-color .35s; }
-.palier::before { content: ""; position: absolute; left: -34px; top: 50%; width: 13px; height: 13px; margin-top: -8px; border-radius: 50%; background: var(--role); border: 3px solid var(--role); transition: background-color .35s, border-color .35s, transform .35s; }
+.palier { --pad-y: 16px; --role-taille: clamp(24px, 2.6vw, 34px); position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: baseline; gap: 4px 14px; padding: var(--pad-y) 18px; border-radius: 14px; transition: background-color .35s; }
+/* Point de 15 px centré sur la ligne (40 px de retrait, 12,5 px) et en face du nom du rôle, même avec des avantages en dessous */
+.palier::before { content: ""; position: absolute; left: -35px; top: calc(var(--pad-y) + var(--role-taille) * 1.05 / 2); box-sizing: border-box; width: 15px; height: 15px; margin-top: -7.5px; border-radius: 50%; background: var(--role); border: 3px solid var(--role); transition: background-color .35s, border-color .35s, transform .35s; }
 .p-niv { font: 500 13px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brume); }
-.p-role { font: 800 clamp(24px, 2.6vw, 34px)/1.05 var(--f-titre); letter-spacing: -.02em; color: color-mix(in srgb, var(--role) 88%, var(--lait)); transition: color .35s; min-width: 0; overflow-wrap: anywhere; }
+.p-role { font: 800 var(--role-taille)/1.05 var(--f-titre); letter-spacing: -.02em; color: color-mix(in srgb, var(--role) 88%, var(--lait)); transition: color .35s; min-width: 0; overflow-wrap: anywhere; }
 .p-avantages { grid-column: 2; list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .p-avantages:empty { display: none; }
 .p-avantages li, .cn-avantages li {
@@ -559,7 +561,7 @@ main, .pied { position: relative; z-index: 1; }
   }
   .cn-mini b { font: 800 22px/1 var(--f-titre); color: var(--lait); letter-spacing: 0; font-variant-numeric: tabular-nums; }
   .cn-mini span { font: 700 16px/1 var(--f-titre); letter-spacing: 0; text-transform: none; }
-  .palier { grid-template-columns: 62px minmax(0, 1fr); padding: 14px 12px; }
+  .palier { --pad-y: 14px; grid-template-columns: 62px minmax(0, 1fr); padding: var(--pad-y) 12px; }
 }
 
 /* Quêtes d'Halloween */
@@ -632,6 +634,10 @@ main, .pied { position: relative; z-index: 1; }
 .roles-halloween li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; color: var(--brume); }
 .mention { display: inline-block; padding: 3px 8px; border-radius: 6px; font-weight: 600; color: var(--citrouille); background: color-mix(in srgb, var(--citrouille) 16%, transparent); }
 .mention-gris { color: var(--lait); background: color-mix(in srgb, var(--lait) 10%, transparent); }
+.mention-salon { padding: 1px 6px; text-decoration: none; transition: background-color .2s; }
+.mention-salon:hover { background: color-mix(in srgb, var(--citrouille) 30%, transparent); }
+.btn-halloween { --b-fond: var(--citrouille); --b-texte: var(--nuit); --b-bord: var(--citrouille); justify-self: start; }
+.btn-halloween:hover { --b-fond: var(--lait); --b-texte: var(--nuit); --b-bord: var(--lait); }
 .astuce { font-size: 15px; color: var(--brume); padding: 12px 16px; border-radius: 12px; background: color-mix(in srgb, var(--citrouille) 8%, transparent); border: 1px dashed color-mix(in srgb, var(--citrouille) 40%, transparent); }
 @media (max-width: 860px) { .recompenses { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 420px) { .lots-suite li { grid-template-columns: minmax(0, 1fr); gap: 2px; } .marche { font-size: 26px; } }
@@ -1405,12 +1411,13 @@ main, .pied { position: relative; z-index: 1; }
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🕸️</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>les-quêtes</span><span class="desc">Les 7 jeux d&#x27;Halloween à relever.</span></li>
           </ul>
         </div>
+        <a class="btn btn-halloween" href="https://discord.gg/tUAGq8KCT" target="_blank" rel="noopener">Ouvrir le salon #halloween<svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
       </div>
     </div>
     <div class="cadre quetes-bloc">
       <div class="quetes-tete" data-revele>
         <h3 class="quetes-titre">Les quêtes d'Halloween</h3>
-        <p>Au programme, 7 jeux&nbsp;: énigmes, rébus, mots mêlés, différences et d'autres épreuves. Ils se font dans l'ordre et l'équipe valide chacun avant de débloquer le suivant. Tu réponds par texte ou par image, avec le bouton «&nbsp;Mes quêtes&nbsp;» dans #halloween.</p>
+        <p>Au programme, 7 jeux&nbsp;: énigmes, rébus, mots mêlés, différences et d'autres épreuves. Ils se font dans l'ordre et l'équipe valide chacun avant de débloquer le suivant. Tu réponds par texte ou par image, avec le bouton «&nbsp;Mes quêtes&nbsp;» dans <a class="mention mention-salon" href="https://discord.gg/tUAGq8KCT" target="_blank" rel="noopener">#halloween</a>.</p>
       </div>
       <ol class="quetes">
         <li class="quete" data-numero="1" data-ouverture="2026-10-17T00:00:00+02:00" data-jour="samedi 17 octobre" data-q="eyJub20iOiAiVHJvdXZlIGxlcyA3IGRpZmbDqXJlbmNlcyIsICJjb25zaWduZSI6ICJDb21wYXJlIGxlcyBkZXV4IGltYWdlcyBldCB0cm91dmUgbGVzICoqNyBkaWZmw6lyZW5jZXMqKi4ifQ=="><span class="q-lanterne" aria-hidden="true"><b>1</b><svg><use href="#i-cadenas"/></svg></span><span class="q-titre"><span class="sr">Quête 1 : </span><span aria-hidden="true">???</span><span class="sr">Quête secrète</span></span><span class="q-consigne" hidden></span><span class="q-date">sam. 17 oct.</span><span class="q-etat">Verrouillée</span></li>
@@ -2653,6 +2660,21 @@ main, .pied { position: relative; z-index: 1; }
   }
   dessinerFond(scrollY);
   requestAnimationFrame(boucle);
+
+  /* ---------- Niveaux : la ligne commence au premier point et s'arrête au dernier ---------- */
+  (function caleLigne() {
+    const ligne = $('.echelle');
+    const etapes = $$('.palier', ligne);
+    if (!etapes.length) return;
+    const centre = (p) => { const r = $('.p-role', p); return p.offsetTop + r.offsetTop + r.offsetHeight / 2; };
+    const caler = () => {
+      ligne.style.setProperty('--rail-haut', `${centre(etapes[0])}px`);
+      ligne.style.setProperty('--rail-bas', `${ligne.offsetHeight - centre(etapes[etapes.length - 1])}px`);
+    };
+    caler();
+    if ('ResizeObserver' in window) new ResizeObserver(caler).observe(ligne); else addEventListener('resize', caler);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(caler);
+  })();
 
   /* ---------- Sans GSAP ou en mouvement réduit : tout reste visible ---------- */
   if (!anime) {
