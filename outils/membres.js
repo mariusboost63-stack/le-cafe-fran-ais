@@ -21,6 +21,8 @@ const INVITATION = 'france';
 const grouper = (n, sep) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 const arrondi = (n) => Math.floor(n / 100) * 100;
 const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
+// Dans GitHub Actions, le message s'affiche aussi dans le résumé de l'exécution
+const signaler = (texte, niveau = 'notice') => console.log(process.env.GITHUB_ACTIONS ? `::${niveau}::${texte}` : texte);
 
 async function relever() {
   const url = `https://discord.com/api/v10/invites/${INVITATION}?with_counts=true`;
@@ -124,13 +126,11 @@ async function dessinerImage(n) {
     n = donne ? Number(donne) : await relever();
   } catch (e) {
     // Discord injoignable : on garde les valeurs actuelles, sans faire échouer la tâche quotidienne
-    console.log(`Nombre de membres non relevé (${e.message}) : rien n'est modifié.`);
+    signaler(`Nombre de membres non relevé (${e.message}) : rien n'est modifié.`, 'warning');
     return;
   }
   const { modifiee, arrondiChange } = majPage(n);
-  console.log(`${n} membres (aperçu : plus de ${arrondi(n)}). index.html ${modifiee ? 'mis à jour' : 'déjà à jour'}.`);
-  if (arrondiChange || arg.includes('--image')) {
-    await dessinerImage(n);
-    console.log('apercu.png régénérée.');
-  }
+  const image = arrondiChange || arg.includes('--image');
+  if (image) await dessinerImage(n);
+  signaler(`${n} membres (aperçu : plus de ${arrondi(n)}). index.html ${modifiee ? 'mis à jour' : 'déjà à jour'}${image ? ', apercu.png redessinée' : ''}.`);
 })().catch((e) => { console.error(e.message); process.exit(1); });
