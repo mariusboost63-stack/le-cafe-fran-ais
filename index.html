@@ -89,7 +89,7 @@ try {
   }
 }
 
-html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+html { scrollbar-gutter: stable; }
 [hidden] { display: none !important; }
 img { max-width: 100%; }
 body {
@@ -293,7 +293,7 @@ main, .pied { position: relative; z-index: 1; }
   font: 800 clamp(120px, 24vw, 400px)/1 var(--f-titre); font-stretch: 80%;
   letter-spacing: -.04em; white-space: nowrap;
   color: transparent; -webkit-text-stroke: 2px var(--p-trait);
-  pointer-events: none; user-select: none;
+  pointer-events: none; user-select: none; will-change: transform;
 }
 .salle-interieur {
   position: relative; z-index: 1;
@@ -1027,7 +1027,6 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 860px) { .pause-grille { grid-template-columns: minmax(0, 1fr); } }
 
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
-[data-animations="reduites"] { scroll-behavior: auto; }
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
 </style>
 </head>
@@ -2271,6 +2270,17 @@ main, .pied { position: relative; z-index: 1; }
     } catch (e) { /* hors ligne ou bloqué : on garde les valeurs fixes */ }
   })();
 
+  /* ---------- Liens internes : défilement doux ---------- */
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || a.classList.contains('saut')) return;
+    const id = a.getAttribute('href').slice(1);
+    const cible = id && document.getElementById(id);
+    if (!cible) return;
+    e.preventDefault();
+    scrollTo({ top: cible.getBoundingClientRect().top + scrollY, behavior: reduit ? 'auto' : 'smooth' });
+  });
+
   /* ---------- Réduire ou réactiver les animations ---------- */
   (function animations() {
     const btn = $('#animations');
@@ -2353,7 +2363,7 @@ main, .pied { position: relative; z-index: 1; }
   const niveau = $('.mini-tasse .niveau');
   const rubans = $$('.defile').map((el) => el.getAnimations ? el.getAnimations()[0] : null).filter(Boolean);
   const logoIncline = $('.logo-incline');
-  let dernierY = -1, vitesse = 0, sens = 1, taux = 1;
+  let dernierY = -1, vitesse = 0, sens = 1, taux = 1, tauxApplique = 1, inclinaisonAppliquee = '';
   const inclinaison = { x: 0, y: 0, cx: 0, cy: 0 };
 
   if (!reduit) {
@@ -2380,14 +2390,15 @@ main, .pied { position: relative; z-index: 1; }
       if (Math.abs(vitesse) > .5) sens = vitesse > 0 ? 1 : -1;
       const cible = sens * (1 + Math.min(7, Math.abs(vitesse) * .22));
       taux += (cible - taux) * .08;
-      for (const a of rubans) a.playbackRate = taux;
+      if (Math.abs(taux - tauxApplique) > .02) { tauxApplique = taux; for (const a of rubans) a.playbackRate = taux; }
       const sx = souris.cx, sy2 = souris.cy;
       souris.cx += (souris.x - souris.cx) * .06;
       souris.cy += (souris.y - souris.cy) * .06;
       inclinaison.cx += (inclinaison.x - inclinaison.cx) * .07;
       inclinaison.cy += (inclinaison.y - inclinaison.cy) * .07;
       if (y < innerHeight * 1.2) {
-        logoIncline.style.transform = `rotateY(${(inclinaison.cx * 7).toFixed(2)}deg) rotateX(${(-inclinaison.cy * 6).toFixed(2)}deg)`;
+        const t = `rotateY(${(inclinaison.cx * 7).toFixed(1)}deg) rotateX(${(-inclinaison.cy * 6).toFixed(1)}deg)`;
+        if (t !== inclinaisonAppliquee) { inclinaisonAppliquee = t; logoIncline.style.transform = t; }
       }
       if (bouge || Math.abs(sx - souris.cx) > .0005 || Math.abs(sy2 - souris.cy) > .0005) dessinerFond(y);
     } else if (bouge) {
@@ -2406,6 +2417,7 @@ main, .pied { position: relative; z-index: 1; }
   }
 
   g.registerPlugin(ST);
+  ST.config({ ignoreMobileResize: true });
 
   /* ---------- Ouverture : le logo se compose ---------- */
   const porteFermee = racine.getAttribute('data-porte') === 'fermee';
@@ -2434,11 +2446,17 @@ main, .pied { position: relative; z-index: 1; }
     carte.classList.add('horizontale');
     const distance = () => Math.max(0, piste.scrollWidth - racine.clientWidth);
     const rempli = $('.progression .rempli', carte);
+    const panneaux = $$('.panneau', piste);
+    const arrets = () => {
+      const d = distance();
+      return d ? panneaux.map((p) => Math.min(1, p.offsetLeft / d)) : [0];
+    };
     const trajet = g.to(piste, {
       x: () => -distance(), ease: 'none',
       scrollTrigger: {
         trigger: carte, start: 'top top', end: () => '+=' + distance(),
-        pin: true, scrub: .8, invalidateOnRefresh: true, anticipatePin: 1,
+        pin: true, scrub: .6, invalidateOnRefresh: true, anticipatePin: 1,
+        snap: { snapTo: (v) => arrets().reduce((a, b) => (Math.abs(b - v) < Math.abs(a - v) ? b : a)), duration: { min: .25, max: .6 }, delay: .12, ease: 'power2.inOut' },
         onUpdate: (self) => g.set(rempli, { scaleX: self.progress }),
       },
     });
@@ -2554,7 +2572,18 @@ main, .pied { position: relative; z-index: 1; }
   }
 
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ST.refresh());
-  addEventListener('load', () => ST.refresh());
+  if ('ResizeObserver' in window) {
+    let hauteur = 0, attente = 0;
+    new ResizeObserver(() => {
+      const h = Math.round($('main').getBoundingClientRect().height);
+      if (Math.abs(h - hauteur) < 2) return;
+      const premiere = !hauteur;
+      hauteur = h;
+      if (premiere) return;
+      clearTimeout(attente);
+      attente = setTimeout(() => ST.refresh(), 200);
+    }).observe($('main'));
+  }
 })();
 </script>
 
