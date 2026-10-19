@@ -651,7 +651,7 @@ main, .pied { position: relative; z-index: 1; }
 .eco-tete { display: grid; gap: 22px; max-width: 760px; }
 .eco-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 48ch; }
 .gains-bloc { display: grid; gap: 16px; }
-.gains { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.gains { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .gain {
   display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: 20px; min-width: 0;
   background: var(--nuit-2); border: 1px solid var(--trait); transition: border-color .3s, box-shadow .3s;
@@ -661,12 +661,12 @@ main, .pied { position: relative; z-index: 1; }
 .gain h3 { font: 800 22px/1.15 var(--f-titre); letter-spacing: -.01em; }
 .gain h3 code { font: 500 19px/1.2 var(--f-mono); letter-spacing: 0; color: var(--creme); }
 .gain p { color: var(--brume); }
-.gain-vocal { grid-row: span 2; align-content: space-between; background: linear-gradient(160deg, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 75%); border-color: color-mix(in srgb, var(--creme) 30%, transparent); }
+.gain-phare { grid-column: span 2; align-content: start; background: linear-gradient(160deg, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 75%); border-color: color-mix(in srgb, var(--creme) 30%, transparent); }
 .gain .gain-chiffre { font: 800 clamp(44px, 4.6vw, 68px)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; color: var(--lait); }
 .gain-chiffre span { display: block; margin-top: 10px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--creme); }
 .gain .gain-montant { font: 800 clamp(26px, 2.4vw, 32px)/1 var(--f-titre); letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--lait); }
 .virements { color: var(--brume); font-size: 15px; }
-@media (max-width: 900px) { .gains { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gain-vocal { grid-row: auto; grid-column: 1 / -1; } }
+@media (max-width: 900px) { .gains { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gain-phare { grid-column: 1 / -1; } }
 @media (max-width: 560px) { .gains { grid-template-columns: minmax(0, 1fr); } }
 
 .boutique { display: grid; gap: 24px; }
@@ -1340,7 +1340,7 @@ main, .pied { position: relative; z-index: 1; }
           <b id="cn-valeur">100</b>
           <span class="cn-role" id="cn-role">@Légende</span>
           <span class="cn-barre"><span class="cn-rempli" id="cn-rempli"></span></span>
-          <ul class="cn-avantages" id="cn-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul>
+          <ul class="cn-avantages" id="cn-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal et à l'écrit</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul>
         </div>
         <p class="niveaux-note">Les virements de grains sont limités à 50&nbsp;000 par jour, 100&nbsp;000 dès @Connaisseur et pour les boosters. Les boosters gagnent aussi deux fois plus d'XP.<span class="seulement-halloween"> Pendant Halloween, l'expérience est augmentée pour tout le monde.</span></p>
       </div>
@@ -1350,13 +1350,13 @@ main, .pied { position: relative; z-index: 1; }
           <li class="palier" data-niveau="2" style="--role: var(--r-curieux)"><span class="p-niv">Niv. 2</span><span class="p-role">@Curieux</span><ul class="p-avantages"></ul></li>
           <li class="palier" data-niveau="5" style="--role: var(--r-decouverte)"><span class="p-niv">Niv. 5</span><span class="p-role">@Découverte</span><ul class="p-avantages"></ul></li>
           <li class="palier" data-niveau="10" style="--role: var(--r-debutant)"><span class="p-niv">Niv. 10</span><span class="p-role">@Débutant</span><ul class="p-avantages"></ul></li>
-          <li class="palier" data-niveau="15" style="--role: var(--r-apprenti)"><span class="p-niv">Niv. 15</span><span class="p-role">@Apprenti</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×1,5 en vocal</li></ul></li>
-          <li class="palier" data-niveau="25" style="--role: var(--r-novice)"><span class="p-niv">Niv. 25</span><span class="p-role">@Novice</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×1,5 en vocal</li></ul></li>
-          <li class="palier" data-niveau="40" style="--role: var(--r-voyageur)"><span class="p-niv">Niv. 40</span><span class="p-role">@Voyageur</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×2 en vocal</li></ul></li>
-          <li class="palier" data-niveau="55" style="--role: var(--r-connaisseur)"><span class="p-niv">Niv. 55</span><span class="p-role">@Connaisseur</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×2 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
-          <li class="palier" data-niveau="70" style="--role: var(--r-philosophe)"><span class="p-niv">Niv. 70</span><span class="p-role">@Philosophe</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
-          <li class="palier" data-niveau="85" style="--role: var(--r-maestro)"><span class="p-niv">Niv. 85</span><span class="p-role">@Maestro</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
-          <li class="palier" data-niveau="100" style="--role: var(--r-legende)"><span class="p-niv">Niv. 100</span><span class="p-role">@Légende</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
+          <li class="palier" data-niveau="15" style="--role: var(--r-apprenti)"><span class="p-niv">Niv. 15</span><span class="p-role">@Apprenti</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×1,5 en vocal et à l'écrit</li></ul></li>
+          <li class="palier" data-niveau="25" style="--role: var(--r-novice)"><span class="p-niv">Niv. 25</span><span class="p-role">@Novice</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×1,5 en vocal et à l'écrit</li></ul></li>
+          <li class="palier" data-niveau="40" style="--role: var(--r-voyageur)"><span class="p-niv">Niv. 40</span><span class="p-role">@Voyageur</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×2 en vocal et à l'écrit</li></ul></li>
+          <li class="palier" data-niveau="55" style="--role: var(--r-connaisseur)"><span class="p-niv">Niv. 55</span><span class="p-role">@Connaisseur</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×2 en vocal et à l'écrit</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
+          <li class="palier" data-niveau="70" style="--role: var(--r-philosophe)"><span class="p-niv">Niv. 70</span><span class="p-role">@Philosophe</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal et à l'écrit</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
+          <li class="palier" data-niveau="85" style="--role: var(--r-maestro)"><span class="p-niv">Niv. 85</span><span class="p-role">@Maestro</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal et à l'écrit</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
+          <li class="palier" data-niveau="100" style="--role: var(--r-legende)"><span class="p-niv">Niv. 100</span><span class="p-role">@Légende</span><ul class="p-avantages"><li><svg aria-hidden="true"><use href="#i-palette"/></svg>Couleurs de pseudo offertes</li><li><svg aria-hidden="true"><use href="#i-micro"/></svg>Grains ×3 en vocal et à l'écrit</li><li><svg aria-hidden="true"><use href="#i-virement"/></svg>Virements jusqu'à 100&#8239;000 grains par jour</li></ul></li>
         </ol>
       </div>
     </div>
@@ -1471,11 +1471,12 @@ main, .pied { position: relative; z-index: 1; }
       <div class="eco-tete" data-revele>
         <p class="surtitre">L'économie du café</p>
         <h2 class="h2" id="t-grains">Les grains</h2>
-        <p class="chapo">C'est la monnaie du serveur. Tu en gagnes en parlant, en jouant et en passant chaque jour, puis tu les dépenses dans la boutique.</p>
+        <p class="chapo">C'est la monnaie du serveur. Tu en gagnes en parlant, en écrivant, en jouant et en passant chaque jour, puis tu les dépenses dans la boutique.</p>
       </div>
       <div class="gains-bloc">
         <ul class="gains">
-          <li class="gain gain-vocal"><svg aria-hidden="true"><use href="#i-micro"/></svg><h3>En vocal</h3><p class="gain-chiffre">5&nbsp;000 grains<span>toutes les 10 minutes</span></p><p>Micro et casque ouverts, avec au moins deux personnes actives dans le salon. Ton bonus de rôle multiplie le gain.</p></li>
+          <li class="gain gain-phare"><svg aria-hidden="true"><use href="#i-micro"/></svg><h3>En vocal</h3><p class="gain-chiffre">5&nbsp;000 grains<span>toutes les 10 minutes</span></p><p>Micro et casque ouverts, avec au moins deux personnes actives dans le salon. Ton bonus de rôle multiplie le gain&nbsp;: ×1,5, ×2 ou ×3.</p></li>
+          <li class="gain gain-phare"><svg aria-hidden="true"><use href="#i-texte"/></svg><h3>En écrivant</h3><p class="gain-chiffre">300 grains<span>par message, au plus toutes les 36 secondes</span></p><p>Chaque message te rapporte des grains, une fois toutes les 36&nbsp;secondes au maximum. Ton bonus de rôle multiplie le gain, comme en vocal&nbsp;: ×1,5, ×2 ou ×3.</p></li>
           <li class="gain"><svg aria-hidden="true"><use href="#i-jour"/></svg><h3><code>/journalier</code></h3><p class="gain-montant">10&#8239;000 grains</p><p>Ta récompense du jour. Repasse chaque jour pour la récupérer.</p></li>
           <li class="gain"><svg aria-hidden="true"><use href="#i-semaine"/></svg><h3><code>/hebdomadaire</code></h3><p class="gain-montant">50&#8239;000 grains</p><p>Une récompense de plus, à récupérer une fois par semaine.</p></li>
           <li class="gain"><svg aria-hidden="true"><use href="#i-des"/></svg><h3>Le casino</h3><p>Défis entre membres, roulette, blackjack et d'autres jeux pour miser tes grains dans #casino.</p></li>
@@ -1489,6 +1490,7 @@ main, .pied { position: relative; z-index: 1; }
           <p class="surtitre">Calcule tes gains en vocal</p>
           <h3 class="grains-titre">Combien tu gagnes en parlant&nbsp;?</h3>
           <p>Choisis ton bonus de rôle et ton temps en vocal. Le calcul suit la règle du serveur&nbsp;: 5&nbsp;000 grains toutes les 10&nbsp;minutes, multipliés par ton bonus.</p>
+          <p>À l'écrit, le plafond est le même&nbsp;: 300 grains toutes les 36&nbsp;secondes, soit jusqu'à 30&nbsp;000 grains par heure, multipliés par le même bonus.</p>
           <p>Les temps affichés dans la boutique, juste en dessous, suivent le bonus que tu choisis ici.</p>
         </div>
         <form class="calcul" id="calcul" aria-label="Calculer les grains gagnés en vocal">
@@ -1663,7 +1665,7 @@ main, .pied { position: relative; z-index: 1; }
         <p class="surtitre">Soutenir le café</p>
         <ul>
           <li><h3>Booste le serveur</h3><p>Ton boost aide le café à grandir. En échange, tu gagnes deux fois plus d'XP, tu peux envoyer des images dans tous les salons et tu accèdes aux salons privés.</p></li>
-          <li><h3>Bump et vote</h3><p>C'est gratuit. Utilise régulièrement <code>/bump</code> et <a href="https://discordinvites.net/servers/829698572927762432" target="_blank" rel="noopener">vote pour le café sur discordinvites.net</a> pour le faire connaître. Les votants gagnent aussi un bonus de grains ×2 en vocal.</p></li>
+          <li><h3>Bump et vote</h3><p>C'est gratuit. Utilise régulièrement <code>/bump</code> et <a href="https://discordinvites.net/servers/829698572927762432" target="_blank" rel="noopener">vote pour le café sur discordinvites.net</a> pour le faire connaître. Les votants gagnent aussi un bonus de grains ×2 en vocal et à l'écrit.</p></li>
         </ul>
       </div>
     </div>

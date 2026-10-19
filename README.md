@@ -13,7 +13,7 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - La visite des salles en défilement horizontal bleu, blanc, rouge : le comptoir (Café Français), la terrasse (Centre de Convivialité) et l'arrière-salle (Divertissements), avec la description de chaque salon.
 - Le système de niveaux : un compteur grimpe de palier en palier, de @Curieux (niveau 2) à @Légende (niveau 100), et affiche les avantages débloqués (couleurs de pseudo, bonus de grains, virements).
 - L'événement Halloween 2026 : compte à rebours en direct jusqu'à la prochaine quête, calendrier des 7 quêtes, barème des citrouilles, récompenses et rôles à gagner.
-- Les grains : toutes les façons d'en gagner (vocal, /journalier, /hebdomadaire, casino, /voler), un calculateur de gains en vocal et la boutique, avec le temps de vocal nécessaire pour chaque article.
+- Les grains : toutes les façons d'en gagner (vocal, messages, /journalier, /hebdomadaire, casino, /voler), un calculateur de gains en vocal et la boutique, avec le temps de vocal nécessaire pour chaque article.
 - Les salons vocaux et leurs limites de places.
 - L'équipe, présentée sur des badges suspendus avec les profils de chacun : Gérants, Administrateurs, Responsables, et le reste de l'équipe sur le Discord.
 - Trois étapes pour rejoindre le serveur, une FAQ, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
