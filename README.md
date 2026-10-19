@@ -36,50 +36,79 @@ Une fois le site en ligne, elle affiche le nombre de membres connectés, l'occup
 
 ## Classement du mini-jeu
 
-Les scores sont enregistrés dans **Firebase Firestore** (Google, gratuit). Tant que le projet n'est pas renseigné, le jeu fonctionne comme avant, sans pseudo ni classement.
+Les scores sont enregistrés dans **Firebase Firestore** (Google, gratuit), projet `cafe-fr`. Chaque joueur reçoit une **identité anonyme** (Firebase Authentication), gardée sur son appareil : son score est rangé sous cette identité et personne d'autre ne peut le modifier.
 
 **Mise en place (une seule fois)**
 
 1. Sur [console.firebase.google.com](https://console.firebase.google.com), crée un projet (Google Analytics n'est pas nécessaire).
-2. Menu **Créer → Firestore Database → Créer une base de données**, emplacement européen (`eur3` ou `europe-west`), mode **production**.
-3. Onglet **Règles** de Firestore : remplace tout par les règles ci-dessous, puis **Publier**.
-4. **Paramètres du projet → Vos applications → Web (`</>`)** : enregistre une application, puis copie `projectId` et `apiKey`.
-5. Dans `index.html`, renseigne-les : `const CLASSEMENT = { projet: 'ton-projet', cle: 'ta-cle' };`
+2. **Authentication → Commencer → Méthode de connexion → Anonyme** : active-la.
+3. **Firestore Database → Créer une base de données**, emplacement européen, mode **production**.
+4. Onglet **Règles** de Firestore : remplace tout par les règles ci-dessous, puis **Publier**.
+5. **Paramètres du projet → Vos applications → Web (`</>`)** : enregistre une application, puis copie `projectId` et `apiKey`, à renseigner dans `index.html` : `const CLASSEMENT = { projet: '…', cle: '…' };`
 
-La clé `apiKey` d'une application web Firebase n'est pas secrète : elle peut être visible dans la page, ce sont les règles qui protègent les données.
+La clé `apiKey` d'une application web Firebase n'est pas secrète : ce sont les règles qui protègent les données.
 
 ```
 rules_version = '2';
 service cloud.firestore {
   match /databases/{base}/documents {
-    // Une collection par semaine (semaine-AAAA-MM-JJ, date du lundi), un document par joueur
-    match /{semaine}/{joueur} {
+
+    // Partie en cours de chaque joueur : identifiant de la partie et heure de début (fixée par le serveur)
+    match /parties/{uid} {
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['id', 'debut'])
+        && request.resource.data.id is string
+        && request.resource.data.id.size() >= 8 && request.resource.data.id.size() <= 40
+        && request.resource.data.debut == request.time;
+    }
+
+    // Classement : une collection par semaine (scores-AAAA-MM-JJ, date du lundi), un document par joueur
+    match /{semaine}/{uid} {
       function semaineValide() {
-        return semaine.matches('semaine-[0-9]{4}-[0-9]{2}-[0-9]{2}');
+        return semaine.matches('scores-[0-9]{4}-[0-9]{2}-[0-9]{2}');
       }
+      // On n'écrit que dans la semaine en cours (du lundi au dimanche, heure de Paris)
+      function semaineEnCours() {
+        let p = semaine.split('-');
+        let lundi = timestamp.date(int(p[1]), int(p[2]), int(p[3]));
+        return request.time > lundi - duration.value(2, 'h') && request.time < lundi + duration.value(168, 'h');
+      }
+      // Chacun n'écrit que son propre score, après une vraie partie (au moins 40 s, au plus 10 min)
       function scoreValide() {
         let d = request.resource.data;
-        return d.keys().hasOnly(['pseudo', 'score', 'maj'])
+        let partie = get(/databases/$(base)/documents/parties/$(uid)).data;
+        return request.auth != null && request.auth.uid == uid
+          && d.keys().hasOnly(['pseudo', 'score', 'maj', 'partie'])
           && d.pseudo is string && d.pseudo.size() >= 2 && d.pseudo.size() <= 24
-          && d.score is int && d.score >= 1 && d.score <= 300
-          && d.maj == request.time;
+          && d.score is int && d.score >= 1 && d.score <= 200
+          && d.maj == request.time
+          && d.partie == partie.id
+          && request.time > partie.debut + duration.value(40, 's')
+          && request.time < partie.debut + duration.value(10, 'm');
       }
       allow read: if semaineValide();
-      allow create: if semaineValide() && scoreValide();
-      allow update: if semaineValide() && scoreValide() && request.resource.data.score > resource.data.score;
+      allow create: if semaineValide() && semaineEnCours() && scoreValide();
+      allow update: if semaineValide() && semaineEnCours() && scoreValide()
+        && request.resource.data.score > resource.data.score
+        && request.resource.data.partie != resource.data.partie;
       allow delete: if false;
     }
   }
 }
 ```
 
+**Ce que les règles garantissent**
+
+- Chacun ne peut écrire **que son propre score** (document nommé d'après son identité anonyme).
+- Un score n'est accepté qu'**après une vraie partie** : le début de chaque partie est noté par le serveur (collection `parties`), et le score n'est accepté qu'entre 40 secondes et 10 minutes plus tard, une seule fois par partie.
+- Le score doit battre le précédent du joueur, et ne pas dépasser **200** : c'est impossible en 45 secondes (en attrapant absolument tout, une partie rapporte au plus 180 environ). Si la durée du jeu change, adapte `SCORE_MAX` dans `index.html` et la limite dans les règles.
+- On n'écrit que dans la **semaine en cours** ; personne ne peut supprimer un score depuis le site.
+
 **Fonctionnement**
 
-- La semaine va du lundi 0 h au dimanche minuit, heure de Paris. Chaque semaine a sa collection, `semaine-2026-10-19` par exemple.
-- Chaque joueur a un document par semaine, nommé d'après son pseudo. Il garde son meilleur score et l'heure (`maj`) à laquelle il l'a fait.
-- Le site affiche le top 10, la place du joueur s'il est plus loin, et le gagnant de la semaine précédente.
-- Un score au-delà de 300 est refusé : c'est impossible en 45 secondes. Si la durée du jeu change, adapte `SCORE_MAX` dans `index.html` et la limite dans les règles.
-- **Avant de donner les 250 000 grains**, vérifie le gagnant : un classement sur un site ne peut pas être protégé à 100 % contre la triche, et n'importe qui peut taper le pseudo de quelqu'un d'autre. Les scores se consultent dans la console Firebase (Firestore → la collection de la semaine). Pour retirer un score, supprime son document depuis la console.
+- La semaine va du lundi 0 h au dimanche minuit, heure de Paris. Chaque semaine a sa collection, `scores-2026-10-19` par exemple (date du lundi).
+- Le site affiche le top 10 (une ligne par pseudo), la place du joueur s'il est plus loin, et le gagnant de la semaine précédente.
+- **Avant de donner les 250 000 grains**, vérifie le gagnant : un tricheur peut encore gonfler *son propre* score (jusqu'à 200), et n'importe qui peut choisir le pseudo d'un autre. Les scores se consultent dans la console Firebase (Firestore → la collection de la semaine) ; un score suspect se supprime depuis la console.
 
 ## Saisons
 

@@ -2144,7 +2144,7 @@ main, .pied { position: relative; z-index: 1; }
   // Les scores sont gardés dans Firebase Firestore (voir README, « Classement du mini-jeu »).
   // Laisser « projet » vide désactive le classement : le jeu fonctionne alors comme avant.
   const CLASSEMENT = { projet: 'cafe-fr', cle: 'AIzaSyAtTxp61GD0ExBnitW-fq1XFJQRNBTatY0' };
-  const SCORE_MAX = 300; // au-delà, impossible en 45 secondes : refusé (même limite dans les règles Firestore)
+  const SCORE_MAX = 200; // au-delà, impossible en 45 secondes : refusé (même limite dans les règles Firestore)
   const classement = (function () {
     const actif = Boolean(CLASSEMENT.projet && CLASSEMENT.cle);
     const lirePseudo = () => { try { return localStorage.getItem('cafe-pseudo') || ''; } catch (e) { return ''; } };
@@ -2167,22 +2167,48 @@ main, .pied { position: relative; z-index: 1; }
       const jour = Date.UTC(p.year, p.month - 1, p.day);
       const lundi = jour - ((new Date(jour).getUTCDay() + 6) % 7) * 864e5;
       const finParis = lundi + 7 * 864e5;
-      return { id: `semaine-${new Date(lundi).toISOString().slice(0, 10)}`, fin: finParis - decalage(finParis - decalage(finParis)) };
+      return { id: `scores-${new Date(lundi).toISOString().slice(0, 10)}`, fin: finParis - decalage(finParis - decalage(finParis)) };
     }
-    // Un document par joueur et par semaine, identifié par son pseudo
-    const idJoueur = (pseudo) => pseudo.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9._-]+/g, '_').replace(/^[_.]+|[_.]+$/g, '') || 'joueur';
 
-    async function api(action, corps) {
-      const res = await fetch(`https://firestore.googleapis.com/v1/${racineApi}${action}?key=${encodeURIComponent(CLASSEMENT.cle)}`,
-        corps ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) } : {});
+    // Identité anonyme du joueur (Firebase Authentication), gardée sur l'appareil.
+    // Chaque score est rangé sous cette identité : personne d'autre ne peut le modifier.
+    const cle = encodeURIComponent(CLASSEMENT.cle);
+    let session = null;
+    try { session = JSON.parse(localStorage.getItem('cafe-session') || 'null'); } catch (e) { session = null; }
+    const garderSession = (s) => { session = s; try { localStorage.setItem('cafe-session', JSON.stringify(s)); } catch (e) { /* stockage indisponible */ } };
+    async function identite() {
+      if (session && session.jeton && Date.now() < session.expire - 60000) return session;
+      if (session && session.renouvellement) {
+        const res = await fetch(`https://securetoken.googleapis.com/v1/token?key=${cle}`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(session.renouvellement)}` });
+        if (res.ok) {
+          const d = await res.json();
+          garderSession({ uid: d.user_id, jeton: d.id_token, renouvellement: d.refresh_token, expire: Date.now() + d.expires_in * 1000 });
+          return session;
+        }
+      }
+      const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${cle}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ returnSecureToken: true }) });
+      if (!res.ok) throw new Error(`Identité ${res.status}`);
+      const d = await res.json();
+      garderSession({ uid: d.localId, jeton: d.idToken, renouvellement: d.refreshToken, expire: Date.now() + d.expiresIn * 1000 });
+      return session;
+    }
+
+    async function api(action, corps, jeton) {
+      const entetes = { 'Content-Type': 'application/json' };
+      if (jeton) entetes.Authorization = `Bearer ${jeton}`;
+      const res = await fetch(`https://firestore.googleapis.com/v1/${racineApi}${action}?key=${cle}`,
+        corps ? { method: 'POST', headers: entetes, body: JSON.stringify(corps) } : {});
       if (!res.ok) throw Object.assign(new Error(`Firestore ${res.status}`), { status: res.status });
       return res.json();
     }
     const lireDoc = (d) => ({ id: d.name.split('/').pop(), pseudo: d.fields.pseudo.stringValue, score: Number(d.fields.score.integerValue) });
+    // Top 10, une seule ligne par pseudo (un joueur peut jouer depuis plusieurs appareils)
     async function meilleurs(sem) {
-      const rep = await api(':runQuery', { structuredQuery: { from: [{ collectionId: sem.id }], orderBy: [{ field: { fieldPath: 'score' }, direction: 'DESCENDING' }], limit: 10 } });
-      return rep.filter((r) => r.document).map((r) => lireDoc(r.document));
+      const rep = await api(':runQuery', { structuredQuery: { from: [{ collectionId: sem.id }], orderBy: [{ field: { fieldPath: 'score' }, direction: 'DESCENDING' }], limit: 30 } });
+      const vus = new Set();
+      return rep.filter((r) => r.document).map((r) => lireDoc(r.document))
+        .filter((l) => { const k = l.pseudo.toLowerCase(); if (vus.has(k)) return false; vus.add(k); return true; }).slice(0, 10);
     }
     async function rang(sem, score) {
       const rep = await api(':runAggregationQuery', { structuredAggregationQuery: {
@@ -2198,8 +2224,7 @@ main, .pied { position: relative; z-index: 1; }
     async function afficher() {
       const sem = semaine();
       semaineAffichee = sem.id;
-      const pseudo = lirePseudo();
-      const id = pseudo && idJoueur(pseudo);
+      const id = session && session.uid;
       try {
         const lignes = await meilleurs(sem);
         liste.replaceChildren(...(lignes.length ? lignes.map((l, i) => {
@@ -2222,18 +2247,34 @@ main, .pied { position: relative; z-index: 1; }
         liste.replaceChildren(el('li', 'cl-vide', 'Classement indisponible pour le moment.'));
       }
     }
-    // Enregistre le score s'il bat le meilleur score de la semaine de ce pseudo
+    // Début de partie : son heure est notée par le serveur, qui n'accepte le score qu'après 40 secondes de jeu
+    let partie = null;
+    function commencer() {
+      const id = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`);
+      partie = { id, prete: identite().then((s) => api(':commit', { writes: [{
+        update: { name: `${racineApi}/parties/${s.uid}`, fields: { id: { stringValue: id } } },
+        updateMask: { fieldPaths: ['id'] },
+        updateTransforms: [{ fieldPath: 'debut', setToServerValue: 'REQUEST_TIME' }],
+      }] }, s.jeton)) };
+      partie.prete.catch(() => { /* signalé à l'envoi du score */ });
+    }
+    // Enregistre le score s'il bat le meilleur score de la semaine du joueur
     async function envoyer(pseudo, score) {
       if (score < 1) return { etat: 'zero' };
       if (score > SCORE_MAX) return { etat: 'refuse' };
-      const sem = semaine(), id = idJoueur(pseudo);
-      const avant = await scoreDe(sem, id);
+      if (!partie) throw new Error('Partie non commencée');
+      const enCours = partie;
+      partie = null;
+      await enCours.prete;
+      const s = await identite();
+      const sem = semaine();
+      const avant = await scoreDe(sem, s.uid);
       if (avant && avant.score >= score) return { etat: 'pas-mieux', score: avant.score, rang: await rang(sem, avant.score) };
       await api(':commit', { writes: [{
-        update: { name: `${racineApi}/${sem.id}/${id}`, fields: { pseudo: { stringValue: pseudo }, score: { integerValue: String(score) } } },
-        updateMask: { fieldPaths: ['pseudo', 'score'] },
+        update: { name: `${racineApi}/${sem.id}/${s.uid}`, fields: { pseudo: { stringValue: pseudo }, score: { integerValue: String(score) }, partie: { stringValue: enCours.id } } },
+        updateMask: { fieldPaths: ['pseudo', 'score', 'partie'] },
         updateTransforms: [{ fieldPath: 'maj', setToServerValue: 'REQUEST_TIME' }],
-      }] });
+      }] }, s.jeton);
       return { etat: 'ok', score, rang: await rang(sem, score) };
     }
     function message(r) {
@@ -2258,7 +2299,7 @@ main, .pied { position: relative; z-index: 1; }
       io.observe(bloc);
     } else afficher();
 
-    return { actif, lirePseudo, garderPseudo, afficher, envoyer, message };
+    return { actif, lirePseudo, garderPseudo, afficher, commencer, envoyer, message };
   })();
 
   /* ---------- La pause café : attrape les grains ---------- */
@@ -2395,6 +2436,7 @@ main, .pied { position: relative; z-index: 1; }
       requestAnimationFrame(boucle);
     }
     function demarrer() {
+      if (classement.actif) classement.commencer();
       etat = 'jeu'; items = []; textes = []; score = 0; reste = DUREE; secousse = 0;
       ecran.hidden = true; boite.classList.add('en-jeu');
       toile.focus({ preventScroll: true });
