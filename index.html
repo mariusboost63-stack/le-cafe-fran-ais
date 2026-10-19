@@ -2285,7 +2285,9 @@ main, .pied { position: relative; z-index: 1; }
     try { record = +localStorage.getItem('cafe-record') || 0; } catch (err) {}
     recordAff.textContent = record;
     const halloween = () => racine.getAttribute('data-saison') === 'halloween';
-    const borner = (x) => Math.min(W - 6 - 82 * e, Math.max(6 + 144 * e, x));
+    // L'ouverture de la tasse (51 unités de part et d'autre du centre) doit pouvoir atteindre les deux bords :
+    // l'anse ou le rebord sortent alors du cadre
+    const borner = (x) => Math.min(W - 51 * e, Math.max(51 * e, x));
     function taille() {
       ratio = Math.min(2, devicePixelRatio || 1);
       const r = toile.getBoundingClientRect();
@@ -2374,7 +2376,7 @@ main, .pied { position: relative; z-index: 1; }
       if (droite) cibleX += 560 * dt;
       cibleX = borner(cibleX);
       tasseX += (cibleX - tasseX) * Math.min(1, dt * 16);
-      const haut = H - 14 - 94 * e, g = tasseX - 51 * e, d = tasseX + 51 * e;
+      const haut = H - 14 - 94 * e, g = tasseX - 51 * e - 9, d = tasseX + 51 * e + 9;
       for (const it of items) {
         it.y += it.vy * dt; it.a += it.va * dt;
         if (it.y >= haut - 6 && it.y <= haut + 20 && it.x >= g && it.x <= d) {
@@ -2440,7 +2442,8 @@ main, .pied { position: relative; z-index: 1; }
       nom.value = pseudo; nom.focus();
     });
     const viser = (ev) => { const r = toile.getBoundingClientRect(); cibleX = borner(ev.clientX - r.left); };
-    toile.addEventListener('pointermove', viser);
+    // À la souris, la tasse suit le pointeur partout sur la page pendant la partie ; au doigt, seulement sur le jeu
+    addEventListener('pointermove', (ev) => { if (ev.pointerType === 'touch' ? ev.target === toile : (etat === 'jeu' || ev.target === toile)) viser(ev); });
     toile.addEventListener('pointerdown', (ev) => { viser(ev); if (etat === 'jeu' && toile.setPointerCapture) toile.setPointerCapture(ev.pointerId); });
     addEventListener('keydown', (ev) => {
       if (etat !== 'jeu') return;
