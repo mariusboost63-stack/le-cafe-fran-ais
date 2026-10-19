@@ -33,7 +33,8 @@ try {
   else if (s === 'auto') s = new Date().getMonth() === 9 ? 'halloween' : 'normal';
   r.setAttribute('data-saison', s);
   if (!h || h === '#saison-halloween' || h === '#saison-normale') { try { if (!localStorage.getItem('cafe-porte')) r.setAttribute('data-porte', 'fermee'); } catch (e) {} }
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { r.classList.add('intro'); setTimeout(function () { r.classList.remove('intro'); }, 2200); }
+  try { if (localStorage.getItem('cafe-animations') === 'reduites') r.setAttribute('data-animations', 'reduites'); } catch (e) {}
+  if (!r.hasAttribute('data-animations')) { r.classList.add('intro'); setTimeout(function () { r.classList.remove('intro'); }, 2200); }
 } catch (e) {}
 </script>
 <style>
@@ -1025,10 +1026,9 @@ main, .pied { position: relative; z-index: 1; }
 .jeu-lien { color: var(--lait); font-size: 15px; }
 @media (max-width: 860px) { .pause-grille { grid-template-columns: minmax(0, 1fr); } }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-}
+/* Animations réduites, à la demande du visiteur (bouton du pied de page) */
+[data-animations="reduites"] { scroll-behavior: auto; }
+[data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
 </style>
 </head>
 <body>
@@ -1606,7 +1606,7 @@ main, .pied { position: relative; z-index: 1; }
 <footer class="pied">
   <div class="cadre">
     <p>Le Café Français · serveur Discord francophone depuis 2021 · <a href="https://discord.gg/france" target="_blank" rel="noopener">discord.gg/france</a></p>
-    <p class="indice-cafe">Envie d'un café&nbsp;? Tape «&nbsp;café&nbsp;» sur ton clavier. <button class="revoir-porte" id="revoir-porte" type="button">Repasser la porte</button></p>
+    <p class="indice-cafe">Envie d'un café&nbsp;? Tape «&nbsp;café&nbsp;» sur ton clavier. <button class="revoir-porte" id="revoir-porte" type="button">Repasser la porte</button> · <button class="revoir-porte" id="animations" type="button" aria-pressed="false">Réduire les animations</button></p>
     <p>Développé par <strong class="auteur">mvriuus</strong> · Le Café Français n'est pas affilié à Discord Inc.</p>
   </div>
 </footer>
@@ -1623,7 +1623,7 @@ main, .pied { position: relative; z-index: 1; }
   racine.lang = 'fr';
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
-  const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduit = racine.getAttribute('data-animations') === 'reduites';
   const g = window.gsap;
   const ST = window.ScrollTrigger;
   const anime = !reduit && !!g && !!ST;
@@ -2269,6 +2269,19 @@ main, .pied { position: relative; z-index: 1; }
       const r = await fetch(WIDGET, { signal: ctrl.signal, cache: 'no-store' });
       if (r.ok) appliquerWidget(await r.json());
     } catch (e) { /* hors ligne ou bloqué : on garde les valeurs fixes */ }
+  })();
+
+  /* ---------- Réduire ou réactiver les animations ---------- */
+  (function animations() {
+    const btn = $('#animations');
+    btn.setAttribute('aria-pressed', String(reduit));
+    btn.textContent = reduit ? 'Réactiver les animations' : 'Réduire les animations';
+    btn.addEventListener('click', () => {
+      try {
+        if (reduit) localStorage.removeItem('cafe-animations'); else localStorage.setItem('cafe-animations', 'reduites');
+      } catch (e) { /* stockage indisponible : le choix ne sera pas retenu */ }
+      location.reload();
+    });
   })();
 
   /* ---------- Copier l'invitation ---------- */

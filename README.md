@@ -21,6 +21,7 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - « Commande ton café » : quatre questions qui révèlent la boisson et la table du café faites pour le visiteur, avec ses salons conseillés.
 - « Attrape les grains » : un mini-jeu de 45 secondes, avec un record gardé sur l'appareil.
 - Un bouton « Ambiance » qui joue un fond sonore de café, créé directement dans la page (aucun fichier audio).
+- Les animations jouent pour tout le monde, même sur les appareils réglés en « mouvement réduit ». Le bouton « Réduire les animations », dans le pied de page, permet à chaque visiteur de les couper (choix gardé sur son appareil).
 - Des surprises : cliquer sur la tasse du logo la remplit, taper « café » au clavier fait pleuvoir des grains, taper « boo » lâche des chauves-souris.
 
 ## Données en direct
