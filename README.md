@@ -19,9 +19,9 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - Trois étapes pour rejoindre le serveur, une FAQ, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
 - À la première visite, l'entrée « Pousser la porte » : la devanture du café s'ouvre avec un tintement de clochette. Le bouton « Repasser la porte », dans le pied de page, la fait revenir.
 - « Commande ton café » : quatre questions qui révèlent la boisson et la table du café faites pour le visiteur, avec ses salons conseillés.
-- « Attrape les grains » : un mini-jeu de 45 secondes, avec un record gardé sur l'appareil.
+- « Attrape les grains » : un mini-jeu de 45 secondes, avec un record gardé sur l'appareil et un classement de la semaine (voir plus bas). Avant de jouer, le visiteur entre son pseudo Discord ; chaque dimanche à minuit, le n°1 gagne 250 000 grains et le classement repart à zéro.
 - Un bouton « Ambiance » qui joue un fond sonore de café, créé directement dans la page (aucun fichier audio).
-- Les animations jouent pour tout le monde, même sur les appareils réglés en « mouvement réduit ». Le bouton « Réduire les animations », dans le pied de page, permet à chaque visiteur de les couper (choix gardé sur son appareil).
+- Les animations jouent pour tout le monde, même sur les appareils réglés en « mouvement réduit ». L'interrupteur « Animations », en bas du pied de page, permet à chaque visiteur de les couper (choix gardé sur son appareil).
 - Des surprises : cliquer sur la tasse du logo la remplit, taper « café » au clavier fait pleuvoir des grains, taper « boo » lâche des chauves-souris.
 
 ## Données en direct
@@ -33,6 +33,53 @@ https://discord.com/api/guilds/829698572927762432/widget.json
 ```
 
 Une fois le site en ligne, elle affiche le nombre de membres connectés, l'occupation de chaque salon vocal et les avatars des personnes en ligne. Le widget doit rester activé dans les paramètres du serveur (Paramètres du serveur → Widget). Si le widget ne répond pas, la page garde les valeurs écrites dans le HTML.
+
+## Classement du mini-jeu
+
+Les scores sont enregistrés dans **Firebase Firestore** (Google, gratuit). Tant que le projet n'est pas renseigné, le jeu fonctionne comme avant, sans pseudo ni classement.
+
+**Mise en place (une seule fois)**
+
+1. Sur [console.firebase.google.com](https://console.firebase.google.com), crée un projet (Google Analytics n'est pas nécessaire).
+2. Menu **Créer → Firestore Database → Créer une base de données**, emplacement européen (`eur3` ou `europe-west`), mode **production**.
+3. Onglet **Règles** de Firestore : remplace tout par les règles ci-dessous, puis **Publier**.
+4. **Paramètres du projet → Vos applications → Web (`</>`)** : enregistre une application, puis copie `projectId` et `apiKey`.
+5. Dans `index.html`, renseigne-les : `const CLASSEMENT = { projet: 'ton-projet', cle: 'ta-cle' };`
+
+La clé `apiKey` d'une application web Firebase n'est pas secrète : elle peut être visible dans la page, ce sont les règles qui protègent les données.
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{base}/documents {
+    // Une collection par semaine (semaine-AAAA-MM-JJ, date du lundi), un document par joueur
+    match /{semaine}/{joueur} {
+      function semaineValide() {
+        return semaine.matches('semaine-[0-9]{4}-[0-9]{2}-[0-9]{2}');
+      }
+      function scoreValide() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['pseudo', 'score', 'maj'])
+          && d.pseudo is string && d.pseudo.size() >= 2 && d.pseudo.size() <= 24
+          && d.score is int && d.score >= 1 && d.score <= 300
+          && d.maj == request.time;
+      }
+      allow read: if semaineValide();
+      allow create: if semaineValide() && scoreValide();
+      allow update: if semaineValide() && scoreValide() && request.resource.data.score > resource.data.score;
+      allow delete: if false;
+    }
+  }
+}
+```
+
+**Fonctionnement**
+
+- La semaine va du lundi 0 h au dimanche minuit, heure de Paris. Chaque semaine a sa collection, `semaine-2026-10-19` par exemple.
+- Chaque joueur a un document par semaine, nommé d'après son pseudo. Il garde son meilleur score et l'heure (`maj`) à laquelle il l'a fait.
+- Le site affiche le top 10, la place du joueur s'il est plus loin, et le gagnant de la semaine précédente.
+- Un score au-delà de 300 est refusé : c'est impossible en 45 secondes. Si la durée du jeu change, adapte `SCORE_MAX` dans `index.html` et la limite dans les règles.
+- **Avant de donner les 250 000 grains**, vérifie le gagnant : un classement sur un site ne peut pas être protégé à 100 % contre la triche, et n'importe qui peut taper le pseudo de quelqu'un d'autre. Les scores se consultent dans la console Firebase (Firestore → la collection de la semaine). Pour retirer un score, supprime son document depuis la console.
 
 ## Saisons
 

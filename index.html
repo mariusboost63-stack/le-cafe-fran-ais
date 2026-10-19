@@ -487,6 +487,15 @@ main, .pied { position: relative; z-index: 1; }
 .pied .cadre { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; color: var(--brume); font-size: 14px; }
 .pied a { color: var(--lait); }
 .pied .auteur { color: var(--lait); font-weight: 600; }
+/* Interrupteur des animations */
+.pied-anim { display: inline-flex; align-items: center; gap: 12px; }
+.interrupteur { position: relative; flex: none; width: 50px; height: 28px; padding: 0; border-radius: 999px; border: 1px solid var(--trait); background: color-mix(in srgb, var(--lait) 8%, transparent); cursor: pointer; transition: background-color .25s, border-color .25s; }
+.int-bouton { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--brume); box-shadow: 0 2px 6px rgb(0 0 0 / .35); transition: transform .3s cubic-bezier(.3, 1.4, .5, 1), background-color .25s; }
+.interrupteur[aria-checked="true"] { background: var(--creme); border-color: var(--creme); }
+.interrupteur[aria-checked="true"] .int-bouton { transform: translateX(22px); background: var(--lait); }
+.interrupteur:hover { border-color: var(--lait); }
+.interrupteur:focus-visible { outline: 2px solid var(--lait); outline-offset: 3px; }
+.int-etat { min-width: 11ch; font: 500 12px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brume); }
 
 /* Descriptions des salons */
 .salon .desc { grid-column: 4; font: 400 14px/1.35 var(--f-texte); color: var(--p-doux); }
@@ -1016,20 +1025,54 @@ main, .pied { position: relative; z-index: 1; }
 
 /* La pause café : attrape les grains */
 .pause { padding-block: clamp(80px, 10vw, 140px); }
-.pause-grille { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
-.pause-tete { display: grid; gap: 20px; min-width: 0; }
+.pause-grille { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-areas: "tete jeu" ". classement"; gap: clamp(28px, 4vw, 48px) clamp(32px, 6vw, 96px); align-items: center; }
+.pause-tete { grid-area: tete; display: grid; gap: 20px; min-width: 0; }
 .pause-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 40ch; }
 .pause-commandes { color: var(--brume); font-size: 15px; }
 .pause-record { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
 .pause-record b { margin-left: 8px; font: 800 30px/1 var(--f-titre); letter-spacing: 0; color: var(--creme); font-variant-numeric: tabular-nums; }
-.jeu { position: relative; min-width: 0; border-radius: 24px; overflow: hidden; border: 1px solid var(--trait); background: radial-gradient(ellipse at 50% 125%, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 65%); }
+.jeu { grid-area: jeu; position: relative; min-width: 0; border-radius: 24px; overflow: hidden; border: 1px solid var(--trait); background: radial-gradient(ellipse at 50% 125%, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 65%); }
 #jeu-toile { display: block; width: 100%; height: clamp(360px, 56vh, 480px); cursor: ew-resize; }
 .jeu.en-jeu #jeu-toile { touch-action: none; cursor: none; }
 .jeu-ecran { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 24px; text-align: center; background: color-mix(in srgb, var(--nuit) 55%, transparent); }
 .jeu-titre { font: 800 clamp(30px, 3.6vw, 46px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; }
 .jeu-texte { color: var(--brume); max-width: 34ch; }
 .jeu-lien { color: var(--lait); font-size: 15px; }
-@media (max-width: 860px) { .pause-grille { grid-template-columns: minmax(0, 1fr); } }
+.jeu-statut { font-weight: 600; color: var(--lait); max-width: 36ch; }
+.jeu-form { display: grid; justify-items: center; gap: 10px; width: min(300px, 100%); }
+.jeu-pseudo { display: grid; gap: 6px; width: 100%; text-align: left; }
+.jeu-pseudo label { font: 500 12px/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--brume); }
+.jeu-pseudo input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--trait); background: color-mix(in srgb, var(--nuit) 85%, transparent); color: var(--lait); font: 600 16px/1.2 var(--f-texte); transition: border-color .2s; }
+.jeu-pseudo input::placeholder { color: color-mix(in srgb, var(--brume) 70%, transparent); font-weight: 500; }
+.jeu-pseudo input:focus { outline: none; border-color: var(--creme); }
+.jeu-erreur { color: var(--rouge); font-size: 13px; }
+.jeu-erreur:empty { display: none; }
+.jeu-changer { padding: 0; border: 0; background: none; color: var(--brume); font: inherit; font-size: 14px; text-decoration: underline; cursor: pointer; }
+.jeu-changer:hover { color: var(--lait); }
+.jeu-lot { max-width: 34ch; color: var(--brume); font-size: 14px; }
+.jeu-lot b, .cl-lot b { color: var(--ambre); }
+
+/* Classement de la semaine */
+.classement { grid-area: classement; display: grid; gap: 14px; min-width: 0; padding: 22px 22px 18px; border-radius: 20px; border: 1px solid var(--trait); background: color-mix(in srgb, var(--lait) 3%, transparent); }
+.cl-tete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+.cl-titre { font: 800 clamp(22px, 2.2vw, 28px)/1.1 var(--f-titre); font-stretch: 85%; letter-spacing: -.01em; }
+.cl-fin { font: 500 12px/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brume); }
+.cl-lot { color: var(--brume); font-size: 14.5px; }
+.cl-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.cl-ligne { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 12px; background: color-mix(in srgb, var(--lait) 3%, transparent); }
+.cl-ligne.moi { box-shadow: inset 0 0 0 1px var(--creme); }
+.cl-rang { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 800 14px/1 var(--f-titre); color: var(--brume); border: 1px solid var(--trait); }
+.cl-ligne:nth-child(1) .cl-rang { background: var(--ambre); border-color: var(--ambre); color: var(--nuit); }
+.cl-ligne:nth-child(2) .cl-rang { background: #c9d1e0; border-color: #c9d1e0; color: var(--nuit); }
+.cl-ligne:nth-child(3) .cl-rang { background: var(--creme); border-color: var(--creme); color: var(--nuit); }
+.cl-pseudo { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.cl-score { font: 800 18px/1 var(--f-titre); font-variant-numeric: tabular-nums; }
+.cl-score small { margin-left: 4px; font: 500 11px/1 var(--f-mono); color: var(--brume); }
+.cl-vide { color: var(--brume); padding: 6px 0; }
+.cl-moi { font: 500 13px/1.4 var(--f-mono); color: var(--creme); }
+.cl-precedent { padding-top: 12px; border-top: 1px solid var(--trait); color: var(--brume); font-size: 14px; }
+.cl-precedent b { color: var(--lait); }
+@media (max-width: 860px) { .pause-grille { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tete" "jeu" "classement"; } }
 
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
@@ -1493,9 +1536,29 @@ main, .pied { position: relative; z-index: 1; }
         <div class="jeu-ecran" id="jeu-ecran">
           <p class="jeu-titre" id="jeu-titre">Prêt pour une pause&nbsp;?</p>
           <p class="jeu-texte" id="jeu-texte">45 secondes pour remplir ta tasse.</p>
-          <button class="btn btn-plein" id="jeu-jouer" type="button">Jouer</button>
+          <p class="jeu-statut" id="jeu-statut" role="status" hidden></p>
+          <form class="jeu-form" id="jeu-form" novalidate>
+            <div class="jeu-pseudo" id="jeu-pseudo" hidden>
+              <label for="jeu-nom">Ton pseudo Discord</label>
+              <input id="jeu-nom" type="text" maxlength="24" autocomplete="nickname" autocapitalize="off" spellcheck="false" placeholder="Ton pseudo">
+              <p class="jeu-erreur" id="jeu-erreur" role="alert"></p>
+            </div>
+            <button class="btn btn-plein" id="jeu-jouer" type="submit">Jouer</button>
+            <button class="jeu-changer" id="jeu-changer" type="button" hidden>Changer de pseudo</button>
+          </form>
+          <p class="jeu-lot" id="jeu-lot" hidden>Chaque dimanche, le n°1 du classement gagne <b>250&nbsp;000 grains</b> sur le serveur.</p>
           <a class="jeu-lien" id="jeu-lien" href="https://discord.gg/france" target="_blank" rel="noopener" hidden>Les vrais grains t'attendent sur le serveur</a>
         </div>
+      </div>
+      <div class="classement" id="classement" hidden>
+        <div class="cl-tete">
+          <h3 class="cl-titre">Classement de la semaine</h3>
+          <span class="cl-fin" id="cl-fin"></span>
+        </div>
+        <p class="cl-lot">Le classement se termine chaque dimanche à minuit&nbsp;: le n°1 remporte <b>250&nbsp;000 grains</b> sur le serveur Discord, puis tout repart à zéro.</p>
+        <ol class="cl-liste" id="cl-liste"><li class="cl-vide">Chargement du classement…</li></ol>
+        <p class="cl-moi" id="cl-moi" hidden></p>
+        <p class="cl-precedent" id="cl-precedent" hidden></p>
       </div>
     </div>
   </section>
@@ -1610,8 +1673,13 @@ main, .pied { position: relative; z-index: 1; }
 <footer class="pied">
   <div class="cadre">
     <p>Le Café Français · serveur Discord francophone depuis 2021 · <a href="https://discord.gg/france" target="_blank" rel="noopener">discord.gg/france</a></p>
-    <p class="indice-cafe">Envie d'un café&nbsp;? Tape «&nbsp;café&nbsp;» sur ton clavier. <button class="revoir-porte" id="revoir-porte" type="button">Repasser la porte</button> · <button class="revoir-porte" id="animations" type="button" aria-pressed="false">Réduire les animations</button></p>
+    <p class="indice-cafe">Envie d'un café&nbsp;? Tape «&nbsp;café&nbsp;» sur ton clavier. <button class="revoir-porte" id="revoir-porte" type="button">Repasser la porte</button></p>
     <p>Développé par <strong class="auteur">mvriuus</strong> · Le Café Français n'est pas affilié à Discord Inc.</p>
+    <div class="pied-anim">
+      <span id="anim-etiquette">Animations</span>
+      <button class="interrupteur" id="animations" type="button" role="switch" aria-checked="true" aria-labelledby="anim-etiquette"><span class="int-bouton" aria-hidden="true"></span></button>
+      <span class="int-etat" id="anim-etat" aria-hidden="true">Activées</span>
+    </div>
   </div>
 </footer>
 <canvas class="pluie-ecran" id="pluie-ecran" aria-hidden="true"></canvas>
@@ -2063,11 +2131,136 @@ main, .pied { position: relative; z-index: 1; }
     question();
   })();
 
+  /* ---------- La pause café : classement de la semaine ---------- */
+  // Les scores sont gardés dans Firebase Firestore (voir README, « Classement du mini-jeu »).
+  // Laisser « projet » vide désactive le classement : le jeu fonctionne alors comme avant.
+  const CLASSEMENT = { projet: '', cle: '' };
+  const SCORE_MAX = 300; // au-delà, impossible en 45 secondes : refusé (même limite dans les règles Firestore)
+  const classement = (function () {
+    const actif = Boolean(CLASSEMENT.projet && CLASSEMENT.cle);
+    const lirePseudo = () => { try { return localStorage.getItem('cafe-pseudo') || ''; } catch (e) { return ''; } };
+    const garderPseudo = (v) => { try { localStorage.setItem('cafe-pseudo', v); } catch (e) { /* stockage indisponible */ } };
+    if (!actif) return { actif, lirePseudo, garderPseudo };
+
+    const bloc = $('#classement'), liste = $('#cl-liste'), moi = $('#cl-moi'), finAff = $('#cl-fin'), precedent = $('#cl-precedent');
+    bloc.hidden = false;
+    const racineApi = `projects/${CLASSEMENT.projet}/databases/(default)/documents`;
+    const el = (tag, cls, texte) => Object.assign(document.createElement(tag), { className: cls, textContent: texte });
+    const nombre = (n) => n.toLocaleString('fr-FR');
+    const rangTexte = (r) => (r === 1 ? '1er' : `${r}e`);
+
+    // Semaine du lundi 0 h au dimanche minuit, heure de Paris
+    const PARIS = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
+    const parties = (t) => Object.fromEntries(PARIS.formatToParts(t).filter((x) => x.type !== 'literal').map((x) => [x.type, +x.value]));
+    const decalage = (t) => { const p = parties(t); return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - Math.floor(t / 1000) * 1000; };
+    function semaine(t = Date.now()) {
+      const p = parties(t);
+      const jour = Date.UTC(p.year, p.month - 1, p.day);
+      const lundi = jour - ((new Date(jour).getUTCDay() + 6) % 7) * 864e5;
+      const finParis = lundi + 7 * 864e5;
+      return { id: `semaine-${new Date(lundi).toISOString().slice(0, 10)}`, fin: finParis - decalage(finParis - decalage(finParis)) };
+    }
+    // Un document par joueur et par semaine, identifié par son pseudo
+    const idJoueur = (pseudo) => pseudo.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9._-]+/g, '_').replace(/^[_.]+|[_.]+$/g, '') || 'joueur';
+
+    async function api(action, corps) {
+      const res = await fetch(`https://firestore.googleapis.com/v1/${racineApi}${action}?key=${encodeURIComponent(CLASSEMENT.cle)}`,
+        corps ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) } : {});
+      if (!res.ok) throw Object.assign(new Error(`Firestore ${res.status}`), { status: res.status });
+      return res.json();
+    }
+    const lireDoc = (d) => ({ id: d.name.split('/').pop(), pseudo: d.fields.pseudo.stringValue, score: Number(d.fields.score.integerValue) });
+    async function meilleurs(sem) {
+      const rep = await api(':runQuery', { structuredQuery: { from: [{ collectionId: sem.id }], orderBy: [{ field: { fieldPath: 'score' }, direction: 'DESCENDING' }], limit: 10 } });
+      return rep.filter((r) => r.document).map((r) => lireDoc(r.document));
+    }
+    async function rang(sem, score) {
+      const rep = await api(':runAggregationQuery', { structuredAggregationQuery: {
+        structuredQuery: { from: [{ collectionId: sem.id }], where: { fieldFilter: { field: { fieldPath: 'score' }, op: 'GREATER_THAN', value: { integerValue: String(score) } } } },
+        aggregations: [{ alias: 'devant', count: {} }] } });
+      return Number(rep[0]?.result?.aggregateFields?.devant?.integerValue || 0) + 1;
+    }
+    async function scoreDe(sem, id) {
+      try { return lireDoc(await api(`/${sem.id}/${id}`)); } catch (e) { if (e.status === 404) return null; throw e; }
+    }
+
+    let semaineAffichee = '';
+    async function afficher() {
+      const sem = semaine();
+      semaineAffichee = sem.id;
+      const pseudo = lirePseudo();
+      const id = pseudo && idJoueur(pseudo);
+      try {
+        const lignes = await meilleurs(sem);
+        liste.replaceChildren(...(lignes.length ? lignes.map((l, i) => {
+          const li = el('li', `cl-ligne${l.id === id ? ' moi' : ''}`);
+          const score = el('span', 'cl-score', nombre(l.score));
+          score.append(el('small', '', 'grains'));
+          li.append(el('span', 'cl-rang', String(i + 1)), el('span', 'cl-pseudo', l.pseudo), score);
+          return li;
+        }) : [el('li', 'cl-vide', 'Personne n\'a encore joué cette semaine. À toi d\'ouvrir le bal !')]));
+        moi.hidden = true;
+        if (id && !lignes.some((l) => l.id === id)) {
+          const mien = await scoreDe(sem, id);
+          if (mien) { moi.textContent = `Toi : ${rangTexte(await rang(sem, mien.score))} avec ${nombre(mien.score)} grains`; moi.hidden = false; }
+        }
+        // Le gagnant de la semaine précédente reste affiché après la remise à zéro
+        const [gagnant] = await meilleurs(semaine(Date.now() - 7 * 864e5));
+        precedent.hidden = !gagnant;
+        if (gagnant) precedent.replaceChildren('Gagnant de la semaine dernière : ', el('b', '', gagnant.pseudo), ` avec ${nombre(gagnant.score)} grains.`);
+      } catch (e) {
+        liste.replaceChildren(el('li', 'cl-vide', 'Classement indisponible pour le moment.'));
+      }
+    }
+    // Enregistre le score s'il bat le meilleur score de la semaine de ce pseudo
+    async function envoyer(pseudo, score) {
+      if (score < 1) return { etat: 'zero' };
+      if (score > SCORE_MAX) return { etat: 'refuse' };
+      const sem = semaine(), id = idJoueur(pseudo);
+      const avant = await scoreDe(sem, id);
+      if (avant && avant.score >= score) return { etat: 'pas-mieux', score: avant.score, rang: await rang(sem, avant.score) };
+      await api(':commit', { writes: [{
+        update: { name: `${racineApi}/${sem.id}/${id}`, fields: { pseudo: { stringValue: pseudo }, score: { integerValue: String(score) } } },
+        updateMask: { fieldPaths: ['pseudo', 'score'] },
+        updateTransforms: [{ fieldPath: 'maj', setToServerValue: 'REQUEST_TIME' }],
+      }] });
+      return { etat: 'ok', score, rang: await rang(sem, score) };
+    }
+    function message(r) {
+      if (r.etat === 'ok') return r.rang === 1 ? 'Score enregistré : tu prends la 1re place du classement !' : `Score enregistré : tu es ${rangTexte(r.rang)} du classement de la semaine.`;
+      if (r.etat === 'pas-mieux') return `Ton meilleur score de la semaine reste ${nombre(r.score)} (${rangTexte(r.rang)}).`;
+      if (r.etat === 'zero') return 'Attrape au moins un grain pour entrer au classement.';
+      return 'Ce score ne peut pas être enregistré.';
+    }
+
+    // Fin de semaine : compte à rebours, et nouveau classement le lundi
+    function majFin() {
+      const sem = semaine();
+      if (semaineAffichee && sem.id !== semaineAffichee) afficher();
+      const ms = Math.max(0, sem.fin - Date.now());
+      const j = Math.floor(ms / 864e5), h = Math.floor((ms % 864e5) / 36e5), m = Math.floor((ms % 36e5) / 6e4);
+      finAff.textContent = j > 0 ? `Fin dans ${j} j ${h} h` : h > 0 ? `Fin dans ${h} h ${m} min` : `Fin dans ${m} min`;
+    }
+    majFin();
+    setInterval(majFin, 30000);
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entrees) => { if (entrees.some((x) => x.isIntersecting)) { io.disconnect(); afficher(); } }, { rootMargin: '300px' });
+      io.observe(bloc);
+    } else afficher();
+
+    return { actif, lirePseudo, garderPseudo, afficher, envoyer, message };
+  })();
+
   /* ---------- La pause café : attrape les grains ---------- */
   (function jeu() {
     const toile = $('#jeu-toile'), c = toile.getContext('2d');
     const boite = $('#jeu'), ecran = $('#jeu-ecran'), titre = $('#jeu-titre'), texte = $('#jeu-texte');
     const bouton = $('#jeu-jouer'), lien = $('#jeu-lien'), recordAff = $('#jeu-record');
+    const form = $('#jeu-form'), champ = $('#jeu-pseudo'), nom = $('#jeu-nom'), erreur = $('#jeu-erreur'), changer = $('#jeu-changer'), statut = $('#jeu-statut');
+    let pseudo = classement.lirePseudo();
+    const lot = $('#jeu-lot');
+    if (classement.actif) { champ.hidden = false; lot.hidden = false; nom.value = pseudo; }
     const css = getComputedStyle(racine);
     const coul = (n, d) => css.getPropertyValue(n).trim() || d;
     const C = { lait: coul('--lait', '#f2f1f9'), cafe: coul('--cafe', '#3b2214'), creme: coul('--creme', '#c99263'), grain: coul('--grain', '#8a5a34'),
@@ -2208,10 +2401,35 @@ main, .pied { position: relative; z-index: 1; }
       texte.textContent = `Tu as attrapé ${score} grain${score > 1 ? 's' : ''}.` + (nouveau ? '' : ` Ton record : ${record}.`);
       bouton.textContent = 'Rejouer';
       lien.hidden = false; ecran.hidden = false;
+      if (classement.actif) {
+        champ.hidden = true; lot.hidden = true; changer.hidden = false;
+        statut.hidden = false; statut.textContent = 'Envoi au classement…';
+        classement.envoyer(pseudo, score)
+          .then((r) => { statut.textContent = classement.message(r); })
+          .catch(() => { statut.textContent = 'Le classement n\'a pas pu être mis à jour. Réessaie un peu plus tard.'; })
+          .finally(() => classement.afficher());
+      }
       dessiner();
       bouton.focus({ preventScroll: true });
     }
-    bouton.addEventListener('click', demarrer);
+    // Avant de jouer : le pseudo Discord, pour le classement (gardé sur l'appareil)
+    form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      if (classement.actif && !champ.hidden) {
+        const saisi = nom.value.trim().replace(/\s+/g, ' ');
+        if (saisi.length < 2) { erreur.textContent = 'Entre ton pseudo Discord pour jouer (2 caractères minimum).'; nom.focus(); return; }
+        erreur.textContent = '';
+        pseudo = saisi;
+        classement.garderPseudo(pseudo);
+      }
+      statut.hidden = true;
+      demarrer();
+    });
+    changer.addEventListener('click', () => {
+      champ.hidden = false; lot.hidden = false; changer.hidden = true; statut.hidden = true;
+      bouton.textContent = 'Jouer';
+      nom.value = pseudo; nom.focus();
+    });
     const viser = (ev) => { const r = toile.getBoundingClientRect(); cibleX = borner(ev.clientX - r.left); };
     toile.addEventListener('pointermove', viser);
     toile.addEventListener('pointerdown', (ev) => { viser(ev); if (etat === 'jeu' && toile.setPointerCapture) toile.setPointerCapture(ev.pointerId); });
@@ -2307,14 +2525,15 @@ main, .pied { position: relative; z-index: 1; }
 
   /* ---------- Réduire ou réactiver les animations ---------- */
   (function animations() {
-    const btn = $('#animations');
-    btn.setAttribute('aria-pressed', String(reduit));
-    btn.textContent = reduit ? 'Réactiver les animations' : 'Réduire les animations';
+    const btn = $('#animations'), etat = $('#anim-etat');
+    const afficher = (actives) => { btn.setAttribute('aria-checked', String(actives)); etat.textContent = actives ? 'Activées' : 'Désactivées'; };
+    afficher(!reduit);
     btn.addEventListener('click', () => {
+      afficher(reduit); // l'interrupteur bascule, puis la page se recharge avec le nouveau réglage
       try {
         if (reduit) localStorage.removeItem('cafe-animations'); else localStorage.setItem('cafe-animations', 'reduites');
       } catch (e) { /* stockage indisponible : le choix ne sera pas retenu */ }
-      location.reload();
+      setTimeout(() => location.reload(), 320);
     });
   })();
 
