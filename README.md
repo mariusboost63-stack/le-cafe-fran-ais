@@ -15,6 +15,9 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - Les salons vocaux et leurs limites de places.
 - L'équipe, présentée sur des badges suspendus avec les profils de chacun : Gérants, Administrateurs, Responsables, et le reste de l'équipe sur le Discord.
 - Trois étapes pour rejoindre le serveur, une FAQ, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
+- À la première visite, l'entrée « Pousser la porte » : la devanture du café s'ouvre avec un tintement de clochette. Le bouton « Repasser la porte », dans le pied de page, la fait revenir.
+- « Commande ton café » : quatre questions qui révèlent la boisson et la table du café faites pour le visiteur, avec ses salons conseillés.
+- « Attrape les grains » : un mini-jeu de 45 secondes, avec un record gardé sur l'appareil.
 - Un bouton « Ambiance » qui joue un fond sonore de café, créé directement dans la page (aucun fichier audio).
 - Des surprises : cliquer sur la tasse du logo la remplit, taper « café » au clavier fait pleuvoir des grains, taper « boo » lâche des chauves-souris.
 
