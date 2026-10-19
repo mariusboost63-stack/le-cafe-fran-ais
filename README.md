@@ -12,7 +12,7 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - Un ruban « Bonjour, Salut, Coucou… » dont la vitesse suit le défilement.
 - La visite des salles en défilement horizontal bleu, blanc, rouge : le comptoir (Café Français), la terrasse (Centre de Convivialité) et l'arrière-salle (Divertissements), avec la description de chaque salon.
 - Le système de niveaux : un compteur grimpe de palier en palier, de @Curieux (niveau 2) à @Légende (niveau 100), et affiche les avantages débloqués (couleurs de pseudo, bonus de grains, virements).
-- L'événement Halloween 2026 : compte à rebours en direct jusqu'à la prochaine quête, lien vers le salon #halloween (`https://discord.gg/tUAGq8KCT`), calendrier des 7 quêtes, barème des citrouilles, récompenses et rôles à gagner.
+- L'événement Halloween 2026 : compte à rebours en direct jusqu'à la prochaine quête, lien vers le salon #les-quêtes (`https://discord.com/channels/829698572927762432/1560700305631481959`, s'ouvre pour les membres du serveur), calendrier des 7 quêtes, barème des citrouilles, récompenses et rôles à gagner.
 - Les grains : toutes les façons d'en gagner (vocal, messages, /journalier, /hebdomadaire, casino, /voler), un calculateur de gains en vocal et la boutique, avec le temps de vocal nécessaire pour chaque article.
 - Les salons vocaux et leurs limites de places.
 - L'équipe, présentée sur des badges suspendus avec les profils de chacun : Gérants, Administrateurs, Responsables, et le reste de l'équipe sur le Discord.
