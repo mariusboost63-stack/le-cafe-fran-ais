@@ -62,6 +62,12 @@ service cloud.firestore {
         && request.resource.data.debut == request.time;
     }
 
+    // Joueurs bannis du classement : un document par identité (ID du document de score) ou par pseudo en minuscules.
+    // Géré seulement depuis la console Firebase : le site ne peut ni le lire ni l'écrire.
+    match /bannis/{id} {
+      allow read, write: if false;
+    }
+
     // Classement : une collection par semaine (scores-AAAA-MM-JJ, date du lundi), un document par joueur
     match /{semaine}/{uid} {
       function semaineValide() {
@@ -73,6 +79,11 @@ service cloud.firestore {
         let lundi = timestamp.date(int(p[1]), int(p[2]), int(p[3]));
         return request.time > lundi - duration.value(2, 'h') && request.time < lundi + duration.value(168, 'h');
       }
+      // Ni l'identité ni le pseudo ne doivent être bannis
+      function nonBanni(pseudo) {
+        return !exists(/databases/$(base)/documents/bannis/$(uid))
+          && !exists(/databases/$(base)/documents/bannis/$(pseudo.lower()));
+      }
       // Chacun n'écrit que son propre score, après une vraie partie (au moins 40 s, au plus 10 min)
       function scoreValide() {
         let d = request.resource.data;
@@ -80,6 +91,7 @@ service cloud.firestore {
         return request.auth != null && request.auth.uid == uid
           && d.keys().hasOnly(['pseudo', 'score', 'maj', 'partie'])
           && d.pseudo is string && d.pseudo.size() >= 2 && d.pseudo.size() <= 24
+          && !d.pseudo.matches('.*/.*') && nonBanni(d.pseudo)
           && d.score is int && d.score >= 1 && d.score <= 200
           && d.maj == request.time
           && d.partie == partie.id
@@ -103,12 +115,28 @@ service cloud.firestore {
 - Un score n'est accepté qu'**après une vraie partie** : le début de chaque partie est noté par le serveur (collection `parties`), et le score n'est accepté qu'entre 40 secondes et 10 minutes plus tard, une seule fois par partie.
 - Le score doit battre le précédent du joueur, et ne pas dépasser **200** : c'est impossible en 45 secondes (en attrapant absolument tout, une partie rapporte au plus 180 environ). Si la durée du jeu change, adapte `SCORE_MAX` dans `index.html` et la limite dans les règles.
 - On n'écrit que dans la **semaine en cours** ; personne ne peut supprimer un score depuis le site.
+- Un joueur **banni** (par son identité ou son pseudo) ne peut plus enregistrer de score.
 
 **Fonctionnement**
 
 - La semaine va du lundi 0 h au dimanche minuit, heure de Paris. Chaque semaine a sa collection, `scores-2026-10-19` par exemple (date du lundi).
 - Le site affiche le top 10 (une ligne par pseudo), la place du joueur s'il est plus loin, et le gagnant de la semaine précédente.
 - **Avant de donner les 250 000 grains**, vérifie le gagnant : un tricheur peut encore gonfler *son propre* score (jusqu'à 200), et n'importe qui peut choisir le pseudo d'un autre. Les scores se consultent dans la console Firebase (Firestore → la collection de la semaine) ; un score suspect se supprime depuis la console.
+
+**Bannir un joueur du classement**
+
+Dans la console Firebase, **Firestore Database** :
+
+1. Ouvre la collection de la semaine (`scores-…`) et repère le score du tricheur : l'**ID du document** est son identité, le champ `pseudo` son pseudo.
+2. Crée la collection **`bannis`** (la première fois, « Commencer une collection ») et ajoute-y un document dont l'**ID** est :
+   - l'**identité** du joueur (l'ID du document copié à l'étape 1) : bloque cet appareil, quel que soit le pseudo utilisé ;
+   - et/ou son **pseudo en minuscules** (`toto` pour « Toto ») : bloque ce pseudo sur tous les appareils.
+   Mets un champ au choix, par exemple `raison` = `triche`.
+3. Supprime son document de score dans la collection de la semaine (les trois points ⋮ → Supprimer le document) : il disparaît du classement.
+
+Pour débannir, supprime le document dans `bannis`. Le site ne peut ni lire ni modifier cette liste.
+
+Limite : l'identité est liée au navigateur. En effaçant les données du site ou en changeant d'appareil **et** de pseudo, un tricheur revient comme un nouveau joueur ; il devra alors refaire de vraies parties, plafonnées à 200. D'où la vérification du gagnant avant de verser les grains.
 
 ## Saisons
 

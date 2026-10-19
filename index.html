@@ -2459,7 +2459,7 @@ main, .pied { position: relative; z-index: 1; }
         statut.hidden = false; statut.textContent = 'Envoi au classement…';
         classement.envoyer(pseudo, score)
           .then((r) => { statut.textContent = classement.message(r); })
-          .catch(() => { statut.textContent = 'Le classement n\'a pas pu être mis à jour. Réessaie un peu plus tard.'; })
+          .catch((e) => { statut.textContent = e && e.status === 403 ? 'Ce score n\'a pas été accepté par le classement.' : 'Le classement n\'a pas pu être mis à jour. Réessaie un peu plus tard.'; })
           .finally(() => classement.afficher());
       }
       dessiner();
@@ -2471,6 +2471,7 @@ main, .pied { position: relative; z-index: 1; }
       if (classement.actif && !champ.hidden) {
         const saisi = nom.value.trim().replace(/\s+/g, ' ');
         if (saisi.length < 2) { erreur.textContent = 'Entre ton pseudo Discord pour jouer (2 caractères minimum).'; nom.focus(); return; }
+        if (saisi.includes('/')) { erreur.textContent = 'Le pseudo ne peut pas contenir « / ».'; nom.focus(); return; }
         erreur.textContent = '';
         pseudo = saisi;
         classement.garderPseudo(pseudo);
