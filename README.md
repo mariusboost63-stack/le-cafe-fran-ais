@@ -2,6 +2,8 @@
 
 Site vitrine animé du serveur Discord francophone **Le Café Français** : [discord.gg/france](https://discord.gg/france).
 
+En ligne sur **[cafe-fr.com](https://cafe-fr.com)**, hébergé sur GitHub Pages avec le domaine `cafe-fr.com` (fichier `CNAME`). Chaque modification poussée sur la branche `main` est publiée automatiquement.
+
 Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les animations utilisent [GSAP](https://gsap.com) et ScrollTrigger, chargés depuis cdnjs.
 
 ## Ce que contient la page
@@ -48,13 +50,27 @@ Pour voir une version sans rien changer, ajoute `#saison-halloween` ou `#saison-
 
 ## Aperçu des liens partagés
 
-Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. Les adresses utilisées sont celles de GitHub Pages (`https://mariusboost63-stack.github.io/le-cafe-fran-ais/`). Si tu passes à un nom de domaine, remplace cette adresse dans les balises `og:` et `canonical` en haut de `index.html`.
+Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. Les balises `og:` et `canonical` en haut de `index.html` utilisent l'adresse `https://cafe-fr.com/`. Si le domaine change, remplace-la à ces endroits et dans le fichier `CNAME`.
 
-## Mettre en ligne avec GitHub Pages
+## Mise en ligne : GitHub Pages et le domaine cafe-fr.com
 
-1. Dans le dépôt, ouvre **Settings → Pages**.
-2. Dans **Source**, choisis **Deploy from a branch**, puis la branche `main` et le dossier `/ (root)`.
-3. Enregistre. Le site est publié en une minute environ, à l'adresse `https://<ton-pseudo>.github.io/<nom-du-depot>/`.
+Le domaine est chez Hostinger, le site est servi par GitHub Pages.
+
+**Dans hPanel** (Domaines → cafe-fr.com → DNS / Serveurs de noms → Gérer les enregistrements DNS), on garde les serveurs de noms de Hostinger et on remplace les enregistrements A et AAAA de `@` par ceux de GitHub Pages :
+
+| Type | Nom | Pointe vers |
+|---|---|---|
+| A | @ | 185.199.108.153 |
+| A | @ | 185.199.109.153 |
+| A | @ | 185.199.110.153 |
+| A | @ | 185.199.111.153 |
+| AAAA | @ | 2606:50c0:8000::153 |
+| AAAA | @ | 2606:50c0:8001::153 |
+| AAAA | @ | 2606:50c0:8002::153 |
+| AAAA | @ | 2606:50c0:8003::153 |
+| CNAME | www | mariusboost63-stack.github.io |
+
+**Dans GitHub** (Settings → Pages du dépôt) : source « Deploy from a branch », branche `main`, dossier `/ (root)`, domaine personnalisé `cafe-fr.com`, puis « Enforce HTTPS » une fois le certificat prêt.
 
 ## Modifier le contenu
 
