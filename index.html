@@ -2134,7 +2134,7 @@ main, .pied { position: relative; z-index: 1; }
   /* ---------- La pause café : classement de la semaine ---------- */
   // Les scores sont gardés dans Firebase Firestore (voir README, « Classement du mini-jeu »).
   // Laisser « projet » vide désactive le classement : le jeu fonctionne alors comme avant.
-  const CLASSEMENT = { projet: '', cle: '' };
+  const CLASSEMENT = { projet: 'cafe-fr', cle: 'AIzaSyAtTxp61GD0ExBnitW-fq1XFJQRNBTatY0' };
   const SCORE_MAX = 300; // au-delà, impossible en 45 secondes : refusé (même limite dans les règles Firestore)
   const classement = (function () {
     const actif = Boolean(CLASSEMENT.projet && CLASSEMENT.cle);
