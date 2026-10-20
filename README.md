@@ -19,7 +19,7 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - Trois étapes pour rejoindre le serveur, une FAQ, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
 - À la première visite, l'entrée « Pousser la porte » : la devanture du café s'ouvre avec un tintement de clochette. Le bouton « Repasser la porte », dans le pied de page, la fait revenir.
 - « Commande ton café » : quatre questions qui révèlent la boisson et la table du café faites pour le visiteur, avec ses salons conseillés.
-- « Attrape les grains » : un mini-jeu de 45 secondes, avec un record gardé sur l'appareil. Le score se partage sur le Discord avec une image (voir plus bas).
+- « Attrape les grains » : un mini-jeu de 45 secondes, pour le plaisir, avec un record gardé sur l'appareil. Il n'y a ni classement ni partage de score : rien n'est envoyé nulle part, donc rien à tricher.
 - Un bouton « Ambiance » qui joue un fond sonore de café, créé directement dans la page (aucun fichier audio).
 - Les animations jouent pour tout le monde, même sur les appareils réglés en « mouvement réduit ». L'interrupteur « Animations », en bas du pied de page, permet à chaque visiteur de les couper (choix gardé sur son appareil).
 - Des surprises : cliquer sur la tasse du logo la remplit, taper « café » au clavier fait pleuvoir des grains, taper « boo » lâche des chauves-souris.
@@ -48,27 +48,6 @@ Chaque jour vers 6 h, GitHub Actions (`.github/workflows/membres.yml`) lance `ou
 - la description du lien partagé et l'image `apercu.png`, arrondies à la centaine (« plus de 9 200 membres ») : elles restent justes même quand Discord garde un ancien aperçu en mémoire. L'image n'est redessinée que quand la centaine change.
 
 Pour lancer la mise à jour tout de suite : onglet **Actions** du dépôt → **Nombre de membres** → **Run workflow**. En local : `node outils/membres.js` (ou `node outils/membres.js 9300` pour un nombre précis, `--image` pour redessiner l'image), avec Playwright installé.
-
-## Partager son score sur le Discord
-
-Sous le mini-jeu, l'encadré « Partage ton score sur le Discord » montre le message tel qu'il apparaîtra sur le serveur, avec l'image du score. Le bouton « Partager sur le Discord » apparaît aussi à la fin de chaque partie.
-
-- **Sur téléphone**, il ouvre le menu de partage : le joueur choisit Discord, puis le salon.
-- **Sur ordinateur**, il copie le message et ouvre Discord : il reste à le coller dans un salon (Ctrl + V).
-
-Le message contient le lien `cafe-fr.com/score/<score>/`. Chaque score de 1 à 200 a sa page dans `score/`, avec son image `partage.jpg` (score, titre gagné, tasse qui se remplit). Discord affiche cette image sous le message ; un clic sur le lien mène au jeu.
-
-Les titres vont de « Premier café » (dès 1 grain) à « Légende du café » (160 et plus). Ils sont écrits dans `outils/partage.js` et dans `index.html` (module « partager son score »).
-
-Pour modifier les images ou les titres, change `outils/partage.js` (et les titres dans `index.html`), puis régénère toutes les pages avec Playwright installé :
-
-```
-node outils/partage.js
-```
-
-Le salon ouvert sur ordinateur est réglé dans `index.html` : `const SALON = 'https://discord.com/channels/829698572927762432';`. Il ouvre le serveur ; le lien d'un salon précis (clic droit sur le salon → Copier le lien) marche aussi.
-
-Il n'y a plus de classement en ligne : rien n'est enregistré ailleurs que sur l'appareil du joueur (son record).
 
 ## Saisons
 

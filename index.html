@@ -1031,7 +1031,7 @@ main, .pied { position: relative; z-index: 1; }
 
 /* La pause café : attrape les grains */
 .pause { padding-block: clamp(80px, 10vw, 140px); }
-.pause-grille { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-areas: "tete jeu" "partage partage"; gap: clamp(28px, 4vw, 48px) clamp(32px, 6vw, 96px); align-items: center; }
+.pause-grille { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-areas: "tete jeu"; gap: clamp(28px, 4vw, 48px) clamp(32px, 6vw, 96px); align-items: center; }
 .pause-tete { grid-area: tete; display: grid; gap: 20px; min-width: 0; }
 .pause-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 40ch; }
 .pause-commandes { color: var(--brume); font-size: 15px; }
@@ -1044,52 +1044,7 @@ main, .pied { position: relative; z-index: 1; }
 .jeu-titre { font: 800 clamp(30px, 3.6vw, 46px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; }
 .jeu-texte { color: var(--brume); max-width: 34ch; }
 .jeu-lien { color: var(--lait); font-size: 15px; }
-.jeu-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-.btn-discord { --b-fond: #5865f2; --b-texte: #fff; --b-bord: #5865f2; }
-.btn-discord:hover { --b-fond: #4752c4; --b-bord: #4752c4; }
-.btn-discord:hover svg { transform: none; }
-
-/* Partager son score sur le Discord */
-.partage { grid-area: partage; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 28px clamp(28px, 4vw, 56px); min-width: 0; padding: clamp(22px, 3vw, 36px); border-radius: 24px; border: 1px solid color-mix(in srgb, #5865f2 40%, var(--trait)); background: radial-gradient(110% 80% at 0% 0%, color-mix(in srgb, #5865f2 18%, transparent), transparent 65%), color-mix(in srgb, var(--lait) 3%, var(--nuit)); }
-.pt-gauche { display: grid; gap: 24px; min-width: 0; }
-.pt-tete { display: flex; align-items: center; gap: 16px; }
-.pt-pastille { flex: none; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 17px; background: #5865f2; color: #fff; box-shadow: 0 8px 22px color-mix(in srgb, #5865f2 40%, transparent); }
-.pt-pastille svg { width: 31px; height: 31px; }
-.pt-titre { font: 800 clamp(24px, 2.6vw, 34px)/1.05 var(--f-titre); font-stretch: 85%; letter-spacing: -.015em; }
-.pt-texte { margin-top: 6px; color: var(--brume); font-size: 16px; }
-.pt-paliers { display: grid; gap: 10px; }
-.pt-etiquette { font: 500 12px/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
-.pt-titres { display: grid; gap: 2px; max-width: 460px; margin: 0; padding: 0; list-style: none; }
-.pt-titres li { display: flex; align-items: baseline; gap: 10px; padding: 7px 12px; border-radius: 10px; color: var(--brume); font: 600 15px/1.2 var(--f-texte); transition: background-color .3s, color .3s; }
-.pt-titres li::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; transform: translateY(-1px); }
-.pt-points { flex: 1; min-width: 16px; border-bottom: 2px dotted var(--trait); }
-.pt-titres small { font: 500 12px/1 var(--f-mono); letter-spacing: .04em; white-space: nowrap; }
-.pt-titres li.atteint { color: var(--lait); }
-.pt-titres li.atteint::before { background: currentColor; }
-.pt-titres li.actuel { background: color-mix(in srgb, var(--ambre) 14%, transparent); color: var(--ambre); }
-.pt-titres li.actuel .pt-points { border-color: color-mix(in srgb, var(--ambre) 40%, transparent); }
-/* L'aperçu du message, aux couleurs de Discord */
-.pt-message { position: relative; align-self: center; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; padding: 14px 16px 16px; border-radius: 14px; background: #313338; color: #dbdee1; font: 400 15px/1.375 var(--f-texte); transition: opacity .3s; }
-.pt-message.exemple { opacity: .6; }
-.pt-avatar { box-sizing: border-box; width: 40px; height: 40px; padding: 6px; border-radius: 50%; background: var(--nuit); }
-.pt-corps { min-width: 0; }
-.pt-auteur { font-weight: 600; color: #f2f3f5; }
-.pt-auteur span { margin-left: 6px; font-size: 12px; font-weight: 400; color: #949ba4; }
-.pt-ligne { margin-top: 2px; overflow-wrap: anywhere; }
-.pt-url { color: #00a8fc; }
-.pt-embed { display: grid; gap: 4px; max-width: 520px; margin-top: 8px; padding: 10px 14px 14px 12px; border-left: 4px solid var(--creme); border-radius: 4px; background: #2b2d31; }
-.pt-site { font-size: 12px; color: #b5bac1; }
-.pt-etitre { font-weight: 600; color: #00a8fc; }
-.pt-edesc { font-size: 14px; }
-.pt-image { display: block; width: 100%; height: auto; margin-top: 8px; border-radius: 4px; background: var(--nuit); }
-.pt-exemple { position: absolute; top: 12px; right: 12px; padding: 5px 9px; border-radius: 999px; background: var(--nuit); color: var(--brume); font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; }
-.pt-message:not(.exemple) .pt-exemple { display: none; }
-.pt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.pt-aide { color: var(--creme); font-size: 14.5px; overflow-wrap: anywhere; }
-.pt-aide:empty { display: none; }
-.pt-aide a { margin-left: 4px; color: var(--lait); font-weight: 600; }
-@media (max-width: 860px) { .pause-grille { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tete" "jeu" "partage"; } }
-@media (max-width: 920px) { .partage { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 860px) { .pause-grille { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tete" "jeu"; } }
 
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
@@ -1106,7 +1061,6 @@ main, .pied { position: relative; z-index: 1; }
     <symbol id="i-fleche" viewBox="0 0 24 24"><path class="ico-svg" d="M5 12h14M13 6l6 6-6 6"/></symbol>
     <symbol id="i-chevron" viewBox="0 0 24 24"><path class="ico-svg" d="M6 9l6 6 6-6"/></symbol>
     <symbol id="i-copie" viewBox="0 0 24 24"><rect class="ico-svg" x="8.5" y="8.5" width="11" height="11" rx="2.2"/><path class="ico-svg" d="M15.5 8.5V6.2c0-.9-.8-1.7-1.7-1.7H6.2c-.9 0-1.7.8-1.7 1.7v7.6c0 .9.8 1.7 1.7 1.7h2.3"/></symbol>
-    <symbol id="i-discord" viewBox="0 0 24 24"><path fill="currentColor" d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></symbol>
     <symbol id="i-palette" viewBox="0 0 24 24"><path class="ico-svg" d="M12 3.5a8.5 8.5 0 1 0 0 17c1.3 0 1.9-.9 1.9-1.8 0-1.2-1-1.7-1-2.7 0-1 .8-1.6 1.8-1.6h2.2c2 0 3.6-1.5 3.6-3.6C20.5 6.6 16.7 3.5 12 3.5Z"/><circle cx="7.6" cy="11.2" r="1.3" fill="currentColor"/><circle cx="10.4" cy="7.4" r="1.3" fill="currentColor"/><circle cx="15" cy="7.6" r="1.3" fill="currentColor"/></symbol>
     <symbol id="i-micro" viewBox="0 0 24 24"><rect class="ico-svg" x="9" y="3.5" width="6" height="11" rx="3"/><path class="ico-svg" d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v3M8.5 20.5h7"/></symbol>
     <symbol id="i-virement" viewBox="0 0 24 24"><path class="ico-svg" d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/></symbol>
@@ -1557,46 +1511,8 @@ main, .pied { position: relative; z-index: 1; }
         <div class="jeu-ecran" id="jeu-ecran">
           <p class="jeu-titre" id="jeu-titre">Prêt pour une pause&nbsp;?</p>
           <p class="jeu-texte" id="jeu-texte">45 secondes pour remplir ta tasse.</p>
-          <div class="jeu-actions">
-            <button class="btn btn-plein" id="jeu-jouer" type="button">Jouer</button>
-            <button class="btn btn-discord" id="jeu-partager" type="button" hidden><svg aria-hidden="true"><use href="#i-discord"/></svg>Partager sur le Discord</button>
-          </div>
+          <button class="btn btn-plein" id="jeu-jouer" type="button">Jouer</button>
           <a class="jeu-lien" id="jeu-lien" href="https://discord.gg/france" target="_blank" rel="noopener" hidden>Les vrais grains t'attendent sur le serveur</a>
-        </div>
-      </div>
-      <div class="partage" id="partage">
-        <div class="pt-gauche">
-          <div class="pt-tete">
-            <span class="pt-pastille" aria-hidden="true"><svg><use href="#i-discord"/></svg></span>
-            <div>
-              <h3 class="pt-titre">Partage ton score sur le Discord</h3>
-              <p class="pt-texte" id="pt-texte">Fais une partie&nbsp;: ton score s'affichera ici, tel que les membres du serveur le verront.</p>
-            </div>
-          </div>
-          <div class="pt-paliers">
-            <p class="pt-etiquette">Les titres à gagner</p>
-            <ol class="pt-titres" id="pt-titres"></ol>
-          </div>
-          <div class="pt-actions">
-            <button class="btn btn-plein btn-petit" id="pt-jouer" type="button">Jouer une partie</button>
-            <button class="btn btn-discord btn-petit" id="pt-partager" type="button" hidden><svg aria-hidden="true"><use href="#i-discord"/></svg>Partager sur le Discord</button>
-            <button class="copier" id="pt-copier" type="button" hidden><svg aria-hidden="true"><use href="#i-copie"/></svg>Copier le message</button>
-          </div>
-          <p class="pt-aide" id="pt-aide" role="status"></p>
-        </div>
-        <div class="pt-message exemple" id="pt-message" aria-hidden="true">
-          <img class="pt-avatar" id="pt-avatar" alt="" width="40" height="40">
-          <div class="pt-corps">
-            <p class="pt-auteur">Toi <span>Aujourd'hui</span></p>
-            <p class="pt-ligne"><span id="pt-ligne"></span> <span class="pt-url" id="pt-url"></span></p>
-            <div class="pt-embed">
-              <p class="pt-site">Le Café Français</p>
-              <p class="pt-etitre" id="pt-etitre"></p>
-              <p class="pt-edesc" id="pt-edesc"></p>
-              <img class="pt-image" id="pt-image" alt="" width="1200" height="630" loading="lazy" decoding="async">
-            </div>
-          </div>
-          <span class="pt-exemple">Exemple</span>
         </div>
       </div>
     </div>
@@ -2173,101 +2089,11 @@ main, .pied { position: relative; z-index: 1; }
     question();
   })();
 
-  /* ---------- La pause café : partager son score sur le Discord ---------- */
-  // Chaque score a sa page, cafe-fr.com/score/<n>/, avec son image (générées par outils/partage.js) :
-  // collé dans Discord, le lien affiche l'image du score.
-  const partage = (function () {
-    // Salon ouvert pour coller le message (ici, le serveur ; le lien d'un salon précis marche aussi)
-    const SALON = 'https://discord.com/channels/829698572927762432';
-    const SCORE_MAX = 200; // dernière page générée
-    // Mêmes titres que dans outils/partage.js
-    const TITRES = [[160, 'Légende du café'], [140, 'Maître torréfacteur'], [110, 'Chef de comptoir'], [80, 'Barista confirmé'],
-      [50, 'Serveur du comptoir'], [25, 'Apprenti barista'], [1, 'Premier café']];
-    const titre = (n) => TITRES.find(([min]) => n >= min)[1];
-    const grains = (n) => `${n} grain${n > 1 ? 's' : ''} de café`;
-    const adresse = (n) => `https://cafe-fr.com/score/${n}/`;
-    const phrase = (n) => `J'ai attrapé ${grains(n)} au mini-jeu du Café Français\u00a0! Qui fait mieux\u00a0?`;
-    const apercu = $('#pt-message'), texte = $('#pt-texte'), aide = $('#pt-aide');
-    const jouer = $('#pt-jouer'), bouton = $('#pt-partager'), copie = $('#pt-copier');
-    const mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
-    $('#pt-avatar').src = $('link[rel="icon"]').href;
-    let score = 0;
-    const paliers = TITRES.slice().reverse().map(([min, nom]) => {
-      const li = document.createElement('li');
-      li.append(nom, Object.assign(document.createElement('span'), { className: 'pt-points' }),
-        Object.assign(document.createElement('small'), { textContent: `${min} grain${min > 1 ? 's' : ''}` }));
-      $('#pt-titres').append(li);
-      return { li, min };
-    });
-
-    // Montre le score à partager, tel qu'il apparaîtra dans Discord (sans score : un exemple)
-    function montrer(n, legende) {
-      score = Math.min(SCORE_MAX, Math.max(0, Math.round(n) || 0));
-      const vu = score || 87;
-      $('#pt-ligne').textContent = phrase(vu);
-      $('#pt-url').textContent = adresse(vu);
-      $('#pt-etitre').textContent = `J'ai attrapé ${grains(vu)}\u00a0!`;
-      $('#pt-edesc').textContent = `${titre(vu)} au mini-jeu du Café Français. 45 secondes pour remplir ta tasse\u00a0: à toi de battre ce score\u00a0!`;
-      $('#pt-image').src = `score/${vu}/partage.jpg`;
-      apercu.classList.toggle('exemple', !score);
-      // Titres atteints, et celui du score montré
-      paliers.forEach(({ li, min }, i) => {
-        li.classList.toggle('atteint', score >= min);
-        li.classList.toggle('actuel', score >= min && (i === paliers.length - 1 || score < paliers[i + 1].min));
-      });
-      texte.textContent = score ? legende : `Fais une partie\u00a0: ton score s'affichera ici, tel que les membres du serveur le verront.`;
-      jouer.hidden = !!score; bouton.hidden = copie.hidden = !score;
-      aide.textContent = '';
-    }
-    // Copie dans le même clic (execCommand), sinon par le presse-papiers moderne
-    async function copier(txt) {
-      const actif = document.activeElement;
-      const zone = document.createElement('textarea');
-      zone.value = txt; zone.setAttribute('readonly', '');
-      zone.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
-      document.body.append(zone); zone.select();
-      let ok = false;
-      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-      zone.remove();
-      if (actif && actif.focus) actif.focus({ preventScroll: true });
-      if (ok) return true;
-      try { await navigator.clipboard.writeText(txt); return true; } catch (e) { return false; }
-    }
-    function dire(txt, lien) {
-      aide.textContent = txt;
-      if (lien) {
-        const a = document.createElement('a');
-        a.href = SALON; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Ouvrir le Discord';
-        aide.append(' ', a);
-      }
-    }
-    async function partager() {
-      if (!score) return;
-      const msg = `${phrase(score)} ${adresse(score)}`;
-      // Sur téléphone : le menu de partage, où l'on choisit Discord
-      if (navigator.share && matchMedia('(pointer: coarse)').matches) {
-        try { await navigator.share({ text: msg }); dire(`Merci d'avoir partagé ton score\u00a0!`); return; } catch (e) { if (e && e.name === 'AbortError') return; }
-      }
-      // Sur ordinateur : le message est copié, puis Discord s'ouvre pour le coller
-      const ok = await copier(msg);
-      window.open(SALON, '_blank', 'noopener');
-      if (ok) dire(`Message copié\u00a0! Dans le salon, colle-le avec ${mac ? 'Cmd' : 'Ctrl'} + V\u00a0: l'image de ton score s'affichera.`, true);
-      else dire(`Copie ce message et colle-le dans Discord\u00a0: ${msg}`, true);
-    }
-    bouton.addEventListener('click', partager);
-    copie.addEventListener('click', async () => {
-      if (!score) return;
-      dire(await copier(`${phrase(score)} ${adresse(score)}`) ? `Message copié\u00a0! Colle-le dans Discord avec ${mac ? 'Cmd' : 'Ctrl'} + V.` : `Copie ce message\u00a0: ${phrase(score)} ${adresse(score)}`);
-    });
-    return { montrer, partager, grains };
-  })();
-
   /* ---------- La pause café : attrape les grains ---------- */
   (function jeu() {
     const toile = $('#jeu-toile'), c = toile.getContext('2d');
     const boite = $('#jeu'), ecran = $('#jeu-ecran'), titre = $('#jeu-titre'), texte = $('#jeu-texte');
     const bouton = $('#jeu-jouer'), lien = $('#jeu-lien'), recordAff = $('#jeu-record');
-    const partagerFin = $('#jeu-partager');
     const css = getComputedStyle(racine);
     const coul = (n, d) => css.getPropertyValue(n).trim() || d;
     const C = { lait: coul('--lait', '#f2f1f9'), cafe: coul('--cafe', '#3b2214'), creme: coul('--creme', '#c99263'), grain: coul('--grain', '#8a5a34'),
@@ -2282,7 +2108,6 @@ main, .pied { position: relative; z-index: 1; }
     let tasseX = 0, cibleX = 0, secousse = 0, record = 0, gauche = false, droite = false;
     try { record = +localStorage.getItem('cafe-record') || 0; } catch (err) {}
     recordAff.textContent = record;
-    partage.montrer(record, `Ton record\u00a0: ${partage.grains(record)}.`);
     const halloween = () => racine.getAttribute('data-saison') === 'halloween';
     // L'ouverture de la tasse (51 unités de part et d'autre du centre) doit pouvoir atteindre les deux bords :
     // l'anse ou le rebord sortent alors du cadre
@@ -2411,18 +2236,10 @@ main, .pied { position: relative; z-index: 1; }
       texte.textContent = `Tu as attrapé ${score} grain${score > 1 ? 's' : ''}.` + (nouveau ? '' : ` Ton record : ${record}.`);
       bouton.textContent = 'Rejouer';
       lien.hidden = false; ecran.hidden = false;
-      partagerFin.hidden = score < 1;
-      if (score > 0) partage.montrer(score, nouveau ? `Nouveau record\u00a0: ${partage.grains(score)}\u00a0!` : `Ta dernière partie\u00a0: ${partage.grains(score)}.`);
       dessiner();
       bouton.focus({ preventScroll: true });
     }
     bouton.addEventListener('click', demarrer);
-    partagerFin.addEventListener('click', partage.partager);
-    // « Jouer une partie » dans l'encadré de partage : on remonte au jeu et la partie commence
-    $('#pt-jouer').addEventListener('click', () => {
-      boite.scrollIntoView({ block: 'center', behavior: reduit ? 'auto' : 'smooth' });
-      demarrer();
-    });
     const viser = (ev) => { const r = toile.getBoundingClientRect(); cibleX = borner(ev.clientX - r.left); };
     // À la souris, la tasse suit le pointeur partout sur la page pendant la partie ; au doigt, seulement sur le jeu
     addEventListener('pointermove', (ev) => { if (ev.pointerType === 'touch' ? ev.target === toile : (etat === 'jeu' || ev.target === toile)) viser(ev); });

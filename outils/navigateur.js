@@ -1,4 +1,4 @@
-/* Lance Chrome pour dessiner les images (outils/membres.js, outils/partage.js) :
+/* Lance Chrome pour dessiner l'image d'aperçu (outils/membres.js) :
    Playwright avec son propre Chromium, ou playwright-core avec le Google Chrome de la machine.
    La variable CHROME peut donner le chemin d'un autre exécutable. */
 module.exports = async function navigateur() {
