@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: '17 4 * * *' # tous les jours vers 6 h, heure de Paris
   workflow_dispatch:
+    inputs:
+      image:
+        description: Redessiner l'image d'aperçu même si la centaine n'a pas changé
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -26,7 +31,7 @@ jobs:
       - name: Installer Playwright
         run: npm install --no-save --no-package-lock playwright-core@1.56.1
       - name: Relever le nombre de membres
-        run: node outils/membres.js
+        run: node outils/membres.js ${{ inputs.image && '--image' || '' }}
       - name: Publier
         env:
           GH_TOKEN: ${{ github.token }}
