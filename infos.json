@@ -1,0 +1,37 @@
+{
+  "infos": [
+    {
+      "date": "2026-10-20",
+      "publication": "2026-10-20T00:00:00+02:00",
+      "theme": "Société",
+      "titre": "Des couvre-feux dans quatre grandes villes",
+      "texte": "Après les violences et les pillages en marge des manifestations du samedi 17 octobre, où se mêlaient revendications lycéennes et colère contre la vie chère, des couvre-feux partiels s'appliquent depuis lundi soir à Paris, Lyon, Lille et Nice. Selon les villes, ils visent certains quartiers ou seulement les mineurs.",
+      "source": {
+        "nom": "franceinfo",
+        "url": "https://www.franceinfo.fr/societe/mobilisation-du-17-octobre/des-couvre-feux-partiels-mis-en-place-a-paris-lyon-lille-et-nice_8244511.html"
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "publication": "2026-10-19T12:00:00+02:00",
+      "theme": "Culture",
+      "titre": "Cent ans de François Morellet à Chaillot",
+      "texte": "La Cité de l'architecture et du patrimoine, à Paris, fête le centenaire de la naissance de l'artiste François Morellet avec l'exposition « Traits d'esprit ». Elle réunit ses œuvres pensées pour l'architecture, à voir jusqu'au 3 janvier 2027.",
+      "source": {
+        "nom": "Paris.fr",
+        "url": "https://www.paris.fr/evenements/francois-morellet-traits-d-esprit-117959"
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "publication": "2026-10-18T12:00:00+02:00",
+      "theme": "Éducation",
+      "titre": "Deux semaines de vacances pour la Toussaint",
+      "texte": "Depuis le samedi 17 octobre, tous les élèves de métropole sont en vacances : les trois zones ont les mêmes dates cette année. La rentrée aura lieu le lundi 2 novembre au matin.",
+      "source": {
+        "nom": "L'Étudiant",
+        "url": "https://www.letudiant.fr/lifestyle/vacances-scolaires-2026-2027-et-jours-feries-le-calendrier-devoile-avec-toutes-les-dates.html"
+      }
+    }
+  ]
+}

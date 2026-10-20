@@ -48,6 +48,35 @@ Chaque jour vers 6 h, GitHub Actions (`.github/workflows/membres.yml`) lance `ou
 
 Pour lancer la mise à jour tout de suite : onglet **Actions** du dépôt → **Nombre de membres** → **Run workflow**. En local : `node outils/membres.js` (ou `node outils/membres.js 9300` pour un nombre précis, `--image` pour redessiner l'image), avec Playwright installé.
 
+## La petite info du jour
+
+La section « Quoi de neuf en France ? » (`#info`) affiche une info sur l'actualité en France, sous forme de gazette. Une nouvelle info paraît chaque jour à midi, et les quatre précédentes sont listées dessous.
+
+Les infos sont dans **`infos.json`**, de la plus récente à la plus ancienne :
+
+```json
+{
+  "infos": [
+    {
+      "date": "2026-10-20",
+      "publication": "2026-10-20T12:00:00+02:00",
+      "theme": "Société",
+      "titre": "Titre court",
+      "texte": "Deux ou trois phrases factuelles.",
+      "source": { "nom": "franceinfo", "url": "https://www.franceinfo.fr/..." }
+    }
+  ]
+}
+```
+
+- Une info ne s'affiche qu'à partir de son heure de `publication` : elle peut être ajoutée le matin et paraître à midi pile.
+- La page ne fait que lire ce fichier : il n'y a rien à envoyer, donc rien à pirater depuis le site.
+- Les textes sont affichés tels quels, sans HTML ; la typographie française (espaces avant `? ! : ;`) est ajoutée par la page. Les liens de source doivent commencer par `https://`.
+
+**Mise à jour automatique.** Chaque jour vers 11 h 15, une tâche planifiée de Claude Code (session « Info du jour du Café ») cherche l'actualité du jour, vérifie les faits sur plusieurs sources, ajoute l'info en tête de `infos.json` avec une publication à midi, puis la publie sur `main`. Le fichier garde les 30 dernières infos.
+
+Pour corriger ou retirer une info : modifie ou supprime son bloc dans `infos.json` (en gardant un JSON valide), puis publie.
+
 ## Saisons
 
 Le site change de tenue selon la saison, réglée tout en haut de `index.html` :
