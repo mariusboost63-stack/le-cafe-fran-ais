@@ -75,6 +75,12 @@ Les infos sont dans **`infos.json`**, de la plus récente à la plus ancienne :
 
 **Mise à jour automatique.** Chaque jour vers 11 h 15, une tâche planifiée de Claude Code (session « Info du jour du Café ») cherche l'actualité du jour, vérifie les faits sur plusieurs sources, ajoute l'info en tête de `infos.json` avec une publication à midi, puis la publie sur `main`. Le fichier garde les 30 dernières infos.
 
+**Règles pour les sources** (droit d'auteur et droit voisin des éditeurs de presse) :
+
+- Les faits sont libres, mais pas la façon dont un média les raconte : chaque info est écrite avec nos propres mots, sans recopier de phrase ni d'expression d'un article. Une déclaration peut être citée en quelques mots entre guillemets, avec son auteur.
+- Jamais de photo, de vidéo, de logo ou d'extrait long d'un média : seulement le nom de la source et un lien vers l'article (les liens vers des pages en accès libre sont autorisés : arrêt Svensson de la CJUE, article L. 211-3-1 du Code de la propriété intellectuelle).
+- Uniquement des articles en accès libre : pas d'article réservé aux abonnés. De préférence, les médias publics (franceinfo, France 24) ou les sites officiels (.gouv.fr, INSEE, Météo-France).
+
 Pour corriger ou retirer une info : modifie ou supprime son bloc dans `infos.json` (en gardant un JSON valide), puis publie.
 
 ## Saisons
