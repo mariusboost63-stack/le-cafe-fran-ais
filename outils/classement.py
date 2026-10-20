@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Classement des grains du serveur : le top 10 (poche et banque), lu dans la base du bot et publié sans rien de sensible.
+"""Classement des grains du serveur : le top 10 (poche et banque), lu dans la base du bot et publié sans rien de sensible,
+avec le compteur du salon #infini.
 
 Lancé toutes les 15 minutes par GitHub Actions (.github/workflows/classement.yml). Le résultat, classement.json,
 est publié sur la branche « data » du dépôt, et le site le lit. Les identifiants de la base ne quittent jamais
@@ -41,7 +42,8 @@ def lire_adresse(adresse):
     }
 
 
-def meilleurs(adresse):
+def lire_base(adresse):
+    """Le top 10 (identifiant, grains) et le compteur du salon #infini (None s'il est illisible)."""
     import pymysql
     connexion = pymysql.connect(**lire_adresse(adresse), connect_timeout=10, read_timeout=20, charset="utf8mb4")
     try:
@@ -55,7 +57,14 @@ def meilleurs(adresse):
             c.execute("SELECT id, COALESCE(grains, 0) + COALESCE(banque, 0) AS total FROM users"
                       " WHERE blacklistGrains IS NULL AND COALESCE(grains, 0) + COALESCE(banque, 0) > 0"
                       " ORDER BY total DESC LIMIT %s", (TAILLE,))
-            return [(str(i), int(g)) for i, g in c.fetchall()]
+            top = [(str(i), int(g)) for i, g in c.fetchall()]
+            # Le salon #infini : le total des nombres postés par tous les membres (infiniStats)
+            try:
+                c.execute("SELECT COALESCE(SUM(infiniStats), 0) FROM users")
+                infini = int(c.fetchone()[0])
+            except pymysql.MySQLError:
+                infini = None
+            return top, infini
     finally:
         connexion.close()
 
@@ -90,7 +99,7 @@ def main():
         signaler("Secrets CAFE_DB_URL et DISCORD_TOKEN à ajouter dans les réglages du dépôt : rien n'est publié.", "warning")
         return 2
     try:
-        top = meilleurs(adresse)
+        top, infini = lire_base(adresse)
     except Exception as err:  # base injoignable : le site garde le classement précédent
         # Seulement le type et le code d'erreur : jamais le message, qui peut contenir l'hôte ou l'utilisateur
         code = err.args[0] if getattr(err, "args", None) and isinstance(err.args[0], int) else ""
@@ -107,8 +116,11 @@ def main():
     sortie = pathlib.Path(sys.argv[1])
     sortie.parent.mkdir(parents=True, exist_ok=True)
     maj = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
-    sortie.write_text(json.dumps({"maj": maj, "classement": classement}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    signaler(f"Classement publié : {len(classement)} membres.")
+    donnees = {"maj": maj, "classement": classement}
+    if infini is not None:
+        donnees["infini"] = infini
+    sortie.write_text(json.dumps(donnees, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    signaler(f"Classement publié : {len(classement)} membres ; compteur #infini : {infini}.")
     return 0
 
 
