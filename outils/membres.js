@@ -12,6 +12,7 @@
    L'image est dessinée par Chrome (Playwright, ou playwright-core avec Google Chrome installé). */
 const fs = require('fs');
 const path = require('path');
+const navigateur = require('./navigateur');
 
 const RACINE = path.join(__dirname, '..');
 const PAGE = path.join(RACINE, 'index.html');
@@ -56,13 +57,6 @@ function majPage(n) {
   html = remplacer(html, /Rejoins [^"]*? membres sur discord\.gg\/france\./, `Rejoins plus de ${grouper(arrondi(n), '\u00a0')} membres sur discord.gg/france.`, 'description du lien partagé');
   if (html !== avant) fs.writeFileSync(PAGE, html);
   return { modifiee: html !== avant, arrondiChange: !ancien || Number(ancien[1].replace(/\D/g, '')) !== arrondi(n) };
-}
-
-async function navigateur() {
-  let pw;
-  try { pw = require('playwright'); } catch (e) { pw = require('playwright-core'); }
-  if (process.env.CHROME) return pw.chromium.launch({ executablePath: process.env.CHROME });
-  try { return await pw.chromium.launch(); } catch (e) { return pw.chromium.launch({ channel: 'chrome' }); }
 }
 
 // Dessine apercu.png (1200 × 630) avec le logo de la page, les lettres du fond et le nombre de membres

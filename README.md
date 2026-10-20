@@ -19,7 +19,7 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - Trois étapes pour rejoindre le serveur, une FAQ, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
 - À la première visite, l'entrée « Pousser la porte » : la devanture du café s'ouvre avec un tintement de clochette. Le bouton « Repasser la porte », dans le pied de page, la fait revenir.
 - « Commande ton café » : quatre questions qui révèlent la boisson et la table du café faites pour le visiteur, avec ses salons conseillés.
-- « Attrape les grains » : un mini-jeu de 45 secondes, avec un record gardé sur l'appareil et un classement de la semaine (voir plus bas). Avant de jouer, le visiteur entre son pseudo Discord ; chaque dimanche à minuit, le n°1 gagne 250 000 grains et le classement repart à zéro.
+- « Attrape les grains » : un mini-jeu de 45 secondes, avec un record gardé sur l'appareil. Le score se partage sur le Discord avec une image (voir plus bas).
 - Un bouton « Ambiance » qui joue un fond sonore de café, créé directement dans la page (aucun fichier audio).
 - Les animations jouent pour tout le monde, même sur les appareils réglés en « mouvement réduit ». L'interrupteur « Animations », en bas du pied de page, permet à chaque visiteur de les couper (choix gardé sur son appareil).
 - Des surprises : cliquer sur la tasse du logo la remplit, taper « café » au clavier fait pleuvoir des grains, taper « boo » lâche des chauves-souris.
@@ -49,109 +49,26 @@ Chaque jour vers 6 h, GitHub Actions (`.github/workflows/membres.yml`) lance `ou
 
 Pour lancer la mise à jour tout de suite : onglet **Actions** du dépôt → **Nombre de membres** → **Run workflow**. En local : `node outils/membres.js` (ou `node outils/membres.js 9300` pour un nombre précis, `--image` pour redessiner l'image), avec Playwright installé.
 
-## Classement du mini-jeu
+## Partager son score sur le Discord
 
-Les scores sont enregistrés dans **Firebase Firestore** (Google, gratuit), projet `cafe-fr`. Chaque joueur reçoit une **identité anonyme** (Firebase Authentication), gardée sur son appareil : son score est rangé sous cette identité et personne d'autre ne peut le modifier.
+Sous le mini-jeu, l'encadré « Partage ton score sur le Discord » montre le message tel qu'il apparaîtra sur le serveur, avec l'image du score. Le bouton « Partager sur le Discord » apparaît aussi à la fin de chaque partie.
 
-**Mise en place (une seule fois)**
+- **Sur téléphone**, il ouvre le menu de partage : le joueur choisit Discord, puis le salon.
+- **Sur ordinateur**, il copie le message et ouvre Discord : il reste à le coller dans un salon (Ctrl + V).
 
-1. Sur [console.firebase.google.com](https://console.firebase.google.com), crée un projet (Google Analytics n'est pas nécessaire).
-2. **Authentication → Commencer → Méthode de connexion → Anonyme** : active-la.
-3. **Firestore Database → Créer une base de données**, emplacement européen, mode **production**.
-4. Onglet **Règles** de Firestore : remplace tout par les règles ci-dessous, puis **Publier**.
-5. **Paramètres du projet → Vos applications → Web (`</>`)** : enregistre une application, puis copie `projectId` et `apiKey`, à renseigner dans `index.html` : `const CLASSEMENT = { projet: '…', cle: '…' };`
+Le message contient le lien `cafe-fr.com/score/<score>/`. Chaque score de 1 à 200 a sa page dans `score/`, avec son image `partage.jpg` (score, titre gagné, tasse qui se remplit). Discord affiche cette image sous le message ; un clic sur le lien mène au jeu.
 
-La clé `apiKey` d'une application web Firebase n'est pas secrète : ce sont les règles qui protègent les données.
+Les titres vont de « Premier café » (dès 1 grain) à « Légende du café » (160 et plus). Ils sont écrits dans `outils/partage.js` et dans `index.html` (module « partager son score »).
+
+Pour modifier les images ou les titres, change `outils/partage.js` (et les titres dans `index.html`), puis régénère toutes les pages avec Playwright installé :
 
 ```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{base}/documents {
-
-    // Partie en cours de chaque joueur : identifiant de la partie et heure de début (fixée par le serveur)
-    match /parties/{uid} {
-      allow create, update: if request.auth != null && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['id', 'debut'])
-        && request.resource.data.id is string
-        && request.resource.data.id.size() >= 8 && request.resource.data.id.size() <= 40
-        && request.resource.data.debut == request.time;
-    }
-
-    // Joueurs bannis du classement : un document par identité (ID du document de score) ou par pseudo en minuscules.
-    // Géré seulement depuis la console Firebase : le site ne peut ni le lire ni l'écrire.
-    match /bannis/{id} {
-      allow read, write: if false;
-    }
-
-    // Classement : une collection par semaine (scores-AAAA-MM-JJ, date du lundi), un document par joueur
-    match /{semaine}/{uid} {
-      function semaineValide() {
-        return semaine.matches('scores-[0-9]{4}-[0-9]{2}-[0-9]{2}');
-      }
-      // On n'écrit que dans la semaine en cours (du lundi au dimanche, heure de Paris)
-      function semaineEnCours() {
-        let p = semaine.split('-');
-        let lundi = timestamp.date(int(p[1]), int(p[2]), int(p[3]));
-        return request.time > lundi - duration.value(2, 'h') && request.time < lundi + duration.value(168, 'h');
-      }
-      // Ni l'identité ni le pseudo ne doivent être bannis
-      function nonBanni(pseudo) {
-        return !exists(/databases/$(base)/documents/bannis/$(uid))
-          && !exists(/databases/$(base)/documents/bannis/$(pseudo.lower()));
-      }
-      // Chacun n'écrit que son propre score, après une vraie partie (au moins 40 s, au plus 10 min)
-      function scoreValide() {
-        let d = request.resource.data;
-        let partie = get(/databases/$(base)/documents/parties/$(uid)).data;
-        return request.auth != null && request.auth.uid == uid
-          && d.keys().hasOnly(['pseudo', 'score', 'maj', 'partie'])
-          && d.pseudo is string && d.pseudo.size() >= 2 && d.pseudo.size() <= 24
-          && !d.pseudo.matches('.*/.*') && nonBanni(d.pseudo)
-          && d.score is int && d.score >= 1 && d.score <= 200
-          && d.maj == request.time
-          && d.partie == partie.id
-          && request.time > partie.debut + duration.value(40, 's')
-          && request.time < partie.debut + duration.value(10, 'm');
-      }
-      allow read: if semaineValide();
-      allow create: if semaineValide() && semaineEnCours() && scoreValide();
-      allow update: if semaineValide() && semaineEnCours() && scoreValide()
-        && request.resource.data.score > resource.data.score
-        && request.resource.data.partie != resource.data.partie;
-      allow delete: if false;
-    }
-  }
-}
+node outils/partage.js
 ```
 
-**Ce que les règles garantissent**
+Le salon ouvert sur ordinateur est réglé dans `index.html` : `const SALON = 'https://discord.com/channels/829698572927762432';`. Il ouvre le serveur ; le lien d'un salon précis (clic droit sur le salon → Copier le lien) marche aussi.
 
-- Chacun ne peut écrire **que son propre score** (document nommé d'après son identité anonyme).
-- Un score n'est accepté qu'**après une vraie partie** : le début de chaque partie est noté par le serveur (collection `parties`), et le score n'est accepté qu'entre 40 secondes et 10 minutes plus tard, une seule fois par partie.
-- Le score doit battre le précédent du joueur, et ne pas dépasser **200** : c'est impossible en 45 secondes (en attrapant absolument tout, une partie rapporte au plus 180 environ). Si la durée du jeu change, adapte `SCORE_MAX` dans `index.html` et la limite dans les règles.
-- On n'écrit que dans la **semaine en cours** ; personne ne peut supprimer un score depuis le site.
-- Un joueur **banni** (par son identité ou son pseudo) ne peut plus enregistrer de score.
-
-**Fonctionnement**
-
-- La semaine va du lundi 0 h au dimanche minuit, heure de Paris. Chaque semaine a sa collection, `scores-2026-10-19` par exemple (date du lundi).
-- Le site affiche le top 10 (une ligne par pseudo), la place du joueur s'il est plus loin, et le gagnant de la semaine précédente.
-- **Avant de donner les 250 000 grains**, vérifie le gagnant : un tricheur peut encore gonfler *son propre* score (jusqu'à 200), et n'importe qui peut choisir le pseudo d'un autre. Les scores se consultent dans la console Firebase (Firestore → la collection de la semaine) ; un score suspect se supprime depuis la console.
-
-**Bannir un joueur du classement**
-
-Dans la console Firebase, **Firestore Database** :
-
-1. Ouvre la collection de la semaine (`scores-…`) et repère le score du tricheur : l'**ID du document** est son identité, le champ `pseudo` son pseudo.
-2. Crée la collection **`bannis`** (la première fois, « Commencer une collection ») et ajoute-y un document dont l'**ID** est :
-   - l'**identité** du joueur (l'ID du document copié à l'étape 1) : bloque cet appareil, quel que soit le pseudo utilisé ;
-   - et/ou son **pseudo en minuscules** (`toto` pour « Toto ») : bloque ce pseudo sur tous les appareils.
-   Mets un champ au choix, par exemple `raison` = `triche`.
-3. Supprime son document de score dans la collection de la semaine (les trois points ⋮ → Supprimer le document) : il disparaît du classement.
-
-Pour débannir, supprime le document dans `bannis`. Le site ne peut ni lire ni modifier cette liste.
-
-Limite : l'identité est liée au navigateur. En effaçant les données du site ou en changeant d'appareil **et** de pseudo, un tricheur revient comme un nouveau joueur ; il devra alors refaire de vraies parties, plafonnées à 200. D'où la vérification du gagnant avant de verser les grains.
+Il n'y a plus de classement en ligne : rien n'est enregistré ailleurs que sur l'appareil du joueur (son record).
 
 ## Saisons
 
