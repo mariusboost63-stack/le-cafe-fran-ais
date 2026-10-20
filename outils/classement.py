@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Classement des grains du serveur : le top 10, lu dans la base du bot et publié sans rien de sensible.
+"""Classement des grains du serveur : le top 10 (poche et banque), lu dans la base du bot et publié sans rien de sensible.
 
 Lancé toutes les 15 minutes par GitHub Actions (.github/workflows/classement.yml). Le résultat, classement.json,
 est publié sur la branche « data » du dépôt, et le site le lit. Les identifiants de la base ne quittent jamais
@@ -51,8 +51,10 @@ def meilleurs(adresse):
                 c.execute("SET SESSION TRANSACTION READ ONLY")
             except pymysql.MySQLError:
                 pass
-            # Les membres privés de grains (blacklistGrains) ne sont pas classés
-            c.execute("SELECT id, grains FROM users WHERE blacklistGrains IS NULL AND grains > 0 ORDER BY grains DESC LIMIT %s", (TAILLE,))
+            # Le cumul : grains en poche et en banque. Les membres privés de grains (blacklistGrains) ne sont pas classés
+            c.execute("SELECT id, COALESCE(grains, 0) + COALESCE(banque, 0) AS total FROM users"
+                      " WHERE blacklistGrains IS NULL AND COALESCE(grains, 0) + COALESCE(banque, 0) > 0"
+                      " ORDER BY total DESC LIMIT %s", (TAILLE,))
             return [(str(i), int(g)) for i, g in c.fetchall()]
     finally:
         connexion.close()

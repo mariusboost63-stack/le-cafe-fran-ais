@@ -50,11 +50,11 @@ Pour lancer la mise à jour tout de suite : onglet **Actions** du dépôt → **
 
 ## Le classement des grains
 
-La section « Les plus riches du café » (`#classement`) affiche le top 10 des membres par grains, avec leur pseudo et leur avatar Discord. Elle reste cachée tant qu'aucun classement n'a été publié.
+La section « Les plus riches du café » (`#classement`) affiche le top 10 des membres par grains (en poche et en banque), avec leur pseudo et leur avatar Discord. Elle reste cachée tant qu'aucun classement n'a été publié.
 
 **Fonctionnement, sans risque pour l'économie du serveur :**
 
-- Toutes les 15 minutes, GitHub Actions (`.github/workflows/classement.yml`) lance `outils/classement.py`. Il lit le top 10 dans la table `users` de la base du bot (colonne `grains`), **en lecture seule**, sans les membres privés de grains (`blacklistGrains`).
+- Toutes les 15 minutes, GitHub Actions (`.github/workflows/classement.yml`) lance `outils/classement.py`. Il lit le top 10 dans la table `users` de la base du bot (cumul des colonnes `grains` et `banque`), **en lecture seule**, sans les membres privés de grains (`blacklistGrains`).
 - Il récupère le pseudo et l'avatar de chacun sur Discord, puis publie `classement.json` (rang, pseudo, avatar, grains) sur la branche `data` du dépôt.
 - Le site ne lit que ce fichier. **Les identifiants de la base ne sont jamais dans le site** : ils sont rangés dans les secrets du dépôt, que seul GitHub Actions peut lire.
 
