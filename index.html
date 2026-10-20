@@ -1029,22 +1029,6 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 640px) { .quiz-reponses { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 560px) { .quiz-resultat { grid-template-columns: minmax(0, 1fr); } .quiz-resultat > * { grid-column: 1; } .quiz-tasse { grid-row: auto; width: 120px; } }
 
-/* La pause café : attrape les grains */
-.pause { padding-block: clamp(80px, 10vw, 140px); }
-.pause-grille { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-areas: "tete jeu"; gap: clamp(28px, 4vw, 48px) clamp(32px, 6vw, 96px); align-items: center; }
-.pause-tete { grid-area: tete; display: grid; gap: 20px; min-width: 0; }
-.pause-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 40ch; }
-.pause-commandes { color: var(--brume); font-size: 15px; }
-.pause-record { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
-.pause-record b { margin-left: 8px; font: 800 30px/1 var(--f-titre); letter-spacing: 0; color: var(--creme); font-variant-numeric: tabular-nums; }
-.jeu { grid-area: jeu; position: relative; min-width: 0; border-radius: 24px; overflow: hidden; border: 1px solid var(--trait); background: radial-gradient(ellipse at 50% 125%, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 65%); }
-#jeu-toile { display: block; width: 100%; height: clamp(360px, 56vh, 480px); cursor: ew-resize; }
-.jeu.en-jeu #jeu-toile { touch-action: none; cursor: none; }
-.jeu-ecran { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 24px; text-align: center; background: color-mix(in srgb, var(--nuit) 55%, transparent); }
-.jeu-titre { font: 800 clamp(30px, 3.6vw, 46px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; }
-.jeu-texte { color: var(--brume); max-width: 34ch; }
-.jeu-lien { color: var(--lait); font-size: 15px; }
-@media (max-width: 860px) { .pause-grille { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tete" "jeu"; } }
 
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
@@ -1493,27 +1477,6 @@ main, .pied { position: relative; z-index: 1; }
           <li class="article" data-prix="7500000" style="--a: var(--a-deco)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-pinceau"/></svg></span><div class="a-texte"><h4>Décoration Discord</h4><p>Une décoration de profil Discord, d'une valeur maximale de 10 €.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>7&#8239;500&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">250 h</span> de vocal</span></p></li>
           <li class="article" data-prix="10000000" style="--a: var(--a-nitro)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-gemme"/></svg></span><div class="a-texte"><h4>Nitro Boost</h4><p>Un Nitro Boost d'une durée d'un mois.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>10&#8239;000&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">333 h 20</span> de vocal</span></p></li>
         </ol>
-      </div>
-    </div>
-  </section>
-
-  <section class="pause" id="pause" aria-labelledby="t-pause">
-    <div class="cadre pause-grille">
-      <div class="pause-tete" data-revele>
-        <p class="surtitre">La pause café</p>
-        <h2 class="h2" id="t-pause">Attrape les grains</h2>
-        <p class="chapo">Déplace la tasse pour attraper les grains de café. Les grains dorés valent 5 points, <span class="seulement-halloween">les chauves-souris</span><span class="seulement-normal">les glaçons</span> t'en retirent 3. Tu as 45 secondes.</p>
-        <p class="pause-commandes">À la souris, au doigt ou avec les flèches du clavier.</p>
-        <p class="pause-record">Ton record <b id="jeu-record">0</b></p>
-      </div>
-      <div class="jeu" id="jeu">
-        <canvas id="jeu-toile" tabindex="0" role="img" aria-label="Jeu : attrape les grains de café avec la tasse"></canvas>
-        <div class="jeu-ecran" id="jeu-ecran">
-          <p class="jeu-titre" id="jeu-titre">Prêt pour une pause&nbsp;?</p>
-          <p class="jeu-texte" id="jeu-texte">45 secondes pour remplir ta tasse.</p>
-          <button class="btn btn-plein" id="jeu-jouer" type="button">Jouer</button>
-          <a class="jeu-lien" id="jeu-lien" href="https://discord.gg/france" target="_blank" rel="noopener" hidden>Les vrais grains t'attendent sur le serveur</a>
-        </div>
       </div>
     </div>
   </section>
@@ -2089,179 +2052,6 @@ main, .pied { position: relative; z-index: 1; }
     question();
   })();
 
-  /* ---------- La pause café : attrape les grains ---------- */
-  (function jeu() {
-    const toile = $('#jeu-toile'), c = toile.getContext('2d');
-    const boite = $('#jeu'), ecran = $('#jeu-ecran'), titre = $('#jeu-titre'), texte = $('#jeu-texte');
-    const bouton = $('#jeu-jouer'), lien = $('#jeu-lien'), recordAff = $('#jeu-record');
-    const css = getComputedStyle(racine);
-    const coul = (n, d) => css.getPropertyValue(n).trim() || d;
-    const C = { lait: coul('--lait', '#f2f1f9'), cafe: coul('--cafe', '#3b2214'), creme: coul('--creme', '#c99263'), grain: coul('--grain', '#8a5a34'),
-      creux: coul('--grain-fonce', '#3f2414'), or: coul('--ambre', '#f0b232'), brume: coul('--brume', '#a6aec3'), rouge: coul('--rouge', '#f94443'),
-      ombre: coul('--ombre', '#07090f'), citrouille: coul('--citrouille', '#ff8a2a'), glace: coul('--glace', '#bfe3ff') };
-    const tasse = new Path2D($('#p-tasse').getAttribute('d'));
-    const dedans = new Path2D($('#clip-interieur path').getAttribute('d'));
-    const chauve = new Path2D($('#i-chauve path').getAttribute('d'));
-    const DUREE = 45;
-    let W = 0, H = 0, ratio = 1, e = .5;
-    let etat = 'attente', items = [], textes = [], score = 0, reste = DUREE, avant = 0, prochain = 0;
-    let tasseX = 0, cibleX = 0, secousse = 0, record = 0, gauche = false, droite = false;
-    try { record = +localStorage.getItem('cafe-record') || 0; } catch (err) {}
-    recordAff.textContent = record;
-    const halloween = () => racine.getAttribute('data-saison') === 'halloween';
-    // L'ouverture de la tasse (51 unités de part et d'autre du centre) doit pouvoir atteindre les deux bords :
-    // l'anse ou le rebord sortent alors du cadre
-    const borner = (x) => Math.min(W - 51 * e, Math.max(51 * e, x));
-    function taille() {
-      ratio = Math.min(2, devicePixelRatio || 1);
-      const r = toile.getBoundingClientRect();
-      W = r.width; H = r.height;
-      toile.width = Math.round(W * ratio); toile.height = Math.round(H * ratio);
-      e = Math.min(.62, Math.max(.4, W / 900));
-      if (!tasseX) tasseX = cibleX = W / 2;
-      tasseX = borner(tasseX); cibleX = borner(cibleX);
-      dessiner();
-    }
-    function grain(x, y, a, dore) {
-      c.save(); c.translate(x, y); c.rotate(a); c.scale(1.15, 1.15);
-      c.beginPath(); c.ellipse(0, 0, 6, 8.5, 0, 0, Math.PI * 2);
-      c.fillStyle = dore ? C.or : C.grain;
-      if (dore) { c.shadowColor = C.or; c.shadowBlur = 14; }
-      c.fill(); c.shadowBlur = 0;
-      c.beginPath(); c.moveTo(0, -6.5); c.bezierCurveTo(-2.6, -2, 2.6, 2, 0, 6.5);
-      c.strokeStyle = C.creux; c.lineWidth = 1.6; c.lineCap = 'round'; c.stroke();
-      c.restore();
-    }
-    function piege(x, y, a) {
-      c.save(); c.translate(x, y);
-      if (halloween()) {
-        c.rotate(Math.sin(a * 2) * .25); c.translate(-24, -12);
-        c.shadowColor = C.citrouille; c.shadowBlur = 10; c.fillStyle = C.ombre; c.fill(chauve);
-      } else {
-        c.rotate(a * .4); c.fillStyle = C.glace; c.globalAlpha = .9;
-        c.beginPath(); c.roundRect(-11, -11, 22, 22, 5); c.fill();
-        c.globalAlpha = 1; c.fillStyle = C.lait; c.beginPath(); c.roundRect(-6, -7, 6, 4, 2); c.fill();
-      }
-      c.restore();
-    }
-    function dessiner() {
-      c.setTransform(ratio, 0, 0, ratio, 0, 0);
-      c.clearRect(0, 0, W, H);
-      if (etat === 'attente') {
-        [[.12, .2, .4], [.3, .12, 2.1], [.78, .18, 1.2], [.9, .42, 2.8], [.2, .55, .9], [.66, .5, 2.4], [.48, .3, 1.7]]
-          .forEach(([x, y, a], i) => grain(x * W, y * H, a, i === 3));
-      }
-      for (const it of items) { if (it.type === 'piege') piege(it.x, it.y, it.a); else grain(it.x, it.y, it.a, it.type === 'or'); }
-      // La tasse, qui se remplit avec le score
-      const sx = secousse > 0 ? Math.sin(secousse * 60) * 7 * (secousse / .35) : 0;
-      c.save(); c.translate(tasseX - 156 * e + sx, H - 14 - 233 * e); c.scale(e, e);
-      const niveau = Math.min(1, score / 40);
-      if (niveau > 0) {
-        c.save(); c.clip(dedans);
-        const y = 202 - 61 * niveau;
-        c.fillStyle = C.cafe; c.fillRect(90, y, 140, 120);
-        c.fillStyle = C.creme; c.fillRect(90, y, 140, 4);
-        c.restore();
-      }
-      c.fillStyle = C.lait; c.fill(tasse);
-      c.restore();
-      for (const t of textes) {
-        c.globalAlpha = Math.max(0, t.vie); c.fillStyle = t.coul;
-        c.font = '800 22px "Bricolage Grotesque", system-ui, sans-serif'; c.textAlign = 'center';
-        c.fillText(t.txt, t.x, t.y);
-      }
-      c.globalAlpha = 1;
-      if (etat !== 'attente') {
-        c.textAlign = 'left'; c.fillStyle = C.lait; c.font = '800 30px "Bricolage Grotesque", system-ui, sans-serif';
-        c.fillText(String(score), 20, 44);
-        c.fillStyle = C.brume; c.font = '500 12px "DM Mono", ui-monospace, monospace';
-        c.fillText('GRAINS', 20, 62);
-        const s = Math.max(0, Math.ceil(reste));
-        c.textAlign = 'right'; c.fillStyle = s <= 5 ? C.rouge : C.lait; c.font = '800 30px "Bricolage Grotesque", system-ui, sans-serif';
-        c.fillText(`0:${String(s).padStart(2, '0')}`, W - 20, 44);
-        c.fillStyle = C.brume; c.font = '500 12px "DM Mono", ui-monospace, monospace';
-        c.fillText('TEMPS', W - 20, 62);
-      }
-    }
-    function apparaitre(t) {
-      const prog = 1 - reste / DUREE, r = Math.random();
-      const type = r < .1 ? 'or' : r < .22 + prog * .1 ? 'piege' : 'grain';
-      items.push({ type, x: 24 + Math.random() * (W - 48), y: -24, vy: 150 + prog * 200 + Math.random() * 70, a: Math.random() * 6.3, va: (Math.random() - .5) * 3 });
-      prochain = t + (640 - prog * 380) * (.7 + Math.random() * .6);
-    }
-    function boucle(t) {
-      if (etat !== 'jeu') return;
-      const dt = Math.min(.05, (t - avant) / 1000);
-      avant = t;
-      reste -= dt;
-      if (reste <= 0) { reste = 0; fin(); return; }
-      if (t >= prochain) apparaitre(t);
-      if (gauche) cibleX -= 560 * dt;
-      if (droite) cibleX += 560 * dt;
-      cibleX = borner(cibleX);
-      tasseX += (cibleX - tasseX) * Math.min(1, dt * 16);
-      const haut = H - 14 - 94 * e, g = tasseX - 51 * e - 9, d = tasseX + 51 * e + 9;
-      for (const it of items) {
-        it.y += it.vy * dt; it.a += it.va * dt;
-        if (it.y >= haut - 6 && it.y <= haut + 20 && it.x >= g && it.x <= d) {
-          it.pris = true;
-          const val = it.type === 'or' ? 5 : it.type === 'piege' ? -3 : 1;
-          score = Math.max(0, score + val);
-          textes.push({ x: it.x, y: haut - 12, txt: (val > 0 ? '+' : '−') + Math.abs(val), coul: val < 0 ? C.rouge : it.type === 'or' ? C.or : C.lait, vie: 1 });
-          if (val < 0) secousse = .35;
-        }
-      }
-      items = items.filter((it) => !it.pris && it.y < H + 30);
-      for (const tx of textes) { tx.y -= 40 * dt; tx.vie -= dt * 1.4; }
-      textes = textes.filter((tx) => tx.vie > 0);
-      secousse = Math.max(0, secousse - dt);
-      dessiner();
-      requestAnimationFrame(boucle);
-    }
-    function demarrer() {
-      etat = 'jeu'; items = []; textes = []; score = 0; reste = DUREE; secousse = 0;
-      ecran.hidden = true; boite.classList.add('en-jeu');
-      toile.focus({ preventScroll: true });
-      requestAnimationFrame((t) => { avant = t; prochain = t + 400; boucle(t); });
-    }
-    function fin() {
-      etat = 'fin'; items = []; gauche = droite = false;
-      boite.classList.remove('en-jeu');
-      const nouveau = score > record;
-      if (nouveau) {
-        record = score; recordAff.textContent = record;
-        try { localStorage.setItem('cafe-record', String(record)); } catch (err) {}
-      }
-      titre.textContent = nouveau ? 'Nouveau record !' : 'Fin de la pause';
-      texte.textContent = `Tu as attrapé ${score} grain${score > 1 ? 's' : ''}.` + (nouveau ? '' : ` Ton record : ${record}.`);
-      bouton.textContent = 'Rejouer';
-      lien.hidden = false; ecran.hidden = false;
-      dessiner();
-      bouton.focus({ preventScroll: true });
-    }
-    bouton.addEventListener('click', demarrer);
-    const viser = (ev) => { const r = toile.getBoundingClientRect(); cibleX = borner(ev.clientX - r.left); };
-    // À la souris, la tasse suit le pointeur partout sur la page pendant la partie ; au doigt, seulement sur le jeu
-    addEventListener('pointermove', (ev) => { if (ev.pointerType === 'touch' ? ev.target === toile : (etat === 'jeu' || ev.target === toile)) viser(ev); });
-    toile.addEventListener('pointerdown', (ev) => { viser(ev); if (etat === 'jeu' && toile.setPointerCapture) toile.setPointerCapture(ev.pointerId); });
-    addEventListener('keydown', (ev) => {
-      if (etat !== 'jeu') return;
-      if (ev.key === 'ArrowLeft') { gauche = true; ev.preventDefault(); }
-      if (ev.key === 'ArrowRight') { droite = true; ev.preventDefault(); }
-    });
-    addEventListener('keyup', (ev) => {
-      if (ev.key === 'ArrowLeft') gauche = false;
-      if (ev.key === 'ArrowRight') droite = false;
-    });
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && etat === 'jeu') etat = 'pause';
-      else if (!document.hidden && etat === 'pause') { etat = 'jeu'; requestAnimationFrame((t) => { avant = t; boucle(t); }); }
-    });
-    if ('ResizeObserver' in window) new ResizeObserver(taille).observe(toile); else addEventListener('resize', taille);
-    taille();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(dessiner);
-  })();
-
   /* ---------- Widget Discord (fonctionne une fois le site hébergé) ---------- */
   const normaliser = (s) => String(s || '').normalize('NFC').replace(/^[^\p{L}\p{N}]+/u, '').replace(/\s+/g, ' ').trim().toLowerCase();
   function avatar(m) {
@@ -2623,9 +2413,8 @@ main, .pied { position: relative; z-index: 1; }
   paliers.forEach((p, i) => ST.create({ trigger: p, start: 'top 60%', onEnter: () => palier(i), onLeaveBack: () => palier(i - 1) }));
   ST.create({ trigger: echelle, start: 'top 60%', end: 'bottom 60%', onUpdate: (self) => echelle.style.setProperty('--p', self.progress.toFixed(3)) });
 
-  /* ---------- Commande et pause café ---------- */
+  /* ---------- Commande ton café ---------- */
   g.from('.ticket-cadre', { y: 60, rotation: 8, opacity: .25, duration: 1, ease: 'back.out(1.6)', scrollTrigger: { trigger: '.comptoir', start: 'top 82%', once: true } });
-  g.from('.jeu', { y: 50, opacity: .25, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.jeu', start: 'top 88%', once: true } });
 
   /* ---------- Événements et FAQ ---------- */
   g.from('.types-ev li', { y: 40, opacity: .25, duration: .8, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '.types-ev', start: 'top 85%', once: true } });
