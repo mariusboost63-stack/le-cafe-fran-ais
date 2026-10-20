@@ -1,0 +1,48 @@
+# Toutes les 15 minutes, lit le top 10 des grains dans la base du bot (en lecture seule) et le publie
+# sur la branche « data » (classement.json), que le site affiche. Script : outils/classement.py
+# Secrets à ajouter (Settings → Secrets and variables → Actions) : CAFE_DB_URL et DISCORD_TOKEN.
+# Ils ne servent qu'ici : le site n'y a jamais accès.
+name: Classement des grains
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: classement
+  cancel-in-progress: false
+
+jobs:
+  classement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Installer PyMySQL
+        run: pip install --quiet pymysql==1.1.1
+      - name: Relever le classement
+        env:
+          CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        # Code 2 : rien à publier (secrets absents ou base injoignable), sans faire échouer la tâche
+        run: python3 outils/classement.py "$RUNNER_TEMP/out/classement.json" || [ $? -eq 2 ]
+      - name: Publier sur la branche data
+        working-directory: ${{ runner.temp }}
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          [ -f out/classement.json ] || { echo "Rien à publier"; exit 0; }
+          cd out
+          git init -q -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add classement.json
+          git commit -q -m "Classement des grains"
+          git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data

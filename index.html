@@ -1030,6 +1030,40 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 560px) { .quiz-resultat { grid-template-columns: minmax(0, 1fr); } .quiz-resultat > * { grid-column: 1; } .quiz-tasse { grid-row: auto; width: 120px; } }
 
 
+/* Le classement des grains : les plus riches du café */
+.riches { padding-block: clamp(80px, 10vw, 140px); }
+.riches-grille { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.riches-tete { display: grid; gap: 22px; min-width: 0; }
+.riches-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 38ch; }
+#riches-maj { color: var(--creme); }
+.riches-corps { display: grid; gap: 22px; min-width: 0; }
+.top3 { list-style: none; margin: 0; padding: 14px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 12px; }
+.top3 li { --m: var(--creme); position: relative; display: grid; justify-items: center; gap: 10px; min-width: 0; padding: 26px 12px 20px; border-radius: 18px 18px 6px 6px; border: 1px solid color-mix(in srgb, var(--m) 35%, var(--trait)); background: linear-gradient(to bottom, color-mix(in srgb, var(--m) 16%, transparent), color-mix(in srgb, var(--lait) 2%, transparent)); text-align: center; }
+.top3 li:nth-child(1) { --m: var(--ambre); order: 2; padding-block: 34px 32px; }
+.top3 li:nth-child(2) { --m: #c9d1e0; order: 1; }
+.top3 li:nth-child(3) { --m: var(--creme); order: 3; }
+.top3 img { width: 64px; height: 64px; border-radius: 50%; background: var(--nuit-2); box-shadow: 0 0 0 3px var(--m); }
+.top3 li:nth-child(1) img { width: 84px; height: 84px; }
+.rg-rang { position: absolute; top: -14px; left: 50%; translate: -50% 0; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--m); color: var(--nuit); font: 800 14px/1 var(--f-titre); }
+.rg-nom { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.rg-grains { display: inline-flex; align-items: center; gap: 6px; font: 800 18px/1 var(--f-titre); font-variant-numeric: tabular-nums; }
+.rg-grains svg { width: 17px; height: 17px; color: var(--creme); }
+.top3 li:nth-child(1) .rg-grains { font-size: 23px; color: var(--ambre); }
+.riches-liste { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--trait); }
+.riches-liste li { display: grid; grid-template-columns: 28px 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--trait); }
+.rg-place { font: 500 13px/1 var(--f-mono); color: var(--brume); text-align: center; }
+.riches-liste img { width: 36px; height: 36px; border-radius: 50%; background: var(--nuit-2); }
+.riches-liste .rg-grains { font-size: 16px; }
+@media (max-width: 860px) { .riches-grille { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 480px) {
+  .top3 { gap: 8px; }
+  .top3 li { padding-inline: 6px; }
+  .top3 img { width: 52px; height: 52px; }
+  .top3 li:nth-child(1) img { width: 66px; height: 66px; }
+  .rg-grains { font-size: 15px; }
+  .top3 li:nth-child(1) .rg-grains { font-size: 18px; }
+}
+
 /* La petite info du jour : la gazette du comptoir */
 .gazette { padding-block: clamp(80px, 10vw, 140px); }
 .gazette-grille { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); grid-template-areas: "tete journal" "avant journal"; gap: clamp(28px, 4vw, 44px) clamp(32px, 6vw, 96px); align-items: start; }
@@ -1510,6 +1544,20 @@ main, .pied { position: relative; z-index: 1; }
           <li class="article" data-prix="7500000" style="--a: var(--a-deco)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-pinceau"/></svg></span><div class="a-texte"><h4>Décoration Discord</h4><p>Une décoration de profil Discord, d'une valeur maximale de 10 €.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>7&#8239;500&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">250 h</span> de vocal</span></p></li>
           <li class="article" data-prix="10000000" style="--a: var(--a-nitro)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-gemme"/></svg></span><div class="a-texte"><h4>Nitro Boost</h4><p>Un Nitro Boost d'une durée d'un mois.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>10&#8239;000&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">333 h 20</span> de vocal</span></p></li>
         </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="riches" id="classement" aria-labelledby="t-classement" hidden>
+    <div class="cadre riches-grille">
+      <div class="riches-tete" data-revele>
+        <p class="surtitre">Le classement des grains</p>
+        <h2 class="h2" id="t-classement">Les plus riches du café</h2>
+        <p class="chapo">Les dix membres qui ont le plus de grains sur le serveur, relevés directement dans le bot. <span id="riches-maj"></span></p>
+      </div>
+      <div class="riches-corps">
+        <ol class="top3" id="top3"></ol>
+        <ol class="riches-liste" id="riches-liste" start="4"></ol>
       </div>
     </div>
   </section>
@@ -2155,6 +2203,53 @@ main, .pied { position: relative; z-index: 1; }
       $('#info-titre').textContent = 'L\u2019info du jour n\u2019a pas pu être chargée.';
       $('#info-texte').textContent = 'Réessaie dans quelques instants, ou passe sur le serveur pour suivre l\u2019actualité avec la communauté.';
     }
+  })();
+
+  /* ---------- Le classement des grains ---------- */
+  // Le top 10 est relevé dans la base du bot par GitHub Actions (outils/classement.py) et publié sur la branche
+  // « data » : le site ne lit que cette liste, jamais la base. Sans liste, la section reste cachée.
+  (async function classementGrains() {
+    const SOURCE = 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/classement.json';
+    try {
+      const r = await fetch(SOURCE, { cache: 'no-cache' });
+      if (!r.ok) return;
+      const d = await r.json();
+      const liste = (d.classement || []).filter((x) => x && Number.isFinite(Number(x.grains))).slice(0, 10);
+      if (!liste.length) return;
+      const avatar = (x, taille) => {
+        const img = new Image();
+        img.src = /^https:\/\/cdn\.discordapp\.com\//.test(String(x.avatar || '')) ? x.avatar : 'https://cdn.discordapp.com/embed/avatars/0.png';
+        img.alt = ''; img.width = img.height = taille;
+        img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
+        return img;
+      };
+      const grains = (n) => {
+        const b = Object.assign(document.createElement('b'), { className: 'rg-grains' });
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttribute('href', '#i-grain'); svg.setAttribute('aria-hidden', 'true'); svg.append(use);
+        b.append(nf.format(Number(n)), svg, Object.assign(document.createElement('span'), { className: 'sr', textContent: ' grains' }));
+        return b;
+      };
+      const nom = (x) => Object.assign(document.createElement('span'), { className: 'rg-nom', textContent: String(x.nom || 'Membre') });
+      liste.forEach((x, i) => {
+        const li = document.createElement('li');
+        if (i < 3) {
+          li.append(Object.assign(document.createElement('span'), { className: 'rg-rang', textContent: String(i + 1) }), avatar(x, i ? 64 : 84), nom(x), grains(x.grains));
+          $('#top3').append(li);
+        } else {
+          li.append(Object.assign(document.createElement('span'), { className: 'rg-place', textContent: String(i + 1) }), avatar(x, 36), nom(x), grains(x.grains));
+          $('#riches-liste').append(li);
+        }
+      });
+      const minutes = Math.round((Date.now() - Date.parse(d.maj)) / 60000);
+      if (Number.isFinite(minutes)) {
+        $('#riches-maj').textContent = minutes < 1 ? 'Mis à jour à l\u2019instant.' : minutes < 60 ? `Mis à jour il y a ${minutes}\u00a0min.`
+          : `Mis à jour il y a ${Math.round(minutes / 60)}\u00a0h.`;
+      }
+      $('#classement').hidden = false;
+      if (anime) ST.refresh();
+    } catch (e) { /* classement indisponible : la section reste cachée */ }
   })();
 
   /* ---------- Widget Discord (fonctionne une fois le site hébergé) ---------- */

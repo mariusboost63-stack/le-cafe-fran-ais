@@ -48,6 +48,27 @@ Chaque jour vers 6 h, GitHub Actions (`.github/workflows/membres.yml`) lance `ou
 
 Pour lancer la mise à jour tout de suite : onglet **Actions** du dépôt → **Nombre de membres** → **Run workflow**. En local : `node outils/membres.js` (ou `node outils/membres.js 9300` pour un nombre précis, `--image` pour redessiner l'image), avec Playwright installé.
 
+## Le classement des grains
+
+La section « Les plus riches du café » (`#classement`) affiche le top 10 des membres par grains, avec leur pseudo et leur avatar Discord. Elle reste cachée tant qu'aucun classement n'a été publié.
+
+**Fonctionnement, sans risque pour l'économie du serveur :**
+
+- Toutes les 15 minutes, GitHub Actions (`.github/workflows/classement.yml`) lance `outils/classement.py`. Il lit le top 10 dans la table `users` de la base du bot (colonne `grains`), **en lecture seule**, sans les membres privés de grains (`blacklistGrains`).
+- Il récupère le pseudo et l'avatar de chacun sur Discord, puis publie `classement.json` (rang, pseudo, avatar, grains) sur la branche `data` du dépôt.
+- Le site ne lit que ce fichier. **Les identifiants de la base ne sont jamais dans le site** : ils sont rangés dans les secrets du dépôt, que seul GitHub Actions peut lire.
+
+**Secrets à ajouter** (dépôt → Settings → Secrets and variables → Actions → New repository secret) :
+
+| Nom | Valeur |
+|---|---|
+| `CAFE_DB_URL` | `jdbc:mysql://utilisateur:motdepasse@hôte:3306/base` (même format que l'adresse donnée par le développeur du bot ; dans le mot de passe, `=` s'écrit `%3D`, `@` s'écrit `%40`) |
+| `DISCORD_TOKEN` | le jeton d'un bot Discord créé pour l'occasion, **sans aucune permission** et sans l'inviter sur le serveur (discord.com/developers/applications → New Application → Bot → Reset Token) |
+
+L'idéal est un utilisateur de base de données qui n'a que le droit de lecture (SELECT) sur la table `users`. Ne jamais publier ces valeurs dans le code, sur Discord ou ailleurs : si elles ont circulé, change le mot de passe de la base.
+
+Pour lancer le relevé tout de suite : onglet **Actions** → **Classement des grains** → **Run workflow**. Le résumé de l'exécution indique si le classement est publié, ou pourquoi il ne l'est pas (secrets absents, base injoignable).
+
 ## La petite info du jour
 
 La section « Quoi de neuf en France ? » (`#info`) affiche une info sur l'actualité en France, sous forme de gazette. Une nouvelle info paraît chaque jour à midi, et les quatre précédentes sont listées dessous.
