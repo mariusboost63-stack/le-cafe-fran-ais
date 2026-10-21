@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-21",
+      "publication": "2026-10-21T12:00:00+02:00",
+      "theme": "Météo",
+      "titre": "Pluies d'une intensité record en Haute-Corse",
+      "texte": "Mardi 20 octobre, Météo-France a placé la Haute-Corse en vigilance rouge pluie-inondation, levée en soirée. À Solenzara, sur la côte est, les cumuls relevés constituent un record pour la France métropolitaine. Une personne disparue à Ghisonaccia a été retrouvée morte et des dizaines d'habitants ont dû quitter leur logement.",
+      "source": {
+        "nom": "franceinfo",
+        "url": "https://www.franceinfo.fr/france/corse/il-y-avait-tellement-d-eau-que-la-voiture-ne-passait-pas-des-pluies-record-en-corse-font-un-mort_8246989.html"
+      }
+    },
+    {
       "date": "2026-10-20",
       "publication": "2026-10-20T00:00:00+02:00",
       "theme": "Société",
