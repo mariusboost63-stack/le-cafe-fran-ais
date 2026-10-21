@@ -167,6 +167,36 @@ main, .pied { position: relative; z-index: 1; }
 .marque span { white-space: nowrap; }
 @media (max-width: 420px) { .marque { gap: 8px; } .marque span { font-size: 14px; } .mini-tasse { width: 38px; } }
 
+/* Menu mobile */
+.menu-btn { display: none; }
+@media (max-width: 960px) {
+  .menu-btn {
+    display: inline-grid; place-items: center; flex: none; width: 41px; height: 41px; padding: 0; border-radius: 999px; cursor: pointer;
+    border: 1.5px solid var(--trait); background: transparent; color: var(--lait); transition: border-color .2s;
+  }
+  .menu-btn:hover, .menu-btn[aria-expanded="true"] { border-color: var(--lait); }
+  .menu-btn span { display: grid; gap: 4px; }
+  .menu-btn i { display: block; width: 16px; height: 1.5px; border-radius: 2px; background: currentColor; transition: transform .25s, opacity .2s; }
+  .menu-btn[aria-expanded="true"] i:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .menu-btn[aria-expanded="true"] i:nth-child(2) { opacity: 0; }
+  .menu-btn[aria-expanded="true"] i:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+  .barre.menu-ouvert { background: var(--nuit); box-shadow: 0 1px 0 var(--trait); }
+  .barre.menu-ouvert nav {
+    display: grid; gap: 0; position: absolute; top: 100%; left: 0; right: 0;
+    max-height: calc(100dvh - 68px); overflow-y: auto; overscroll-behavior: contain;
+    padding: 4px var(--gouttiere-d) 20px var(--gouttiere-g);
+    background: var(--nuit); box-shadow: 0 1px 0 var(--trait);
+  }
+  .barre.menu-ouvert nav a { padding: 15px 0; font-size: 18px; color: var(--lait); border-bottom: 1px solid var(--trait); }
+}
+@media (max-width: 420px) {
+  .barre-int { gap: 10px; }
+  .barre-droite { gap: 6px; }
+  .barre .btn-petit { padding: 10px 14px; }
+  .barre .son { padding: 0 11px; }
+}
+@media (max-width: 399px) { .marque span { display: none; } }
+
 /* Boutons */
 .btn {
   --b-fond: transparent; --b-texte: var(--lait); --b-bord: var(--trait);
@@ -1158,7 +1188,7 @@ main, .pied { position: relative; z-index: 1; }
       </svg>
       <span>Le Café Français</span>
     </a>
-    <nav aria-label="Sections">
+    <nav id="menu" aria-label="Sections">
       <a href="#carte">La carte</a>
       <a href="#niveaux">Niveaux</a>
       <a href="#halloween" class="seulement-halloween">Halloween</a>
@@ -1171,6 +1201,7 @@ main, .pied { position: relative; z-index: 1; }
     <div class="barre-droite">
       <button class="son" id="son" type="button" aria-pressed="false" aria-label="Ambiance sonore du café" title="Ambiance sonore du café"><span class="son-barres" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="son-texte">Ambiance</span></button>
       <a class="btn btn-plein btn-petit" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre</a>
+      <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span aria-hidden="true"><i></i><i></i><i></i></span></button>
     </div>
   </div>
 </header>
@@ -2445,6 +2476,20 @@ main, .pied { position: relative; z-index: 1; }
 
   /* ---------- Boucle : barre, tasse de progression, ruban, fond ---------- */
   const barre = $('#barre');
+
+  /* Menu mobile */
+  const menuBtn = $('#menu-btn');
+  const menuOuvert = () => barre.classList.contains('menu-ouvert');
+  function menu(ouvert) {
+    barre.classList.toggle('menu-ouvert', ouvert);
+    menuBtn.setAttribute('aria-expanded', ouvert);
+    menuBtn.setAttribute('aria-label', ouvert ? 'Fermer le menu' : 'Ouvrir le menu');
+  }
+  menuBtn.addEventListener('click', () => menu(!menuOuvert()));
+  $$('#menu a').forEach((a) => a.addEventListener('click', () => menu(false)));
+  addEventListener('click', (e) => { if (menuOuvert() && !barre.contains(e.target)) menu(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && menuOuvert()) { menu(false); menuBtn.focus(); } });
+  matchMedia('(min-width: 961px)').addEventListener('change', (e) => { if (e.matches) menu(false); });
   const niveau = $('.mini-tasse .niveau');
   const rubans = $$('.defile').map((el) => el.getAnimations ? el.getAnimations()[0] : null).filter(Boolean);
   const logoIncline = $('.logo-incline');
