@@ -2208,50 +2208,72 @@ main, .pied { position: relative; z-index: 1; }
   /* ---------- Le classement des grains ---------- */
   // Le top 10 est relevé dans la base du bot par GitHub Actions (outils/classement.py) et publié sur la branche
   // « data » : le site ne lit que cette liste, jamais la base. Sans liste, la section reste cachée.
-  (async function classementGrains() {
+  (function classementGrains() {
     const SOURCE = 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/classement.json';
-    try {
-      const r = await fetch(SOURCE, { cache: 'no-cache' });
-      if (!r.ok) return;
-      const d = await r.json();
-      const liste = (d.classement || []).filter((x) => x && Number.isFinite(Number(x.grains))).slice(0, 10);
-      if (!liste.length) return;
-      const avatar = (x, taille) => {
-        const img = new Image();
-        img.src = /^https:\/\/cdn\.discordapp\.com\//.test(String(x.avatar || '')) ? x.avatar : 'https://cdn.discordapp.com/embed/avatars/0.png';
-        img.alt = ''; img.width = img.height = taille;
-        img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
-        // Avatar injoignable : le rond reste, vide, plutôt qu'une image cassée
-        img.addEventListener('error', () => { img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='; }, { once: true });
-        return img;
-      };
-      const grains = (n) => {
-        const b = Object.assign(document.createElement('b'), { className: 'rg-grains' });
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-        use.setAttribute('href', '#i-grain'); svg.setAttribute('aria-hidden', 'true'); svg.append(use);
-        b.append(nf.format(Number(n)), svg, Object.assign(document.createElement('span'), { className: 'sr', textContent: ' grains' }));
-        return b;
-      };
-      const nom = (x) => Object.assign(document.createElement('span'), { className: 'rg-nom', textContent: String(x.nom || 'Membre') });
-      liste.forEach((x, i) => {
-        const li = document.createElement('li');
-        if (i < 3) {
-          li.append(Object.assign(document.createElement('span'), { className: 'rg-rang', textContent: String(i + 1) }), avatar(x, i ? 64 : 84), nom(x), grains(x.grains));
-          $('#top3').append(li);
-        } else {
-          li.append(Object.assign(document.createElement('span'), { className: 'rg-place', textContent: String(i + 1) }), avatar(x, 36), nom(x), grains(x.grains));
-          $('#riches-liste').append(li);
+    const avatar = (x, taille) => {
+      const img = new Image();
+      img.src = /^https:\/\/cdn\.discordapp\.com\//.test(String(x.avatar || '')) ? x.avatar : 'https://cdn.discordapp.com/embed/avatars/0.png';
+      img.alt = ''; img.width = img.height = taille;
+      img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
+      // Avatar injoignable : le rond reste, vide, plutôt qu'une image cassée
+      img.addEventListener('error', () => { img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='; }, { once: true });
+      return img;
+    };
+    const grains = (n) => {
+      const b = Object.assign(document.createElement('b'), { className: 'rg-grains' });
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttribute('href', '#i-grain'); svg.setAttribute('aria-hidden', 'true'); svg.append(use);
+      b.append(nf.format(Number(n)), svg, Object.assign(document.createElement('span'), { className: 'sr', textContent: ' grains' }));
+      return b;
+    };
+    const nom = (x) => Object.assign(document.createElement('span'), { className: 'rg-nom', textContent: String(x.nom || 'Membre') });
+    let maj = NaN, affiche = '', dernier = 0;
+    function ecrireMaj() {
+      const minutes = Math.round((Date.now() - maj) / 60000);
+      if (!Number.isFinite(minutes)) return;
+      $('#riches-maj').textContent = minutes < 1 ? 'Mis à jour à l’instant.' : minutes < 60 ? `Mis à jour il y a ${minutes} min.`
+        : `Mis à jour il y a ${Math.round(minutes / 60)} h.`;
+    }
+    async function charger() {
+      if (Date.now() - dernier < 60000) return;
+      dernier = Date.now();
+      try {
+        const r = await fetch(SOURCE, { cache: 'no-cache' });
+        if (!r.ok) return;
+        const d = await r.json();
+        const liste = (d.classement || []).filter((x) => x && Number.isFinite(Number(x.grains))).slice(0, 10);
+        if (!liste.length) return;
+        maj = Date.parse(d.maj);
+        ecrireMaj();
+        // Rien n'a changé : on ne redessine pas
+        const signature = JSON.stringify(liste);
+        if (signature === affiche) return;
+        affiche = signature;
+        const podium = [], suite = [];
+        liste.forEach((x, i) => {
+          const li = document.createElement('li');
+          if (i < 3) {
+            li.append(Object.assign(document.createElement('span'), { className: 'rg-rang', textContent: String(i + 1) }), avatar(x, i ? 64 : 84), nom(x), grains(x.grains));
+            podium.push(li);
+          } else {
+            li.append(Object.assign(document.createElement('span'), { className: 'rg-place', textContent: String(i + 1) }), avatar(x, 36), nom(x), grains(x.grains));
+            suite.push(li);
+          }
+        });
+        $('#top3').replaceChildren(...podium);
+        $('#riches-liste').replaceChildren(...suite);
+        if ($('#classement').hidden) {
+          $('#classement').hidden = false;
+          if (anime) ST.refresh();
         }
-      });
-      const minutes = Math.round((Date.now() - Date.parse(d.maj)) / 60000);
-      if (Number.isFinite(minutes)) {
-        $('#riches-maj').textContent = minutes < 1 ? 'Mis à jour à l\u2019instant.' : minutes < 60 ? `Mis à jour il y a ${minutes}\u00a0min.`
-          : `Mis à jour il y a ${Math.round(minutes / 60)}\u00a0h.`;
-      }
-      $('#classement').hidden = false;
-      if (anime) ST.refresh();
-    } catch (e) { /* classement indisponible : la section reste cachée */ }
+      } catch (e) { /* classement indisponible : on garde ce qui est affiché */ }
+    }
+    charger();
+    // Page restée ouverte : nouveau classement toutes les 5 minutes, et au retour sur l'onglet
+    setInterval(() => { if (!document.hidden) charger(); }, 5 * 60000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) charger(); });
+    setInterval(ecrireMaj, 60000);
   })();
 
   /* ---------- Widget Discord (fonctionne une fois le site hébergé) ---------- */
