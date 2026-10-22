@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-22",
+      "publication": "2026-10-22T12:00:00+02:00",
+      "theme": "Société",
+      "titre": "La CGT appelle à étendre la grève à partir du 5 novembre",
+      "texte": "Reçue mercredi à Matignon avec les autres syndicats, la secrétaire générale de la CGT, Sophie Binet, a estimé que le Premier ministre Sébastien Lecornu n'avait annoncé « aucune mesure ». Elle invite les salariés à tenir des assemblées sur leur lieu de travail pour « généraliser la grève » dès le 5 novembre.",
+      "source": {
+        "nom": "franceinfo",
+        "url": "https://www.franceinfo.fr/societe/mobilisation-du-17-octobre/video-la-cgt-appelle-a-generaliser-la-greve-a-partir-du-5-novembre_8247280.html"
+      }
+    },
+    {
       "date": "2026-10-21",
       "publication": "2026-10-21T12:00:00+02:00",
       "theme": "Météo",
