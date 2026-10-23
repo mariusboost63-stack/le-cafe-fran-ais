@@ -73,6 +73,12 @@ def main():
         signaler("Secret DISCORD_TOKEN (ou DISCORD_TOKEN_EVENEMENTS) à ajouter dans les réglages du dépôt : rien n'est publié.", "warning")
         return 2
     try:
+        # Un bot absent du serveur peut recevoir une liste vide : on vérifie d'abord qu'il en est membre
+        if SERVEUR not in {g.get("id") for g in appeler("/users/@me/guilds", jeton)}:
+            signaler("Le bot du secret n'est pas membre du serveur : il ne voit pas ses événements, rien n'est publié."
+                     " Invite-le sans permission (voir README, « Les prochains événements »), ou mets le jeton d'un bot"
+                     " présent sur le serveur dans DISCORD_TOKEN_EVENEMENTS.", "warning")
+            return 2
         liste = appeler(f"/guilds/{SERVEUR}/scheduled-events?with_user_count=true", jeton)
     except urllib.error.HTTPError as err:
         if err.code in (401, 403, 404):
@@ -91,7 +97,7 @@ def main():
         salons = {c["id"]: c.get("name", "") for c in appeler(f"/guilds/{SERVEUR}/channels", jeton)}
         roles = {r["id"]: r.get("name", "") for r in appeler(f"/guilds/{SERVEUR}/roles", jeton)}
     except Exception as err:
-        signaler(f"Noms des salons illisibles ({type(err).__name__}) : lieux affichés sans nom.", "warning")
+        signaler(f"Noms des salons illisibles ({type(err).__name__} {getattr(err, 'code', '')}) : lieux affichés sans nom.".replace(" )", ")"), "warning")
 
     evenements = []
     # 1 : programmé, 2 : en cours. Les événements terminés ou annulés ne sont pas publiés
