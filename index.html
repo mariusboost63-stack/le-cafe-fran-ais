@@ -1085,6 +1085,42 @@ main, .pied { position: relative; z-index: 1; }
 .riches-liste img { width: 36px; height: 36px; border-radius: 50%; background: var(--nuit-2); }
 .riches-liste .rg-grains { font-size: 16px; }
 @media (max-width: 860px) { .riches-grille { grid-template-columns: minmax(0, 1fr); } }
+
+/* Les prochains événements, relevés dans l'onglet « Événements » du serveur */
+.prochains { padding-block: clamp(80px, 10vw, 140px); }
+.prochains-tete { display: grid; gap: 22px; margin-bottom: clamp(36px, 5vw, 60px); }
+.prochains-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 52ch; }
+.prochains-liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px; }
+.pe-carte { position: relative; display: grid; grid-template-rows: auto 1fr; min-width: 0; border-radius: 22px; overflow: hidden; background: var(--nuit-2); border: 1px solid var(--trait); transition: border-color .3s, translate .3s; }
+.pe-carte:hover { border-color: color-mix(in srgb, var(--bleu-vif) 45%, var(--trait)); translate: 0 -3px; }
+.pe-carte.is-direct { border-color: color-mix(in srgb, var(--rouge) 55%, var(--trait)); }
+.pe-visuel { position: relative; aspect-ratio: 5 / 2; overflow: hidden;
+  background: radial-gradient(120% 150% at 0% 0%, color-mix(in srgb, var(--bleu) 75%, transparent), transparent 62%),
+    radial-gradient(110% 130% at 100% 100%, color-mix(in srgb, var(--rouge-fonce) 40%, transparent), transparent 60%), var(--nuit); }
+.pe-visuel img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pe-visuel > svg { position: absolute; right: 22px; top: 50%; translate: 0 -50%; width: 72px; height: 72px; color: color-mix(in srgb, var(--lait) 22%, transparent); }
+.pe-statut { position: absolute; top: 14px; left: 14px; display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border-radius: 999px;
+  background: color-mix(in srgb, var(--nuit) 78%, transparent); backdrop-filter: blur(8px); color: var(--lait);
+  font: 500 var(--t-etiquette)/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
+.is-direct .pe-statut { background: var(--rouge-fonce); }
+.is-direct .pastille { background: var(--lait); box-shadow: 0 0 0 0 color-mix(in srgb, var(--lait) 60%, transparent); }
+.pe-corps { display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; gap: 6px 16px; padding: 0 22px 22px; }
+.pe-date { position: relative; z-index: 1; grid-row: span 2; display: grid; justify-items: center; align-content: center; width: 62px; height: 70px; margin-top: -26px; border-radius: 16px;
+  background: var(--lait); color: var(--nuit); box-shadow: 0 12px 26px -12px #000; font: 600 11.5px/1.15 var(--f-texte); letter-spacing: .06em; text-transform: uppercase; }
+.pe-date b { font: 800 27px/1 var(--f-titre); letter-spacing: -.02em; }
+.pe-carte h3 { align-self: end; padding-top: 14px; font: 800 var(--t-h3)/1.12 var(--f-titre); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.pe-quand { color: var(--creme); font-weight: 600; }
+.pe-infos { grid-column: 1 / -1; display: grid; gap: 12px; margin-top: 10px; }
+.pe-lieu { display: flex; align-items: center; gap: 8px; color: var(--lait); }
+.pe-lieu svg { width: 18px; height: 18px; flex: none; color: var(--bleu-vif); }
+.pe-desc { color: var(--brume); white-space: pre-line; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.pe-pied { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding-top: 16px; border-top: 1px solid var(--trait); }
+.pe-interesses { color: var(--brume); font-size: 15px; }
+.pe-interesses b { color: var(--lait); font-variant-numeric: tabular-nums; }
+.pe-lien { will-change: auto; }
+.pe-lien::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.pe-lien:focus-visible { outline: 2px solid var(--bleu-vif); outline-offset: 3px; }
+@media (max-width: 420px) { .pe-corps { padding-inline: 18px; } .pe-date { width: 56px; height: 64px; } }
 @media (max-width: 480px) {
   .top3 { gap: 8px; }
   .top3 li { padding-inline: 6px; }
@@ -1518,6 +1554,17 @@ main, .pied { position: relative; z-index: 1; }
           <p class="astuce">Prends le rôle @Notif Animation dans «&nbsp;Salons et rôles&nbsp;» pour être prévenu de chaque quête et de chaque événement.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="prochains" id="prochains" aria-labelledby="t-prochains" hidden>
+    <div class="cadre">
+      <div class="prochains-tete" data-revele>
+        <p class="surtitre">À l'agenda du serveur</p>
+        <h2 class="h2" id="t-prochains">Les prochains événements</h2>
+        <p class="chapo">Ils sont programmés dans l'onglet «&nbsp;Événements&nbsp;» du serveur. Clique sur «&nbsp;Intéressé&nbsp;» sur Discord pour être prévenu quand ça commence.</p>
+      </div>
+      <ol class="prochains-liste" id="prochains-liste"></ol>
     </div>
   </section>
 
@@ -2305,6 +2352,124 @@ main, .pied { position: relative; z-index: 1; }
     setInterval(() => { if (!document.hidden) charger(); }, 5 * 60000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) charger(); });
     setInterval(ecrireMaj, 60000);
+  })();
+
+  /* ---------- Les prochains événements ---------- */
+  // Les événements programmés sur Discord sont relevés par GitHub Actions (outils/evenements.py) et publiés sur la
+  // branche « evenements ». Sans événement à venir, la section reste cachée.
+  (function prochainsEvenements() {
+    const SOURCE = 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/evenements/evenements.json';
+    const PARIS = 'Europe/Paris';
+    const fmt = (o) => new Intl.DateTimeFormat('fr-FR', { timeZone: PARIS, ...o });
+    const fJour = fmt({ year: 'numeric', month: '2-digit', day: '2-digit' });
+    const fLong = fmt({ weekday: 'long', day: 'numeric', month: 'long' });
+    const fHeure = fmt({ hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+    const jour = (d) => fJour.format(d).split('/').reverse().join('-');
+    const heure = (d) => { const [h, m] = fHeure.format(d).split(':'); return m === '00' ? `${Number(h)} h` : `${Number(h)} h ${m}`; };
+    const maj1 = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+    const ICONES = { vocal: 'i-micro', scene: 'i-voix', ailleurs: 'i-annonce' };
+    const icone = (id) => {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttribute('href', `#${id}`); svg.setAttribute('aria-hidden', 'true'); svg.append(use);
+      return svg;
+    };
+    const el = (tag, className, texte) => Object.assign(document.createElement(tag), className ? { className } : {}, texte !== undefined ? { textContent: texte } : {});
+    // Fin connue, sinon 3 heures après le début (6 heures pour un événement déjà lancé)
+    const fin = (e) => Date.parse(e.fin) || Date.parse(e.debut) + (e.enCours ? 6 : 3) * 3600000;
+    function statut(e, debut, maintenant) {
+      if (e.enCours || (debut <= maintenant && maintenant < fin(e))) return 'En ce moment';
+      const ecart = Math.round((Date.parse(jour(debut)) - Date.parse(jour(maintenant))) / 86400000);
+      if (ecart <= 0) return `Aujourd'hui · ${heure(debut)}`;
+      if (ecart === 1) return `Demain · ${heure(debut)}`;
+      return `Dans ${ecart} jours`;
+    }
+    function carte(e, maintenant) {
+      const debut = new Date(e.debut);
+      const direct = e.enCours || (debut <= maintenant && maintenant < fin(e));
+      const li = el('li', `pe-carte${direct ? ' is-direct' : ''}`);
+      const visuel = el('div', 'pe-visuel');
+      if (/^https:\/\/cdn\.discordapp\.com\//.test(String(e.image || ''))) {
+        const img = new Image();
+        img.src = e.image; img.alt = ''; img.width = 640; img.height = 256;
+        img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
+        img.addEventListener('error', () => img.remove(), { once: true });
+        visuel.append(icone(ICONES[e.type] || 'i-micro'), img);
+      } else visuel.append(icone(ICONES[e.type] || 'i-micro'));
+      const etiquette = el('span', 'pe-statut');
+      if (direct) etiquette.append(el('span', 'pastille'));
+      etiquette.append(statut(e, debut, maintenant));
+      visuel.append(etiquette);
+
+      const corps = el('div', 'pe-corps');
+      const date = el('time', 'pe-date');
+      date.dateTime = jour(debut);
+      date.append(el('span', '', fmt({ weekday: 'short' }).format(debut).replace('.', '')), el('b', '', fmt({ day: 'numeric' }).format(debut)),
+        el('span', '', fmt({ month: 'short' }).format(debut).replace('.', '')));
+      const titre = el('h3', '', String(e.nom || 'Événement'));
+      const finConnue = Date.parse(e.fin);
+      let quand = `${maj1(fLong.format(debut))} · ${heure(debut)}`;
+      if (finConnue) quand += jour(new Date(finConnue)) === jour(debut) ? ` – ${heure(new Date(finConnue))}` : ` au ${fLong.format(new Date(finConnue))}`;
+      if (e.recurrent) quand += ' · revient régulièrement';
+      corps.append(date, titre, el('p', 'pe-quand', quand));
+
+      const infos = el('div', 'pe-infos');
+      const lieu = el('p', 'pe-lieu');
+      lieu.append(icone(ICONES[e.type] || 'i-micro'), String(e.lieu || 'Salon vocal'));
+      infos.append(lieu);
+      if (e.description) infos.append(el('p', 'pe-desc', String(e.description)));
+      corps.append(infos);
+
+      const pied = el('div', 'pe-pied');
+      const n = Number(e.interesses) || 0;
+      const interesses = el('span', 'pe-interesses');
+      if (n) interesses.append(el('b', '', nf.format(n)), n > 1 ? ' intéressés' : ' intéressé');
+      else interesses.textContent = 'Sois le premier !';
+      pied.append(interesses);
+      if (/^https:\/\/discord\.com\/events\//.test(String(e.lien || ''))) {
+        const lien = el('a', 'btn btn-petit btn-ligne pe-lien');
+        lien.href = e.lien; lien.target = '_blank'; lien.rel = 'noopener';
+        lien.append(direct ? 'Rejoindre' : 'Voir sur Discord', icone('i-fleche'));
+        lien.setAttribute('aria-label', `${direct ? 'Rejoindre' : 'Voir sur Discord'} : ${titre.textContent}`);
+        pied.append(lien);
+      }
+      corps.append(pied);
+      li.append(visuel, corps);
+      return li;
+    }
+    let donnees = null, affiche = '', dernier = 0;
+    function afficher() {
+      if (!donnees) return;
+      const maintenant = new Date();
+      const liste = donnees.filter((e) => e && Number.isFinite(Date.parse(e.debut)) && fin(e) > maintenant.getTime())
+        .sort((x, y) => Date.parse(x.debut) - Date.parse(y.debut)).slice(0, 6);
+      // Rien n'a changé (mêmes événements, mêmes étiquettes) : on ne redessine pas
+      const signature = JSON.stringify(liste) + liste.map((e) => statut(e, new Date(e.debut), maintenant)).join();
+      if (signature === affiche) return;
+      affiche = signature;
+      $('#prochains-liste').replaceChildren(...liste.map((e) => carte(e, maintenant)));
+      const cache = !liste.length;
+      if ($('#prochains').hidden !== cache) {
+        $('#prochains').hidden = cache;
+        if (anime) ST.refresh();
+      }
+    }
+    async function charger() {
+      if (Date.now() - dernier < 60000) return;
+      dernier = Date.now();
+      try {
+        const r = await fetch(SOURCE, { cache: 'no-cache' });
+        if (!r.ok) return;
+        const d = await r.json();
+        if (!Array.isArray(d.evenements)) return;
+        donnees = d.evenements;
+        afficher();
+      } catch (e) { /* liste indisponible : on garde ce qui est affiché */ }
+    }
+    charger();
+    // Page restée ouverte : nouvelle liste toutes les 5 minutes, et les étiquettes (« Demain », « En ce moment ») suivent l'heure
+    setInterval(() => { if (!document.hidden) { charger(); afficher(); } }, 5 * 60000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) { charger(); afficher(); } });
   })();
 
   /* ---------- Widget Discord (fonctionne une fois le site hébergé) ---------- */

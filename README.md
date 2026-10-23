@@ -69,6 +69,15 @@ L'idéal est un utilisateur de base de données qui n'a que le droit de lecture 
 
 Pour lancer le relevé tout de suite : onglet **Actions** → **Classement des grains** → **Run workflow**. Le résumé de l'exécution indique si le classement est publié, ou pourquoi il ne l'est pas (secrets absents, base injoignable).
 
+## Les prochains événements
+
+La section « Les prochains événements » (`#prochains`) montre les événements programmés dans l'onglet « Événements » du serveur Discord : date, heure, lieu, description, nombre d'intéressés et image de couverture. Elle reste cachée quand aucun événement n'est à venir, et un événement disparaît du site dès qu'il est terminé.
+
+- Toutes les 30 minutes, GitHub Actions (`.github/workflows/evenements.yml`) lance `outils/evenements.py`, qui lit les événements sur Discord et publie `evenements.json` sur la branche `evenements` du dépôt. Le site ne lit que ce fichier.
+- Il utilise le secret `DISCORD_TOKEN` du classement. Pour voir les événements, **ce bot doit être membre du serveur** : invite-le sans aucune permission avec `https://discord.com/oauth2/authorize?client_id=<ID de l'application>&scope=bot&permissions=0` (l'ID est dans discord.com/developers/applications → l'application → General Information). Pour utiliser un autre bot déjà présent sur le serveur, mets son jeton dans un secret `DISCORD_TOKEN_EVENEMENTS`.
+
+Pour lancer le relevé tout de suite : onglet **Actions** → **Prochains événements** → **Run workflow**. Le résumé indique combien d'événements sont publiés, ou pourquoi rien ne l'est (bot absent du serveur, secret manquant).
+
 ## La petite info du jour
 
 La section « Quoi de neuf en France ? » (`#info`) affiche une info sur l'actualité en France, sous forme de gazette. Une nouvelle info paraît chaque jour à midi, et les quatre précédentes sont listées dessous.
