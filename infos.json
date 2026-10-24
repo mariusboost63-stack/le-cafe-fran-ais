@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-24",
+      "publication": "2026-10-24T12:00:00+02:00",
+      "theme": "Société",
+      "titre": "70 000 policiers et gendarmes déployés pour les cortèges de samedi",
+      "texte": "Une semaine après les violences et pillages du 17 octobre, de nouveaux cortèges sont prévus ce samedi dans toute la France. Le ministre de l'Intérieur, Laurent Nuñez, a annoncé vendredi un dispositif de 70 000 policiers et gendarmes, appuyés par des blindés et des canons à eau. Plusieurs préfectures, dont celles de Nice et de Toulon, ont interdit ou limité les rassemblements.",
+      "source": {
+        "nom": "Public Sénat",
+        "url": "https://www.publicsenat.fr/actualites/territoires/mobilisation-du-24-octobre-laurent-nunez-annonce-le-deploiement-de-70-000-policiers-et-gendarmes-dont-plusieurs-unites-delite"
+      }
+    },
+    {
       "date": "2026-10-23",
       "publication": "2026-10-23T12:00:00+02:00",
       "theme": "Météo",
