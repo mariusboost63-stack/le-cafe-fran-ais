@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-25",
+      "publication": "2026-10-25T12:00:00+01:00",
+      "theme": "Politique",
+      "titre": "Jordan Bardella réélu à la tête du RN, Marine Le Pen entre en campagne",
+      "texte": "Seul candidat, Jordan Bardella a été reconduit samedi à la présidence du Rassemblement national, réuni en congrès à Orléans. Ce dimanche après-midi, Marine Le Pen doit y tenir le premier grand meeting de sa campagne pour l'élection présidentielle.",
+      "source": {
+        "nom": "Boursorama (AFP)",
+        "url": "https://www.boursorama.com/actualite-economique/actualites/orleans-bardella-reelu-au-congres-du-rn-apres-une-manifestation-antifasciste-sans-heurts-fb2ab1f733fbe467ac8626e72d1133c3"
+      }
+    },
+    {
       "date": "2026-10-24",
       "publication": "2026-10-24T12:00:00+02:00",
       "theme": "Société",
