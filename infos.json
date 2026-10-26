@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-26",
+      "publication": "2026-10-26T12:00:00+01:00",
+      "theme": "Culture",
+      "titre": "Strasbourg dresse son grand sapin de Noël de 30 mètres place Kléber",
+      "texte": "Lundi matin, le grand sapin du marché de Noël de Strasbourg a été dressé place Kléber, quelques jours plus tard que prévu. Haut de 30 mètres, l'arbre vient de la forêt de Walscheid, dans le massif des Vosges. Il doit encore être étoffé et décoré avant l'ouverture du marché.",
+      "source": {
+        "nom": "France 3 Grand Est",
+        "url": "https://france3-regions.franceinfo.fr/grand-est/bas-rhin/strasbourg-0/haut-de-30-metres-le-grand-sapin-du-marche-de-noel-installe-a-strasbourg-3439128.html"
+      }
+    },
+    {
       "date": "2026-10-25",
       "publication": "2026-10-25T12:00:00+01:00",
       "theme": "Politique",
