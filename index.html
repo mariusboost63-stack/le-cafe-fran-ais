@@ -1039,6 +1039,11 @@ main, .pied { position: relative; z-index: 1; }
 .ticket-zone { display: grid; gap: 26px; justify-items: center; min-width: 0; }
 .ticket-zone .ticket-cadre { width: 100%; }
 .ticket-partager svg { transform: none !important; }
+.apercu-partage { width: min(440px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 18px; border: 1px solid var(--trait); border-radius: 22px; background: var(--nuit-2); color: var(--lait); }
+.apercu-partage::backdrop { background: color-mix(in srgb, var(--ombre) 80%, transparent); }
+.apercu-partage[open] { display: grid; gap: 14px; justify-items: center; }
+.apercu-partage img { display: block; width: 100%; height: auto; max-height: calc(100dvh - 190px); object-fit: contain; border-radius: 12px; -webkit-touch-callout: default; }
+.apercu-partage p { margin: 0; text-align: center; color: var(--brume); font-size: 15px; }
 .ticket-cadre { filter: drop-shadow(0 22px 34px color-mix(in srgb, var(--ombre) 60%, transparent)); transform: rotate(2.2deg); min-width: 0; }
 .ticket {
   position: relative; overflow: hidden; padding: 24px 22px 40px; background: var(--lait); color: var(--nuit); font: 500 13.5px/1.55 var(--f-mono);
@@ -1421,6 +1426,11 @@ main, .pied { position: relative; z-index: 1; }
             </div>
           </div>
           <button class="btn btn-ligne btn-petit ticket-partager" id="ticket-partager" type="button" hidden><svg aria-hidden="true"><use href="#i-partage"/></svg>Partager ma commande</button>
+          <dialog class="apercu-partage" id="apercu-partage" aria-label="Ton bon de commande en image">
+            <img alt="Ton bon de commande du Café Français" width="1080" height="1350">
+            <p>Appuie longuement sur l'image pour l'enregistrer, puis partage-la où tu veux.</p>
+            <form method="dialog"><button class="btn btn-plein btn-petit">Fermer</button></form>
+          </dialog>
         </div>
       </div>
     </div>
@@ -2172,7 +2182,7 @@ main, .pied { position: relative; z-index: 1; }
       curieux: { nom: 'Un café gourmand', phrase: 'Un peu de tout et beaucoup de surprises : tu ne veux rien rater.', table: 'Partout à la fois', salons: ['#memes', '#confessions', '#le-petit-savoir', '#événements'], conseil: 'Prends le rôle @Notif Animation pour être prévenu de chaque événement.', boisson: 'var(--cafe)', mousse: 'var(--b-gourmand)' },
     };
     const VAGUE = $('.grande-tasse .vague').getAttribute('d');
-    let etape = 0, points = {}, dernier = '', choix = [], servie = null;
+    let etape = 0, points = {}, dernier = '', choix = [], servie = null, imagePrete = null, imageFaite = null;
     const melanger = (t) => t.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map((v) => v[1]);
     const nouveauNumero = () => { num.textContent = String(10 + Math.floor(Math.random() * 990)).padStart(3, '0'); };
     function poser(html, cible) {
@@ -2218,13 +2228,17 @@ main, .pied { position: relative; z-index: 1; }
       setTimeout(() => tampon.classList.add('pose'), reduit ? 0 : 700);
       servie = B;
       partager.hidden = false;
+      // L'image est préparée tout de suite : au clic, le menu de partage doit s'ouvrir sans attendre
+      const pour = B;
+      imageFaite = null;
+      imagePrete = dessiner().then((img) => { if (servie === pour) imageFaite = img; return img; }, () => null);
     }
     zone.addEventListener('click', (e) => {
       const b = e.target.closest('button');
       if (!b) return;
       zone.dataset.joue = '1';
       if (b.hasAttribute('data-rejouer')) {
-        etape = 0; points = {}; dernier = ''; choix = []; servie = null;
+        etape = 0; points = {}; dernier = ''; choix = []; servie = null; imagePrete = null; imageFaite = null;
         partager.hidden = true;
         lignes.innerHTML = '<li class="ticket-vide">En attente de ta commande…</li>';
         tampon.classList.remove('pose');
@@ -2337,23 +2351,34 @@ main, .pied { position: relative; z-index: 1; }
       ctx.fillStyle = C.creme; ctx.font = `500 30px ${F_MONO}`;
       ctx.fillText('Fais le test sur cafe-fr.com', W / 2, yb + 134);
 
-      return new Promise((ok, ko) => toile.toBlob((b) => (b ? ok(b) : ko(new Error('image'))), 'image/png'));
+      return new Promise((ok, ko) => toile.toBlob((b) => (b ? ok(b) : ko(new Error('image'))), 'image/jpeg', .92));
     }
     partager.addEventListener('click', async () => {
-      if (!servie) return;
+      if (!servie || !imagePrete) return;
       partager.disabled = true;
       try {
-        const image = await dessiner();
-        const fichier = new File([image], 'ma-commande-cafe-francais.png', { type: 'image/png' });
+        // Image déjà prête : aucune attente avant navigator.share (sinon Safari refuse)
+        const image = imageFaite || await imagePrete || await dessiner();
+        const fichier = new File([image], 'ma-commande-cafe-francais.jpg', { type: 'image/jpeg' });
         const texte = `Au Café Français, ma commande c'est ${servie.nom.toLowerCase()} ☕ Et toi, tu prends quoi ? https://cafe-fr.com/#commande`;
         // Sur téléphone : le menu de partage avec l'image ; ailleurs, l'image est enregistrée
         if (navigator.canShare && navigator.canShare({ files: [fichier] })) {
           try { await navigator.share({ files: [fichier], text: texte }); return; } catch (e) { if (e && e.name === 'AbortError') return; }
         }
+        const url = URL.createObjectURL(image);
+        // Sur téléphone sans partage (navigateur intégré de Discord, Instagram…) : l'image en grand, à enregistrer d'un appui long
+        const apercu = $('#apercu-partage');
+        if (matchMedia('(pointer: coarse)').matches && apercu.showModal) {
+          const img = $('img', apercu);
+          if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+          img.src = url;
+          apercu.showModal();
+          return;
+        }
         const a = document.createElement('a');
-        a.href = URL.createObjectURL(image); a.download = fichier.name;
+        a.href = url; a.download = fichier.name;
         document.body.append(a); a.click(); a.remove();
-        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
         annoncer('Image enregistrée : partage-la où tu veux !');
       } catch (e) {
         annoncer("Oups, l'image n'a pas pu être créée.");
