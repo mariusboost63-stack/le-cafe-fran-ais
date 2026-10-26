@@ -1036,6 +1036,9 @@ main, .pied { position: relative; z-index: 1; }
 .quiz-salons li { padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--creme) 14%, var(--nuit)); border: 1px solid color-mix(in srgb, var(--creme) 35%, transparent); font-weight: 600; font-size: 14.5px; }
 .quiz-conseil { color: var(--brume); font-size: 15px; max-width: 48ch; }
 .quiz-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.ticket-zone { display: grid; gap: 26px; justify-items: center; min-width: 0; }
+.ticket-zone .ticket-cadre { width: 100%; }
+.ticket-partager svg { transform: none !important; }
 .ticket-cadre { filter: drop-shadow(0 22px 34px color-mix(in srgb, var(--ombre) 60%, transparent)); transform: rotate(2.2deg); min-width: 0; }
 .ticket {
   position: relative; overflow: hidden; padding: 24px 22px 40px; background: var(--lait); color: var(--nuit); font: 500 13.5px/1.55 var(--f-mono);
@@ -1055,7 +1058,7 @@ main, .pied { position: relative; z-index: 1; }
   opacity: 0; transform: rotate(-14deg) scale(2.2); transition: opacity .25s, transform .35s cubic-bezier(.3, 1.6, .5, 1);
 }
 .ticket-tampon.pose { opacity: .88; transform: rotate(-14deg) scale(1); }
-@media (max-width: 860px) { .comptoir { grid-template-columns: minmax(0, 1fr); } .ticket-cadre { max-width: 360px; justify-self: center; width: 100%; } }
+@media (max-width: 860px) { .comptoir { grid-template-columns: minmax(0, 1fr); } .ticket-zone { max-width: 360px; justify-self: center; width: 100%; } }
 @media (max-width: 640px) { .quiz-reponses { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 560px) { .quiz-resultat { grid-template-columns: minmax(0, 1fr); } .quiz-resultat > * { grid-column: 1; } .quiz-tasse { grid-row: auto; width: 120px; } }
 
@@ -1190,6 +1193,7 @@ main, .pied { position: relative; z-index: 1; }
     <symbol id="i-perso" viewBox="0 0 24 24"><circle class="ico-svg" cx="10" cy="8.5" r="3.5"/><path class="ico-svg" d="M3.5 19.5c.8-3.4 3.4-5.5 6.5-5.5s5.7 2.1 6.5 5.5M18.5 7.5v6M15.5 10.5h6"/></symbol>
     <symbol id="i-pinceau" viewBox="0 0 24 24"><path class="ico-svg" d="m20 4-8.6 8.6M14.6 5.4l4 4M11.4 12.6c-1.6-1.6-4.2-1.4-5.4.4-1 1.5-.5 3.4-2.5 5.5 3.2.9 6 .3 7.6-1.4 1.4-1.5 1.6-3.2.3-4.5Z"/></symbol>
     <symbol id="i-gemme" viewBox="0 0 24 24"><path class="ico-svg" d="M7 4.5h10l3.5 5L12 20 3.5 9.5Zm-3.5 5h17M9.5 4.5 8 9.5l4 10.5 4-10.5-1.5-5"/></symbol>
+    <symbol id="i-partage" viewBox="0 0 24 24"><path class="ico-svg" d="M12 14.5V3.5M7.5 8 12 3.5 16.5 8M5 12.5v6A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-6"/></symbol>
     <symbol id="i-cadenas" viewBox="0 0 24 24"><rect class="ico-svg" x="5" y="10.5" width="14" height="10" rx="2.5"/><path class="ico-svg" d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
     <symbol id="i-chauve" viewBox="0 0 48 24"><path fill="currentColor" d="M24 7.2c-1-2.2-2-3.5-2.7-3.6.3 1.3.2 2.5-.3 3.3C18.6 5.6 14.2 3.5 8.8 3.9 4.4 4.2 1.6 6.4 0 9.6c3-1.4 6.1-1.3 7.9.4-1.9.3-3.1 1.6-3.2 3.7 2.2-1.5 4.7-1.6 6.8-.3-1.1 1-1.5 2.5-1.1 4.3 2.6-2.4 6.6-3.6 10.6-2.6.9 1.3 2.2 2.7 3 3.4.8-.7 2.1-2.1 3-3.4 4-1 8 .2 10.6 2.6.4-1.8 0-3.3-1.1-4.3 2.1-1.3 4.6-1.2 6.8.3-.1-2.1-1.3-3.4-3.2-3.7 1.8-1.7 4.9-1.8 7.9-.4-1.6-3.2-4.4-5.4-8.8-5.7-5.4-.4-9.8 1.7-12.2 3-.5-.8-.6-2-.3-3.3-.7.1-1.7 1.4-2.7 3.6Z"/></symbol>
   </defs>
@@ -1408,12 +1412,15 @@ main, .pied { position: relative; z-index: 1; }
             </ul>
           </div>
         </div>
-        <div class="ticket-cadre">
-          <div class="ticket" aria-label="Ta commande">
-            <p class="ticket-tete"><strong>Le Café Français</strong>Bon de commande n°&nbsp;<span id="ticket-num">042</span></p>
-            <ol class="ticket-lignes" id="ticket-lignes" aria-live="polite"><li class="ticket-vide">En attente de ta commande…</li></ol>
-            <p class="ticket-tampon" id="ticket-tampon" aria-hidden="true">Servi</p>
+        <div class="ticket-zone">
+          <div class="ticket-cadre">
+            <div class="ticket" aria-label="Ta commande">
+              <p class="ticket-tete"><strong>Le Café Français</strong>Bon de commande n°&nbsp;<span id="ticket-num">042</span></p>
+              <ol class="ticket-lignes" id="ticket-lignes" aria-live="polite"><li class="ticket-vide">En attente de ta commande…</li></ol>
+              <p class="ticket-tampon" id="ticket-tampon" aria-hidden="true">Servi</p>
+            </div>
           </div>
+          <button class="btn btn-ligne btn-petit ticket-partager" id="ticket-partager" type="button" hidden><svg aria-hidden="true"><use href="#i-partage"/></svg>Partager ma commande</button>
         </div>
       </div>
     </div>
@@ -2151,7 +2158,7 @@ main, .pied { position: relative; z-index: 1; }
 
   /* ---------- Commande ton café ---------- */
   (function commande() {
-    const zone = $('#quiz'), lignes = $('#ticket-lignes'), tampon = $('#ticket-tampon'), num = $('#ticket-num');
+    const zone = $('#quiz'), lignes = $('#ticket-lignes'), tampon = $('#ticket-tampon'), num = $('#ticket-num'), partager = $('#ticket-partager');
     const QUESTIONS = [
       { q: "Tu t'installes où&nbsp;?", r: [['Au comptoir, pour lancer une partie', 'joueur'], ['En terrasse, pour papoter', 'bavard'], ['Dans le salon, casque sur les oreilles', 'vocal'], ["Près du tableau d'affichage, pour ne rien rater", 'curieux']] },
       { q: 'Ce soir, tu as surtout envie de…', r: [['Gagner des grains', 'joueur'], ['Rencontrer du monde', 'bavard'], ['Parler sans avoir à écrire', 'vocal'], ['Rire un bon coup', 'curieux']] },
@@ -2165,7 +2172,7 @@ main, .pied { position: relative; z-index: 1; }
       curieux: { nom: 'Un café gourmand', phrase: 'Un peu de tout et beaucoup de surprises : tu ne veux rien rater.', table: 'Partout à la fois', salons: ['#memes', '#confessions', '#le-petit-savoir', '#événements'], conseil: 'Prends le rôle @Notif Animation pour être prévenu de chaque événement.', boisson: 'var(--cafe)', mousse: 'var(--b-gourmand)' },
     };
     const VAGUE = $('.grande-tasse .vague').getAttribute('d');
-    let etape = 0, points = {}, dernier = '';
+    let etape = 0, points = {}, dernier = '', choix = [], servie = null;
     const melanger = (t) => t.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map((v) => v[1]);
     const nouveauNumero = () => { num.textContent = String(10 + Math.floor(Math.random() * 990)).padStart(3, '0'); };
     function poser(html, cible) {
@@ -2209,13 +2216,16 @@ main, .pied { position: relative; z-index: 1; }
       requestAnimationFrame(() => requestAnimationFrame(() => { const r = $('.quiz-resultat', zone); if (r) r.classList.add('servi'); }));
       ligne(`<span>==</span><span>Total : ${B.nom.toLowerCase()}</span>`, 'ticket-total');
       setTimeout(() => tampon.classList.add('pose'), reduit ? 0 : 700);
+      servie = B;
+      partager.hidden = false;
     }
     zone.addEventListener('click', (e) => {
       const b = e.target.closest('button');
       if (!b) return;
       zone.dataset.joue = '1';
       if (b.hasAttribute('data-rejouer')) {
-        etape = 0; points = {}; dernier = '';
+        etape = 0; points = {}; dernier = ''; choix = []; servie = null;
+        partager.hidden = true;
         lignes.innerHTML = '<li class="ticket-vide">En attente de ta commande…</li>';
         tampon.classList.remove('pose');
         nouveauNumero();
@@ -2226,10 +2236,132 @@ main, .pied { position: relative; z-index: 1; }
       if (!profil) return;
       points[profil] = (points[profil] || 0) + 1;
       dernier = profil;
+      choix.push(b.lastElementChild.textContent);
       ligne(`<span>${String(etape + 1).padStart(2, '0')}</span><span>${b.lastElementChild.textContent}</span>`);
       etape++;
       if (etape < QUESTIONS.length) question(); else resultat();
     });
+
+    /* Partager : le bon de commande devient une image (1080 × 1350) */
+    const couleur = (nom) => getComputedStyle(racine).getPropertyValue(nom).trim();
+    const chemin = (sel) => new Path2D($(sel).getAttribute('d'));
+    function couper(ctx, texte, largeur) {
+      const mots = texte.split(' '), sortie = [];
+      let cours = '';
+      for (const m of mots) {
+        const essai = cours ? cours + ' ' + m : m;
+        if (ctx.measureText(essai).width > largeur && cours) { sortie.push(cours); cours = m; } else cours = essai;
+      }
+      return sortie.concat(cours);
+    }
+    async function dessiner() {
+      const F_TITRE = '"Bricolage Grotesque", "Arial Black", sans-serif', F_MONO = '"DM Mono", ui-monospace, monospace';
+      await Promise.all([document.fonts.load(`800 40px ${F_TITRE}`), document.fonts.load(`500 28px ${F_MONO}`)]).catch(() => {});
+      const C = { nuit: couleur('--nuit'), lait: couleur('--lait'), creme: couleur('--creme'), brume: couleur('--brume'), bleu: couleur('--bleu'), rouge: couleur('--rouge'), tampon: couleur('--rouge-fonce') };
+      const W = 1080, H = 1350, toile = document.createElement('canvas');
+      toile.width = W; toile.height = H;
+      const ctx = toile.getContext('2d');
+
+      // Fond nuit, halo crème
+      ctx.fillStyle = C.nuit; ctx.fillRect(0, 0, W, H);
+      const halo = ctx.createRadialGradient(W / 2, 560, 60, W / 2, 560, 760);
+      halo.addColorStop(0, 'rgba(201, 146, 99, .22)'); halo.addColorStop(1, 'rgba(201, 146, 99, 0)');
+      ctx.fillStyle = halo; ctx.fillRect(0, 0, W, H);
+
+      // En-tête : la tasse tricolore et le nom du café
+      ctx.save();
+      ctx.translate(W / 2 - 330, 56); ctx.scale(.62, .62); ctx.translate(-8, -60);
+      ctx.fillStyle = C.bleu; ctx.fill(chemin('#p-v1'));
+      ctx.fillStyle = C.lait; ctx.fill(chemin('#p-v2'));
+      ctx.fillStyle = C.rouge; ctx.fill(chemin('#p-v3'));
+      ctx.fillStyle = C.lait; ctx.fill(chemin('#p-tasse'));
+      ctx.restore();
+      ctx.fillStyle = C.lait; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+      ctx.font = `800 64px ${F_TITRE}`;
+      ctx.fillText('Le Café Français', W / 2 - 160, 168);
+
+      // Le ticket : on mesure d'abord les lignes pour connaître sa hauteur
+      const TX = 170, TW = 740, PAD = 52, LARGEUR = TW - PAD * 2 - 64;
+      ctx.font = `500 30px ${F_MONO}`;
+      const blocs = choix.map((c, i) => ({ n: String(i + 1).padStart(2, '0'), l: couper(ctx, c, LARGEUR) }));
+      const total = { n: '==', l: couper(ctx, `Total : ${servie.nom.toLowerCase()}`, LARGEUR) };
+      const LH = 42;
+      const hLignes = blocs.reduce((h, b) => h + b.l.length * LH + 14, 0) + 34 + total.l.length * LH;
+      const TH = 70 + 54 + 46 + 40 + hLignes + 120;
+      // L'espace libre est réparti autour du ticket
+      const libre = Math.max(0, H - 70 - (250 + TH + 130 + 134)), TY = 250 + libre / 3;
+
+      ctx.save();
+      ctx.translate(W / 2, TY + TH / 2); ctx.rotate(2 * Math.PI / 180); ctx.translate(-W / 2, -(TY + TH / 2));
+      ctx.shadowColor = 'rgba(7, 9, 15, .55)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 26;
+      ctx.beginPath();
+      ctx.moveTo(TX, TY); ctx.lineTo(TX + TW, TY);
+      const DENT = 24, bas = TY + TH;
+      ctx.lineTo(TX + TW, bas - DENT / 2);
+      for (let x = TX + TW; x > TX; x -= DENT) { ctx.lineTo(x - DENT / 2, bas); ctx.lineTo(Math.max(TX, x - DENT), bas - DENT / 2); }
+      ctx.closePath();
+      ctx.fillStyle = C.lait; ctx.fill();
+      ctx.shadowColor = 'transparent';
+
+      const tiret = (y) => { ctx.save(); ctx.setLineDash([12, 9]); ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(19, 26, 40, .35)'; ctx.beginPath(); ctx.moveTo(TX + PAD, y); ctx.lineTo(TX + TW - PAD, y); ctx.stroke(); ctx.restore(); };
+      let y = TY + 70 + 30;
+      ctx.fillStyle = C.nuit; ctx.textAlign = 'center';
+      ctx.font = `800 40px ${F_TITRE}`; ctx.fillText('Le Café Français', W / 2, y);
+      y += 50; ctx.font = `500 28px ${F_MONO}`; ctx.fillText(`Bon de commande n° ${num.textContent}`, W / 2, y);
+      y += 36; tiret(y);
+      y += 40 + 30;
+      ctx.textAlign = 'left'; ctx.font = `500 30px ${F_MONO}`;
+      const ecrire = (b) => { b.l.forEach((t, i) => { if (i === 0) ctx.fillText(b.n, TX + PAD, y); ctx.fillText(t, TX + PAD + 64, y); y += LH; }); };
+      blocs.forEach((b) => { ecrire(b); y += 14; });
+      y += 4; tiret(y - 30); y += 30;
+      ctx.font = `800 31px ${F_MONO}`; ecrire(total);
+
+      // Le tampon « Servi »
+      ctx.save();
+      ctx.translate(TX + TW - 160, bas - 78); ctx.rotate(-14 * Math.PI / 180);
+      ctx.globalAlpha = .88; ctx.strokeStyle = C.tampon; ctx.fillStyle = C.tampon;
+      ctx.font = `800 52px ${F_TITRE}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const lt = ctx.measureText('SERVI').width + 48;
+      ctx.lineWidth = 4; ctx.strokeRect(-lt / 2, -38, lt, 76); ctx.lineWidth = 2; ctx.strokeRect(-lt / 2 + 7, -31, lt - 14, 62);
+      ctx.fillText('SERVI', 0, 3);
+      ctx.restore();
+      ctx.restore();
+
+      // Bas de l'image : la table et l'invitation
+      ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      const yb = TY + TH + 130 + libre / 3;
+      ctx.fillStyle = C.brume; ctx.font = `500 30px ${F_MONO}`;
+      ctx.fillText(`MA TABLE : ${servie.table.toUpperCase()}`, W / 2, yb);
+      ctx.fillStyle = C.lait; ctx.font = `800 62px ${F_TITRE}`;
+      ctx.fillText('Et toi, tu prends quoi ?', W / 2, yb + 80);
+      ctx.fillStyle = C.creme; ctx.font = `500 30px ${F_MONO}`;
+      ctx.fillText('Fais le test sur cafe-fr.com', W / 2, yb + 134);
+
+      return new Promise((ok, ko) => toile.toBlob((b) => (b ? ok(b) : ko(new Error('image'))), 'image/png'));
+    }
+    partager.addEventListener('click', async () => {
+      if (!servie) return;
+      partager.disabled = true;
+      try {
+        const image = await dessiner();
+        const fichier = new File([image], 'ma-commande-cafe-francais.png', { type: 'image/png' });
+        const texte = `Au Café Français, ma commande c'est ${servie.nom.toLowerCase()} ☕ Et toi, tu prends quoi ? https://cafe-fr.com/#commande`;
+        // Sur téléphone : le menu de partage avec l'image ; ailleurs, l'image est enregistrée
+        if (navigator.canShare && navigator.canShare({ files: [fichier] })) {
+          try { await navigator.share({ files: [fichier], text: texte }); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+        }
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(image); a.download = fichier.name;
+        document.body.append(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        annoncer('Image enregistrée : partage-la où tu veux !');
+      } catch (e) {
+        annoncer("Oups, l'image n'a pas pu être créée.");
+      } finally {
+        partager.disabled = false;
+      }
+    });
+
     nouveauNumero();
     question();
   })();
