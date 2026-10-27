@@ -2440,11 +2440,20 @@ main, .pied { position: relative; z-index: 1; }
     }
   })();
 
+  // Les listes (classement, événements) sont publiées avec le site ; tant qu'il est servi par GitHub Pages, elles
+  // sont lues sur le dépôt (deuxième adresse)
+  async function chargerListe(adresses) {
+    for (const a of adresses) {
+      try { const r = await fetch(a, { cache: 'no-cache' }); if (r.ok) return r; } catch (e) { /* adresse suivante */ }
+    }
+    return null;
+  }
+
   /* ---------- Le classement des grains ---------- */
   // Le top 10 est relevé dans la base du bot par GitHub Actions (outils/classement.py) et publié sur la branche
-  // « data » : le site ne lit que cette liste, jamais la base. Sans liste, la section reste cachée.
+  // « data », puis avec le site : le site ne lit que cette liste, jamais la base. Sans liste, la section reste cachée.
   (function classementGrains() {
-    const SOURCE = 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/classement.json';
+    const SOURCES = ['classement.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/classement.json'];
     const avatar = (x, taille) => {
       const img = new Image();
       img.src = /^https:\/\/cdn\.discordapp\.com\//.test(String(x.avatar || '')) ? x.avatar : 'https://cdn.discordapp.com/embed/avatars/0.png';
@@ -2474,8 +2483,8 @@ main, .pied { position: relative; z-index: 1; }
       if (Date.now() - dernier < 60000) return;
       dernier = Date.now();
       try {
-        const r = await fetch(SOURCE, { cache: 'no-cache' });
-        if (!r.ok) return;
+        const r = await chargerListe(SOURCES);
+        if (!r) return;
         const d = await r.json();
         const liste = (d.classement || []).filter((x) => x && Number.isFinite(Number(x.grains))).slice(0, 10);
         if (!liste.length) return;
@@ -2513,9 +2522,9 @@ main, .pied { position: relative; z-index: 1; }
 
   /* ---------- Les prochains événements ---------- */
   // Les événements programmés sur Discord sont relevés par GitHub Actions (outils/evenements.py) et publiés sur la
-  // branche « evenements ». Sans événement à venir, la section reste cachée.
+  // branche « evenements », puis avec le site. Sans événement à venir, la section reste cachée.
   (function prochainsEvenements() {
-    const SOURCE = 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/evenements/evenements.json';
+    const SOURCES = ['evenements.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/evenements/evenements.json'];
     const PARIS = 'Europe/Paris';
     const fmt = (o) => new Intl.DateTimeFormat('fr-FR', { timeZone: PARIS, ...o });
     const fJour = fmt({ year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -2615,8 +2624,8 @@ main, .pied { position: relative; z-index: 1; }
       if (Date.now() - dernier < 60000) return;
       dernier = Date.now();
       try {
-        const r = await fetch(SOURCE, { cache: 'no-cache' });
-        if (!r.ok) return;
+        const r = await chargerListe(SOURCES);
+        if (!r) return;
         const d = await r.json();
         if (!Array.isArray(d.evenements)) return;
         donnees = d.evenements;

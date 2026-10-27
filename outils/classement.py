@@ -2,7 +2,7 @@
 """Classement des grains du serveur : le top 10 (poche et banque), lu dans la base du bot et publié sans rien de sensible,
 avec le compteur du salon #infini.
 
-Lancé toutes les 15 minutes par GitHub Actions (.github/workflows/classement.yml). Le résultat, classement.json,
+Lancé toutes les heures par GitHub Actions (.github/workflows/classement.yml). Le résultat, classement.json,
 est publié sur la branche « data » du dépôt, et le site le lit. Les identifiants de la base ne quittent jamais
 GitHub : ils sont rangés dans les secrets du dépôt, jamais dans le site. La lecture se fait en lecture seule.
 

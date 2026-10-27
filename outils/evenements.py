@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Prochains événements du serveur : les événements programmés sur Discord (onglet « Événements »), publiés sans rien de sensible.
 
-Lancé toutes les 30 minutes par GitHub Actions (.github/workflows/evenements.yml). Le résultat, evenements.json,
+Lancé toutes les 2 heures par GitHub Actions (.github/workflows/evenements.yml). Le résultat, evenements.json,
 est publié sur la branche « evenements » du dépôt, et le site le lit. Sans événement à venir, la liste est vide
 et la section reste cachée sur le site.
 

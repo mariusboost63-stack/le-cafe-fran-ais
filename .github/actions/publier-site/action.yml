@@ -1,0 +1,48 @@
+# Publie le site sur Cloudflare Pages (projet « cafe-fr »). Utilisé par publier.yml et à la fin des tâches du
+# classement, des événements et du nombre de membres (dans la même tâche, pour ne pas compter une minute de plus).
+# Seuls les fichiers du site partent en ligne, pris sur la dernière version de main, avec les dernières listes du
+# classement (branche « data ») et des événements (branche « evenements »). Sans secrets Cloudflare, rien n'est fait.
+name: Publier le site
+description: Publie les fichiers du site sur Cloudflare Pages
+inputs:
+  api-token:
+    description: Secret CLOUDFLARE_API_TOKEN
+    required: false
+  account-id:
+    description: Secret CLOUDFLARE_ACCOUNT_ID
+    required: false
+runs:
+  using: composite
+  steps:
+    - name: Rassembler les fichiers du site
+      id: site
+      shell: bash
+      env:
+        TOKEN: ${{ inputs.api-token }}
+        COMPTE: ${{ inputs.account-id }}
+      run: |
+        if [ -z "$TOKEN" ] || [ -z "$COMPTE" ]; then echo "::notice::Secrets Cloudflare absents : publication sautée."; exit 0; fi
+        site="$RUNNER_TEMP/site"; rm -rf "$site"; mkdir -p "$site"
+        # Toujours la dernière version de main, même si un push a eu lieu pendant la tâche
+        git fetch -q --depth=1 origin main
+        git archive FETCH_HEAD index.html infos.json apercu.png cgu mentions-legales | tar -x -C "$site"
+        for b in data:classement.json evenements:evenements.json; do
+          branche="${b%%:*}"; fichier="${b#*:}"
+          if git fetch -q --depth=1 origin "$branche" 2>/dev/null; then git show "FETCH_HEAD:$fichier" > "$site/$fichier" 2>/dev/null || rm -f "$site/$fichier"; fi
+        done
+        ls -R "$site"
+        echo "dossier=$site" >> "$GITHUB_OUTPUT"
+    - name: Créer le projet Cloudflare Pages (la première fois)
+      if: steps.site.outputs.dossier
+      shell: bash
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ inputs.api-token }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ inputs.account-id }}
+      run: npx --yes wrangler@4.148.0 pages project create cafe-fr --production-branch=main || echo "Projet cafe-fr déjà créé"
+    - name: Publier sur Cloudflare Pages
+      if: steps.site.outputs.dossier
+      shell: bash
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ inputs.api-token }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ inputs.account-id }}
+      run: npx --yes wrangler@4.148.0 pages deploy "${{ steps.site.outputs.dossier }}" --project-name=cafe-fr --branch=main --commit-dirty=true

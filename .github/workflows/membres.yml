@@ -14,7 +14,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
 
 concurrency:
   group: membres
@@ -43,4 +42,9 @@ jobs:
           git commit -m "Nombre de membres mis à jour"
           git pull --rebase origin main
           git push origin HEAD:main
-          gh api -X POST "repos/${{ github.repository }}/pages/builds" > /dev/null || true
+      # Republie le site avec la nouvelle version (dans la même tâche : pas de minute de plus)
+      - name: Republier le site
+        uses: ./.github/actions/publier-site
+        with:
+          api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

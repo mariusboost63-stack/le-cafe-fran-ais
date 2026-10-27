@@ -1,0 +1,23 @@
+# Publie le site sur Cloudflare Pages à chaque push sur main (voir .github/actions/publier-site).
+# Les tâches du classement, des événements et du nombre de membres republient elles-mêmes le site après leur relevé.
+# Secrets à ajouter (Settings → Secrets and variables → Actions) : CLOUDFLARE_API_TOKEN et CLOUDFLARE_ACCOUNT_ID.
+name: Publier le site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/publier-site
+        with:
+          api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

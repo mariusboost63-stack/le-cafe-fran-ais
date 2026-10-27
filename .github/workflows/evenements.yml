@@ -1,12 +1,13 @@
-# Toutes les 30 minutes, relève les événements programmés du serveur Discord et les publie sur la branche
+# Toutes les 2 heures, relève les événements programmés du serveur Discord et les publie sur la branche
 # « evenements » (evenements.json), que le site affiche. Script : outils/evenements.py
 # Secret : DISCORD_TOKEN (déjà utilisé par le classement), ou DISCORD_TOKEN_EVENEMENTS pour un autre bot.
 # Le bot doit être membre du serveur pour voir ses événements.
+# Toutes les 2 heures (et pas plus) pour rester dans les 2 000 minutes gratuites de GitHub Actions si le dépôt est privé.
 name: Prochains événements
 
 on:
   schedule:
-    - cron: "11,41 * * * *"
+    - cron: "11 */2 * * *"
   workflow_dispatch:
 
 permissions:
@@ -44,3 +45,9 @@ jobs:
           git add evenements.json
           git commit -q -m "Prochains événements"
           git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" evenements
+      # Republie le site avec la nouvelle liste (dans la même tâche : pas de minute de plus)
+      - name: Republier le site
+        uses: ./.github/actions/publier-site
+        with:
+          api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

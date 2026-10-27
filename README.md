@@ -2,7 +2,7 @@
 
 Site vitrine animé du serveur Discord francophone **Le Café Français** : [discord.gg/france](https://discord.gg/france).
 
-En ligne sur **[cafe-fr.com](https://cafe-fr.com)**, hébergé sur GitHub Pages avec le domaine `cafe-fr.com` (fichier `CNAME`). Chaque modification poussée sur la branche `main` est publiée automatiquement.
+En ligne sur **[cafe-fr.com](https://cafe-fr.com)**, publié sur Cloudflare Pages par GitHub Actions (voir « Mise en ligne »). Chaque modification poussée sur la branche `main` est publiée automatiquement.
 
 Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les animations utilisent [GSAP](https://gsap.com) et ScrollTrigger, chargés depuis cdnjs.
 
@@ -54,7 +54,7 @@ La section « Les plus riches du café » (`#classement`) affiche le top 10 des 
 
 **Fonctionnement, sans risque pour l'économie du serveur :**
 
-- Toutes les 15 minutes, GitHub Actions (`.github/workflows/classement.yml`) lance `outils/classement.py`. Il lit le top 10 dans la table `users` de la base du bot (cumul des colonnes `grains` et `banque`), **en lecture seule**, sans les membres privés de grains (`blacklistGrains`).
+- Toutes les heures, GitHub Actions (`.github/workflows/classement.yml`) lance `outils/classement.py`. Il lit le top 10 dans la table `users` de la base du bot (cumul des colonnes `grains` et `banque`), **en lecture seule**, sans les membres privés de grains (`blacklistGrains`).
 - Il récupère le pseudo et l'avatar de chacun sur Discord, puis publie `classement.json` (rang, pseudo, avatar, grains) sur la branche `data` du dépôt.
 - Le site ne lit que ce fichier. **Les identifiants de la base ne sont jamais dans le site** : ils sont rangés dans les secrets du dépôt, que seul GitHub Actions peut lire.
 
@@ -73,7 +73,7 @@ Pour lancer le relevé tout de suite : onglet **Actions** → **Classement des g
 
 La section « Les prochains événements » (`#prochains`) montre les événements programmés dans l'onglet « Événements » du serveur Discord : date, heure, lieu, description, nombre d'intéressés et image de couverture. Elle reste cachée quand aucun événement n'est à venir, et un événement disparaît du site dès qu'il est terminé.
 
-- Toutes les 30 minutes, GitHub Actions (`.github/workflows/evenements.yml`) lance `outils/evenements.py`, qui lit les événements sur Discord et publie `evenements.json` sur la branche `evenements` du dépôt. Le site ne lit que ce fichier.
+- Toutes les 2 heures, GitHub Actions (`.github/workflows/evenements.yml`) lance `outils/evenements.py`, qui lit les événements sur Discord et publie `evenements.json` sur la branche `evenements` du dépôt. Le site ne lit que ce fichier.
 - Il utilise le secret `DISCORD_TOKEN` du classement. Pour voir les événements, **ce bot doit être membre du serveur** : invite-le sans aucune permission avec `https://discord.com/oauth2/authorize?client_id=<ID de l'application>&scope=bot&permissions=0` (l'ID est dans discord.com/developers/applications → l'application → General Information). Pour utiliser un autre bot déjà présent sur le serveur, mets son jeton dans un secret `DISCORD_TOKEN_EVENEMENTS`.
 
 Pour lancer le relevé tout de suite : onglet **Actions** → **Prochains événements** → **Run workflow**. Le résumé indique combien d'événements sont publiés, ou pourquoi rien ne l'est (bot absent du serveur, secret manquant).
@@ -132,25 +132,23 @@ Pour voir une version sans rien changer, ajoute `#saison-halloween` ou `#saison-
 
 Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. L'image est dessinée par `outils/membres.js` (logo de la page, lettres du fond, nombre de membres) : pour changer sa mise en page, modifie ce script puis lance `node outils/membres.js --image`. Les balises `og:` et `canonical` en haut de `index.html` utilisent l'adresse `https://cafe-fr.com/`. Si le domaine change, remplace-la à ces endroits et dans le fichier `CNAME`.
 
-## Mise en ligne : GitHub Pages et le domaine cafe-fr.com
+## Mise en ligne : Cloudflare Pages (dépôt privé possible)
 
-Le domaine est chez Hostinger, le site est servi par GitHub Pages.
+Le site est publié sur **Cloudflare Pages** (projet `cafe-fr`) par GitHub Actions (`.github/workflows/publier.yml`) : à chaque push sur `main`, et après chaque relevé du classement, des événements et du nombre de membres. Seuls les fichiers du site partent en ligne (`index.html`, `infos.json`, `apercu.png`, `cgu/`, `mentions-legales/`), avec `classement.json` et `evenements.json` pris sur les branches `data` et `evenements`. Le README, `outils/` et `.github/` ne sont jamais publiés, et le site n'a plus besoin que le dépôt soit public : **le dépôt peut passer en privé**.
 
-**Dans hPanel** (Domaines → cafe-fr.com → DNS / Serveurs de noms → Gérer les enregistrements DNS), on garde les serveurs de noms de Hostinger et on remplace les enregistrements A et AAAA de `@` par ceux de GitHub Pages :
+Le site lit le classement et les événements à sa propre adresse (`classement.json`, `evenements.json`) ; s'ils n'y sont pas (ancien hébergement GitHub Pages), il les lit sur le dépôt.
 
-| Type | Nom | Pointe vers |
-|---|---|---|
-| A | @ | 185.199.108.153 |
-| A | @ | 185.199.109.153 |
-| A | @ | 185.199.110.153 |
-| A | @ | 185.199.111.153 |
-| AAAA | @ | 2606:50c0:8000::153 |
-| AAAA | @ | 2606:50c0:8001::153 |
-| AAAA | @ | 2606:50c0:8002::153 |
-| AAAA | @ | 2606:50c0:8003::153 |
-| CNAME | www | mariusboost63-stack.github.io |
+**Mise en place (une seule fois)**
 
-**Dans GitHub** (Settings → Pages du dépôt) : source « Deploy from a branch », branche `main`, dossier `/ (root)`, domaine personnalisé `cafe-fr.com`, puis « Enforce HTTPS » une fois le certificat prêt.
+1. **Compte Cloudflare** : crée un compte gratuit sur [dash.cloudflare.com](https://dash.cloudflare.com). L'identifiant du compte (*Account ID*) s'affiche dans la colonne de droite de la page d'accueil d'un domaine, ou dans l'adresse du tableau de bord (`dash.cloudflare.com/<Account ID>`).
+2. **Jeton d'API** : Mon profil → Jetons d'API → Créer un jeton → « Créer un jeton personnalisé », avec la permission **Compte → Cloudflare Pages → Modifier**.
+3. **Secrets GitHub** (Settings → Secrets and variables → Actions → New repository secret) : `CLOUDFLARE_API_TOKEN` (le jeton) et `CLOUDFLARE_ACCOUNT_ID` (l'identifiant du compte).
+4. **Première publication** : onglet Actions → « Publier le site » → Run workflow. Le projet `cafe-fr` est créé tout seul ; le site est alors visible sur `https://cafe-fr.pages.dev`. Vérifie qu'il s'affiche bien.
+5. **Domaine cafe-fr.com** : dans Cloudflare, ajoute le domaine (Ajouter un domaine → `cafe-fr.com` → offre gratuite). Cloudflare donne deux serveurs de noms : dans **hPanel** de Hostinger (Domaines → cafe-fr.com → DNS / Serveurs de noms → Changer les serveurs de noms), remplace ceux de Hostinger par ceux de Cloudflare. Le changement peut prendre de quelques minutes à 24 h ; Cloudflare envoie un e-mail quand le domaine est actif. Recopie d'abord dans Cloudflare les autres enregistrements DNS éventuels (e-mails, MX…) que tu utilises chez Hostinger.
+6. **Brancher le domaine sur le site** : Workers & Pages → `cafe-fr` → Domaines personnalisés → ajoute `cafe-fr.com`, puis `www.cafe-fr.com`. Cloudflare crée les enregistrements et le certificat HTTPS tout seul.
+7. **Passer le dépôt en privé** : une fois `https://cafe-fr.com` servi par Cloudflare, GitHub → Settings → General → Danger Zone → Change visibility → Private. GitHub Pages s'arrête alors, ce qui n'a plus d'importance. Les tâches planifiées (classement, événements, membres) continuent : sur un dépôt privé, GitHub Actions offre 2 000 minutes par mois, largement assez.
+
+Le fichier `CNAME` ne servait qu'à GitHub Pages ; il peut rester.
 
 ## Modifier le contenu
 
