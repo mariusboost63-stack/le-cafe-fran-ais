@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-28",
+      "publication": "2026-10-28T12:00:00+01:00",
+      "theme": "Politique",
+      "titre": "Le Sénat vote une version durcie du projet de loi « casseurs-payeurs »",
+      "texte": "Dans la nuit de mardi à mercredi, les sénateurs ont adopté le texte qui veut faire payer par leurs auteurs les dégâts causés lors de violences dans l'espace public. Défendu par le gouvernement après les pillages de commerces, le projet a été élargi au Sénat. Il doit maintenant passer devant l'Assemblée nationale.",
+      "source": {
+        "nom": "Public Sénat",
+        "url": "https://www.publicsenat.fr/actualites/parlementaire/le-senat-adopte-le-projet-de-loi-casseurs-payeurs-apres-lavoir-largement-durci"
+      }
+    },
+    {
       "date": "2026-10-27",
       "publication": "2026-10-27T12:00:00+01:00",
       "theme": "Éducation",
