@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-29",
+      "publication": "2026-10-29T12:00:00+01:00",
+      "theme": "Économie",
+      "titre": "TotalEnergies : 8,3 milliards de dollars de bénéfice au 3e trimestre",
+      "texte": "Le groupe pétrolier a publié jeudi ses comptes de juillet à septembre : son bénéfice net s'élève à 8,3 milliards de dollars, contre environ 3,7 milliards un an plus tôt. Cette forte hausse s'explique surtout par les marges du raffinage, qui ont nettement progressé sur un an.",
+      "source": {
+        "nom": "Zonebourse",
+        "url": "https://www.zonebourse.com/actualite-bourse/totalenergies-se-resultats-du-troisieme-trimestre-2026-ce785cd3dc8ef025"
+      }
+    },
+    {
       "date": "2026-10-28",
       "publication": "2026-10-28T12:00:00+01:00",
       "theme": "Politique",
