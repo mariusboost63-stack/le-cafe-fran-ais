@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-30",
+      "publication": "2026-10-30T12:00:00+01:00",
+      "theme": "Économie",
+      "titre": "Le PIB français recule de 0,1 % au troisième trimestre",
+      "texte": "D'après la première estimation de l'Insee, publiée vendredi matin, l'activité économique de la France a baissé de 0,1 % entre juillet et septembre. Ce repli tient surtout au net recul des exportations sur la période.",
+      "source": {
+        "nom": "franceinfo",
+        "url": "https://www.franceinfo.fr/economie/victime-d-une-baisse-des-exportations-le-pib-recule-de-0-1-au-troisieme-trimestre-2026-en-france-selon-l-insee_8260019.html"
+      }
+    },
+    {
       "date": "2026-10-29",
       "publication": "2026-10-29T12:00:00+01:00",
       "theme": "Économie",
