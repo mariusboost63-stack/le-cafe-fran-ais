@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-10-31",
+      "publication": "2026-10-31T12:00:00+01:00",
+      "theme": "Société",
+      "titre": "Le Conseil d'État interdit le parcours Bastille-Nation à Paris",
+      "texte": "Saisi en appel par la préfecture de police, le Conseil d'État a annulé la décision du tribunal administratif qui avait autorisé un défilé entre Bastille et Nation. Pour cette nouvelle journée de mobilisation contre la vie chère, le cortège parisien devra suivre le trajet fixé par la préfecture, de la porte de Bagnolet à la porte de Charenton.",
+      "source": {
+        "nom": "LCP",
+        "url": "https://lcp.fr/actualites/manifestation-du-31-octobre-le-conseil-d-etat-annule-la-decision-du-tribunal"
+      }
+    },
+    {
       "date": "2026-10-30",
       "publication": "2026-10-30T12:00:00+01:00",
       "theme": "Économie",
