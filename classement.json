@@ -1,0 +1,66 @@
+{
+  "maj": "2026-10-31T15:35:28+00:00",
+  "classement": [
+    {
+      "rang": 1,
+      "nom": "Mvrius",
+      "avatar": "https://cdn.discordapp.com/avatars/1038171351325872158/2a722330be277d72fa8cf4a0631698e3.png?size=128",
+      "grains": 3692763
+    },
+    {
+      "rang": 2,
+      "nom": "Snomii.",
+      "avatar": "https://cdn.discordapp.com/avatars/1118460003913830440/905817da592439f576bd82ccf2559576.png?size=128",
+      "grains": 3340501
+    },
+    {
+      "rang": 3,
+      "nom": "Lucas",
+      "avatar": "https://cdn.discordapp.com/avatars/1324013060914151486/9b879b8843958deabdacbad7db6d3298.png?size=128",
+      "grains": 2577752
+    },
+    {
+      "rang": 4,
+      "nom": "Lithgow",
+      "avatar": "https://cdn.discordapp.com/avatars/1052168196003741756/20b03caa6ef3fbd79a84a163265201a4.png?size=128",
+      "grains": 2570085
+    },
+    {
+      "rang": 5,
+      "nom": "Camm",
+      "avatar": "https://cdn.discordapp.com/avatars/1357077446398181509/17009921a2f52c0d23a6bccfa07a27dc.png?size=128",
+      "grains": 2038593
+    },
+    {
+      "rang": 6,
+      "nom": "CallStix",
+      "avatar": "https://cdn.discordapp.com/avatars/1066322973126045710/49a833ac2519146628863991f8142300.png?size=128",
+      "grains": 2008409
+    },
+    {
+      "rang": 7,
+      "nom": "jadelaboss",
+      "avatar": "https://cdn.discordapp.com/avatars/1094001402260492308/efcb75cbe7e0032911a41d7676623745.png?size=128",
+      "grains": 1878586
+    },
+    {
+      "rang": 8,
+      "nom": "roro",
+      "avatar": "https://cdn.discordapp.com/avatars/1272237443956871178/5cf3288263f792b1ab950c2fbe3122c6.png?size=128",
+      "grains": 1726036
+    },
+    {
+      "rang": 9,
+      "nom": "ayriie",
+      "avatar": "https://cdn.discordapp.com/avatars/1178744057858641971/4182f39cc4572c1b537d37e3170d1667.png?size=128",
+      "grains": 1651100
+    },
+    {
+      "rang": 10,
+      "nom": "Cyrnaxx.",
+      "avatar": "https://cdn.discordapp.com/avatars/629410780584083456/480a30251892f3af90535142513ea728.png?size=128",
+      "grains": 1322603
+    }
+  ],
+  "infini": 4664
+}
