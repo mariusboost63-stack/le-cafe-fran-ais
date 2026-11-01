@@ -124,7 +124,7 @@ var SAISON = 'auto';
 - `'auto'` : version Halloween en octobre, version normale le reste de l'année. Le changement se fait tout seul le 1er novembre.
 - `'halloween'` ou `'normal'` : force une version.
 
-En version normale, la section Halloween est remplacée par une section « Événements », le lien du menu change, le compteur passe à 30 salons et les salons reprennent leurs emojis habituels.
+En version normale, la section Halloween est remplacée par une section « Événements », le lien du menu change, le compteur passe à 28 salons et les salons reprennent leurs emojis habituels.
 
 Pour voir une version sans rien changer, ajoute `#saison-halloween` ou `#saison-normale` à la fin de l'adresse du site.
 
