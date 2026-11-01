@@ -124,7 +124,7 @@ var SAISON = 'auto';
 - `'auto'` : version Halloween en octobre, version normale le reste de l'année. Le changement se fait tout seul le 1er novembre.
 - `'halloween'` ou `'normal'` : force une version.
 
-En version normale, la section Halloween est remplacée par une section « Événements », le lien du menu change, le compteur passe à 28 salons et les emojis d'Halloween des salons sont masqués.
+En version normale, la section Halloween est remplacée par une section « Événements », le lien du menu change, le compteur passe à 30 salons et les salons reprennent leurs emojis habituels.
 
 Pour voir une version sans rien changer, ajoute `#saison-halloween` ou `#saison-normale` à la fin de l'adresse du site.
 
@@ -155,7 +155,7 @@ Le fichier `CNAME` ne servait qu'à GitHub Pages ; il peut rester.
 Tout se modifie dans `index.html` :
 
 - **Nombre de membres** : mis à jour tout seul chaque jour (voir « Nombre de membres à jour »), rien à modifier à la main.
-- **Salons et emojis** : chaque salon est une ligne `<li class="salon">`. Les emojis actuels sont ceux de la saison d'Halloween.
+- **Salons et emojis** : chaque salon est une ligne `<li class="salon">`, dans l'ordre du serveur. Son emoji habituel est dans `<span class="seulement-normal">`, celui d'Halloween dans `<span class="seulement-halloween">`. Les salons privés (cadenas) utilisent l'icône `#i-texte-prive`.
 - **Salons vocaux** : chaque ligne `<li class="vocal">` porte le nom exact du salon dans `data-vocal` (il sert à retrouver le salon dans le widget) et sa limite de places dans `data-max`.
 - **Équipe** : chaque profil est une ligne `<li class="profil">` dans la liste du badge (`<ul class="profils">`). Pour ajouter quelqu'un, copie une ligne et change le nom, le pseudo et l'image (`src`, une adresse d'image ou une image intégrée).
 - **Quêtes d'Halloween** : chaque quête est une ligne `<li class="quete">`. Sa date d'ouverture est dans `data-ouverture` (heure de Paris). Jusqu'à cette heure, la carte affiche `???` ; à l'ouverture, la page affiche toute seule le nom et la consigne de la quête, même si le visiteur est déjà sur le site. Ces textes sont rangés, encodés, dans `data-q` pour ne pas être lisibles dans le code de la page. Pour en changer un, ouvre la console du navigateur sur le site et tape :
