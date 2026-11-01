@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-01",
+      "publication": "2026-11-01T12:00:00+01:00",
+      "theme": "Économie",
+      "titre": "Gaz, retraites, trêve hivernale : ce qui change au 1er novembre",
+      "texte": "Depuis ce dimanche, le prix repère du gaz publié par la Commission de régulation de l'énergie augmente de 6,6 %. Les retraites complémentaires Agirc-Arrco sont revalorisées de 1,4 %. La trêve hivernale commence aussi : jusqu'au 31 mars, les expulsions locatives sont suspendues.",
+      "source": {
+        "nom": "France 3 Régions",
+        "url": "https://france3-regions.franceinfo.fr/corse/energie-logement-retraites-ce-qui-change-au-1er-novembre-3442254.html"
+      }
+    },
+    {
       "date": "2026-10-31",
       "publication": "2026-10-31T12:00:00+01:00",
       "theme": "Société",
