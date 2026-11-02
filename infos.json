@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-02",
+      "publication": "2026-11-02T12:00:00+01:00",
+      "theme": "Éducation",
+      "titre": "Les blocages de lycées reprennent au retour des vacances",
+      "texte": "Au retour des vacances de la Toussaint, des lycées ont de nouveau été bloqués lundi, notamment à Marseille, à l'appel des organisations lycéennes et étudiantes. Elles poursuivent leur mouvement malgré les mesures annoncées par le gouvernement, avant une journée de grève prévue jeudi 5 novembre.",
+      "source": {
+        "nom": "La Libre (AFP)",
+        "url": "https://www.lalibre.be/dernieres-depeches/2026/11/02/crise-dans-leducation-blocages-et-manifestations-en-vue-en-france-pour-la-reprise-des-cours-IJFCQMJTHJCDRKSBW4C26MI34Y/"
+      }
+    },
+    {
       "date": "2026-11-01",
       "publication": "2026-11-01T12:00:00+01:00",
       "theme": "Économie",
