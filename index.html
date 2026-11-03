@@ -898,22 +898,53 @@ main, .pied { position: relative; z-index: 1; }
 .evenements-grille { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
 .evenements-texte { display: grid; gap: 22px; min-width: 0; }
 .evenements-texte .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 44ch; }
-.bilan-ev { display: grid; gap: 12px; }
-.bilan-titre { font: 500 var(--t-etiquette)/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--citrouille); }
-.bilan-ev ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 480px; }
-.bilan-ev li { display: grid; gap: 6px; align-content: start; padding: 16px 18px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--citrouille) 35%, var(--trait)); background: color-mix(in srgb, var(--citrouille) 7%, transparent); min-width: 0; }
-.bilan-ev b { font: 800 clamp(30px, 3vw, 40px)/1 var(--f-titre); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.bilan-ev {
+  position: relative; overflow: hidden; isolation: isolate; display: grid; gap: 22px;
+  padding: clamp(20px, 2.6vw, 30px); border-radius: 24px;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--citrouille) 16%, var(--nuit-2)), var(--nuit-2) 62%);
+  border: 1px solid color-mix(in srgb, var(--citrouille) 38%, var(--trait));
+  box-shadow: 0 24px 60px -30px color-mix(in srgb, var(--citrouille) 60%, transparent);
+}
+.bilan-ev::before {
+  content: ""; position: absolute; z-index: -1; right: -18%; top: -40%; width: 70%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--citrouille) 30%, transparent), transparent);
+}
+.bilan-chauve { position: absolute; z-index: -1; right: 22px; top: 18px; width: 58px; height: 29px; color: color-mix(in srgb, var(--citrouille) 40%, transparent); transform: rotate(-8deg); }
+.bilan-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding-right: 64px; }
+.bilan-titre { font: 800 clamp(24px, 2.4vw, 30px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.01em; }
+.bilan-titre em { font-style: normal; color: var(--citrouille); }
+.bilan-etat { padding: 5px 10px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--citrouille) 45%, transparent); font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--citrouille); }
+.bilan-ev ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.bilan-ev li { display: grid; gap: 8px; align-content: start; padding: 16px 0 16px clamp(16px, 2vw, 26px); border-left: 1px solid color-mix(in srgb, var(--citrouille) 28%, transparent); min-width: 0; }
+.bilan-ev li:nth-child(odd) { padding-left: 0; padding-right: clamp(12px, 2vw, 22px); border-left: 0; }
+.bilan-ev li:nth-child(n+3) { border-top: 1px solid color-mix(in srgb, var(--citrouille) 28%, transparent); }
+.bilan-ev li:nth-child(-n+2) { padding-top: 2px; }
+.bilan-ev b { display: flex; align-items: baseline; font: 800 clamp(38px, 4vw, 56px)/.9 var(--f-titre); font-stretch: 85%; font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--citrouille); text-shadow: 0 0 26px color-mix(in srgb, var(--citrouille) 45%, transparent); }
+.bilan-ev b .plus { font-size: .55em; margin-left: 2px; }
 .bilan-ev li > span { color: var(--brume); font-size: 14.5px; line-height: 1.3; }
 .astuce-ev { max-width: 46ch; padding: 14px 18px; border-radius: 14px; border: 1px dashed var(--trait); color: var(--brume); }
-.types-ev { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.types-ev li { display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: 20px; background: var(--nuit-2); border: 1px solid var(--trait); min-width: 0; }
-.types-ev svg { width: 30px; height: 30px; }
-.types-ev li:nth-child(1) svg { color: var(--bleu-vif); }
-.types-ev li:nth-child(2) svg { color: var(--lait); }
-.types-ev li:nth-child(3) svg { color: var(--rouge); }
-.types-ev li:nth-child(4) svg { color: var(--creme); }
-.types-ev h3 { font: 800 22px/1.15 var(--f-titre); letter-spacing: -.01em; }
+.types-ev { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.types-ev li {
+  --ev: var(--bleu-vif);
+  position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 12px;
+  padding: 26px 24px 24px; border-radius: 22px; min-width: 0;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--ev) 10%, var(--nuit-2)), var(--nuit-2) 55%);
+  border: 1px solid color-mix(in srgb, var(--ev) 22%, var(--trait));
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), border-color .3s, box-shadow .35s;
+}
+.types-ev li:nth-child(2) { --ev: var(--lait); }
+.types-ev li:nth-child(3) { --ev: var(--rouge); }
+.types-ev li:nth-child(4) { --ev: var(--creme); }
+.types-ev li::after { content: ""; position: absolute; left: 24px; right: 24px; top: 0; height: 2px; border-radius: 0 0 2px 2px; background: var(--ev); opacity: .7; }
+.types-ev li:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--ev) 55%, transparent); box-shadow: 0 22px 44px -26px color-mix(in srgb, var(--ev) 70%, transparent); }
+.ev-ico { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; color: var(--ev); background: color-mix(in srgb, var(--ev) 14%, transparent); border: 1px solid color-mix(in srgb, var(--ev) 32%, transparent); }
+.ev-ico svg { width: 28px; height: 28px; }
+.ev-fond { position: absolute; z-index: -1; right: -26px; bottom: -30px; width: 150px; height: 150px; color: var(--ev); opacity: .07; transform: rotate(-12deg); transition: transform .5s cubic-bezier(.2, .8, .2, 1), opacity .3s; }
+.types-ev li:hover .ev-fond { transform: rotate(-4deg) scale(1.08); opacity: .11; }
+.types-ev h3 { margin-top: 4px; font: 800 23px/1.15 var(--f-titre); letter-spacing: -.01em; }
 .types-ev p { color: var(--brume); }
+.ev-salon { margin-top: auto; align-self: flex-start; padding: 4px 10px; border-radius: 8px; font: 600 14px/1.2 var(--f-texte); color: var(--ev); background: color-mix(in srgb, var(--ev) 13%, transparent); }
+@media (prefers-reduced-motion: reduce) { .types-ev li, .ev-fond { transition: none; } .types-ev li:hover { transform: none; } }
 @media (max-width: 860px) { .evenements-grille { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 520px) { .types-ev { grid-template-columns: minmax(0, 1fr); } }
 
@@ -1483,21 +1514,25 @@ main, .pied { position: relative; z-index: 1; }
         <h2 class="h2" id="t-evenements">Le prochain événement se prépare</h2>
         <p class="chapo">Le café organise régulièrement des événements pour toute la communauté. Le dernier en date, Halloween 2026, a rassemblé le serveur autour de jeux, de quêtes et d'une chasse aux citrouilles.</p>
         <div class="bilan-ev">
-          <p class="bilan-titre">Halloween 2026 en chiffres</p>
+          <svg class="bilan-chauve" aria-hidden="true" viewBox="0 0 48 24"><use href="#i-chauve"/></svg>
+          <div class="bilan-tete">
+            <p class="bilan-titre"><em>Halloween 2026</em> en chiffres</p>
+            <span class="bilan-etat">Terminé</span>
+          </div>
           <ul>
-            <li><b>7</b><span>jeux et quêtes d'Halloween</span></li>
-            <li><b>13</b><span>finalistes</span></li>
-            <li><b>10</b><span>participants récompensés</span></li>
-            <li><b><span class="sr">Plus de </span>300<span aria-hidden="true">+</span></b><span>citrouilles récoltées</span></li>
+            <li><b data-n="7">7</b><span>jeux et quêtes d'Halloween</span></li>
+            <li><b data-n="13">13</b><span>finalistes</span></li>
+            <li><b data-n="10">10</b><span>participants récompensés</span></li>
+            <li><b><span class="sr">Plus de </span><span data-n="300">300</span><span class="plus" aria-hidden="true">+</span></b><span>citrouilles récoltées</span></li>
           </ul>
         </div>
         <p class="astuce-ev">Prends le rôle @Notif Animation dans «&nbsp;Salons et rôles&nbsp;» pour être prévenu dès qu'un événement commence.</p>
       </div>
       <ul class="types-ev">
-        <li><svg aria-hidden="true"><use href="#i-cadeau"/></svg><h3>Concours</h3><p>Des concours réguliers dans #concours, avec de nombreux lots à gagner.</p></li>
-        <li><svg aria-hidden="true"><use href="#i-infini"/></svg><h3>L'infini</h3><p>Faites avancer ensemble la suite de nombres dans #infini : des rôles et des grains à gagner, et un classement des meilleurs.</p></li>
-        <li><svg aria-hidden="true"><use href="#i-masque"/></svg><h3>Confessions anonymes</h3><p>Confie ce que tu as sur le cœur dans #confessions, en toute discrétion : personne ne sait que c'est toi.</p></li>
-        <li><svg aria-hidden="true"><use href="#i-texte"/></svg><h3>Fils à thème</h3><p>Des fils de discussion pour raconter, partager et participer ensemble.</p></li>
+        <li><svg class="ev-fond" aria-hidden="true"><use href="#i-cadeau"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-cadeau"/></svg></span><h3>Concours</h3><p>Des concours réguliers, avec de nombreux lots à gagner.</p><span class="ev-salon">#concours</span></li>
+        <li><svg class="ev-fond" aria-hidden="true"><use href="#i-infini"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-infini"/></svg></span><h3>L'infini</h3><p>Faites avancer ensemble la suite de nombres : des rôles et des grains à gagner, et un classement des meilleurs.</p><span class="ev-salon">#infini</span></li>
+        <li><svg class="ev-fond" aria-hidden="true"><use href="#i-masque"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-masque"/></svg></span><h3>Confessions anonymes</h3><p>Confie ce que tu as sur le cœur, en toute discrétion : personne ne sait que c'est toi.</p><span class="ev-salon">#confessions</span></li>
+        <li><svg class="ev-fond" aria-hidden="true"><use href="#i-texte"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-texte"/></svg></span><h3>Fils à thème</h3><p>Des fils de discussion pour raconter, partager et participer ensemble.</p></li>
       </ul>
     </div>
   </section>
@@ -3034,6 +3069,11 @@ main, .pied { position: relative; z-index: 1; }
   g.from('.journal', { y: 60, rotation: -7, opacity: .25, duration: 1, ease: 'back.out(1.5)', scrollTrigger: { trigger: '.gazette', start: 'top 75%', once: true } });
 
   /* ---------- Événements et FAQ ---------- */
+  $$('.bilan-ev [data-n]').forEach((el) => {
+    const n = Number(el.dataset.n);
+    el.textContent = '0';
+    ST.create({ trigger: '.bilan-ev', start: 'top 85%', once: true, onEnter: () => compter(el, n, n > 50 ? 2 : 1.4) });
+  });
   g.from('.types-ev li', { y: 40, opacity: .25, duration: .8, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '.types-ev', start: 'top 85%', once: true } });
   g.from('.question', { y: 30, opacity: .25, duration: .7, stagger: .06, ease: 'power3.out', scrollTrigger: { trigger: '.faq-liste', start: 'top 85%', once: true } });
 
