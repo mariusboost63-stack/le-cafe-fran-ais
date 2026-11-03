@@ -131,13 +131,19 @@ En version normale, la section Halloween est remplacée par une section « Évé
 
 Pour voir une version sans rien changer, ajoute `#saison-halloween` ou `#saison-normale` à la fin de l'adresse du site.
 
+## Référencement et page d'erreur
+
+- `robots.txt` autorise tous les robots et indique `sitemap.xml`, la liste des pages du site (accueil, `/infos/`, CGU, mentions légales). Si une page s'ajoute, ajoute-la au sitemap.
+- En haut de `index.html`, un bloc `application/ld+json` décrit le site et la communauté pour les moteurs de recherche (nom, description, lien Discord).
+- `404.html` s'affiche pour toute adresse inexistante (GitHub Pages comme Cloudflare Pages) ; ses liens sont absolus (`/polices/…`, `/`).
+
 ## Aperçu des liens partagés
 
 Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. L'image est dessinée par `outils/membres.js` (logo de la page, lettres du fond, nombre de membres) : pour changer sa mise en page, modifie ce script puis lance `node outils/membres.js --image`. Les balises `og:` et `canonical` en haut de `index.html` utilisent l'adresse `https://cafe-fr.com/`. Si le domaine change, remplace-la à ces endroits et dans le fichier `CNAME`.
 
 ## Mise en ligne : Cloudflare Pages (dépôt privé possible)
 
-Le site est publié sur **Cloudflare Pages** (projet `cafe-fr`) par GitHub Actions (`.github/workflows/publier.yml`) : à chaque push sur `main`, et après chaque relevé du classement, des événements et du nombre de membres. Seuls les fichiers du site partent en ligne (`index.html`, `infos.json`, `apercu.png`, `cgu/`, `mentions-legales/`), avec `classement.json` et `evenements.json` pris sur les branches `data` et `evenements`. Le README, `outils/` et `.github/` ne sont jamais publiés, et le site n'a plus besoin que le dépôt soit public : **le dépôt peut passer en privé**.
+Le site est publié sur **Cloudflare Pages** (projet `cafe-fr`) par GitHub Actions (`.github/workflows/publier.yml`) : à chaque push sur `main`, et après chaque relevé du classement, des événements et du nombre de membres. Seuls les fichiers du site partent en ligne (`index.html`, `404.html`, `robots.txt`, `sitemap.xml`, `infos.json`, `apercu.png`, `cgu/`, `mentions-legales/`, `infos/`, `polices/`, `js/`), avec `classement.json` et `evenements.json` pris sur les branches `data` et `evenements`. Le README, `outils/` et `.github/` ne sont jamais publiés, et le site n'a plus besoin que le dépôt soit public : **le dépôt peut passer en privé**.
 
 Le site lit le classement et les événements à sa propre adresse (`classement.json`, `evenements.json`) ; s'ils n'y sont pas (ancien hébergement GitHub Pages), il les lit sur le dépôt.
 
