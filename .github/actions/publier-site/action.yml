@@ -38,11 +38,19 @@ runs:
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.api-token }}
         CLOUDFLARE_ACCOUNT_ID: ${{ inputs.account-id }}
-      run: npx --yes wrangler@4.148.0 pages project create cafe-fr --production-branch=main || echo "Projet cafe-fr déjà créé"
+      run: |
+        # Les clés collées dans GitHub gardent parfois un espace ou un retour à la ligne : on les retire
+        export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
+        export CLOUDFLARE_ACCOUNT_ID="$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')"
+        npx --yes wrangler@4.148.0 pages project create cafe-fr --production-branch=main || echo "Création du projet cafe-fr ignorée (il existe peut-être déjà)"
     - name: Publier sur Cloudflare Pages
       if: steps.site.outputs.dossier
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.api-token }}
         CLOUDFLARE_ACCOUNT_ID: ${{ inputs.account-id }}
-      run: npx --yes wrangler@4.148.0 pages deploy "${{ steps.site.outputs.dossier }}" --project-name=cafe-fr --branch=main --commit-dirty=true
+      run: |
+        # Les clés collées dans GitHub gardent parfois un espace ou un retour à la ligne : on les retire
+        export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
+        export CLOUDFLARE_ACCOUNT_ID="$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')"
+        npx --yes wrangler@4.148.0 pages deploy "${{ steps.site.outputs.dossier }}" --project-name=cafe-fr --branch=main --commit-dirty=true
