@@ -1,0 +1,35 @@
+# Installe chez Cloudflare la tâche qui annonce la petite info du jour sur Discord pile à midi (dossier annonce/),
+# et lui donne le webhook du salon. Relancée seulement quand le dossier annonce/ change, ou à la main.
+# Secrets utilisés : CLOUDFLARE_API_TOKEN (avec l'autorisation « Workers Scripts : Edit »), CLOUDFLARE_ACCOUNT_ID
+# et DISCORD_WEBHOOK_INFO.
+name: Annonce Cloudflare
+
+on:
+  push:
+    branches: [main]
+    paths: ["annonce/**", ".github/workflows/annonce-cloudflare.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  installer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Installer la tâche chez Cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_INFO }}
+        run: |
+          # Les clés collées dans GitHub gardent parfois un espace ou un retour à la ligne : on les retire
+          export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
+          export CLOUDFLARE_ACCOUNT_ID="$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')"
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ] || [ -z "$WEBHOOK" ]; then
+            echo "::warning::Secrets Cloudflare ou webhook absents : tâche non installée."; exit 0
+          fi
+          npx --yes wrangler@4.148.0 deploy --config annonce/wrangler.toml
+          printf '%s' "$WEBHOOK" | tr -d '[:space:]' | npx --yes wrangler@4.148.0 secret put DISCORD_WEBHOOK_INFO --config annonce/wrangler.toml

@@ -1,0 +1,14 @@
+# Tâche Cloudflare qui annonce la petite info du jour sur Discord à midi (voir worker.js).
+# Publiée par GitHub Actions (.github/workflows/annonce-cloudflare.yml) ; le webhook y est ajouté comme secret.
+name = "cafe-fr-annonce"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+# Pas d'adresse publique : la tâche ne fait que tourner aux horaires ci-dessous
+workers_dev = false
+
+[vars]
+SITE = "https://cafe-fr.pages.dev"
+
+# Horaires en UTC : 10 h = midi à Paris en été, 11 h = midi en hiver
+[triggers]
+crons = ["0 10 * * *", "0 11 * * *"]

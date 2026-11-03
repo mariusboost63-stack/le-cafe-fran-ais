@@ -1,14 +1,10 @@
-# Annonce la petite info du jour sur le serveur Discord (embed), peu après sa publication à midi, heure de Paris.
-# Deux passages à 10 h 03 et 11 h 03 UTC couvrent midi en été comme en hiver ; celui de 13 h 03 UTC rattrape une info
-# publiée en retard. Chaque info n'est annoncée qu'une fois (date gardée sur la branche « annonces »).
-# Script : outils/annonce_info.py. Secret à ajouter : DISCORD_WEBHOOK_INFO (webhook du salon choisi).
+# Annonce à la main la petite info du jour sur le serveur Discord (embed), avec outils/annonce_info.py.
+# L'annonce de midi, elle, est envoyée par Cloudflare, à l'heure pile (dossier annonce/, annonce-cloudflare.yml) :
+# GitHub lance ses tâches programmées avec parfois une heure de retard. Ce lancement manuel sert au test (case « Test »)
+# ou à rattraper une info publiée après midi. Secret : DISCORD_WEBHOOK_INFO (webhook du salon choisi).
 name: Annonce de l'info du jour
 
 on:
-  schedule:
-    - cron: "3 10 * * *"
-    - cron: "3 11 * * *"
-    - cron: "3 13 * * *"
   workflow_dispatch:
     inputs:
       test:

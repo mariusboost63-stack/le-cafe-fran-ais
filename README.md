@@ -112,11 +112,12 @@ Les infos sont dans **`infos.json`**, de la plus récente à la plus ancienne :
 - Jamais de photo, de vidéo, de logo ou d'extrait long d'un média : seulement le nom de la source et un lien vers l'article (les liens vers des pages en accès libre sont autorisés : arrêt Svensson de la CJUE, article L. 211-3-1 du Code de la propriété intellectuelle).
 - Uniquement des articles en accès libre : pas d'article réservé aux abonnés. De préférence, les médias publics (franceinfo, France 24) ou les sites officiels (.gouv.fr, INSEE, Météo-France).
 
-**Annonce sur Discord.** Peu après midi (heure de Paris), GitHub Actions (`.github/workflows/annonce-info.yml`) poste l'info du jour dans un salon du serveur, sous forme d'embed (titre, texte, thème, source, lien vers le site), avec `outils/annonce_info.py`. Chaque info n'est annoncée qu'une fois, sans aucune mention (@everyone, rôles). Pour l'activer :
+**Annonce sur Discord.** À midi pile (heure de Paris), une tâche Cloudflare (dossier `annonce/`, installée par `.github/workflows/annonce-cloudflare.yml`) poste l'info du jour dans un salon du serveur, sous forme d'embed (titre, texte, thème, source, lien vers le site), sans aucune mention (@everyone, rôles). Elle passe par Cloudflare parce que GitHub lance ses tâches programmées avec parfois une heure de retard. La clé Cloudflare doit avoir l'autorisation « Workers Scripts : Edit ». GitHub garde un lancement manuel (`.github/workflows/annonce-info.yml`, `outils/annonce_info.py`) pour tester ou rattraper une info publiée après midi. Pour l'activer :
 
 1. Dans Discord : Paramètres du salon choisi → Intégrations → Webhooks → Nouveau webhook ; nomme-le « La Gazette du Café », mets-lui l'avatar voulu, puis « Copier l'URL du webhook ».
 2. Dans GitHub : Settings → Secrets and variables → Actions → New repository secret, nom `DISCORD_WEBHOOK_INFO`, valeur : l'URL copiée.
 3. Pour essayer à tout moment : onglet Actions → « Annonce de l'info du jour » → Run workflow, coche « Test », puis Run workflow. La dernière info publiée est envoyée, marquée « Test », sans changer l'annonce de midi.
+4. Si une info est publiée après midi (tâche du jour en retard), lance « Annonce de l'info du jour » sans cocher « Test » pour l'envoyer.
 
 Toutes les infos publiées (jusqu'à 30) sont aussi sur la page **`/infos/`** (fichier `infos/index.html`), classées par mois et filtrables par thème ; le lien « Toutes les éditions » y mène depuis l'accueil.
 
