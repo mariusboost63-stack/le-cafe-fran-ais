@@ -1,0 +1,5 @@
+# Tous les robots sont les bienvenus sur le site du Café Français
+User-agent: *
+Allow: /
+
+Sitemap: https://cafe-fr.com/sitemap.xml
