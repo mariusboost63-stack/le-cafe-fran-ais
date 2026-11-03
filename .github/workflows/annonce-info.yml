@@ -10,6 +10,11 @@ on:
     - cron: "3 11 * * *"
     - cron: "3 13 * * *"
   workflow_dispatch:
+    inputs:
+      test:
+        description: "Test : envoyer tout de suite la dernière info publiée (marquée « Test »), sans toucher à l'annonce de midi"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -34,7 +39,7 @@ jobs:
           DISCORD_WEBHOOK_INFO: ${{ secrets.DISCORD_WEBHOOK_INFO }}
         # Code 2 : rien à annoncer (déjà fait, pas encore midi, secret absent), sans faire échouer la tâche
         run: |
-          code=0; python3 outils/annonce_info.py infos.json "$RUNNER_TEMP/etat/derniere.txt" || code=$?
+          code=0; python3 outils/annonce_info.py infos.json "$RUNNER_TEMP/etat/derniere.txt" ${{ inputs.test && '--test' || '' }} || code=$?
           if [ "$code" -eq 0 ]; then echo "faite=1" >> "$GITHUB_OUTPUT"; elif [ "$code" -ne 2 ]; then exit "$code"; fi
       - name: Retenir la date de l'annonce
         if: steps.annonce.outputs.faite

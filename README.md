@@ -116,7 +116,7 @@ Les infos sont dans **`infos.json`**, de la plus récente à la plus ancienne :
 
 1. Dans Discord : Paramètres du salon choisi → Intégrations → Webhooks → Nouveau webhook ; nomme-le « La Gazette du Café », mets-lui l'avatar voulu, puis « Copier l'URL du webhook ».
 2. Dans GitHub : Settings → Secrets and variables → Actions → New repository secret, nom `DISCORD_WEBHOOK_INFO`, valeur : l'URL copiée.
-3. Pour essayer tout de suite (si l'info du jour est déjà publiée) : onglet Actions → « Annonce de l'info du jour » → Run workflow.
+3. Pour essayer à tout moment : onglet Actions → « Annonce de l'info du jour » → Run workflow, coche « Test », puis Run workflow. La dernière info publiée est envoyée, marquée « Test », sans changer l'annonce de midi.
 
 Toutes les infos publiées (jusqu'à 30) sont aussi sur la page **`/infos/`** (fichier `infos/index.html`), classées par mois et filtrables par thème ; le lien « Toutes les éditions » y mène depuis l'accueil.
 

@@ -8,7 +8,8 @@ dans infos.json ; elle n'est annoncée qu'une fois : la date de la dernière ann
 Variable d'environnement (secret du dépôt) :
   DISCORD_WEBHOOK_INFO   adresse du webhook du salon où poster (Paramètres du salon → Intégrations → Webhooks)
 
-Usage : python3 outils/annonce_info.py <infos.json> <fichier de la dernière annonce>
+Usage : python3 outils/annonce_info.py <infos.json> <fichier de la dernière annonce> [--test]
+  --test : envoie la dernière info déjà publiée (même d'un autre jour), marquée « Test », sans rien retenir
 Codes de sortie : 0 info annoncée, 2 rien à annoncer (déjà fait, pas encore midi, ou secret absent), 1 erreur.
 """
 import datetime
@@ -45,6 +46,14 @@ def info_du_jour(chemin, maintenant):
             continue
         publication = datetime.datetime.fromisoformat(info["publication"])
         return info if publication <= maintenant else None
+    return None
+
+
+def derniere_publiee(chemin, maintenant):
+    """La plus récente des infos déjà publiées, quel que soit son jour (pour le mode test)."""
+    for info in json.loads(pathlib.Path(chemin).read_text(encoding="utf-8")).get("infos", []):
+        if info.get("titre") and datetime.datetime.fromisoformat(info["publication"]) <= maintenant:
+            return info
     return None
 
 
@@ -85,6 +94,7 @@ def main():
     if len(sys.argv) < 3:
         sys.exit(__doc__)
     infos, etat = sys.argv[1], pathlib.Path(sys.argv[2])
+    test = "--test" in sys.argv[3:]
     webhook = os.environ.get("DISCORD_WEBHOOK_INFO", "").strip()
     if not webhook:
         signaler("Secret DISCORD_WEBHOOK_INFO à ajouter dans les réglages du dépôt : rien n'est annoncé.", "warning")
@@ -93,16 +103,20 @@ def main():
         signaler("DISCORD_WEBHOOK_INFO n'est pas une adresse de webhook Discord : rien n'est annoncé.", "warning")
         return 2
     maintenant = datetime.datetime.now(datetime.timezone.utc)
-    info = info_du_jour(infos, maintenant)
+    info = derniere_publiee(infos, maintenant) if test else info_du_jour(infos, maintenant)
     if not info:
         signaler("Pas d'info du jour publiée pour l'instant : rien à annoncer.")
         return 2
-    if etat.exists() and etat.read_text(encoding="utf-8").strip() == info["date"]:
+    if not test and etat.exists() and etat.read_text(encoding="utf-8").strip() == info["date"]:
         signaler(f"L'info du {info['date']} a déjà été annoncée.")
         return 2
+    carte = embed(info)
+    if test:
+        carte["footer"]["text"] = "Message de test · " + carte["footer"]["text"]
     contenu = {
         "username": "La Gazette du Café",
-        "embeds": [embed(info)],
+        "content": "🧪 Test de l'annonce de la petite info du jour" if test else "",
+        "embeds": [carte],
         "allowed_mentions": {"parse": []},  # jamais de mention @everyone ni de rôle par erreur
     }
     try:
@@ -114,6 +128,9 @@ def main():
     except urllib.error.URLError as err:
         signaler(f"Discord injoignable ({type(err.reason).__name__}).", "error")
         return 1
+    if test:
+        signaler(f"Test envoyé sur Discord avec l'info du {info['date']} : {info['titre']}")
+        return 2  # rien à retenir : l'annonce de midi se fera normalement
     etat.parent.mkdir(parents=True, exist_ok=True)
     etat.write_text(info["date"] + "\n", encoding="utf-8")
     signaler(f"Info du {info['date']} annoncée sur Discord : {info['titre']}")
