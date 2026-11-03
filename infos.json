@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-03",
+      "publication": "2026-11-03T12:00:00+01:00",
+      "theme": "Santé",
+      "titre": "3 000 « docteurs juniors » en renfort dans les déserts médicaux",
+      "texte": "Depuis lundi, environ 3 000 internes de quatrième année de médecine générale exercent comme « docteurs juniors », surtout en cabinet et en maison de santé. D'après les chiffres communiqués, huit sur dix sont affectés dans des territoires qui manquent de médecins. Pas encore tout à fait diplômés, ils restent encadrés par un praticien.",
+      "source": {
+        "nom": "franceinfo",
+        "url": "https://www.franceinfo.fr/sante/deserts-medicaux/reportage-des-delais-un-peu-moins-longs-qui-sont-les-docteurs-juniors-deployes-des-lundi-pour-lutter-contre-les-deserts-medicaux_8263223.html"
+      }
+    },
+    {
       "date": "2026-11-02",
       "publication": "2026-11-02T12:00:00+01:00",
       "theme": "Éducation",
