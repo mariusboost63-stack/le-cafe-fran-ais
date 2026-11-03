@@ -898,6 +898,12 @@ main, .pied { position: relative; z-index: 1; }
 .evenements-grille { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
 .evenements-texte { display: grid; gap: 22px; min-width: 0; }
 .evenements-texte .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 44ch; }
+.bilan-ev { display: grid; gap: 12px; }
+.bilan-titre { font: 500 var(--t-etiquette)/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--citrouille); }
+.bilan-ev ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 480px; }
+.bilan-ev li { display: grid; gap: 6px; align-content: start; padding: 16px 18px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--citrouille) 35%, var(--trait)); background: color-mix(in srgb, var(--citrouille) 7%, transparent); min-width: 0; }
+.bilan-ev b { font: 800 clamp(30px, 3vw, 40px)/1 var(--f-titre); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.bilan-ev li > span { color: var(--brume); font-size: 14.5px; line-height: 1.3; }
 .astuce-ev { max-width: 46ch; padding: 14px 18px; border-radius: 14px; border: 1px dashed var(--trait); color: var(--brume); }
 .types-ev { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .types-ev li { display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: 20px; background: var(--nuit-2); border: 1px solid var(--trait); min-width: 0; }
@@ -1198,6 +1204,8 @@ main, .pied { position: relative; z-index: 1; }
     <symbol id="i-pinceau" viewBox="0 0 24 24"><path class="ico-svg" d="m20 4-8.6 8.6M14.6 5.4l4 4M11.4 12.6c-1.6-1.6-4.2-1.4-5.4.4-1 1.5-.5 3.4-2.5 5.5 3.2.9 6 .3 7.6-1.4 1.4-1.5 1.6-3.2.3-4.5Z"/></symbol>
     <symbol id="i-gemme" viewBox="0 0 24 24"><path class="ico-svg" d="M7 4.5h10l3.5 5L12 20 3.5 9.5Zm-3.5 5h17M9.5 4.5 8 9.5l4 10.5 4-10.5-1.5-5"/></symbol>
     <symbol id="i-partage" viewBox="0 0 24 24"><path class="ico-svg" d="M12 14.5V3.5M7.5 8 12 3.5 16.5 8M5 12.5v6A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-6"/></symbol>
+    <symbol id="i-cadeau" viewBox="0 0 24 24"><rect class="ico-svg" x="4.5" y="10.5" width="15" height="10" rx="1.8"/><rect class="ico-svg" x="3.5" y="7" width="17" height="3.5" rx="1.2"/><path class="ico-svg" d="M12 7v13.5M12 7C10.6 3.9 6.9 3.6 7.1 5.7 7.3 7 9.6 7 12 7Zm0 0c1.4-3.1 5.1-3.4 4.9-1.3C16.7 7 14.4 7 12 7Z"/></symbol>
+    <symbol id="i-infini" viewBox="0 0 24 24"><path class="ico-svg" d="M12 12c-1.8-2.4-3.3-3.6-5-3.6a3.6 3.6 0 0 0 0 7.2c1.7 0 3.2-1.2 5-3.6Zm0 0c1.8 2.4 3.3 3.6 5 3.6a3.6 3.6 0 0 0 0-7.2c-1.7 0-3.2 1.2-5 3.6Z"/></symbol>
     <symbol id="i-cadenas" viewBox="0 0 24 24"><rect class="ico-svg" x="5" y="10.5" width="14" height="10" rx="2.5"/><path class="ico-svg" d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
     <symbol id="i-chauve" viewBox="0 0 48 24"><path fill="currentColor" d="M24 7.2c-1-2.2-2-3.5-2.7-3.6.3 1.3.2 2.5-.3 3.3C18.6 5.6 14.2 3.5 8.8 3.9 4.4 4.2 1.6 6.4 0 9.6c3-1.4 6.1-1.3 7.9.4-1.9.3-3.1 1.6-3.2 3.7 2.2-1.5 4.7-1.6 6.8-.3-1.1 1-1.5 2.5-1.1 4.3 2.6-2.4 6.6-3.6 10.6-2.6.9 1.3 2.2 2.7 3 3.4.8-.7 2.1-2.1 3-3.4 4-1 8 .2 10.6 2.6.4-1.8 0-3.3-1.1-4.3 2.1-1.3 4.6-1.2 6.8.3-.1-2.1-1.3-3.4-3.2-3.7 1.8-1.7 4.9-1.8 7.9-.4-1.6-3.2-4.4-5.4-8.8-5.7-5.4-.4-9.8 1.7-12.2 3-.5-.8-.6-2-.3-3.3-.7.1-1.7 1.4-2.7 3.6Z"/></symbol>
   </defs>
@@ -1473,13 +1481,22 @@ main, .pied { position: relative; z-index: 1; }
       <div class="evenements-texte" data-revele>
         <p class="surtitre">Événements</p>
         <h2 class="h2" id="t-evenements">Le prochain événement se prépare</h2>
-        <p class="chapo">Le café organise régulièrement des événements pour toute la communauté. Le dernier en date, Halloween 2026, proposait 7 jeux, une chasse aux citrouilles et des Nitro Boost à gagner.</p>
+        <p class="chapo">Le café organise régulièrement des événements pour toute la communauté. Le dernier en date, Halloween 2026, a rassemblé le serveur autour de jeux, de quêtes et d'une chasse aux citrouilles.</p>
+        <div class="bilan-ev">
+          <p class="bilan-titre">Halloween 2026 en chiffres</p>
+          <ul>
+            <li><b>7</b><span>jeux et quêtes d'Halloween</span></li>
+            <li><b>13</b><span>finalistes</span></li>
+            <li><b>10</b><span>participants récompensés</span></li>
+            <li><b><span class="sr">Plus de </span>300<span aria-hidden="true">+</span></b><span>citrouilles récoltées</span></li>
+          </ul>
+        </div>
         <p class="astuce-ev">Prends le rôle @Notif Animation dans «&nbsp;Salons et rôles&nbsp;» pour être prévenu dès qu'un événement commence.</p>
       </div>
       <ul class="types-ev">
-        <li><svg aria-hidden="true"><use href="#i-des"/></svg><h3>Jeux et quêtes</h3><p>Énigmes, rébus, mots mêlés et autres épreuves, avec un classement à la clé.</p></li>
-        <li><svg aria-hidden="true"><use href="#i-micro"/></svg><h3>Doublages</h3><p>Prête ta voix le temps d'un doublage avec la communauté.</p></li>
-        <li><svg aria-hidden="true"><use href="#i-pinceau"/></svg><h3>Concours</h3><p>Concours de dessins ou de profils, annoncés dans #concours et #événements.</p></li>
+        <li><svg aria-hidden="true"><use href="#i-cadeau"/></svg><h3>Concours</h3><p>Des concours réguliers dans #concours, avec de nombreux lots à gagner.</p></li>
+        <li><svg aria-hidden="true"><use href="#i-infini"/></svg><h3>L'infini</h3><p>Faites avancer ensemble la suite de nombres dans #infini : des rôles et des grains à gagner, et un classement des meilleurs.</p></li>
+        <li><svg aria-hidden="true"><use href="#i-masque"/></svg><h3>Confessions anonymes</h3><p>Confie ce que tu as sur le cœur dans #confessions, en toute discrétion : personne ne sait que c'est toi.</p></li>
         <li><svg aria-hidden="true"><use href="#i-texte"/></svg><h3>Fils à thème</h3><p>Des fils de discussion pour raconter, partager et participer ensemble.</p></li>
       </ul>
     </div>
