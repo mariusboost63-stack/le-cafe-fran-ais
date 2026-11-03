@@ -1127,6 +1127,21 @@ main, .pied { position: relative; z-index: 1; }
 .rg-place { font: 500 13px/1 var(--f-mono); color: var(--brume); text-align: center; }
 .riches-liste img { width: 36px; height: 36px; border-radius: 50%; background: var(--nuit-2); }
 .riches-liste .rg-grains { font-size: 16px; }
+.riches-onglets { display: inline-flex; gap: 4px; justify-self: start; padding: 4px; border-radius: 999px; border: 1px solid var(--trait); background: var(--nuit-2); }
+.riches-onglets[hidden] { display: none; }
+.riches-onglets button {
+  display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 0; border-radius: 999px; cursor: pointer;
+  background: transparent; color: var(--brume); font: 700 15px/1 var(--f-titre); transition: background-color .25s, color .25s;
+}
+.riches-onglets button svg { width: 17px; height: 17px; }
+.riches-onglets button:hover { color: var(--lait); }
+.riches-onglets button[aria-selected="true"] { background: var(--lait); color: var(--nuit); }
+.riches-onglets button[aria-selected="true"] svg { color: var(--grain); }
+.riches-panneau { display: grid; gap: 22px; min-width: 0; }
+.riches-panneau[hidden] { display: none; }
+.riches-legende { color: var(--brume); font-size: 15px; }
+.riches-legende b { color: var(--lait); font-variant-numeric: tabular-nums; }
+.rg-grains .i-inf { color: var(--bleu-vif); }
 @media (max-width: 860px) { .riches-grille { grid-template-columns: minmax(0, 1fr); } }
 
 /* Les prochains événements, relevés dans l'onglet « Événements » du serveur */
@@ -1697,13 +1712,25 @@ main, .pied { position: relative; z-index: 1; }
   <section class="riches" id="classement" aria-labelledby="t-classement" hidden>
     <div class="cadre riches-grille">
       <div class="riches-tete" data-revele>
-        <p class="surtitre">Le classement des grains</p>
-        <h2 class="h2" id="t-classement">Les plus riches du café</h2>
-        <p class="chapo">Les dix membres qui ont le plus de grains sur le serveur, en poche et en banque, relevés directement dans le bot. <span id="riches-maj"></span></p>
+        <p class="surtitre">Les classements</p>
+        <h2 class="h2" id="t-classement">Les champions du café</h2>
+        <p class="chapo">Les dix membres les plus riches en grains, et ceux qui font le plus avancer la suite de #infini, relevés directement dans le bot. <span id="riches-maj"></span></p>
       </div>
       <div class="riches-corps">
-        <ol class="top3" id="top3"></ol>
-        <ol class="riches-liste" id="riches-liste" start="4"></ol>
+        <div class="riches-onglets" role="tablist" aria-label="Choix du classement" hidden>
+          <button type="button" role="tab" id="onglet-grains" aria-controls="panneau-grains" aria-selected="true"><svg aria-hidden="true"><use href="#i-grain"/></svg>Grains</button>
+          <button type="button" role="tab" id="onglet-infini" aria-controls="panneau-infini" aria-selected="false" tabindex="-1"><svg aria-hidden="true"><use href="#i-infini"/></svg>#infini</button>
+        </div>
+        <div class="riches-panneau" id="panneau-grains" role="tabpanel" aria-labelledby="onglet-grains">
+          <p class="riches-legende">Les plus riches, en poche et en banque.</p>
+          <ol class="top3" id="top3"></ol>
+          <ol class="riches-liste" id="riches-liste" start="4"></ol>
+        </div>
+        <div class="riches-panneau" id="panneau-infini" role="tabpanel" aria-labelledby="onglet-infini" hidden>
+          <p class="riches-legende">Les membres qui ont posté le plus de nombres. <span id="infini-total"></span></p>
+          <ol class="top3" id="top3-infini"></ol>
+          <ol class="riches-liste" id="liste-infini" start="4"></ol>
+        </div>
       </div>
     </div>
   </section>
@@ -2514,14 +2541,18 @@ main, .pied { position: relative; z-index: 1; }
       img.addEventListener('error', () => { img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='; }, { once: true });
       return img;
     };
-    const grains = (n) => {
+    // Valeur affichée : grains (icône grain) ou nombres postés dans #infini (icône infini)
+    const valeur = (n, icone, unite) => {
       const b = Object.assign(document.createElement('b'), { className: 'rg-grains' });
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-      use.setAttribute('href', '#i-grain'); svg.setAttribute('aria-hidden', 'true'); svg.append(use);
-      b.append(nf.format(Number(n)), svg, Object.assign(document.createElement('span'), { className: 'sr', textContent: ' grains' }));
+      use.setAttribute('href', icone); svg.setAttribute('aria-hidden', 'true'); svg.append(use);
+      if (icone === '#i-infini') svg.classList.add('i-inf');
+      b.append(nf.format(Number(n)), svg, Object.assign(document.createElement('span'), { className: 'sr', textContent: ' ' + unite }));
       return b;
     };
+    const grains = (n) => valeur(n, '#i-grain', 'grains');
+    const nombres = (n) => valeur(n, '#i-infini', Number(n) > 1 ? 'nombres' : 'nombre');
     const nom = (x) => Object.assign(document.createElement('span'), { className: 'rg-nom', textContent: String(x.nom || 'Membre') });
     let maj = NaN, affiche = '', dernier = 0;
     function ecrireMaj() {
@@ -2537,33 +2568,65 @@ main, .pied { position: relative; z-index: 1; }
         const r = await chargerListe(SOURCES);
         if (!r) return;
         const d = await r.json();
-        const liste = (d.classement || []).filter((x) => x && Number.isFinite(Number(x.grains))).slice(0, 10);
+        const propre = (l, cle) => (Array.isArray(l) ? l : []).filter((x) => x && Number.isFinite(Number(x[cle]))).slice(0, 10);
+        const liste = propre(d.classement, 'grains');
+        const listeInfini = propre(d.infini_classement, 'nombres');
         if (!liste.length) return;
         maj = Date.parse(d.maj);
         ecrireMaj();
         // Rien n'a changé : on ne redessine pas
-        const signature = JSON.stringify(liste);
+        const signature = JSON.stringify([liste, listeInfini, d.infini]);
         if (signature === affiche) return;
         affiche = signature;
-        const podium = [], suite = [];
-        liste.forEach((x, i) => {
-          const li = document.createElement('li');
-          if (i < 3) {
-            li.append(Object.assign(document.createElement('span'), { className: 'rg-rang', textContent: String(i + 1) }), avatar(x, i ? 64 : 84), nom(x), grains(x.grains));
-            podium.push(li);
-          } else {
-            li.append(Object.assign(document.createElement('span'), { className: 'rg-place', textContent: String(i + 1) }), avatar(x, 36), nom(x), grains(x.grains));
-            suite.push(li);
-          }
-        });
-        $('#top3').replaceChildren(...podium);
-        $('#riches-liste').replaceChildren(...suite);
+        remplir(liste, (x) => grains(x.grains), '#top3', '#riches-liste');
+        // Le classement de #infini n'apparaît que s'il est publié
+        $('.riches-onglets').hidden = !listeInfini.length;
+        if (listeInfini.length) {
+          remplir(listeInfini, (x) => nombres(x.nombres), '#top3-infini', '#liste-infini');
+          $('#infini-total').textContent = Number.isFinite(Number(d.infini)) ? `La suite en est à ${nf.format(Number(d.infini))}.` : '';
+        } else montrer('grains');
         if ($('#classement').hidden) {
           $('#classement').hidden = false;
           if (anime) ST.refresh();
         }
       } catch (e) { /* classement indisponible : on garde ce qui est affiché */ }
     }
+    function remplir(liste, montant, idPodium, idSuite) {
+      const podium = [], suite = [];
+      liste.forEach((x, i) => {
+        const li = document.createElement('li');
+        if (i < 3) {
+          li.append(Object.assign(document.createElement('span'), { className: 'rg-rang', textContent: String(i + 1) }), avatar(x, i ? 64 : 84), nom(x), montant(x));
+          podium.push(li);
+        } else {
+          li.append(Object.assign(document.createElement('span'), { className: 'rg-place', textContent: String(i + 1) }), avatar(x, 36), nom(x), montant(x));
+          suite.push(li);
+        }
+      });
+      $(idPodium).replaceChildren(...podium);
+      $(idSuite).replaceChildren(...suite);
+    }
+    // Onglets Grains / #infini (flèches gauche et droite au clavier)
+    const onglets = $$('.riches-onglets [role="tab"]');
+    function montrer(quoi, focus) {
+      onglets.forEach((o) => {
+        const actif = o.id === 'onglet-' + quoi;
+        o.setAttribute('aria-selected', actif);
+        o.tabIndex = actif ? 0 : -1;
+        $('#' + o.getAttribute('aria-controls')).hidden = !actif;
+        if (actif && focus) o.focus();
+      });
+      if (anime) ST.refresh();
+    }
+    onglets.forEach((o, i) => {
+      o.addEventListener('click', () => montrer(o.id.replace('onglet-', '')));
+      o.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault();
+        const suivant = onglets[(i + (e.key === 'ArrowRight' ? 1 : onglets.length - 1)) % onglets.length];
+        montrer(suivant.id.replace('onglet-', ''), true);
+      });
+    });
     charger();
     // Page restée ouverte : nouveau classement toutes les 5 minutes, et au retour sur l'onglet
     setInterval(() => { if (!document.hidden) charger(); }, 5 * 60000);

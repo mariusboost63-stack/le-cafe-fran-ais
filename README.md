@@ -56,6 +56,7 @@ La section « Les plus riches du café » (`#classement`) affiche le top 10 des 
 
 - Toutes les heures, GitHub Actions (`.github/workflows/classement.yml`) lance `outils/classement.py`. Il lit le top 10 dans la table `users` de la base du bot (cumul des colonnes `grains` et `banque`), **en lecture seule**, sans les membres privés de grains (`blacklistGrains`).
 - Il récupère le pseudo et l'avatar de chacun sur Discord, puis publie `classement.json` (rang, pseudo, avatar, grains) sur la branche `data` du dépôt.
+- Il relève aussi le **classement de #infini** (top 10 de la colonne `infiniStats`, le nombre de nombres postés par chaque membre) et le total de la suite. Sur le site, un onglet « #infini » apparaît à côté de « Grains » dès que ce classement est publié.
 - Le site ne lit que ce fichier. **Les identifiants de la base ne sont jamais dans le site** : ils sont rangés dans les secrets du dépôt, que seul GitHub Actions peut lire.
 
 **Secrets à ajouter** (dépôt → Settings → Secrets and variables → Actions → New repository secret) :

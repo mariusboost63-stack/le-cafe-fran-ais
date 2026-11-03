@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Classement des grains du serveur : le top 10 (poche et banque), lu dans la base du bot et publié sans rien de sensible,
-avec le compteur du salon #infini.
+"""Classements du serveur, lus dans la base du bot et publiés sans rien de sensible : le top 10 des grains (poche et
+banque), le top 10 du salon #infini (nombres postés) et le compteur total de #infini.
 
 Lancé toutes les heures par GitHub Actions (.github/workflows/classement.yml). Le résultat, classement.json,
 est publié sur la branche « data » du dépôt, et le site le lit. Les identifiants de la base ne quittent jamais
@@ -43,7 +43,8 @@ def lire_adresse(adresse):
 
 
 def lire_base(adresse):
-    """Le top 10 (identifiant, grains) et le compteur du salon #infini (None s'il est illisible)."""
+    """Le top 10 des grains, le compteur du salon #infini (None s'il est illisible) et le top 10 de #infini
+    (liste vide s'il est illisible). Les tops sont des listes (identifiant, valeur)."""
     import pymysql
     connexion = pymysql.connect(**lire_adresse(adresse), connect_timeout=10, read_timeout=20, charset="utf8mb4")
     try:
@@ -64,7 +65,13 @@ def lire_base(adresse):
                 infini = int(c.fetchone()[0])
             except pymysql.MySQLError:
                 infini = None
-            return top, infini
+            # Le classement de #infini : les membres qui y ont posté le plus de nombres
+            try:
+                c.execute("SELECT id, infiniStats FROM users WHERE infiniStats > 0 ORDER BY infiniStats DESC LIMIT %s", (TAILLE,))
+                top_infini = [(str(i), int(n)) for i, n in c.fetchall()]
+            except pymysql.MySQLError:
+                top_infini = []
+            return top, infini, top_infini
     finally:
         connexion.close()
 
@@ -99,28 +106,39 @@ def main():
         signaler("Secrets CAFE_DB_URL et DISCORD_TOKEN à ajouter dans les réglages du dépôt : rien n'est publié.", "warning")
         return 2
     try:
-        top, infini = lire_base(adresse)
+        top, infini, top_infini = lire_base(adresse)
     except Exception as err:  # base injoignable : le site garde le classement précédent
         # Seulement le type et le code d'erreur : jamais le message, qui peut contenir l'hôte ou l'utilisateur
         code = err.args[0] if getattr(err, "args", None) and isinstance(err.args[0], int) else ""
         signaler(f"Base de données injoignable ({type(err).__name__} {code}) : classement non mis à jour.".replace(" )", ")"), "warning")
         return 2
-    classement = []
-    for rang, (identifiant, grains) in enumerate(top, 1):
-        try:
-            classement.append({"rang": rang, **profil(identifiant, jeton), "grains": grains})
-        except Exception as err:
-            signaler(f"Profil Discord du n°{rang} illisible ({type(err).__name__}).", "warning")
-            classement.append({"rang": rang, "nom": "Membre", "avatar": None, "grains": grains})
-        time.sleep(.4)  # Discord limite les appels rapprochés
+    profils = {}  # un membre présent dans les deux classements n'est demandé qu'une fois à Discord
+
+    def classer(top, cle, quoi):
+        liste = []
+        for rang, (identifiant, valeur) in enumerate(top, 1):
+            if identifiant not in profils:
+                try:
+                    profils[identifiant] = profil(identifiant, jeton)
+                except Exception as err:
+                    signaler(f"Profil Discord du n°{rang} ({quoi}) illisible ({type(err).__name__}).", "warning")
+                    profils[identifiant] = {"nom": "Membre", "avatar": None}
+                time.sleep(.4)  # Discord limite les appels rapprochés
+            liste.append({"rang": rang, **profils[identifiant], cle: valeur})
+        return liste
+
+    classement = classer(top, "grains", "grains")
+    classement_infini = classer(top_infini, "nombres", "#infini")
     sortie = pathlib.Path(sys.argv[1])
     sortie.parent.mkdir(parents=True, exist_ok=True)
     maj = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
     donnees = {"maj": maj, "classement": classement}
     if infini is not None:
         donnees["infini"] = infini
+    if classement_infini:
+        donnees["infini_classement"] = classement_infini
     sortie.write_text(json.dumps(donnees, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    signaler(f"Classement publié : {len(classement)} membres ; compteur #infini : {infini}.")
+    signaler(f"Classements publiés : {len(classement)} membres (grains), {len(classement_infini)} (#infini) ; compteur #infini : {infini}.")
     return 0
 
 
