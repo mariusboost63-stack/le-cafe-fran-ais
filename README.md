@@ -4,7 +4,7 @@ Site vitrine animé du serveur Discord francophone **Le Café Français** : [dis
 
 En ligne sur **[cafe-fr.com](https://cafe-fr.com)**, publié sur Cloudflare Pages par GitHub Actions (voir « Mise en ligne »). Chaque modification poussée sur la branche `main` est publiée automatiquement.
 
-Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les animations utilisent [GSAP](https://gsap.com) et ScrollTrigger, chargés depuis cdnjs.
+Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les animations utilisent [GSAP](https://gsap.com) et ScrollTrigger (dossier `js/`), et les polices sont dans `polices/` : la page ne demande rien à Google Fonts ni à un CDN.
 
 ## Ce que contient la page
 

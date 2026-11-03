@@ -64,8 +64,11 @@ async function dessinerImage(n) {
   const nav = await navigateur();
   try {
     const page = await nav.newPage({ viewport: { width: 1200, height: 630 } });
-    // Seules les polices sont chargées : sans GSAP, le logo reste immobile
-    await page.route(/^https?:\/\/(?!fonts\.(googleapis|gstatic)\.com)/, (r) => r.abort());
+    // Rien n'est chargé depuis Internet (les polices sont dans le dépôt), et GSAP est neutralisé : le logo reste immobile
+    await page.route(/^https?:\/\//, (r) => r.abort());
+    await page.addInitScript(() => {
+      for (const nom of ['gsap', 'ScrollTrigger']) Object.defineProperty(window, nom, { get: () => undefined, set: () => {}, configurable: false });
+    });
     await page.goto('file://' + PAGE);
     await page.evaluate(async (texte) => {
       const lettre = (id, cx, cy, h, r) => {
