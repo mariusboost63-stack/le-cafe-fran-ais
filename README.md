@@ -112,6 +112,8 @@ Les infos sont dans **`infos.json`**, de la plus récente à la plus ancienne :
 - Jamais de photo, de vidéo, de logo ou d'extrait long d'un média : seulement le nom de la source et un lien vers l'article (les liens vers des pages en accès libre sont autorisés : arrêt Svensson de la CJUE, article L. 211-3-1 du Code de la propriété intellectuelle).
 - Uniquement des articles en accès libre : pas d'article réservé aux abonnés. De préférence, les médias publics (franceinfo, France 24) ou les sites officiels (.gouv.fr, INSEE, Météo-France).
 
+Toutes les infos publiées (jusqu'à 30) sont aussi sur la page **`/infos/`** (fichier `infos/index.html`), classées par mois et filtrables par thème ; le lien « Toutes les éditions » y mène depuis l'accueil.
+
 Pour corriger ou retirer une info : modifie ou supprime son bloc dans `infos.json` (en gardant un JSON valide), puis publie.
 
 ## Saisons

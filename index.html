@@ -1215,6 +1215,9 @@ main, .pied { position: relative; z-index: 1; }
 .gazette-liste time { font: 500 12px/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--creme); white-space: nowrap; }
 .gazette-liste .gl-corps { display: grid; gap: 8px; padding: 0 2px 16px; color: var(--brume); font-size: 15.5px; }
 .gazette-liste .gl-corps a { color: var(--lait); font-size: 13px; }
+.gazette-tout { justify-self: start; display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; color: var(--lait); font: 700 15px/1 var(--f-titre); text-decoration: none; }
+.gazette-tout svg { width: 18px; height: 18px; transition: transform .25s; }
+.gazette-tout:hover svg { transform: translateX(4px); }
 @media (max-width: 860px) {
   .gazette-grille { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tete" "journal" "avant"; }
   .journal { transform: rotate(-.6deg); }
@@ -1754,6 +1757,7 @@ main, .pied { position: relative; z-index: 1; }
       <div class="gazette-avant" id="info-avant" hidden>
         <p class="surtitre">Les jours précédents</p>
         <ul class="gazette-liste" id="info-liste"></ul>
+        <a class="gazette-tout" href="infos/">Toutes les éditions<svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
       </div>
     </div>
   </section>
@@ -2474,8 +2478,8 @@ main, .pied { position: relative; z-index: 1; }
   // Chacune s'affiche à partir de son heure de publication ; les précédentes sont listées dessous.
   (async function infoDuJour() {
     const PARIS = 'Europe/Paris';
-    // Espaces insécables avant ? ! : ; et à l'intérieur des guillemets
-    const fr = (t) => String(t || '').replace(/ ([?!:;»])/g, '\u00a0$1').replace(/« /g, '«\u00a0');
+    // Espaces insécables avant ? ! : ; %, à l'intérieur des guillemets et dans les nombres (161 000)
+    const fr = (t) => String(t || '').replace(/ ([?!:;»%])/g, '\u00a0$1').replace(/« /g, '«\u00a0').replace(/(\d) (?=\d{3}\b)/g, '$1\u00a0');
     const jour = (d, options) => new Intl.DateTimeFormat('fr-FR', { timeZone: PARIS, ...options }).format(new Date(`${d}T12:00:00Z`));
     const lien = (u) => /^https:\/\//.test(String(u || '')) ? u : null;
     // Date et heure à Paris, pour annoncer la prochaine info
