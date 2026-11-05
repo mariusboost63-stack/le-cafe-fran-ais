@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-05",
+      "publication": "2026-11-05T12:00:00+01:00",
+      "theme": "Politique",
+      "titre": "Budget 2027 : aucune voix pour à l'Assemblée, le texte part au Sénat",
+      "texte": "Mercredi, les députés ont repoussé la partie recettes du projet de budget de l'État pour 2027, par 458 voix contre et aucune pour. Ce vote fait tomber tout le texte en première lecture : le Sénat se penchera sur la version initiale du gouvernement à partir du 20 novembre. Selon Matignon, le temps du compromis viendra après le passage au Sénat.",
+      "source": {
+        "nom": "franceinfo",
+        "url": "https://www.franceinfo.fr/economie/budget/l-assemblee-nationale-rejette-a-l-unanimite-le-budget-de-l-etat-2027-en-premiere-lecture_8268527.html"
+      }
+    },
+    {
       "date": "2026-11-04",
       "publication": "2026-11-04T12:00:00+01:00",
       "theme": "Culture",
