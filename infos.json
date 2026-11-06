@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-06",
+      "publication": "2026-11-06T12:00:00+01:00",
+      "theme": "Société",
+      "titre": "Salaires : une conférence sociale lundi après la grève de jeudi",
+      "texte": "Jeudi, la journée de grève et de manifestations pour les salaires et le pouvoir d'achat a rassemblé 575 000 personnes selon le ministère de l'Intérieur, près de 1,6 million selon la CGT. Le ministère a aussi fait état de 448 interpellations. Le Premier ministre, Sébastien Lecornu, a réagi en annonçant une conférence sociale avec syndicats et patronat, lundi à Matignon.",
+      "source": {
+        "nom": "franceinfo",
+        "url": "https://www.franceinfo.fr/economie/greve/greve/matignon-annonce-la-tenue-d-une-conference-sociale-lundi-en-presence-des-syndicats-et-du-patronat_8269589.html"
+      }
+    },
+    {
       "date": "2026-11-05",
       "publication": "2026-11-05T12:00:00+01:00",
       "theme": "Politique",
