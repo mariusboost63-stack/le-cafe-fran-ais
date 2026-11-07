@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-07",
+      "publication": "2026-11-07T12:00:00+01:00",
+      "theme": "Société",
+      "titre": "Longtemps contestée, l'autoroute A69 Toulouse-Castres est en service",
+      "texte": "L'autoroute A69, qui relie Castres à Verfeil, aux portes de Toulouse, a été mise en service vendredi 6 novembre, après des années de contestation et de nombreux recours en justice. Les premiers véhicules l'ont empruntée en fin de matinée. Le tarif du péage, jusqu'à 20,40 € l'aller-retour pour une voiture, reste critiqué.",
+      "source": {
+        "nom": "France 3 Occitanie",
+        "url": "https://france3-regions.franceinfo.fr/occitanie/tarn/albi/video-ouverture-de-l-a69-toulouse-castres-une-victoire-collective-pour-les-partisans-du-projet-rendue-amere-par-le-prix-de-plus-de-20-euros-au-peage-3445233.html"
+      }
+    },
+    {
       "date": "2026-11-06",
       "publication": "2026-11-06T12:00:00+01:00",
       "theme": "Société",
