@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-08",
+      "publication": "2026-11-08T12:00:00+01:00",
+      "theme": "Sport",
+      "titre": "Masters de Paris : Van Assche éliminé, finale Alcaraz-Shelton",
+      "texte": "Le Français Luca Van Assche a été éliminé samedi en demi-finale du Masters 1000 de Paris, à La Défense Arena, par l'Américain Ben Shelton (5-7, 6-3, 6-4). Dans l'autre demi-finale, l'Espagnol Carlos Alcaraz a dominé le Norvégien Casper Ruud 6-4, 6-4. Les deux vainqueurs s'affrontent ce dimanche pour le titre.",
+      "source": {
+        "nom": "Eurosport",
+        "url": "https://www.eurosport.fr/tennis/atp-paris/2026/rolex-paris-masters-la-belle-aventure-de-luca-van-assche-sarrete-face-a-ben-shelton_sto23353162/story.shtml"
+      }
+    },
+    {
       "date": "2026-11-07",
       "publication": "2026-11-07T12:00:00+01:00",
       "theme": "Société",
