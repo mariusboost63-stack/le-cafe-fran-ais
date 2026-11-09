@@ -1262,6 +1262,7 @@ main, .pied { position: relative; z-index: 1; }
     <symbol id="i-texte" viewBox="0 0 24 24"><path class="ico-svg" d="M9.5 3.5 7.5 20.5M16.5 3.5l-2 17M4.5 8.5h16M3.5 15.5h16"/></symbol>
     <symbol id="i-texte-prive" viewBox="0 0 24 24"><path class="ico-svg" d="M8.5 5.5 6.8 20.5M14 12.5l-1 8M3.5 9.5h8M3 15.5h15"/><rect x="15" y="5.6" width="7.5" height="5.4" rx="1.3" fill="currentColor"/><path class="ico-svg" d="M16.8 5.6V4.4a1.95 1.95 0 0 1 3.9 0v1.2" style="stroke-width: 1.6"/></symbol>
     <symbol id="i-annonce" viewBox="0 0 24 24"><path class="ico-svg" d="M3.5 9.5h4l10-5v15l-10-5h-4Z"/><path class="ico-svg" d="M7.5 14.5 9 20h2.6l-1.3-5M21 10.5v3"/></symbol>
+    <symbol id="i-forum" viewBox="0 0 24 24"><path class="ico-svg" d="M3.5 5.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8l-3.2 2.6c-.5.4-1.3 0-1.3-.6Z"/><path class="ico-svg" d="M15.5 8.5h3a2 2 0 0 1 2 2v8.7c0 .6-.8 1-1.3.6L16 17.5h-5a2 2 0 0 1-2-2v-1"/></symbol>
     <symbol id="i-regles" viewBox="0 0 24 24"><rect class="ico-svg" x="4.5" y="3.5" width="15" height="17" rx="3"/><path class="ico-svg" d="M8.5 12.2l2.4 2.4 4.6-5"/></symbol>
     <symbol id="i-voix" viewBox="0 0 24 24"><path class="ico-svg" d="M3.5 9.5h4l5-4.5v14l-5-4.5h-4Z"/><path class="ico-svg" d="M16 9a4.2 4.2 0 0 1 0 6M18.8 6.3a8 8 0 0 1 0 11.4"/></symbol>
     <symbol id="i-fleche" viewBox="0 0 24 24"><path class="ico-svg" d="M5 12h14M13 6l6 6-6 6"/></symbol>
@@ -1379,7 +1380,7 @@ main, .pied { position: relative; z-index: 1; }
     <ul class="chiffres hero-revele">
       <li><b id="nb-membres" data-valeur="9496">9&#8239;496</b><span>membres</span></li>
       <li class="vivant" id="stat-ligne" hidden><b><span class="pastille" aria-hidden="true"></span><span id="en-ligne">0</span></b><span>en ligne</span></li>
-      <li><b><span class="seulement-halloween">30</span><span class="seulement-normal">28</span></b><span>salons</span></li>
+      <li><b><span class="seulement-halloween">34</span><span class="seulement-normal">32</span></b><span>salons</span></li>
       <li><b>6</b><span>salons vocaux</span></li>
     </ul>
   </section>
@@ -1463,16 +1464,20 @@ main, .pied { position: relative; z-index: 1; }
           <div class="salle-texte">
             <p class="surtitre">Catégorie <span>Divertissements</span></p>
             <h3 class="salle-titre" id="t-arriere">L'arrière-salle</h3>
-            <p class="salle-desc">Pour jouer et rigoler : le casino, le smash or pass, les confessions anonymes et la suite infinie de nombres.</p>
-            <p class="salle-compte"><b>4</b>salons</p>
+            <p class="salle-desc">Pour jouer et rigoler : le casino, le jeu de cartes DeckFR et son marché d'échange, le smash or pass, les confessions anonymes et la suite infinie de nombres.</p>
+            <p class="salle-compte"><b>8</b>salons</p>
           </div>
           <div class="discord-liste">
             <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Divertissements</p>
             <ul>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">♾️</span><span class="seulement-halloween">🧹</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>infini</span><span class="desc">Une suite infinie de nombres.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">📢</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>news-casino</span><span class="desc">Les nouveautés du casino : nouveaux jeux, règles et changements de mises.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🎰</span><span class="seulement-halloween">🕷️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span><span class="desc">Défis entre membres, roulette, blackjack : mise tes grains.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">📢</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>news-deckfr</span><span class="desc">Les nouveautés de DeckFR, le jeu de cartes du café.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🃏</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>deckfr</span><span class="desc">Tire des cartes et complète ta collection.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-forum"/></svg><span class="emo" aria-hidden="true">🤝</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Forum </span>trade-cartes-grains</span><span class="desc">Échange tes cartes avec les autres membres, ou contre des grains.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🤳</span><span class="seulement-halloween">🧛‍♀️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>smash-or-pass</span><span class="desc">Donne ton avis sur les membres.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">💌</span><span class="seulement-halloween">🕯️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>confessions</span><span class="desc">Tes confessions, de manière anonyme.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🎰</span><span class="seulement-halloween">🕷️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span><span class="desc">Défis entre membres, roulette, blackjack : mise tes grains.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">♾️</span><span class="seulement-halloween">🧹</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>infini</span><span class="desc">Une suite infinie de nombres.</span></li>
             </ul>
           </div>
         </div>
@@ -2087,67 +2092,335 @@ main, .pied { position: relative; z-index: 1; }
     }
   })();
 
-  /* ---------- Ambiance sonore : un café généré en direct, sans fichier audio ---------- */
+  /* ---------- Ambiance sonore : un café parisien généré en direct, sans fichier audio ----------
+     La rumeur de la salle, des tables qui bavardent et rient, les tasses et les cuillères, la monnaie
+     sur le comptoir, la machine à expresso (moulin, coups, pompe, vapeur), la porte et sa clochette,
+     et une valse musette (composée pour le site) qui passe au poste. Tout est synthétisé. */
   (function ambiance() {
     const btn = $('#son');
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) { btn.hidden = true; return; }
-    let ctx = null, maitre = null, actif = false;
-    function bruit(type, sec) {
-      const b = ctx.createBuffer(1, Math.floor(ctx.sampleRate * sec), ctx.sampleRate);
-      const d = b.getChannelData(0);
-      let dernier = 0;
-      for (let i = 0; i < d.length; i++) {
-        const blanc = Math.random() * 2 - 1;
-        if (type === 'brun') { dernier = (dernier + .02 * blanc) / 1.02; d[i] = dernier * 3.5; } else d[i] = blanc;
+    let ctx = null, maitre = null, echo = null, actif = false, blanc = null, brun = null;
+    const places = [];
+    const hasard = (a, b) => a + Math.random() * (b - a);
+    const choisir = (l) => l[Math.floor(Math.random() * l.length)];
+    const hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
+    function plusTard(fn, ms) { setTimeout(() => { if (actif) fn(); else plusTard(fn, ms); }, ms); }
+    function bruit(type, sec, canaux) {
+      const b = ctx.createBuffer(canaux || 1, Math.floor(ctx.sampleRate * sec), ctx.sampleRate);
+      for (let c = 0; c < b.numberOfChannels; c++) {
+        const d = b.getChannelData(c);
+        let dernier = 0;
+        for (let i = 0; i < d.length; i++) {
+          const x = Math.random() * 2 - 1;
+          if (type === 'brun') { dernier = (dernier + .02 * x) / 1.02; d[i] = dernier * 3.5; } else d[i] = x;
+        }
       }
       return b;
     }
-    function enBoucle(buffer) { const src = ctx.createBufferSource(); src.buffer = buffer; src.loop = true; src.start(); return src; }
-    function plusTard(fn, ms) { setTimeout(() => { if (actif) fn(); else plusTard(fn, ms); }, ms); }
+    function gain(v) { const g = ctx.createGain(); g.gain.value = v; return g; }
+    function filtre(type, f, q) { const n = ctx.createBiquadFilter(); n.type = type; n.frequency.value = f; if (q != null) n.Q.value = q; return n; }
+    function enBoucle(buffer) { const s = ctx.createBufferSource(); s.buffer = buffer; s.loop = true; s.start(); return s; }
+    // Un bruit joué une seule fois, de t à t + dur (souffles, frottements, vapeur…)
+    function souffle(t, dur, vers, buffer) {
+      const s = ctx.createBufferSource(); s.buffer = buffer || blanc; s.loop = true;
+      s.connect(vers); s.start(t, Math.random() * 1.5); s.stop(t + dur);
+    }
+    // Une place dans la salle : un panoramique, le son direct et un peu d'écho de la pièce
+    function place(pan, reverb) {
+      const entree = gain(1);
+      let sortie = entree;
+      if (ctx.createStereoPanner) { sortie = ctx.createStereoPanner(); sortie.pan.value = pan; entree.connect(sortie); }
+      sortie.connect(maitre);
+      sortie.connect(gain(reverb)).connect(echo);
+      return entree;
+    }
+    // L'écho de la salle : une réponse de pièce fabriquée, aux aigus étouffés par les murs et les gens
+    function piece() {
+      const n = Math.floor(ctx.sampleRate * 2.2), b = ctx.createBuffer(2, n, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) {
+        const d = b.getChannelData(c);
+        let lisse = 0;
+        for (let i = 0; i < n; i++) { lisse = lisse * .55 + (Math.random() * 2 - 1) * .45; d[i] = lisse * Math.pow(1 - i / n, 4.5); }
+      }
+      const conv = ctx.createConvolver(); conv.buffer = b;
+      return conv;
+    }
+
+    /* La salle : un fond grave qui respire, et une rumeur lointaine de conversations */
+    function salle() {
+      const gFond = gain(.11);
+      enBoucle(brun).connect(filtre('lowpass', 380)).connect(gFond).connect(maitre);
+      const respirer = () => { gFond.gain.setTargetAtTime(hasard(.08, .13), ctx.currentTime, 2.5); plusTard(respirer, hasard(3000, 7000)); };
+      respirer();
+      const bande = filtre('bandpass', 800, .7), gRumeur = gain(.004), loin = place(0, 1.4);
+      enBoucle(blanc).connect(bande).connect(gRumeur).connect(filtre('lowpass', 1800)).connect(loin);
+      const rumeur = () => {
+        const t = ctx.currentTime;
+        gRumeur.gain.setTargetAtTime(hasard(.002, .007), t, .08);
+        bande.frequency.setTargetAtTime(hasard(500, 1300), t, .12);
+        plusTard(rumeur, hasard(90, 300));
+      };
+      rumeur();
+    }
+
+    /* Les tables : des voix synthétiques (cordes vocales + voyelles) trop loin pour qu'on comprenne les mots */
+    const VOYELLES = [[750, 1350], [400, 2000], [550, 1750], [290, 2200], [380, 800], [300, 750], [290, 1750], [430, 1450], [600, 1000]];
+    function table(i, foule) {
+      const grave = i % 2 === 0, f0 = grave ? hasard(95, 140) : hasard(180, 240);
+      const cordes = ctx.createOscillator(); cordes.type = 'sawtooth'; cordes.frequency.value = f0;
+      const gVoix = gain(0), gSouffle = gain(0), sortie = gain(hasard(.55, 1));
+      const f1 = filtre('bandpass', 500, 5), f2 = filtre('bandpass', 1500, 7), corps = filtre('lowpass', 300, .7);
+      cordes.connect(gVoix);
+      gVoix.connect(f1); gVoix.connect(f2); gVoix.connect(corps);
+      souffle(ctx.currentTime, 1e6, gSouffle);
+      gSouffle.connect(f1); gSouffle.connect(f2);
+      f1.connect(sortie); f2.connect(gain(.6)).connect(sortie); corps.connect(gain(.3)).connect(sortie);
+      if (ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = hasard(-.85, .85); sortie.connect(p).connect(foule); }
+      else sortie.connect(foule);
+      cordes.start();
+      const parler = () => {
+        let t = ctx.currentTime + .05, h = f0 * hasard(.95, 1.15);
+        const rire = Math.random() < .07, question = !rire && Math.random() < .2;
+        const n = Math.round(rire ? hasard(4, 8) : hasard(3, 16)), fort = hasard(.5, 1);
+        for (let k = 0; k < n; k++) {
+          const v = rire ? VOYELLES[0] : choisir(VOYELLES);
+          const d = rire ? hasard(.13, .17) : hasard(.1, .23);
+          const a = fort * (rire ? 1 - k / n * .6 : hasard(.45, 1));
+          if (rire || Math.random() < .55) {
+            // une consonne soufflée avant la voyelle
+            gSouffle.gain.setTargetAtTime(a * (rire ? .8 : hasard(.2, .6)), t, .008);
+            gSouffle.gain.setTargetAtTime(0, t + .035, .015);
+          }
+          f1.frequency.setTargetAtTime(v[0], t, .02);
+          f2.frequency.setTargetAtTime(v[1], t, .025);
+          const monte = question && k >= n - 2 ? 1.25 : 1;
+          cordes.frequency.setTargetAtTime(h * monte * (rire ? 1.45 : hasard(.93, 1.08)), t, .035);
+          gVoix.gain.setTargetAtTime(a, t + .03, .02);
+          gVoix.gain.setTargetAtTime(a * .08, t + d * .72, .02);
+          t += d;
+          h *= rire ? .97 : .988;
+        }
+        gVoix.gain.setTargetAtTime(0, t, .04);
+        plusTard(parler, (t - ctx.currentTime) * 1000 + hasard(250, rire ? 2500 : 4500));
+      };
+      plusTard(parler, hasard(200, 5000));
+    }
+
+    /* La vaisselle : porcelaine, cuillères, verres et monnaie */
+    function choc(t, f, fort, duree, vers) {
+      [[1, 1], [1.58, .55], [2.31, .35], [3.42, .2], [4.6, .1]].forEach(([m, a], j) => {
+        if (f * m > 15000) return;
+        const o = ctx.createOscillator(), g = gain(0), fin = t + duree / (1 + j * .5) * hasard(.8, 1.2);
+        o.frequency.value = f * m * hasard(.99, 1.01);
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(fort * a, t + .0015);
+        g.gain.exponentialRampToValueAtTime(.0001, fin);
+        o.connect(g).connect(vers); o.start(t); o.stop(fin + .02);
+      });
+      const clic = gain(0), aigu = filtre('highpass', 3000);
+      clic.gain.setValueAtTime(fort * .5, t); clic.gain.exponentialRampToValueAtTime(.0001, t + .012);
+      souffle(t, .03, aigu); aigu.connect(clic).connect(vers);
+    }
+    function vaisselle() {
+      const t = ctx.currentTime + .05, v = choisir(places), r = Math.random();
+      if (r < .42) {
+        // une tasse reposée sur sa soucoupe, souvent en deux temps
+        const f = hasard(1300, 2400), fort = hasard(.05, .1), d = hasard(.25, .45);
+        choc(t, f, fort, d, v);
+        if (Math.random() < .7) choc(t + hasard(.04, .09), f * hasard(.97, 1.03), fort * .4, d * .6, v);
+      } else if (r < .74) {
+        // une cuillère qui tourne dans la tasse
+        let x = t;
+        const f = hasard(3800, 5000);
+        for (let k = Math.round(hasard(6, 14)); k > 0; k--) { choc(x, f * hasard(.96, 1.04), hasard(.012, .03), hasard(.06, .12), v); x += hasard(.11, .17); }
+      } else if (r < .88) {
+        // la monnaie rendue sur le comptoir : une pièce qui rebondit
+        let x = t, ecart = hasard(.1, .15), fort = .05;
+        const f = hasard(4800, 6200);
+        for (let k = 0; k < 7; k++) { choc(x, f * hasard(.98, 1.02), fort, .09, v); x += ecart; ecart *= .72; fort *= .7; }
+      } else {
+        // deux verres qui trinquent
+        const f = hasard(2400, 3300);
+        choc(t, f, .05, 1.1, v); choc(t + .008, f * 1.06, .04, .9, v);
+      }
+      plusTard(vaisselle, hasard(1800, 6500));
+    }
+
+    /* Le comptoir : la machine à expresso, du moulin à la buse vapeur */
+    function coupSourd(t, vers) {
+      const o = ctx.createOscillator(), g = gain(0);
+      o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(55, t + .12);
+      g.gain.setValueAtTime(.2, t); g.gain.exponentialRampToValueAtTime(.0001, t + .18);
+      o.connect(g).connect(vers); o.start(t); o.stop(t + .2);
+      const bois = gain(0), mat = filtre('bandpass', 900, 1.2);
+      bois.gain.setValueAtTime(.12, t); bois.gain.exponentialRampToValueAtTime(.0001, t + .05);
+      souffle(t, .06, mat); mat.connect(bois).connect(vers);
+    }
+    function vapeur(t, vers) {
+      const d = hasard(5, 8);
+      // le sifflement qui monte quand le lait chauffe
+      const sif = filtre('bandpass', 3800, 1.5), gSif = gain(0);
+      sif.frequency.setValueAtTime(3800, t); sif.frequency.linearRampToValueAtTime(6000, t + d);
+      gSif.gain.setValueAtTime(0, t); gSif.gain.linearRampToValueAtTime(.035, t + .3);
+      gSif.gain.setValueAtTime(.035, t + d - .2); gSif.gain.linearRampToValueAtTime(0, t + d);
+      souffle(t, d, sif); sif.connect(gSif).connect(vers);
+      // le gargouillis du début, quand la buse aspire de l'air
+      const glou = filtre('bandpass', 650, 2.5), gGlou = gain(0);
+      for (let x = t; x < t + d * .5; x += .03) gGlou.gain.setValueAtTime(Math.random() < .5 ? hasard(.02, .07) : 0, x);
+      gGlou.gain.setValueAtTime(0, t + d * .5);
+      souffle(t, d * .5, glou); glou.connect(gGlou).connect(vers);
+      // la purge, un petit jet de vapeur à la fin
+      const purge = filtre('highpass', 2000), gPurge = gain(0), p = t + d + hasard(.8, 1.5);
+      gPurge.gain.setValueAtTime(0, p); gPurge.gain.linearRampToValueAtTime(.04, p + .05); gPurge.gain.exponentialRampToValueAtTime(.0001, p + .5);
+      souffle(p, .55, purge); purge.connect(gPurge).connect(vers);
+    }
+    function machine() {
+      const v = places[1];
+      let t = ctx.currentTime + .1;
+      // 1. Le moulin broie les grains
+      const dm = hasard(2.5, 4.5);
+      const moteur = ctx.createOscillator(), gMoteur = gain(0); moteur.type = 'sawtooth';
+      moteur.frequency.setValueAtTime(60, t); moteur.frequency.linearRampToValueAtTime(190, t + .35);
+      moteur.frequency.setValueAtTime(190, t + dm); moteur.frequency.exponentialRampToValueAtTime(40, t + dm + .8);
+      gMoteur.gain.setValueAtTime(0, t); gMoteur.gain.linearRampToValueAtTime(.022, t + .2);
+      gMoteur.gain.setValueAtTime(.022, t + dm); gMoteur.gain.linearRampToValueAtTime(0, t + dm + .8);
+      moteur.connect(filtre('lowpass', 900)).connect(gMoteur).connect(v); moteur.start(t); moteur.stop(t + dm + .9);
+      const grains = filtre('bandpass', 2800, .8), gGrains = gain(0);
+      for (let x = t + .25; x < t + dm; x += .025) gGrains.gain.setValueAtTime(hasard(0, .045), x);
+      gGrains.gain.setValueAtTime(0, t + dm);
+      souffle(t, dm + .1, grains); grains.connect(gGrains).connect(v);
+      t += dm + hasard(1.2, 2.2);
+      // 2. On tasse le café et on cogne le porte-filtre
+      for (let k = 0; k < 2; k++) { coupSourd(t, v); t += hasard(.25, .4); }
+      t += hasard(1.5, 3);
+      // 3. La pompe vibre pendant que le café coule
+      const dp = hasard(7, 11);
+      const pompe = ctx.createOscillator(), gPompe = gain(0); pompe.type = 'sawtooth'; pompe.frequency.value = 50;
+      gPompe.gain.setValueAtTime(0, t); gPompe.gain.linearRampToValueAtTime(.03, t + .15);
+      gPompe.gain.setValueAtTime(.03, t + dp); gPompe.gain.linearRampToValueAtTime(0, t + dp + .2);
+      pompe.connect(filtre('lowpass', 420)).connect(gPompe).connect(v); pompe.start(t); pompe.stop(t + dp + .3);
+      t += dp + hasard(1, 3);
+      // 4. Une fois sur deux, on fait mousser le lait
+      if (Math.random() < .55) { vapeur(t, v); t += 9; }
+      plusTard(machine, (t - ctx.currentTime) * 1000 + hasard(25000, 55000));
+    }
+
+    /* La porte : la clochette, et la rue qui entre avec le client */
+    function porte() {
+      const t = ctx.currentTime + .05, v = places[4];
+      [0, .13, .27, .48].forEach((dt, i) => {
+        const base = 2093 * (i % 2 ? 1.19 : 1) * hasard(.985, 1.015), g = gain(0);
+        g.gain.setValueAtTime(0, t + dt);
+        g.gain.linearRampToValueAtTime(.05 / Math.pow(i + 1, .6), t + dt + .003);
+        g.gain.exponentialRampToValueAtTime(.0001, t + dt + 1.4);
+        [[1, 1], [2.32, .45], [4.25, .2]].forEach(([m, a]) => {
+          const o = ctx.createOscillator(), gp = gain(a);
+          o.frequency.value = base * m; o.connect(gp).connect(g); o.start(t + dt); o.stop(t + dt + 1.5);
+        });
+        g.connect(v);
+      });
+      const rue = filtre('lowpass', 1400), gRue = gain(0);
+      gRue.gain.setValueAtTime(0, t); gRue.gain.linearRampToValueAtTime(.12, t + .5);
+      gRue.gain.setValueAtTime(.12, t + 2); gRue.gain.linearRampToValueAtTime(0, t + 3);
+      souffle(t, 3.1, rue, brun); rue.connect(gRue).connect(v);
+      plusTard(porte, hasard(60000, 130000));
+    }
+
+    /* Une chaise qu'on recule sur le carrelage */
+    function chaise() {
+      const t = ctx.currentTime + .05, d = hasard(.25, .6), f = hasard(500, 900);
+      const frotte = filtre('bandpass', f, 6), g = gain(0);
+      frotte.frequency.setValueAtTime(f, t); frotte.frequency.linearRampToValueAtTime(f * hasard(.7, 1.4), t + d);
+      for (let x = t; x < t + d; x += .018) g.gain.setValueAtTime(hasard(.03, .1), x);
+      g.gain.setValueAtTime(0, t + d);
+      souffle(t, d, frotte); frotte.connect(g).connect(choisir(places));
+      plusTard(chaise, hasard(15000, 45000));
+    }
+
+    /* Le poste, dans un coin : une valse musette à l'accordéon (mélodie originale, en ré mineur) */
+    const ACCORDS = {
+      Dm: [50, 45, [53, 57, 62]], A7: [45, 52, [55, 61, 64]], Gm: [43, 50, [55, 58, 62]], Bb: [46, 53, [53, 58, 62]],
+      F: [41, 48, [53, 57, 60]], C7: [48, 43, [52, 55, 58]], D7: [50, 45, [54, 57, 60]]
+    };
+    // Chaque mesure : l'accord, puis la mélodie en croches [note MIDI, nombre de croches], 0 pour un silence
+    const VALSE_A = [
+      ['Dm', [[69, 2], [74, 1], [76, 1], [77, 2]]], ['Dm', [[81, 3], [79, 1], [77, 2]]], ['A7', [[76, 2], [73, 1], [74, 1], [76, 2]]], ['A7', [[79, 4], [77, 1], [76, 1]]],
+      ['A7', [[76, 2], [69, 1], [73, 1], [76, 2]]], ['A7', [[79, 3], [77, 1], [76, 2]]], ['Dm', [[77, 2], [76, 1], [74, 1], [69, 2]]], ['Dm', [[74, 6]]],
+      ['Gm', [[70, 2], [74, 1], [79, 1], [82, 2]]], ['Gm', [[81, 2], [79, 2], [74, 2]]], ['Dm', [[77, 2], [76, 1], [77, 1], [81, 2]]], ['Dm', [[74, 3], [76, 1], [77, 2]]],
+      ['Bb', [[79, 2], [77, 1], [76, 1], [74, 2]]], ['A7', [[73, 2], [76, 2], [81, 2]]], ['A7', [[79, 2], [77, 1], [76, 1], [73, 2]]], ['Dm', [[74, 4], [0, 2]]]
+    ];
+    const VALSE_B = [
+      ['F', [[72, 2], [77, 1], [79, 1], [81, 2]]], ['F', [[84, 3], [81, 1], [77, 2]]], ['C7', [[79, 2], [76, 1], [77, 1], [79, 2]]], ['C7', [[82, 4], [81, 1], [79, 1]]],
+      ['C7', [[76, 2], [72, 1], [76, 1], [79, 2]]], ['C7', [[82, 3], [81, 1], [79, 2]]], ['F', [[81, 2], [79, 1], [77, 1], [72, 2]]], ['F', [[77, 6]]],
+      ['Bb', [[74, 2], [77, 1], [82, 1], [86, 2]]], ['Bb', [[84, 2], [82, 2], [77, 2]]], ['F', [[81, 2], [80, 1], [81, 1], [84, 2]]], ['D7', [[78, 2], [81, 1], [84, 1], [81, 2]]],
+      ['Gm', [[82, 2], [81, 1], [79, 1], [74, 2]]], ['C7', [[76, 2], [79, 2], [84, 2]]], ['F', [[77, 3], [81, 1], [84, 2]]], ['A7', [[76, 2], [79, 1], [77, 1], [76, 1], [73, 1]]]
+    ];
+    // Une note d'accordéon : plusieurs anches légèrement désaccordées, ce qui fait le son « musette »
+    function anche(t, m, dur, fort, desaccords, coupure, vers) {
+      const g = gain(0), lp = filtre('lowpass', coupure, .5);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(fort, t + .025);
+      g.gain.linearRampToValueAtTime(fort * .8, t + dur);
+      g.gain.linearRampToValueAtTime(0, t + dur + .06);
+      desaccords.forEach((c) => {
+        const o = ctx.createOscillator(); o.type = 'sawtooth';
+        o.frequency.value = hz(m); o.detune.value = c;
+        o.connect(lp); o.start(t); o.stop(t + dur + .08);
+      });
+      lp.connect(g).connect(vers);
+    }
+    function poste() {
+      // un petit haut-parleur : ni basses ni aigus, et l'écho de la salle
+      const radio = gain(.06);
+      radio.connect(filtre('highpass', 220)).connect(filtre('lowpass', 3600)).connect(place(.55, .9));
+      let morceau = [], i = 0, prochaine = 0, transpo = 0, temps = .4;
+      const jeu = () => hasard(-.008, .008);
+      function mesure(t, [acc, melodie], n) {
+        const [basse, quinte, accord] = ACCORDS[acc];
+        anche(t + jeu(), (n % 2 ? quinte : basse) + transpo, temps * .8, .55, [0, 1200], 900, radio);
+        [1, 2].forEach((b) => accord.forEach((note) => anche(t + b * temps + jeu(), note + transpo, temps * .45, .16, [0, 9], 1500, radio)));
+        let x = t;
+        melodie.forEach(([note, croches], k) => {
+          const d = croches * temps / 2;
+          if (note) anche(x + jeu(), note + transpo, d * .92, k === 0 ? .4 : .32, [0, 13, -11], 2600, radio);
+          x += d;
+        });
+      }
+      function suivre() {
+        if (prochaine < ctx.currentTime) prochaine = ctx.currentTime + .05;
+        while (i < morceau.length && prochaine < ctx.currentTime + 1.5) { mesure(prochaine, morceau[i], i); prochaine += 3 * temps; i++; }
+        if (i < morceau.length) plusTard(suivre, 400);
+        else plusTard(commencer, (prochaine - ctx.currentTime) * 1000 + hasard(20000, 50000));
+      }
+      function commencer() {
+        morceau = VALSE_A.concat(VALSE_B, VALSE_A);
+        i = 0; transpo = choisir([0, 0, -2, 3]); temps = 60 / hasard(140, 165);
+        prochaine = ctx.currentTime + .1;
+        suivre();
+      }
+      plusTard(commencer, 2500);
+    }
+
     function construire() {
       ctx = new AC();
-      maitre = ctx.createGain(); maitre.gain.value = 0; maitre.connect(ctx.destination);
-      // Brouhaha de la salle
-      const grave = ctx.createBiquadFilter(); grave.type = 'lowpass'; grave.frequency.value = 420;
-      const gSalle = ctx.createGain(); gSalle.gain.value = .5;
-      enBoucle(bruit('brun', 4)).connect(grave).connect(gSalle).connect(maitre);
-      // Conversations : un bruit filtré dont le volume varie comme des syllabes
-      const voix = ctx.createBiquadFilter(); voix.type = 'bandpass'; voix.frequency.value = 900; voix.Q.value = .9;
-      const gVoix = ctx.createGain(); gVoix.gain.value = .02;
-      enBoucle(bruit('blanc', 3)).connect(voix).connect(gVoix).connect(maitre);
-      const babiller = () => {
-        const t = ctx.currentTime;
-        gVoix.gain.setTargetAtTime(.006 + Math.random() * .04, t, .06);
-        voix.frequency.setTargetAtTime(600 + Math.random() * 900, t, .1);
-        plusTard(babiller, 90 + Math.random() * 260);
-      };
-      babiller();
-      // Tasses et cuillères qui tintent
-      const tinter = (encore) => {
-        const t = ctx.currentTime, f = 1800 + Math.random() * 2600;
-        const g = ctx.createGain();
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(.03 + Math.random() * .04, t + .004);
-        g.gain.exponentialRampToValueAtTime(.0001, t + .5 + Math.random() * .5);
-        [1, 2.76].forEach((m) => { const o = ctx.createOscillator(); o.frequency.value = f * m; o.connect(g); o.start(t); o.stop(t + 1.1); });
-        if (ctx.createStereoPanner) { const pan = ctx.createStereoPanner(); pan.pan.value = Math.random() * 1.6 - .8; g.connect(pan).connect(maitre); }
-        else g.connect(maitre);
-        if (encore && Math.random() < .35) setTimeout(() => actif && tinter(false), 120 + Math.random() * 200);
-        if (encore) plusTard(() => tinter(true), 2500 + Math.random() * 6000);
-      };
-      plusTard(() => tinter(true), 1500);
-      // La machine à expresso, de temps en temps
-      const aigu = ctx.createBiquadFilter(); aigu.type = 'bandpass'; aigu.frequency.value = 4200; aigu.Q.value = 1.4;
-      const gVapeur = ctx.createGain(); gVapeur.gain.value = 0;
-      enBoucle(bruit('blanc', 2)).connect(aigu).connect(gVapeur).connect(maitre);
-      const expresso = () => {
-        const t = ctx.currentTime;
-        gVapeur.gain.setTargetAtTime(.018, t, .4); aigu.frequency.setTargetAtTime(5200, t, 1.2);
-        gVapeur.gain.setTargetAtTime(0, t + 3.2, .5); aigu.frequency.setTargetAtTime(4200, t + 3.2, .5);
-        plusTard(expresso, 25000 + Math.random() * 30000);
-      };
-      plusTard(expresso, 9000);
+      blanc = bruit('blanc', 2); brun = bruit('brun', 4);
+      maitre = gain(0);
+      // un compresseur doux : rien ne sature quand tout le café parle en même temps
+      const doux = ctx.createDynamicsCompressor();
+      doux.threshold.value = -18; doux.knee.value = 12; doux.ratio.value = 3; doux.attack.value = .01; doux.release.value = .25;
+      maitre.connect(doux).connect(ctx.destination);
+      echo = piece(); echo.connect(gain(.5)).connect(maitre);
+      [-.75, -.4, 0, .4, .75].forEach((p) => places.push(place(p, .45)));
+      salle();
+      const foule = gain(.45);
+      foule.connect(filtre('lowpass', 2600)).connect(place(0, .9));
+      for (let i = 0; i < 7; i++) table(i, foule);
+      plusTard(vaisselle, 1200);
+      plusTard(machine, hasard(6000, 12000));
+      plusTard(porte, hasard(20000, 40000));
+      plusTard(chaise, hasard(5000, 15000));
+      poste();
     }
     btn.addEventListener('click', async () => {
       if (!ctx) construire();
@@ -2156,7 +2429,7 @@ main, .pied { position: relative; z-index: 1; }
       if (actif) {
         try { await ctx.resume(); } catch (e) { /* le navigateur refuse le son */ }
         maitre.gain.cancelScheduledValues(ctx.currentTime);
-        maitre.gain.setTargetAtTime(.6, ctx.currentTime, .7);
+        maitre.gain.setTargetAtTime(.85, ctx.currentTime, .7);
       } else {
         maitre.gain.setTargetAtTime(0, ctx.currentTime, .25);
         setTimeout(() => { if (!actif) ctx.suspend(); }, 1200);
@@ -2286,7 +2559,7 @@ main, .pied { position: relative; z-index: 1; }
       { q: 'Et avec ton café&nbsp;?', r: [['Un croissant, avalé entre deux parties', 'joueur'], ['Une conversation qui dure des heures', 'bavard'], ['De la musique en fond', 'vocal'], ['Une anecdote à partager', 'curieux']] },
     ];
     const BOISSONS = {
-      joueur: { nom: 'Un petit noir', phrase: 'Serré et sans détour : tu viens pour jouer.', table: "L'arrière-salle", salons: ['#casino', '#smash-or-pass', '#infini', 'Gaming'], conseil: "Récupère ton /journalier avant de miser : 10 000 grains chaque jour.", boisson: 'var(--cafe)', mousse: 'var(--grain)' },
+      joueur: { nom: 'Un petit noir', phrase: 'Serré et sans détour : tu viens pour jouer.', table: "L'arrière-salle", salons: ['#casino', '#deckfr', '#infini', 'Gaming'], conseil: "Récupère ton /journalier avant de miser : 10 000 grains chaque jour.", boisson: 'var(--cafe)', mousse: 'var(--grain)' },
       bavard: { nom: 'Un café crème', phrase: 'Doux et généreux : tu viens pour discuter et rencontrer du monde.', table: 'La terrasse', salons: ['#présentation', '#discussion', '#international', '#suggestions'], conseil: 'Commence par te présenter dans #présentation, la terrasse fera le reste.', boisson: 'var(--b-creme)', mousse: 'var(--creme)' },
       vocal: { nom: 'Un cappuccino', phrase: 'Une belle mousse et du temps devant toi : ta place est dans les salons vocaux.', table: 'Le salon', salons: ["Ici c'est Détente !", 'Public', 'Musique', 'Gaming'], conseil: 'Chaque tranche de 10 minutes à plusieurs te rapporte 5 000 grains.', boisson: 'var(--cafe)', mousse: 'var(--lait)' },
       curieux: { nom: 'Un café gourmand', phrase: 'Un peu de tout et beaucoup de surprises : tu ne veux rien rater.', table: 'Partout à la fois', salons: ['#médias', '#confessions', '#le-petit-savoir', '#événements'], conseil: 'Prends le rôle @Notif Animation pour être prévenu de chaque événement.', boisson: 'var(--cafe)', mousse: 'var(--b-gourmand)' },

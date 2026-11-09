@@ -19,7 +19,7 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - Trois étapes pour rejoindre le serveur, une FAQ, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
 - À la première visite, l'entrée « Pousser la porte » : la devanture du café s'ouvre avec un tintement de clochette. Le bouton « Repasser la porte », dans le pied de page, la fait revenir.
 - « Commande ton café » : quatre questions qui révèlent la boisson et la table du café faites pour le visiteur, avec ses salons conseillés.
-- Un bouton « Ambiance » qui joue un fond sonore de café, créé directement dans la page (aucun fichier audio).
+- Un bouton « Ambiance » qui joue un fond sonore de café parisien, entièrement synthétisé dans la page (aucun fichier audio) : la rumeur de la salle, des tables qui bavardent et rient (voix trop lointaines pour qu'on comprenne les mots), tasses, cuillères, verres et monnaie, la machine à expresso (moulin, coups du porte-filtre, pompe, buse vapeur), la porte et sa clochette, une chaise qu'on recule, et une valse musette à l'accordéon, composée pour le site, qui passe de temps en temps au poste.
 - Les animations jouent pour tout le monde, même sur les appareils réglés en « mouvement réduit ». L'interrupteur « Animations », en bas du pied de page, permet à chaque visiteur de les couper (choix gardé sur son appareil).
 - Des surprises : cliquer sur la tasse du logo la remplit, taper « café » au clavier fait pleuvoir des grains, taper « boo » lâche des chauves-souris.
 
@@ -171,7 +171,7 @@ Le fichier `CNAME` ne servait qu'à GitHub Pages ; il peut rester.
 Tout se modifie dans `index.html` :
 
 - **Nombre de membres** : mis à jour tout seul chaque jour (voir « Nombre de membres à jour »), rien à modifier à la main.
-- **Salons et emojis** : chaque salon est une ligne `<li class="salon">`, dans l'ordre du serveur. Son emoji habituel est dans `<span class="seulement-normal">`, celui d'Halloween dans `<span class="seulement-halloween">`. Les salons privés (cadenas) utilisent l'icône `#i-texte-prive`.
+- **Salons et emojis** : chaque salon est une ligne `<li class="salon">`, dans l'ordre du serveur. Son emoji habituel est dans `<span class="seulement-normal">`, celui d'Halloween dans `<span class="seulement-halloween">`. Les salons privés (cadenas) utilisent l'icône `#i-texte-prive`, les salons d'annonces `#i-annonce` et les forums `#i-forum`. Pense à mettre à jour le nombre de salons de la catégorie (`salle-compte`) et le total de l'ouverture.
 - **Salons vocaux** : chaque ligne `<li class="vocal">` porte le nom exact du salon dans `data-vocal` (il sert à retrouver le salon dans le widget) et sa limite de places dans `data-max`.
 - **Équipe** : chaque profil est une ligne `<li class="profil">` dans la liste du badge (`<ul class="profils">`). Pour ajouter quelqu'un, copie une ligne et change le nom, le pseudo et l'image (`src`, une adresse d'image ou une image intégrée).
 - **Quêtes d'Halloween** : chaque quête est une ligne `<li class="quete">`. Sa date d'ouverture est dans `data-ouverture` (heure de Paris). Jusqu'à cette heure, la carte affiche `???` ; à l'ouverture, la page affiche toute seule le nom et la consigne de la quête, même si le visiteur est déjà sur le site. Ces textes sont rangés, encodés, dans `data-q` pour ne pas être lisibles dans le code de la page. Pour en changer un, ouvre la console du navigateur sur le site et tape :
