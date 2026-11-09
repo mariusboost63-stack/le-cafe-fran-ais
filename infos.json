@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-09",
+      "publication": "2026-11-09T12:00:00+01:00",
+      "theme": "International",
+      "titre": "Arche de Tchernobyl endommagée : les donateurs se retrouvent à Paris",
+      "texte": "Des pays donateurs se réunissent ce lundi à Bercy, à l'invitation de la France, de l'Ukraine et de la BERD, pour financer la remise en état de l'arche qui confine le réacteur accidenté de Tchernobyl. Touchée par un drone russe en février 2025, elle demande au moins 500 millions d'euros de travaux. Les pays du G7 ont déjà promis environ 260 millions.",
+      "source": {
+        "nom": "AFP via Boursorama",
+        "url": "https://www.boursorama.com/actualite-economique/actualites/ukraine-reunion-a-paris-pour-financer-la-reparation-de-l-arche-de-tchernobyl-41e508fc04312d9653952cb980425247"
+      }
+    },
+    {
       "date": "2026-11-08",
       "publication": "2026-11-08T12:00:00+01:00",
       "theme": "Sport",
