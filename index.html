@@ -52,15 +52,25 @@
 <link rel="preload" href="polices/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="polices/polices.css">
 <script>
-/* Saison du site : 'auto' (Halloween en octobre, version normale le reste de l'année), 'halloween' ou 'normal'.
-   Pour prévisualiser : ajoute #saison-halloween ou #saison-normale à l'adresse. */
+/* Saison du site : 'auto', 'halloween', 'noel' ou 'normal'.
+   'auto' suit l'heure de Paris : Halloween en octobre, Noël du 1er décembre à 00 h au 6 janvier inclus, version
+   normale le reste de l'année. La page change de tenue toute seule à minuit pile, même si elle est déjà ouverte.
+   Pour prévisualiser : ajoute #saison-halloween, #saison-noel ou #saison-normale à l'adresse. */
 var SAISON = 'auto';
+var SAISONS_APERCU = { '#saison-halloween': 'halloween', '#saison-noel': 'noel', '#saison-normale': 'normal' };
+function saisonDuJour(t) {
+  var m, j, d = t || new Date();
+  try {
+    new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', month: 'numeric', day: 'numeric' }).formatToParts(d)
+      .forEach(function (x) { if (x.type === 'month') m = +x.value; if (x.type === 'day') j = +x.value; });
+  } catch (e) { m = d.getMonth() + 1; j = d.getDate(); }
+  return m === 10 ? 'halloween' : (m === 12 || (m === 1 && j <= 6)) ? 'noel' : 'normal';
+}
 try {
   var r = document.documentElement, h = location.hash, s = SAISON;
-  if (h === '#saison-halloween') s = 'halloween'; else if (h === '#saison-normale') s = 'normal';
-  else if (s === 'auto') s = new Date().getMonth() === 9 ? 'halloween' : 'normal';
+  if (SAISONS_APERCU[h]) s = SAISONS_APERCU[h]; else if (s === 'auto') s = saisonDuJour();
   r.setAttribute('data-saison', s);
-  if (!h || h === '#saison-halloween' || h === '#saison-normale') { try { if (!localStorage.getItem('cafe-porte')) r.setAttribute('data-porte', 'fermee'); } catch (e) {} }
+  if (!h || SAISONS_APERCU[h]) { try { if (!localStorage.getItem('cafe-porte')) r.setAttribute('data-porte', 'fermee'); } catch (e) {} }
   try { if (localStorage.getItem('cafe-animations') === 'reduites') r.setAttribute('data-animations', 'reduites'); } catch (e) {}
   if (!r.hasAttribute('data-animations')) { r.classList.add('intro'); setTimeout(function () { r.classList.remove('intro'); }, 2200); }
 } catch (e) {}
@@ -95,6 +105,7 @@ try {
   --b-creme: #a8744a;   /* café crème */
   --b-gourmand: #e0b793;
   /* raretés de DeckFR */
+  --sapin: #2fa866; --or: #f0c04a;
   --rar-1: #a6aec3; --rar-2: #6b95ff; --rar-3: #b57bff; --rar-4: #f0b232; --rar-5: #f94443;
 
   --f-titre: "Bricolage Grotesque", "Arial Black", "Helvetica Neue", system-ui, sans-serif;
@@ -491,6 +502,72 @@ main, .pied { position: relative; z-index: 1; }
 .dk-nouvelles span { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--r); }
 .dk-maj { color: var(--brume); font-size: 14px; }
 .riches-onglets button[hidden] { display: none; }
+
+/* Noël */
+.noel { position: relative; overflow: hidden; padding-block: clamp(96px, 13vw, 170px); }
+.noel-lueur {
+  position: absolute; inset: 0 -10% 0 25%; z-index: -1; pointer-events: none;
+  background: radial-gradient(38% 40% at 62% 58%, color-mix(in srgb, var(--or) 20%, transparent), transparent),
+              radial-gradient(30% 32% at 85% 25%, color-mix(in srgb, var(--sapin) 22%, transparent), transparent);
+  animation: scintille 6s ease-in-out infinite alternate;
+}
+@keyframes scintille { from { opacity: .7; } to { opacity: 1; } }
+.noel-grille { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+@media (max-width: 960px) { .noel-grille { grid-template-columns: minmax(0, 1fr); } }
+.noel-texte { display: grid; gap: 24px; min-width: 0; }
+.noel .surtitre { color: var(--or); display: inline-flex; gap: 10px; align-items: center; }
+.noel .surtitre .pastille { background: var(--rouge); box-shadow: 0 0 0 0 color-mix(in srgb, var(--rouge) 60%, transparent); }
+.n-titre { font: 800 clamp(64px, 10.5vw, 172px)/.84 var(--f-titre); font-stretch: 80%; letter-spacing: -.04em; color: var(--lait); }
+.n-titre .ligne { display: block; }
+.n-titre .ligne + .ligne { color: transparent; -webkit-text-stroke: 2px var(--or); }
+.noel-texte p.chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 46ch; }
+.noel .rebours { border-bottom-color: color-mix(in srgb, var(--or) 50%, transparent); }
+.noel .rb-label { color: var(--or); }
+.noel-rebours[hidden], .noel-voeux[hidden] { display: none; }
+.noel-voeux { font: 800 clamp(44px, 6vw, 84px)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; color: var(--or); }
+.avent { display: grid; gap: 20px; min-width: 0; padding: clamp(20px, 3vw, 32px); border-radius: 26px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--sapin) 16%, var(--nuit-2)), var(--nuit) 85%);
+  border: 1px solid color-mix(in srgb, var(--sapin) 35%, var(--trait)); box-shadow: 0 30px 60px color-mix(in srgb, var(--ombre) 50%, transparent); }
+.avent-tete { display: grid; gap: 8px; }
+.avent-titre { font: 800 var(--t-h3)/1.1 var(--f-titre); }
+.avent-tete p { color: var(--brume); font-size: 15px; }
+.avent-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 520px) { .avent-grille { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.case { position: relative; display: block; width: 100%; aspect-ratio: 1; padding: 0; border: 0; border-radius: 12px; cursor: pointer; perspective: 500px; background: color-mix(in srgb, var(--ombre) 55%, transparent); color: var(--lait); }
+.volet, .dedans { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 12px; }
+.volet {
+  z-index: 1; font: 800 clamp(18px, 2vw, 26px)/1 var(--f-titre); transform-origin: left center; transition: transform .7s cubic-bezier(.3, 1.4, .5, 1), opacity .7s;
+  background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--lait) 16%, transparent), transparent 55%), var(--c);
+  border: 1px solid color-mix(in srgb, var(--lait) 18%, transparent);
+}
+.volet::after { content: ""; position: absolute; inset: 5px; border-radius: 8px; border: 1px dashed color-mix(in srgb, var(--or) 45%, transparent); }
+.dedans { font-size: clamp(22px, 2.6vw, 32px); background: color-mix(in srgb, var(--or) 10%, var(--nuit)); border: 1px solid color-mix(in srgb, var(--or) 35%, transparent); }
+.case[data-etat="fermee"] { cursor: not-allowed; }
+.case[data-etat="fermee"] .volet { filter: saturate(.35) brightness(.7); }
+.case[data-etat="du-jour"] .volet { box-shadow: 0 0 0 2px var(--or), 0 0 22px color-mix(in srgb, var(--or) 60%, transparent); animation: appel 1.6s ease-in-out infinite alternate; }
+@keyframes appel { to { transform: scale(1.06) rotate(-2deg); } }
+.case[data-etat="ouverte"] .volet { transform: rotateY(-105deg); opacity: .0; pointer-events: none; }
+.case[aria-pressed="true"] .dedans { box-shadow: 0 0 0 2px var(--or); background: color-mix(in srgb, var(--or) 22%, var(--nuit)); }
+.case:focus-visible { outline: 2px solid var(--or); outline-offset: 3px; }
+.avent-lecture { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; padding: 18px; border-radius: 18px; background: color-mix(in srgb, var(--lait) 5%, transparent); border: 1px solid var(--trait); min-height: 128px; }
+.al-emoji { font-size: 40px; line-height: 1; }
+.al-jour { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--or); }
+.avent-lecture h4 { font: 800 21px/1.15 var(--f-titre); margin: 4px 0 6px; }
+.avent-lecture p:last-child { color: var(--brume); }
+/* La guirlande sous la barre */
+.guirlande { position: absolute; left: 0; right: 0; bottom: -15px; height: 18px; pointer-events: none;
+  background: radial-gradient(circle at 50% -30px, transparent 37px, color-mix(in srgb, var(--lait) 45%, transparent) 37px 38.5px, transparent 39.5px) 0 0 / 48px 18px repeat-x; }
+.guirlande::before, .guirlande::after { content: ""; position: absolute; inset: 0; animation: clignote 1.8s steps(1) infinite; }
+.guirlande::before { background: radial-gradient(ellipse 3.5px 5px at 50% 12px, var(--rouge) 90%, transparent) 0 0 / 192px 18px repeat-x, radial-gradient(ellipse 3.5px 5px at 50% 12px, var(--sapin) 90%, transparent) 96px 0 / 192px 18px repeat-x; filter: drop-shadow(0 0 4px var(--rouge)); }
+.guirlande::after { background: radial-gradient(ellipse 3.5px 5px at 50% 12px, var(--or) 90%, transparent) 48px 0 / 192px 18px repeat-x, radial-gradient(ellipse 3.5px 5px at 50% 12px, var(--bleu-vif) 90%, transparent) 144px 0 / 192px 18px repeat-x; filter: drop-shadow(0 0 4px var(--or)); animation-delay: -.9s; }
+@keyframes clignote { 0% { opacity: 1; } 50% { opacity: .35; } }
+/* La neige */
+.neige { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 45; pointer-events: none; display: none; }
+[data-saison="noel"] .neige { display: block; }
+/* La couronne sur la porte */
+.couronne { position: absolute; top: 72%; left: 50%; width: 56px; height: 56px; margin-left: -28px; border-radius: 50%;
+  border: 10px dotted var(--sapin); box-shadow: inset 0 0 0 3px #1f6b45, 0 0 0 3px #1f6b45; }
+.couronne::after { content: ""; position: absolute; left: 50%; bottom: -16px; width: 18px; height: 14px; margin-left: -9px; background: var(--rouge); border-radius: 4px 4px 9px 9px; }
 
 /* Halloween */
 .halloween { --p-carte: color-mix(in srgb, var(--citrouille) 9%, var(--nuit)); --p-texte: var(--lait); --p-doux: color-mix(in srgb, var(--citrouille) 55%, var(--lait)); --p-survol: color-mix(in srgb, var(--citrouille) 12%, transparent);
@@ -957,10 +1034,13 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 640px) { .soutenir ul { grid-template-columns: minmax(0, 1fr); } }
 
 /* Saisons */
-[data-saison="normal"] .seulement-halloween, [data-saison="halloween"] .seulement-normal { display: none; }
-[data-saison="normal"] .vocal .emo { display: none; }
-[data-saison="normal"] .vocal { grid-template-columns: 22px minmax(0, 1fr) auto auto; }
-@media (max-width: 520px) { [data-saison="normal"] .vocal { grid-template-columns: 20px minmax(0, 1fr) auto; } }
+[data-saison="normal"] .seulement-halloween, [data-saison="noel"] .seulement-halloween,
+[data-saison="normal"] .seulement-noel, [data-saison="halloween"] .seulement-noel,
+[data-saison="halloween"] .seulement-normal, [data-saison="noel"] .seulement-normal,
+[data-saison="halloween"] .hors-halloween, [data-saison="noel"] .hors-noel { display: none; }
+[data-saison="normal"] .vocal .emo, [data-saison="noel"] .vocal .emo { display: none; }
+[data-saison="normal"] .vocal, [data-saison="noel"] .vocal { grid-template-columns: 22px minmax(0, 1fr) auto auto; }
+@media (max-width: 520px) { [data-saison="normal"] .vocal, [data-saison="noel"] .vocal { grid-template-columns: 20px minmax(0, 1fr) auto; } }
 
 /* Ambiance sonore */
 .barre-droite { display: flex; align-items: center; gap: 10px; }
@@ -1376,14 +1456,16 @@ main, .pied { position: relative; z-index: 1; }
   </defs>
 </svg>
 
+<canvas class="neige" id="neige" aria-hidden="true"></canvas>
+
 <div class="porte-ecran" id="porte" role="dialog" aria-modal="true" aria-labelledby="porte-titre">
   <div class="facade">
     <p class="enseigne" id="porte-titre"><span class="sr">Entrée du Café Français</span><svg viewBox="4 0 1052 292" aria-hidden="true"><use href="#p-tasse" style="fill: var(--lait)"/><use href="#p-v1" style="fill: var(--bleu)"/><use href="#p-v2" style="fill: var(--lait)"/><use href="#p-v3" style="fill: var(--rouge)"/><use href="#p-L" style="fill: var(--lait)"/><use href="#p-e" style="fill: var(--lait)"/><use href="#p-c" style="fill: var(--lait)"/><use href="#p-a1" style="fill: var(--lait)"/><use href="#p-f" style="fill: var(--lait)"/><use href="#p-e2" style="fill: var(--lait)"/><use href="#p-acc" style="fill: var(--lait)"/><use href="#p-F" style="fill: var(--lait)"/><use href="#p-r" style="fill: var(--lait)"/><use href="#p-a2" style="fill: var(--lait)"/><use href="#p-n" style="fill: var(--lait)"/><use href="#p-cc" style="fill: var(--lait)"/><use href="#p-a3" style="fill: var(--lait)"/><use href="#p-i" style="fill: var(--lait)"/><use href="#p-s" style="fill: var(--lait)"/><use href="#p-pt" style="fill: var(--lait)"/></svg></p>
     <div class="store" aria-hidden="true"></div>
     <div class="portes" aria-hidden="true">
       <div class="lumiere"></div>
-      <div class="battant battant-g"><span class="vitre" data-texte="Le Café"></span><span class="poignee"></span></div>
-      <div class="battant battant-d"><span class="vitre" data-texte="Français"></span><span class="poignee"></span><span class="pancarte">Ouvert</span></div>
+      <div class="battant battant-g"><span class="vitre" data-texte="Le Café"></span><span class="poignee"></span><span class="couronne seulement-noel"></span></div>
+      <div class="battant battant-d"><span class="vitre" data-texte="Français"></span><span class="poignee"></span><span class="pancarte"><span class="hors-noel">Ouvert</span><span class="seulement-noel">Joyeux Noël</span></span></div>
     </div>
     <div class="porte-actions">
       <button class="btn btn-plein" id="porte-entrer" type="button">Pousser la porte</button>
@@ -1397,6 +1479,7 @@ main, .pied { position: relative; z-index: 1; }
 <div class="grain" aria-hidden="true"></div>
 
 <header class="barre" id="barre">
+  <div class="guirlande seulement-noel" aria-hidden="true"></div>
   <div class="barre-int">
     <a class="marque" href="#haut" aria-label="Le Café Français, retour en haut">
       <svg class="mini-tasse" viewBox="8 116 234 120" aria-hidden="true">
@@ -1409,6 +1492,7 @@ main, .pied { position: relative; z-index: 1; }
       <a href="#carte">La carte</a>
       <a href="#niveaux">Niveaux</a>
       <a href="#halloween" class="seulement-halloween">Halloween</a>
+      <a href="#noel" class="seulement-noel">Noël</a>
       <a href="#evenements" class="seulement-normal">Événements</a>
       <a href="#grains">Grains</a>
       <a href="#deckfr">DeckFR</a>
@@ -1468,7 +1552,7 @@ main, .pied { position: relative; z-index: 1; }
     <ul class="chiffres hero-revele">
       <li><b id="nb-membres" data-valeur="9496">9&#8239;496</b><span>membres</span></li>
       <li class="vivant" id="stat-ligne" hidden><b><span class="pastille" aria-hidden="true"></span><span id="en-ligne">0</span></b><span>en ligne</span></li>
-      <li><b><span class="seulement-halloween">34</span><span class="seulement-normal">32</span></b><span>salons</span></li>
+      <li><b><span class="seulement-halloween">34</span><span class="hors-halloween">32</span></b><span>salons</span></li>
       <li><b>6</b><span>salons vocaux</span></li>
     </ul>
   </section>
@@ -1506,15 +1590,15 @@ main, .pied { position: relative; z-index: 1; }
           <div class="discord-liste">
             <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Café Français</p>
             <ul>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-regles"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📖</span><span class="seulement-halloween">🪦</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon des règles </span>nos-règles</span><span class="desc">Le règlement du café, à lire en arrivant.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🏠</span><span class="seulement-halloween">🎃</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>accueil</span><span class="desc">Tout ce qu&#x27;il faut savoir sur le serveur.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📢</span><span class="seulement-halloween">🕯️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>annonces</span><span class="desc">Les grandes nouvelles du café, à ne pas manquer.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📰</span><span class="seulement-halloween">🕸️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>patch-note</span><span class="desc">Les nouveautés et les corrections du serveur.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🎁</span><span class="seulement-halloween">🍬</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>concours</span><span class="desc">Les concours du serveur et les lots à gagner.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">👯</span><span class="seulement-halloween">👻</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>événements</span><span class="desc">Les activités de la communauté : jeux, doublages, concours de dessins…</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🗞️</span><span class="seulement-halloween">🧙</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>le-petit-savoir</span><span class="desc">Une anecdote ou un fait étonnant pour apprendre chaque jour.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🔎</span><span class="seulement-halloween">🧛</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>recrutements</span><span class="desc">Les candidatures pour rejoindre l&#x27;équipe.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📬</span><span class="seulement-halloween">🧪</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>support</span><span class="desc">Un problème ou un signalement&nbsp;? Ouvre un ticket.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-regles"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📖</span><span class="seulement-halloween">🪦</span><span class="seulement-noel">📜</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon des règles </span>nos-règles</span><span class="desc">Le règlement du café, à lire en arrivant.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🏠</span><span class="seulement-halloween">🎃</span><span class="seulement-noel">🎄</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>accueil</span><span class="desc">Tout ce qu&#x27;il faut savoir sur le serveur.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📢</span><span class="seulement-halloween">🕯️</span><span class="seulement-noel">🔔</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>annonces</span><span class="desc">Les grandes nouvelles du café, à ne pas manquer.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📰</span><span class="seulement-halloween">🕸️</span><span class="seulement-noel">🎀</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>patch-note</span><span class="desc">Les nouveautés et les corrections du serveur.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🎁</span><span class="seulement-halloween">🍬</span><span class="seulement-noel">🎁</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>concours</span><span class="desc">Les concours du serveur et les lots à gagner.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">👯</span><span class="seulement-halloween">👻</span><span class="seulement-noel">🎅</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>événements</span><span class="desc">Les activités de la communauté : jeux, doublages, concours de dessins…</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🗞️</span><span class="seulement-halloween">🧙</span><span class="seulement-noel">🕯️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>le-petit-savoir</span><span class="desc">Une anecdote ou un fait étonnant pour apprendre chaque jour.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🔎</span><span class="seulement-halloween">🧛</span><span class="seulement-noel">🧝</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>recrutements</span><span class="desc">Les candidatures pour rejoindre l&#x27;équipe.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📬</span><span class="seulement-halloween">🧪</span><span class="seulement-noel">✉️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>support</span><span class="desc">Un problème ou un signalement&nbsp;? Ouvre un ticket.</span></li>
             </ul>
           </div>
         </div>
@@ -1533,14 +1617,14 @@ main, .pied { position: relative; z-index: 1; }
             <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Centre de Convivialité</p>
             <ul>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte-prive"/></svg><span class="emo" aria-hidden="true">🎨</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel privé </span>couleurs</span><span class="desc">Choisis la couleur de ton pseudo, avec le rôle @Accès Couleurs.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🍿</span><span class="seulement-halloween">⚰️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>présentation</span><span class="desc">Présente-toi à la communauté.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🍿</span><span class="seulement-halloween">⚰️</span><span class="seulement-noel">🧣</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>présentation</span><span class="desc">Présente-toi à la communauté.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte-prive"/></svg><span class="emo" aria-hidden="true">✨</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel privé </span>discussion-vip</span><span class="desc">Le salon privé des @VIP et des boosters.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">☕</span><span class="seulement-halloween">🖤</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>discussion</span><span class="desc">Le salon principal pour parler de tout et de rien.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🌏</span><span class="seulement-halloween">🦇</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>international</span><span class="desc">Pour discuter dans d&#x27;autres langues que le français.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🔦</span><span class="seulement-halloween">🪄</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>suggestions</span><span class="desc">Tes idées pour le serveur, étudiées par l&#x27;équipe.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">⚡</span><span class="seulement-halloween">🧟</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>soutien</span><span class="desc">Bump et vote pour faire connaître le serveur.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🤖</span><span class="seulement-halloween">🧪</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>commandes</span><span class="desc">Les commandes des bots, sans encombrer les autres salons.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📸</span><span class="seulement-halloween">👁️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>médias</span><span class="desc">Pour partager tes images et tes vidéos.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">☕</span><span class="seulement-halloween">🖤</span><span class="seulement-noel">🍫</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>discussion</span><span class="desc">Le salon principal pour parler de tout et de rien.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🌏</span><span class="seulement-halloween">🦇</span><span class="seulement-noel">🌟</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>international</span><span class="desc">Pour discuter dans d&#x27;autres langues que le français.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🔦</span><span class="seulement-halloween">🪄</span><span class="seulement-noel">🦌</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>suggestions</span><span class="desc">Tes idées pour le serveur, étudiées par l&#x27;équipe.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">⚡</span><span class="seulement-halloween">🧟</span><span class="seulement-noel">✨</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>soutien</span><span class="desc">Bump et vote pour faire connaître le serveur.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🤖</span><span class="seulement-halloween">🧪</span><span class="seulement-noel">🛷</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>commandes</span><span class="desc">Les commandes des bots, sans encombrer les autres salons.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">📸</span><span class="seulement-halloween">👁️</span><span class="seulement-noel">❄️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>médias</span><span class="desc">Pour partager tes images et tes vidéos.</span></li>
             </ul>
           </div>
         </div>
@@ -1559,13 +1643,13 @@ main, .pied { position: relative; z-index: 1; }
             <p class="cat"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Divertissements</p>
             <ul>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">📢</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>news-casino</span><span class="desc">Les nouveautés du casino : nouveaux jeux, règles et changements de mises.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🎰</span><span class="seulement-halloween">🕷️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span><span class="desc">Défis entre membres, roulette, blackjack : mise tes grains.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🎰</span><span class="seulement-halloween">🕷️</span><span class="seulement-noel">🍬</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>casino</span><span class="desc">Défis entre membres, roulette, blackjack : mise tes grains.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-annonce"/></svg><span class="emo" aria-hidden="true">📢</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon d'annonces </span>news-deckfr</span><span class="desc">Les nouveautés de DeckFR, le jeu de cartes du café.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true">🃏</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>deckfr</span><span class="desc">Tire des cartes et complète ta collection.</span></li>
               <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-forum"/></svg><span class="emo" aria-hidden="true">🤝</span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Forum </span>trade-cartes-grains</span><span class="desc">Échange tes cartes avec les autres membres, ou contre des grains.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🤳</span><span class="seulement-halloween">🧛‍♀️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>smash-or-pass</span><span class="desc">Donne ton avis sur les membres.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">💌</span><span class="seulement-halloween">🕯️</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>confessions</span><span class="desc">Tes confessions, de manière anonyme.</span></li>
-              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">♾️</span><span class="seulement-halloween">🧹</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>infini</span><span class="desc">Une suite infinie de nombres.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">🤳</span><span class="seulement-halloween">🧛‍♀️</span><span class="seulement-noel">💋</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>smash-or-pass</span><span class="desc">Donne ton avis sur les membres.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">💌</span><span class="seulement-halloween">🕯️</span><span class="seulement-noel">🧦</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>confessions</span><span class="desc">Tes confessions, de manière anonyme.</span></li>
+              <li class="salon"><svg class="ico" aria-hidden="true"><use href="#i-texte"/></svg><span class="emo" aria-hidden="true"><span class="seulement-normal">♾️</span><span class="seulement-halloween">🧹</span><span class="seulement-noel">⭐</span></span><span class="sep" aria-hidden="true">│</span><span class="nom"><span class="sr">Salon textuel </span>infini</span><span class="desc">Une suite infinie de nombres.</span></li>
             </ul>
           </div>
         </div>
@@ -1673,6 +1757,63 @@ main, .pied { position: relative; z-index: 1; }
         <li><svg class="ev-fond" aria-hidden="true"><use href="#i-masque"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-masque"/></svg></span><h3>Confessions anonymes</h3><p>Confie ce que tu as sur le cœur, en toute discrétion : personne ne sait que c'est toi.</p><span class="ev-salon">#confessions</span></li>
         <li><svg class="ev-fond" aria-hidden="true"><use href="#i-texte"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-texte"/></svg></span><h3>Fils à thème</h3><p>Des fils de discussion pour raconter, partager et participer ensemble.</p></li>
       </ul>
+    </div>
+  </section>
+
+  <section class="noel seulement-noel" id="noel" aria-labelledby="t-noel">
+    <div class="noel-lueur" aria-hidden="true"></div>
+    <div class="cadre noel-grille">
+      <div class="noel-texte">
+        <p class="surtitre"><span class="pastille" aria-hidden="true"></span><span id="noel-etat">Événement de saison</span></p>
+        <h2 class="n-titre" id="t-noel"><span class="sr">Noël au café</span><span aria-hidden="true"><span class="ligne"><span class="flotte" style="--i:0">N</span><span class="flotte" style="--i:1">o</span><span class="flotte" style="--i:2">ë</span><span class="flotte" style="--i:3">l</span></span><span class="ligne"><span class="flotte" style="--i:4">a</span><span class="flotte" style="--i:5">u</span><span class="flotte" style="--i:6">&nbsp;</span><span class="flotte" style="--i:7">c</span><span class="flotte" style="--i:8">a</span><span class="flotte" style="--i:9">f</span><span class="flotte" style="--i:10">é</span></span></span></h2>
+        <p class="chapo">Le café a sorti les guirlandes. Jusqu'au 6 janvier, le site se met à l'heure de Noël&nbsp;: de la neige, des salons en habits de fête, des chants de Noël à l'accordéon dans l'ambiance sonore, et un calendrier de l'Avent à ouvrir chaque jour.</p>
+        <div class="rebours noel-rebours" id="noel-rebours">
+          <p class="rb-label" id="noel-label">Il reste avant Noël</p>
+          <p class="rb-temps" role="timer" aria-live="off"><span><b id="n-j">--</b><i>jours</i></span><span><b id="n-h">--</b><i>h</i></span><span><b id="n-m">--</b><i>min</i></span><span><b id="n-s">--</b><i>s</i></span></p>
+          <p class="rb-date">Le 25 décembre à minuit, heure de Paris.</p>
+        </div>
+        <p class="noel-voeux" id="noel-voeux" hidden></p>
+      </div>
+      <div class="avent">
+        <div class="avent-tete">
+          <h3 class="avent-titre">Le calendrier de l'Avent</h3>
+          <p>Une case s'ouvre chaque jour à minuit, heure de Paris, avec une tradition de Noël à découvrir. Les cases passées restent ouvertes jusqu'au 6 janvier.</p>
+        </div>
+        <ol class="avent-grille" aria-label="Les 24 cases du calendrier">
+            <li><button type="button" class="case" data-jour="1" data-c="eyJlIjogIvCfjoEiLCAidCI6ICJMZSBjYWxlbmRyaWVyIGRlIGwnQXZlbnQiLCAieCI6ICJOw6kgZW4gQWxsZW1hZ25lIGF1IFhJWGUgc2nDqGNsZSwgaWwgYWlkYWl0IGxlcyBlbmZhbnRzIMOgIHBhdGllbnRlciBqdXNxdSfDoCBOb8OrbC4gTGVzIHByZW1pZXJzIGNhbGVuZHJpZXJzIGltcHJpbcOpcyBhcHBhcmFpc3NlbnQgYXUgZMOpYnV0IGR1IFhYZSBzacOoY2xlLiJ9" style="--c: #1d3b6e"><span class="volet">1</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="2" data-c="eyJlIjogIvCfjLIiLCAidCI6ICJMZSBzYXBpbiBkZSBTw6lsZXN0YXQiLCAieCI6ICJFbiAxNTIxLCB1biBsaXZyZSBkZSBjb21wdGVzIGRlIFPDqWxlc3RhdCwgZW4gQWxzYWNlLCBub3RlIHVuZSBkw6lwZW5zZSBwb3VyIGZhaXJlIGdhcmRlciBsZXMgc2FwaW5zIGRlIGxhIGZvcsOqdCBhdmFudCBOb8OrbC4gT24gbGUgcHLDqXNlbnRlIHNvdXZlbnQgY29tbWUgbGEgcGx1cyBhbmNpZW5uZSB0cmFjZSDDqWNyaXRlIGR1IHNhcGluIGRlIE5vw6tsLiJ9" style="--c: #8a5a1c"><span class="volet">2</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="3" data-c="eyJlIjogIvCfj64iLCAidCI6ICJMZSBwbHVzIHZpZXV4IG1hcmNow6kiLCAieCI6ICJMZSBDaHJpc3RraW5kZWxzbcOkcmlrIGRlIFN0cmFzYm91cmcgZXhpc3RlIGRlcHVpcyAxNTcwLiBDJ2VzdCBsJ3VuIGRlcyBwbHVzIGFuY2llbnMgbWFyY2jDqXMgZGUgTm/Dq2wgZCdFdXJvcGUuIn0=" style="--c: #1f6b45"><span class="volet">3</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="4" data-c="eyJlIjogIvCfqrUiLCAidCI6ICJMYSBiw7tjaGUiLCAieCI6ICJBdmFudCBkJ8OqdHJlIHVuIGfDonRlYXUsIGxhIGLDu2NoZSBkZSBOb8OrbCDDqXRhaXQgdW4gdnJhaSBtb3JjZWF1IGRlIGJvaXMgcXUnb24gZmFpc2FpdCBicsO7bGVyIGxvbmd0ZW1wcyBkYW5zIGxhIGNoZW1pbsOpZS4gTGEgdmVyc2lvbiBww6J0aXNzacOocmUgcydlc3QgcsOpcGFuZHVlIGF1IFhJWGUgc2nDqGNsZS4ifQ==" style="--c: var(--rouge-fonce)"><span class="volet">4</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="5" data-c="eyJlIjogIvCfjaoiLCAidCI6ICJMZXMgYnJlZGVsZSIsICJ4IjogIkVuIEFsc2FjZSwgY2hhcXVlIGZhbWlsbGUgcHLDqXBhcmUgcGx1c2lldXJzIHNvcnRlcyBkZSBwZXRpdHMgYmlzY3VpdHMgZGUgTm/Dq2wsIGxlcyBicmVkZWxlIDogw6l0b2lsZXMgw6AgbGEgY2FubmVsbGUsIHNhYmzDqXMsIHBldGl0cyBwYWlucyBkJ2FuaXPigKYifQ==" style="--c: #1d3b6e"><span class="volet">5</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="6" data-c="eyJlIjogIvCfjoUiLCAidCI6ICJMYSBTYWludC1OaWNvbGFzIiwgIngiOiAiTGUgNiBkw6ljZW1icmUsIGRhbnMgbCdFc3QgZGUgbGEgRnJhbmNlLCBzYWludCBOaWNvbGFzIGFwcG9ydGUgZnJpYW5kaXNlcyBldCBwYWlucyBkJ8OpcGljZXMgYXV4IGVuZmFudHMgc2FnZXMuIElsIGVzdCBzb3V2ZW50IHN1aXZpIGR1IFDDqHJlIEZvdWV0dGFyZC4ifQ==" style="--c: #8a5a1c"><span class="volet">6</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="7" data-c="eyJlIjogIvCfp5HigI3wn4y+IiwgInQiOiAiTGVzIHNhbnRvbnMiLCAieCI6ICJMZXMgc2FudG9ucyBkZSBQcm92ZW5jZSwgbGVzIHBldGl0ZXMgZmlndXJpbmVzIGQnYXJnaWxlIGRlIGxhIGNyw6hjaGUsIHRpcmVudCBsZXVyIG5vbSBkdSBwcm92ZW7Dp2FsIMKrIHNhbnRvdW4gwrssIHBldGl0IHNhaW50LiBJbHMgc2Ugc29udCByw6lwYW5kdXMgYXByw6hzIGxhIFLDqXZvbHV0aW9uLiJ9" style="--c: #1f6b45"><span class="volet">7</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="8" data-c="eyJlIjogIvCfla/vuI8iLCAidCI6ICJMYSBGw6p0ZSBkZXMgTHVtacOocmVzIiwgIngiOiAiTGUgOCBkw6ljZW1icmUsIEx5b24gcydpbGx1bWluZS4gTGEgdHJhZGl0aW9uIHJlbW9udGUgw6AgMTg1MiwgcXVhbmQgbGVzIEx5b25uYWlzIG9udCBwb3PDqSBkZXMgbHVtaWdub25zIMOgIGxldXJzIGZlbsOqdHJlcyBwb3VyIGwnaW5hdWd1cmF0aW9uIGRlIGxhIHN0YXR1ZSBkZSBsYSBWaWVyZ2Ugw6AgRm91cnZpw6hyZS4ifQ==" style="--c: var(--rouge-fonce)"><span class="volet">8</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="9" data-c="eyJlIjogIuKYlSIsICJ0IjogIkxlIGNob2NvbGF0IGNoYXVkIiwgIngiOiAiTGUgY2hvY29sYXQgc2VyYWl0IGFycml2w6kgw6AgbGEgY291ciBkZSBGcmFuY2UgYXZlYyBBbm5lIGQnQXV0cmljaGUsIGF1IGTDqWJ1dCBkdSBYVklJZSBzacOoY2xlLiBBdWpvdXJkJ2h1aSwgYydlc3QgbGEgYm9pc3NvbiBkZXMgYXByw6hzLW1pZGkgZCdoaXZlciwgYXUgY2Fmw6kgY29tbWUgw6AgbGEgbWFpc29uLiJ9" style="--c: #1d3b6e"><span class="volet">9</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="10" data-c="eyJlIjogIvCfjawiLCAidCI6ICJMZXMgcGFwaWxsb3RlcyIsICJ4IjogIlNww6ljaWFsaXTDqSBkZSBMeW9uLCBsYSBwYXBpbGxvdGUgZXN0IHVuIGJvbmJvbiBlbnZlbG9wcMOpIGRhbnMgdW4gcGFwaWVyIGJyaWxsYW50LCBhdmVjIHVuZSBkZXZpbmV0dGUgb3UgdW5lIGNpdGF0aW9uIGdsaXNzw6llIMOgIGwnaW50w6lyaWV1ci4ifQ==" style="--c: #8a5a1c"><span class="volet">10</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="11" data-c="eyJlIjogIvCfja8iLCAidCI6ICJMZXMgdHJlaXplIGRlc3NlcnRzIiwgIngiOiAiRW4gUHJvdmVuY2UsIG9uIHNlcnQgdHJlaXplIGRlc3NlcnRzIGFwcsOocyBsZSBncm9zIHNvdXBlciBkdSAyNCBkw6ljZW1icmUgOiBmcnVpdHMgc2Vjcywgbm91Z2F0IGJsYW5jIGV0IG5vdWdhdCBub2lyLCBwb21wZSDDoCBsJ2h1aWxlLCBkYXR0ZXPigKYifQ==" style="--c: #1f6b45"><span class="volet">11</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="12" data-c="eyJlIjogIuKtkCIsICJ0IjogIkxhIHByZW1pw6hyZSBjcsOoY2hlIiwgIngiOiAiU2FpbnQgRnJhbsOnb2lzIGQnQXNzaXNlIGF1cmFpdCBtaXMgZW4gc2PDqG5lIGxhIHByZW1pw6hyZSBjcsOoY2hlIHZpdmFudGUgZW4gMTIyMywgZGFucyBsZSB2aWxsYWdlIGRlIEdyZWNjaW8sIGVuIEl0YWxpZS4ifQ==" style="--c: var(--rouge-fonce)"><span class="volet">12</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="13" data-c="eyJlIjogIvCfjL8iLCAidCI6ICJMZSBndWkiLCAieCI6ICJBY2Nyb2Now6kgYXUtZGVzc3VzIGRlIGxhIHBvcnRlLCBsZSBndWkgcG9ydGVyYWl0IGJvbmhldXIuIEVuIEZyYW5jZSwgbGEgdHJhZGl0aW9uIHZldXQgcXUnb24gcydlbWJyYXNzZSBkZXNzb3VzIGF1IG1vbWVudCBkdSBOb3V2ZWwgQW4uIn0=" style="--c: #1d3b6e"><span class="volet">13</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="14" data-c="eyJlIjogIuKcie+4jyIsICJ0IjogIkxlIHNlY3LDqXRhcmlhdCBkdSBQw6hyZSBOb8OrbCIsICJ4IjogIkRlcHVpcyAxOTYyLCBMYSBQb3N0ZSBmYWl0IHLDqXBvbmRyZSBhdXggbGV0dHJlcyBlbnZvecOpZXMgYXUgUMOocmUgTm/Dq2wuIFNvbiBzZWNyw6l0YXJpYXQgZXN0IGluc3RhbGzDqSDDoCBMaWJvdXJuZSwgZW4gR2lyb25kZS4ifQ==" style="--c: #8a5a1c"><span class="volet">14</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="15" data-c="eyJlIjogIvCfk64iLCAidCI6ICJTYW5zIHRpbWJyZSIsICJ4IjogIlVuZSBsZXR0cmUgYWRyZXNzw6llIGF1IFDDqHJlIE5vw6tsIHBldXQgcGFydGlyIHNhbnMgdGltYnJlLiBJbCBzdWZmaXQgZCfDqWNyaXJlIHNvbiBhZHJlc3NlIGF1IGRvcyBwb3VyIHJlY2V2b2lyIHVuZSByw6lwb25zZS4ifQ==" style="--c: #1f6b45"><span class="volet">15</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="16" data-c="eyJlIjogIvCfkZ4iLCAidCI6ICJMZXMgc291bGllcnMiLCAieCI6ICJFbiBGcmFuY2UsIG9uIG5lIHN1c3BlbmQgcGFzIGZvcmPDqW1lbnQgZGUgY2hhdXNzZXR0ZXMgOiBiZWF1Y291cCBkJ2VuZmFudHMgcG9zZW50IGxldXJzIGNoYXVzc29ucyBvdSBsZXVycyBzb3VsaWVycyBhdSBwaWVkIGR1IHNhcGluIG91IGRldmFudCBsYSBjaGVtaW7DqWUuIn0=" style="--c: var(--rouge-fonce)"><span class="volet">16</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="17" data-c="eyJlIjogIvCfjJkiLCAidCI6ICJMZSByw6l2ZWlsbG9uIiwgIngiOiAiTGUgbW90IHZpZW50IGRlIMKrIHLDqXZlaWxsZXIgwrsgOiBhdXRyZWZvaXMsIGxlIHJlcGFzIGF2YWl0IGxpZXUgYXUgbWlsaWV1IGRlIGxhIG51aXQsIGF1IHJldG91ciBkZSBsYSBtZXNzZSBkZSBtaW51aXQuIn0=" style="--c: #1d3b6e"><span class="volet">17</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="18" data-c="eyJlIjogIvCfpqoiLCAidCI6ICJMZXMgaHXDrnRyZXMiLCAieCI6ICJMZXMgZsOqdGVzIGRlIGZpbiBkJ2FubsOpZSBzb250IGxlIGdyYW5kIG1vbWVudCBkZXMgaHXDrnRyZXMgZW4gRnJhbmNlIDogdW5lIGdyYW5kZSBwYXJ0aWUgZGUgbGEgcsOpY29sdGUgZGUgbCdhbm7DqWUgZXN0IG1hbmfDqWUgZW4gZMOpY2VtYnJlLiJ9" style="--c: #8a5a1c"><span class="volet">18</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="19" data-c="eyJlIjogIvCfjrYiLCAidCI6ICJQZXRpdCBQYXBhIE5vw6tsIiwgIngiOiAiQ2hhbnTDqWUgcGFyIFRpbm8gUm9zc2kgZW4gMTk0NiwgwqsgUGV0aXQgUGFwYSBOb8OrbCDCuyBlc3QgbCd1bmUgZGVzIGNoYW5zb25zIGxlcyBwbHVzIHZlbmR1ZXMgZGUgbCdoaXN0b2lyZSBkdSBkaXNxdWUgZW4gRnJhbmNlLiJ9" style="--c: #1f6b45"><span class="volet">19</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="20" data-c="eyJlIjogIvCflJQiLCAidCI6ICJWaXZlIGxlIHZlbnQiLCAieCI6ICLCqyBWaXZlIGxlIHZlbnQgwrsgcmVwcmVuZCBsJ2FpciBkZSDCqyBKaW5nbGUgQmVsbHMgwrssIGNvbXBvc8OpIGF1eCDDiXRhdHMtVW5pcyBhdSBYSVhlIHNpw6hjbGUuIExlcyBwYXJvbGVzIGZyYW7Dp2Fpc2VzIHNvbnQgZGUgRnJhbmNpcyBCbGFuY2hlLiJ9" style="--c: var(--rouge-fonce)"><span class="volet">20</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="21" data-c="eyJlIjogIvCfjrsiLCAidCI6ICJEb3VjZSBudWl0IiwgIngiOiAiwqsgRG91Y2UgbnVpdCDCuyBhIMOpdMOpIGNoYW50w6llIHBvdXIgbGEgcHJlbWnDqHJlIGZvaXMgbGUgMjQgZMOpY2VtYnJlIDE4MTgsIGRhbnMgdW5lIMOpZ2xpc2UgZCdPYmVybmRvcmYsIGVuIEF1dHJpY2hlLCBhY2NvbXBhZ27DqWUgw6AgbGEgZ3VpdGFyZS4ifQ==" style="--c: #1d3b6e"><span class="volet">21</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="22" data-c="eyJlIjogIvCfpJ0iLCAidCI6ICJMYSB0csOqdmUgZGUgMTkxNCIsICJ4IjogIsOAIE5vw6tsIDE5MTQsIHN1ciBsZSBmcm9udCwgZGVzIHNvbGRhdHMgZGUgY2FtcHMgZW5uZW1pcyBvbnQgZnJhdGVybmlzw6kgcGVuZGFudCBxdWVscXVlcyBoZXVyZXMgOiBjaGFudHMsIHBvaWduw6llcyBkZSBtYWluIGV0IHBldGl0cyBjYWRlYXV4IMOpY2hhbmfDqXMuIn0=" style="--c: #8a5a1c"><span class="volet">22</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="23" data-c="eyJlIjogIvCfp5QiLCAidCI6ICJMZSB2cmFpIHNhaW50IE5pY29sYXMiLCAieCI6ICLDiXbDqnF1ZSBkZSBNeXJlIGF1IElWZSBzacOoY2xlLCBzYWludCBOaWNvbGFzIGEgaW5zcGlyw6kgbGUgcGVyc29ubmFnZSBkdSBQw6hyZSBOb8OrbCwgcXVpIGEgcHJpcyBzb24gYWxsdXJlIGFjdHVlbGxlIGF1eCDDiXRhdHMtVW5pcyBhdSBYSVhlIHNpw6hjbGUuIn0=" style="--c: #1f6b45"><span class="volet">23</span><span class="dedans" aria-hidden="true"></span></button></li>
+            <li><button type="button" class="case" data-jour="24" data-c="eyJlIjogIvCfjoQiLCAidCI6ICJKb3lldXggTm/Dq2wgISIsICJ4IjogIkMnZXN0IGxlIHNvaXIgZHUgcsOpdmVpbGxvbi4gVG91dCBsZSBDYWbDqSBGcmFuw6dhaXMgdGUgc291aGFpdGUgdW4gam95ZXV4IE5vw6tsLCBhdSBjaGF1ZCBhdmVjIGNldXggcXVlIHR1IGFpbWVzLiBFdCBnYXJkZS1ub3VzIHVuZSBwYXJ0IGRlIGLDu2NoZSAhIn0=" style="--c: var(--rouge-fonce)"><span class="volet">24</span><span class="dedans" aria-hidden="true"></span></button></li>
+        </ol>
+        <div class="avent-lecture" id="avent-lecture" aria-live="polite">
+          <span class="al-emoji" id="al-emoji" aria-hidden="true">🎁</span>
+          <div>
+            <p class="al-jour" id="al-jour">Le calendrier</p>
+            <h4 id="al-titre">Ouvre la case du jour</h4>
+            <p id="al-texte">Chaque matin, une nouvelle case t'attend. Clique dessus pour l'ouvrir.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2634,6 +2775,145 @@ main, .pied { position: relative; z-index: 1; }
     if (lu.endsWith('cafe')) { frappe = ''; pluieEcran(170, innerHeight); annoncer('Un café, un ! Et des grains pour la route.'); }
     else if (lu.endsWith('boo')) { frappe = ''; envolee(); annoncer('Bouh ! Les chauves-souris sont lâchées.'); }
   });
+
+  /* ---------- Saison : la page change de tenue à minuit pile (heure de Paris), même déjà ouverte ---------- */
+  (function saisonEnDirect() {
+    if (SAISON !== 'auto' || SAISONS_APERCU[location.hash]) return;
+    const MESSAGES = { noel: 'Joyeux Noël ! Le café a sorti les guirlandes.', halloween: 'Halloween s’invite au café…', normal: 'Le café reprend sa tenue de tous les jours.' };
+    // Millisecondes jusqu'au prochain minuit à Paris
+    function avantMinuit() {
+      const p = {};
+      new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', hour: 'numeric', minute: 'numeric', second: 'numeric', hourCycle: 'h23' })
+        .formatToParts(new Date()).forEach((x) => { p[x.type] = Number(x.value); });
+      return ((23 - p.hour) * 3600 + (59 - p.minute) * 60 + (60 - p.second)) * 1000 - new Date().getMilliseconds();
+    }
+    let minuteur = 0;
+    function verifier() {
+      const s = saisonDuJour();
+      if (s !== racine.getAttribute('data-saison')) {
+        racine.setAttribute('data-saison', s);
+        dispatchEvent(new CustomEvent('saison', { detail: s }));
+        annoncer(MESSAGES[s]);
+        if (anime) ST.refresh();
+      }
+      clearTimeout(minuteur);
+      minuteur = setTimeout(verifier, Math.min(avantMinuit() + 250, 6 * 3600000));
+    }
+    verifier();
+    // Un onglet en arrière-plan peut retarder les minuteurs : on revérifie au retour
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) verifier(); });
+  })();
+
+  /* ---------- Noël : compte à rebours et calendrier de l'Avent ---------- */
+  (function noel() {
+    const jourParis = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(t || new Date());
+    // Le Noël en cours : en janvier, c'est celui de l'année d'avant
+    const anneeNoel = () => { const j = jourParis(); return Number(j.slice(0, 4)) - (j.slice(5, 7) === '01' ? 1 : 0); };
+    // Paris est à UTC+1 en décembre
+    const minuitParis = (a, m, j) => Date.UTC(a, m - 1, j) - 3600000;
+    const deux = (n) => String(n).padStart(2, '0');
+    function rebours() {
+      const a = anneeNoel(), cible = minuitParis(a, 12, 25), reste = cible - Date.now(), aujourdhui = jourParis();
+      const voeux = $('#noel-voeux');
+      if (reste > 0) {
+        const s = Math.floor(reste / 1000);
+        $('#n-j').textContent = Math.floor(s / 86400); $('#n-h').textContent = deux(Math.floor(s / 3600) % 24);
+        $('#n-m').textContent = deux(Math.floor(s / 60) % 60); $('#n-s').textContent = deux(s % 60);
+        const j = Math.ceil(reste / 86400000);
+        $('#noel-etat').textContent = j > 1 ? `Événement de saison · J-${j} avant Noël` : 'Événement de saison · c’est demain !';
+        $('#noel-rebours').hidden = false; voeux.hidden = true;
+      } else {
+        const nouvelAn = aujourdhui.slice(5, 7) === '01';
+        voeux.textContent = nouvelAn ? `Bonne année ${a + 1} !` : 'Joyeux Noël !';
+        $('#noel-etat').textContent = nouvelAn ? 'Le café te souhaite une belle année' : 'C’est Noël au café';
+        $('#noel-rebours').hidden = true; voeux.hidden = false;
+      }
+    }
+    // Le calendrier : une case par jour, ouverte à minuit (heure de Paris)
+    const cases = $$('.case');
+    const lire = (c) => { try { return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(c.dataset.c), (x) => x.charCodeAt(0)))); } catch (e) { return null; } };
+    const cle = () => 'cafe-avent-' + anneeNoel();
+    function ouvertes() { try { return JSON.parse(localStorage.getItem(cle())) || []; } catch (e) { return []; } }
+    function retenir(n) { try { const l = ouvertes(); if (!l.includes(n)) { l.push(n); localStorage.setItem(cle(), JSON.stringify(l)); } } catch (e) {} }
+    let choisie = 0;
+    function etats() {
+      const a = anneeNoel(), aujourdhui = jourParis(), deja = ouvertes();
+      cases.forEach((c) => {
+        const n = Number(c.dataset.jour), jour = `${a}-12-${deux(n)}`;
+        const etat = aujourdhui < jour ? 'fermee' : deja.includes(n) ? 'ouverte' : aujourdhui === jour ? 'du-jour' : 'passee';
+        c.dataset.etat = etat;
+        c.setAttribute('aria-disabled', String(etat === 'fermee'));
+        c.setAttribute('aria-pressed', String(n === choisie));
+        c.setAttribute('aria-label', etat === 'fermee' ? `Case ${n}, s'ouvre le ${n} décembre` : etat === 'ouverte' ? `Case ${n}, ouverte` : `Case ${n}, à ouvrir`);
+        const contenu = etat === 'ouverte' && lire(c);
+        $('.dedans', c).textContent = contenu ? contenu.e : '';
+      });
+    }
+    function montrer(c) {
+      const d = lire(c);
+      if (!d) return;
+      choisie = Number(c.dataset.jour);
+      $('#al-emoji').textContent = d.e;
+      $('#al-jour').textContent = `${choisie} décembre`;
+      $('#al-titre').textContent = d.t;
+      $('#al-texte').textContent = d.x;
+    }
+    cases.forEach((c) => c.addEventListener('click', () => {
+      if (c.dataset.etat === 'fermee') { annoncer(`Patience : cette case s'ouvre le ${c.dataset.jour} décembre.`); return; }
+      retenir(Number(c.dataset.jour));
+      montrer(c);
+      etats();
+    }));
+    // Au chargement : la dernière case ouverte est lue, sinon on invite à ouvrir celle du jour
+    etats();
+    const derniere = cases.filter((c) => c.dataset.etat === 'ouverte').pop();
+    if (derniere) { montrer(derniere); etats(); }
+    rebours();
+    setInterval(() => { if (!document.hidden && racine.getAttribute('data-saison') === 'noel') rebours(); }, 1000);
+    setInterval(etats, 30000);
+    addEventListener('saison', () => { etats(); rebours(); });
+  })();
+
+  /* ---------- Noël : la neige tombe sur le café ---------- */
+  (function neige() {
+    const toile = $('#neige'), c = toile.getContext && toile.getContext('2d');
+    if (!c) return;
+    const flocons = [];
+    let l = 0, h = 0, boucle = 0, avant = 0;
+    const actif = () => racine.getAttribute('data-saison') === 'noel' && racine.getAttribute('data-animations') !== 'reduites' && !document.hidden;
+    function flocon(partout) {
+      const r = .8 + Math.random() * Math.random() * 2.8;
+      return { x: Math.random() * l, y: partout ? Math.random() * h : -6, r, v: 18 + r * 16 + Math.random() * 10, p: Math.random() * 6.3, a: .35 + Math.random() * .5, d: .4 + Math.random() };
+    }
+    function taille() {
+      const ratio = Math.min(devicePixelRatio || 1, 2);
+      l = innerWidth; h = innerHeight;
+      toile.width = l * ratio; toile.height = h * ratio; c.setTransform(ratio, 0, 0, ratio, 0, 0);
+      const nb = Math.round(Math.min(110, l * h / 14000));
+      while (flocons.length < nb) flocons.push(flocon(true));
+      flocons.splice(nb);
+    }
+    function dessiner(t) {
+      if (!actif()) { c.clearRect(0, 0, l, h); boucle = 0; return; }
+      const dt = Math.min(.05, (t - (avant || t)) / 1000);
+      avant = t;
+      c.clearRect(0, 0, l, h);
+      c.fillStyle = '#f2f1f9';
+      flocons.forEach((f, i) => {
+        f.y += f.v * dt; f.p += f.d * dt; f.x += Math.sin(f.p) * 14 * dt;
+        if (f.y > h + 6) flocons[i] = flocon(false);
+        c.globalAlpha = f.a; c.beginPath(); c.arc(f.x, f.y, f.r, 0, 6.283); c.fill();
+      });
+      c.globalAlpha = 1;
+      boucle = requestAnimationFrame(dessiner);
+    }
+    function relancer() { if (actif() && !boucle) { avant = 0; boucle = requestAnimationFrame(dessiner); } }
+    taille();
+    addEventListener('resize', taille);
+    document.addEventListener('visibilitychange', relancer);
+    new MutationObserver(relancer).observe(racine, { attributes: true, attributeFilter: ['data-saison', 'data-animations'] });
+    relancer();
+  })();
 
   /* ---------- Pousser la porte : l'entrée du café à la première visite ---------- */
   function clochette() {
