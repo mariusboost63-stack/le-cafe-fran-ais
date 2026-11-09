@@ -1062,6 +1062,28 @@ main, .pied { position: relative; z-index: 1; }
 .son-barres i:nth-child(4) { animation-delay: -.2s; }
 @media (max-width: 520px) { .son-texte { display: none; } .son { padding: 0 13px; } }
 
+.son-groupe { position: relative; display: flex; align-items: center; }
+.son-groupe[hidden] { display: none; }
+.son-groupe .son { border-radius: 999px 0 0 999px; border-right-width: 0; }
+.son-reglages { display: grid; place-items: center; width: 36px; height: 41px; padding: 0 6px 0 4px; border-radius: 0 999px 999px 0; border: 1.5px solid var(--trait); background: transparent; color: var(--brume); cursor: pointer; transition: color .2s, border-color .2s; }
+.son-reglages svg { width: 18px; height: 18px; }
+.son-reglages:hover, .son-reglages[aria-expanded="true"] { color: var(--lait); border-color: var(--lait); }
+.son[aria-pressed="true"] + .son-reglages { border-color: var(--creme); }
+.son-panneau { position: absolute; top: calc(100% + 12px); right: 0; z-index: 5; width: min(300px, calc(100vw - 32px)); display: grid; gap: 12px; padding: 18px; border-radius: 18px; background: var(--nuit-2); border: 1px solid var(--trait); box-shadow: 0 20px 50px color-mix(in srgb, var(--ombre) 70%, transparent); text-align: left; }
+.son-panneau[hidden] { display: none; }
+.sp-titre { font: 800 18px/1.1 var(--f-titre); }
+.sp-moment { color: var(--brume); font-size: 14px; line-height: 1.4; }
+.sp-volume { display: flex; justify-content: space-between; font-weight: 600; font-size: 15px; }
+.sp-volume output { font: 500 13px/1.4 var(--f-mono); color: var(--creme); }
+#son-volume { width: 100%; accent-color: var(--creme); }
+.sp-choix { display: flex; align-items: center; gap: 10px; font-size: 15px; cursor: pointer; }
+.sp-choix input { appearance: none; flex: none; position: relative; width: 38px; height: 22px; margin: 0; border-radius: 999px; background: var(--trait); cursor: pointer; transition: background-color .2s; }
+.sp-choix input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--lait); transition: transform .2s; }
+.sp-choix input:checked { background: var(--creme); }
+.sp-choix input:checked::after { transform: translateX(16px); }
+.sp-choix input:focus-visible, .son-reglages:focus-visible { outline: 2px solid var(--lait); outline-offset: 2px; }
+@media (max-width: 520px) { .son-reglages { width: 32px; } .son-panneau { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 74px); left: 16px; right: 16px; width: auto; } }
+
 /* Surprises */
 .toast {
   position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 80; max-width: calc(100% - 32px);
@@ -1501,7 +1523,18 @@ main, .pied { position: relative; z-index: 1; }
       <a href="#equipe">Équipe</a>
     </nav>
     <div class="barre-droite">
-      <button class="son" id="son" type="button" aria-pressed="false" aria-label="Ambiance sonore du café" title="Ambiance sonore du café"><span class="son-barres" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="son-texte">Ambiance</span></button>
+      <div class="son-groupe">
+        <button class="son" id="son" type="button" aria-pressed="false" aria-label="Ambiance sonore du café" title="Ambiance sonore du café"><span class="son-barres" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="son-texte">Ambiance</span></button>
+        <button class="son-reglages" id="son-reglages" type="button" aria-expanded="false" aria-controls="son-panneau" aria-label="Réglages de l'ambiance" title="Réglages de l'ambiance"><svg aria-hidden="true" viewBox="0 0 24 24"><path class="ico-svg" d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle class="ico-svg" cx="16" cy="7" r="2"/><circle class="ico-svg" cx="8" cy="17" r="2"/></svg></button>
+        <div class="son-panneau" id="son-panneau" hidden>
+          <p class="sp-titre">Ambiance sonore</p>
+          <p class="sp-moment" id="sp-moment">Le café suit l'heure de Paris.</p>
+          <label class="sp-volume" for="son-volume"><span>Volume</span><output id="son-volume-aff" for="son-volume">70&nbsp;%</output></label>
+          <input type="range" id="son-volume" min="0" max="100" step="5" value="70">
+          <label class="sp-choix"><input type="checkbox" id="son-musique" checked><span>Musique au poste</span></label>
+          <label class="sp-choix"><input type="checkbox" id="son-porte" checked><span>Lancer l'ambiance en poussant la porte</span></label>
+        </div>
+      </div>
       <a class="btn btn-plein btn-petit" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre</a>
       <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span aria-hidden="true"><i></i><i></i><i></i></span></button>
     </div>
@@ -2381,28 +2414,62 @@ main, .pied { position: relative; z-index: 1; }
   })();
 
   /* ---------- Ambiance sonore : un café parisien généré en direct, sans fichier audio ----------
-     La rumeur de la salle, des tables qui bavardent et rient, les tasses et les cuillères, la monnaie
-     sur le comptoir, la machine à expresso (moulin, coups, pompe, vapeur), la porte et sa clochette,
-     et une valse musette (composée pour le site) qui passe au poste. Tout est synthétisé. */
+     La rumeur de la salle, des tables qui bavardent et rient, les tasses et les cuillères, la monnaie sur le comptoir,
+     la machine à expresso (moulin, coups, pompe, vapeur), la porte et sa clochette, et un accordéon qui passe au poste :
+     une valse musette composée pour le site, et des chants de Noël traditionnels en décembre (« Douce nuit »,
+     « Vive le vent »), avec un feu de cheminée et des grelots. Le café vit à l'heure de Paris (plein à midi, calme la
+     nuit) et selon le nombre de membres en ligne. Réglages (volume, musique, lancement à la porte) gardés sur l'appareil. */
   (function ambiance() {
-    const btn = $('#son');
+    const btn = $('#son'), btnReglages = $('#son-reglages'), panneau = $('#son-panneau');
     const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) { btn.hidden = true; return; }
-    let ctx = null, maitre = null, echo = null, actif = false, blanc = null, brun = null;
+    if (!AC) { $('.son-groupe').hidden = true; return; }
+    let ctx = null, maitre = null, echo = null, actif = false, blanc = null, brun = null, radio = null, cheminee = null;
     const places = [];
     const hasard = (a, b) => a + Math.random() * (b - a);
     const choisir = (l) => l[Math.floor(Math.random() * l.length)];
     const hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
+    const noel = () => racine.getAttribute('data-saison') === 'noel';
+
+    /* Les réglages, gardés sur l'appareil */
+    const reglages = { volume: 70, musique: true, porte: true };
+    try { Object.assign(reglages, JSON.parse(localStorage.getItem('cafe-ambiance')) || {}); } catch (e) {}
+    const garder = () => { try { localStorage.setItem('cafe-ambiance', JSON.stringify(reglages)); } catch (e) {} };
+    const niveau = () => .85 * Math.max(0, Math.min(100, Number(reglages.volume) || 0)) / 100;
+
+    /* Le moment de la journée, à l'heure de Paris, et le monde en ligne (widget Discord) */
+    const MOMENTS = [
+      { de: 7, a: 11, tables: 4, vaisselle: 1.2, machine: 1.6, musique: .8, porte: 1.3, fond: .9, texte: 'Le café ouvre : premiers expressos et quelques habitués au comptoir.' },
+      { de: 11, a: 14, tables: 8, vaisselle: 1.6, machine: 1.3, musique: .8, porte: 1.5, fond: 1.15, texte: 'Le coup de feu de midi : le café est plein.' },
+      { de: 14, a: 18, tables: 5, vaisselle: 1, machine: 1, musique: 1, porte: 1, fond: 1, texte: 'L’après-midi, au calme, entre deux cafés.' },
+      { de: 18, a: 23, tables: 6, vaisselle: .9, machine: .6, musique: 1.4, porte: 1, fond: 1, texte: 'La soirée : la radio un peu plus fort et des tables animées.' },
+      { de: 23, a: 31, tables: 2, vaisselle: .4, machine: .2, musique: .7, porte: .3, fond: .75, texte: 'La nuit : quelques couche-tard et la radio en sourdine.' }
+    ];
+    let enLigne = 0;
+    addEventListener('en-ligne', (e) => { enLigne = Number(e.detail) || 0; decrire(); });
+    function heureParis() {
+      try { return Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', hour: 'numeric', hourCycle: 'h23' }).format(new Date())); }
+      catch (e) { return new Date().getHours(); }
+    }
+    function moment() {
+      const h = heureParis(), x = h < 7 ? h + 24 : h;
+      return MOMENTS.find((m) => x >= m.de && x < m.a) || MOMENTS[2];
+    }
+    // Plus il y a de monde en ligne, plus il y a de tables qui parlent
+    const affluence = () => (enLigne > 0 ? Math.min(1.35, Math.max(.65, enLigne / 700)) : 1);
+    const nbTables = () => Math.max(1, Math.min(9, Math.round(moment().tables * affluence())));
+    function decrire() {
+      const m = moment();
+      $('#sp-moment').textContent = `Il est ${heureParis()} h à Paris. ${m.texte}` + (enLigne > 0 ? ` ${nf.format(enLigne)} membres en ligne.` : '');
+    }
+
     function plusTard(fn, ms) { setTimeout(() => { if (actif) fn(); else plusTard(fn, ms); }, ms); }
-    function bruit(type, sec, canaux) {
-      const b = ctx.createBuffer(canaux || 1, Math.floor(ctx.sampleRate * sec), ctx.sampleRate);
-      for (let c = 0; c < b.numberOfChannels; c++) {
-        const d = b.getChannelData(c);
-        let dernier = 0;
-        for (let i = 0; i < d.length; i++) {
-          const x = Math.random() * 2 - 1;
-          if (type === 'brun') { dernier = (dernier + .02 * x) / 1.02; d[i] = dernier * 3.5; } else d[i] = x;
-        }
+    function bruit(type, sec) {
+      const b = ctx.createBuffer(1, Math.floor(ctx.sampleRate * sec), ctx.sampleRate);
+      const d = b.getChannelData(0);
+      let dernier = 0;
+      for (let i = 0; i < d.length; i++) {
+        const x = Math.random() * 2 - 1;
+        if (type === 'brun') { dernier = (dernier + .02 * x) / 1.02; d[i] = dernier * 3.5; } else d[i] = x;
       }
       return b;
     }
@@ -2439,20 +2506,21 @@ main, .pied { position: relative; z-index: 1; }
     function salle() {
       const gFond = gain(.11);
       enBoucle(brun).connect(filtre('lowpass', 380)).connect(gFond).connect(maitre);
-      const respirer = () => { gFond.gain.setTargetAtTime(hasard(.08, .13), ctx.currentTime, 2.5); plusTard(respirer, hasard(3000, 7000)); };
+      const respirer = () => { gFond.gain.setTargetAtTime(hasard(.08, .13) * moment().fond, ctx.currentTime, 2.5); plusTard(respirer, hasard(3000, 7000)); };
       respirer();
       const bande = filtre('bandpass', 800, .7), gRumeur = gain(.004), loin = place(0, 1.4);
       enBoucle(blanc).connect(bande).connect(gRumeur).connect(filtre('lowpass', 1800)).connect(loin);
       const rumeur = () => {
         const t = ctx.currentTime;
-        gRumeur.gain.setTargetAtTime(hasard(.002, .007), t, .08);
+        gRumeur.gain.setTargetAtTime(hasard(.002, .007) * moment().fond, t, .08);
         bande.frequency.setTargetAtTime(hasard(500, 1300), t, .12);
         plusTard(rumeur, hasard(90, 300));
       };
       rumeur();
     }
 
-    /* Les tables : des voix synthétiques (cordes vocales + voyelles) trop loin pour qu'on comprenne les mots */
+    /* Les tables : des voix synthétiques (cordes vocales + voyelles) trop loin pour qu'on comprenne les mots.
+       Seules les premières tables parlent, selon l'heure et le monde en ligne. */
     const VOYELLES = [[750, 1350], [400, 2000], [550, 1750], [290, 2200], [380, 800], [300, 750], [290, 1750], [430, 1450], [600, 1000]];
     function table(i, foule) {
       const grave = i % 2 === 0, f0 = grave ? hasard(95, 140) : hasard(180, 240);
@@ -2468,6 +2536,8 @@ main, .pied { position: relative; z-index: 1; }
       else sortie.connect(foule);
       cordes.start();
       const parler = () => {
+        // Table vide pour l'instant : on repasse plus tard
+        if (i >= nbTables()) { plusTard(parler, hasard(4000, 9000)); return; }
         let t = ctx.currentTime + .05, h = f0 * hasard(.95, 1.15);
         const rire = Math.random() < .07, question = !rire && Math.random() < .2;
         const n = Math.round(rire ? hasard(4, 8) : hasard(3, 16)), fort = hasard(.5, 1);
@@ -2532,7 +2602,7 @@ main, .pied { position: relative; z-index: 1; }
         const f = hasard(2400, 3300);
         choc(t, f, .05, 1.1, v); choc(t + .008, f * 1.06, .04, .9, v);
       }
-      plusTard(vaisselle, hasard(1800, 6500));
+      plusTard(vaisselle, hasard(1800, 6500) / moment().vaisselle);
     }
 
     /* Le comptoir : la machine à expresso, du moulin à la buse vapeur */
@@ -2589,9 +2659,9 @@ main, .pied { position: relative; z-index: 1; }
       gPompe.gain.setValueAtTime(.03, t + dp); gPompe.gain.linearRampToValueAtTime(0, t + dp + .2);
       pompe.connect(filtre('lowpass', 420)).connect(gPompe).connect(v); pompe.start(t); pompe.stop(t + dp + .3);
       t += dp + hasard(1, 3);
-      // 4. Une fois sur deux, on fait mousser le lait
-      if (Math.random() < .55) { vapeur(t, v); t += 9; }
-      plusTard(machine, (t - ctx.currentTime) * 1000 + hasard(25000, 55000));
+      // 4. Une fois sur deux, on fait mousser le lait (plus souvent en hiver : chocolats et cafés crème)
+      if (Math.random() < (noel() ? .75 : .55)) { vapeur(t, v); t += 9; }
+      plusTard(machine, (t - ctx.currentTime) * 1000 + hasard(25000, 55000) / moment().machine);
     }
 
     /* La porte : la clochette, et la rue qui entre avec le client */
@@ -2612,7 +2682,7 @@ main, .pied { position: relative; z-index: 1; }
       gRue.gain.setValueAtTime(0, t); gRue.gain.linearRampToValueAtTime(.12, t + .5);
       gRue.gain.setValueAtTime(.12, t + 2); gRue.gain.linearRampToValueAtTime(0, t + 3);
       souffle(t, 3.1, rue, brun); rue.connect(gRue).connect(v);
-      plusTard(porte, hasard(60000, 130000));
+      plusTard(porte, hasard(60000, 130000) / moment().porte);
     }
 
     /* Une chaise qu'on recule sur le carrelage */
@@ -2623,15 +2693,39 @@ main, .pied { position: relative; z-index: 1; }
       for (let x = t; x < t + d; x += .018) g.gain.setValueAtTime(hasard(.03, .1), x);
       g.gain.setValueAtTime(0, t + d);
       souffle(t, d, frotte); frotte.connect(g).connect(choisir(places));
-      plusTard(chaise, hasard(15000, 45000));
+      plusTard(chaise, hasard(15000, 45000) / moment().vaisselle);
     }
 
-    /* Le poste, dans un coin : une valse musette à l'accordéon (mélodie originale, en ré mineur) */
+    /* Noël : un feu de cheminée qui crépite dans un coin */
+    function feu() {
+      cheminee = gain(noel() ? 1 : 0);
+      cheminee.connect(place(-.6, .5));
+      const braise = gain(.035);
+      enBoucle(brun).connect(filtre('bandpass', 260, .8)).connect(braise).connect(cheminee);
+      const crepiter = () => {
+        if (noel()) {
+          const t = ctx.currentTime + .02, n = Math.random() < .15 ? Math.round(hasard(3, 7)) : 1;
+          for (let k = 0; k < n; k++) {
+            const x = t + k * hasard(.01, .05), g = gain(0), f = filtre('highpass', hasard(1200, 3500));
+            g.gain.setValueAtTime(hasard(.02, Math.random() < .08 ? .14 : .06), x);
+            g.gain.exponentialRampToValueAtTime(.0001, x + hasard(.004, .02));
+            souffle(x, .03, f); f.connect(g).connect(cheminee);
+          }
+        }
+        plusTard(crepiter, hasard(60, 420));
+      };
+      crepiter();
+      addEventListener('saison', () => cheminee.gain.setTargetAtTime(noel() ? 1 : 0, ctx.currentTime, 1));
+    }
+
+    /* Le poste, dans un coin : l'accordéon. Une valse musette composée pour le site (ré mineur), et en décembre
+       deux airs de Noël du domaine public : « Douce nuit » (Gruber, 1818) et « Vive le vent » (« Jingle Bells »,
+       Pierpont, 1857). Chaque mesure : l'accord, puis la mélodie en croches [note MIDI, nombre de croches], 0 = silence. */
     const ACCORDS = {
       Dm: [50, 45, [53, 57, 62]], A7: [45, 52, [55, 61, 64]], Gm: [43, 50, [55, 58, 62]], Bb: [46, 53, [53, 58, 62]],
-      F: [41, 48, [53, 57, 60]], C7: [48, 43, [52, 55, 58]], D7: [50, 45, [54, 57, 60]]
+      F: [41, 48, [53, 57, 60]], C7: [48, 43, [52, 55, 58]], D7: [50, 45, [54, 57, 60]],
+      C: [48, 43, [52, 55, 60]], G7: [43, 50, [53, 55, 59]]
     };
-    // Chaque mesure : l'accord, puis la mélodie en croches [note MIDI, nombre de croches], 0 pour un silence
     const VALSE_A = [
       ['Dm', [[69, 2], [74, 1], [76, 1], [77, 2]]], ['Dm', [[81, 3], [79, 1], [77, 2]]], ['A7', [[76, 2], [73, 1], [74, 1], [76, 2]]], ['A7', [[79, 4], [77, 1], [76, 1]]],
       ['A7', [[76, 2], [69, 1], [73, 1], [76, 2]]], ['A7', [[79, 3], [77, 1], [76, 2]]], ['Dm', [[77, 2], [76, 1], [74, 1], [69, 2]]], ['Dm', [[74, 6]]],
@@ -2644,8 +2738,34 @@ main, .pied { position: relative; z-index: 1; }
       ['Bb', [[74, 2], [77, 1], [82, 1], [86, 2]]], ['Bb', [[84, 2], [82, 2], [77, 2]]], ['F', [[81, 2], [80, 1], [81, 1], [84, 2]]], ['D7', [[78, 2], [81, 1], [84, 1], [81, 2]]],
       ['Gm', [[82, 2], [81, 1], [79, 1], [74, 2]]], ['C7', [[76, 2], [79, 2], [84, 2]]], ['F', [[77, 3], [81, 1], [84, 2]]], ['A7', [[76, 2], [79, 1], [77, 1], [76, 1], [73, 1]]]
     ];
+    const DOUCE_NUIT = [
+      ['C', [[67, 3], [69, 1], [67, 2]]], ['C', [[64, 6]]], ['C', [[67, 3], [69, 1], [67, 2]]], ['C', [[64, 6]]],
+      ['G7', [[74, 4], [74, 2]]], ['G7', [[71, 6]]], ['C', [[72, 4], [72, 2]]], ['C', [[67, 6]]],
+      ['F', [[69, 4], [69, 2]]], ['F', [[72, 3], [71, 1], [69, 2]]], ['C', [[67, 3], [69, 1], [67, 2]]], ['C', [[64, 6]]],
+      ['F', [[69, 4], [69, 2]]], ['F', [[72, 3], [71, 1], [69, 2]]], ['C', [[67, 3], [69, 1], [67, 2]]], ['C', [[64, 6]]],
+      ['G7', [[74, 4], [74, 2]]], ['G7', [[77, 3], [74, 1], [71, 2]]], ['C', [[72, 6]]], ['C', [[76, 6]]],
+      ['C', [[72, 2], [67, 2], [64, 2]]], ['G7', [[67, 3], [65, 1], [62, 2]]], ['C', [[60, 6]]], ['C', [[0, 6]]]
+    ];
+    const VIVE_LE_VENT = [
+      ['C', [[76, 2], [76, 2], [76, 4]]], ['C', [[76, 2], [76, 2], [76, 4]]], ['C', [[76, 2], [79, 2], [72, 3], [74, 1]]], ['C', [[76, 8]]],
+      ['F', [[77, 2], [77, 2], [77, 3], [77, 1]]], ['C', [[77, 2], [76, 2], [76, 2], [76, 1], [76, 1]]], ['G7', [[76, 2], [74, 2], [74, 2], [76, 2]]], ['G7', [[74, 4], [79, 4]]],
+      ['C', [[76, 2], [76, 2], [76, 4]]], ['C', [[76, 2], [76, 2], [76, 4]]], ['C', [[76, 2], [79, 2], [72, 3], [74, 1]]], ['C', [[76, 8]]],
+      ['F', [[77, 2], [77, 2], [77, 3], [77, 1]]], ['C', [[77, 2], [76, 2], [76, 2], [76, 1], [76, 1]]], ['G7', [[79, 2], [79, 2], [77, 2], [74, 2]]], ['C', [[72, 6], [0, 2]]]
+    ];
+    const MORCEAUX = {
+      valse: { mesure: 3, tempo: [140, 165], transpo: [0, 0, -2, 3], mesures: VALSE_A.concat(VALSE_B, VALSE_A) },
+      douceNuit: { mesure: 3, tempo: [96, 108], transpo: [0, 2], mesures: DOUCE_NUIT },
+      viveLeVent: { mesure: 4, tempo: [128, 144], transpo: [0, -2], grelots: true, mesures: VIVE_LE_VENT.concat(VIVE_LE_VENT) }
+    };
+    let dernierMorceau = '';
+    function prochainMorceau() {
+      const liste = noel() ? ['douceNuit', 'viveLeVent', 'valse'] : ['valse'];
+      const i = (liste.indexOf(dernierMorceau) + 1) % liste.length;
+      dernierMorceau = liste[i];
+      return MORCEAUX[dernierMorceau];
+    }
     // Une note d'accordéon : plusieurs anches légèrement désaccordées, ce qui fait le son « musette »
-    function anche(t, m, dur, fort, desaccords, coupure, vers) {
+    function anche(t, m, dur, fort, desaccords, coupure) {
       const g = gain(0), lp = filtre('lowpass', coupure, .5);
       g.gain.setValueAtTime(0, t);
       g.gain.linearRampToValueAtTime(fort, t + .025);
@@ -2656,34 +2776,50 @@ main, .pied { position: relative; z-index: 1; }
         o.frequency.value = hz(m); o.detune.value = c;
         o.connect(lp); o.start(t); o.stop(t + dur + .08);
       });
-      lp.connect(g).connect(vers);
+      lp.connect(g).connect(radio);
+    }
+    // Les grelots du traîneau, sur les temps de « Vive le vent »
+    function grelots(t) {
+      const g = gain(0), f = filtre('highpass', 6500);
+      g.gain.setValueAtTime(.05, t); g.gain.exponentialRampToValueAtTime(.0001, t + .18);
+      souffle(t, .2, f); f.connect(g).connect(radio);
+      choc(t + .01, hasard(5200, 6400), .012, .12, radio);
     }
     function poste() {
       // un petit haut-parleur : ni basses ni aigus, et l'écho de la salle
-      const radio = gain(.06);
+      radio = gain(reglages.musique ? .06 : 0);
       radio.connect(filtre('highpass', 220)).connect(filtre('lowpass', 3600)).connect(place(.55, .9));
-      let morceau = [], i = 0, prochaine = 0, transpo = 0, temps = .4;
+      let morceau = null, i = 0, prochaine = 0, transpo = 0, temps = .4;
       const jeu = () => hasard(-.008, .008);
       function mesure(t, [acc, melodie], n) {
         const [basse, quinte, accord] = ACCORDS[acc];
-        anche(t + jeu(), (n % 2 ? quinte : basse) + transpo, temps * .8, .55, [0, 1200], 900, radio);
-        [1, 2].forEach((b) => accord.forEach((note) => anche(t + b * temps + jeu(), note + transpo, temps * .45, .16, [0, 9], 1500, radio)));
+        const temps3 = morceau.mesure === 3;
+        // main gauche : basse puis accords (valse : basse-accord-accord ; à quatre temps : basse-accord-quinte-accord)
+        anche(t + jeu(), basse + transpo - (temps3 && n % 2 ? basse - quinte : 0), temps * .8, .55, [0, 1200], 900);
+        if (!temps3) anche(t + 2 * temps + jeu(), quinte + transpo, temps * .8, .5, [0, 1200], 900);
+        (temps3 ? [1, 2] : [1, 3]).forEach((b) => accord.forEach((note) => anche(t + b * temps + jeu(), note + transpo, temps * .45, .16, [0, 9], 1500)));
+        if (morceau.grelots) for (let b = 0; b < morceau.mesure; b++) grelots(t + b * temps + .01);
         let x = t;
         melodie.forEach(([note, croches], k) => {
           const d = croches * temps / 2;
-          if (note) anche(x + jeu(), note + transpo, d * .92, k === 0 ? .4 : .32, [0, 13, -11], 2600, radio);
+          if (note) anche(x + jeu(), note + transpo, d * .92, k === 0 ? .4 : .32, [0, 13, -11], 2600);
           x += d;
         });
       }
       function suivre() {
         if (prochaine < ctx.currentTime) prochaine = ctx.currentTime + .05;
-        while (i < morceau.length && prochaine < ctx.currentTime + 1.5) { mesure(prochaine, morceau[i], i); prochaine += 3 * temps; i++; }
-        if (i < morceau.length) plusTard(suivre, 400);
-        else plusTard(commencer, (prochaine - ctx.currentTime) * 1000 + hasard(20000, 50000));
+        while (i < morceau.mesures.length && prochaine < ctx.currentTime + 1.5) {
+          mesure(prochaine, morceau.mesures[i], i);
+          prochaine += morceau.mesure * temps; i++;
+        }
+        if (i < morceau.mesures.length) plusTard(suivre, 400);
+        else plusTard(commencer, (prochaine - ctx.currentTime) * 1000 + hasard(20000, 50000) / moment().musique);
       }
       function commencer() {
-        morceau = VALSE_A.concat(VALSE_B, VALSE_A);
-        i = 0; transpo = choisir([0, 0, -2, 3]); temps = 60 / hasard(140, 165);
+        // Musique coupée dans les réglages : on attend
+        if (!reglages.musique) { plusTard(commencer, 5000); return; }
+        morceau = prochainMorceau();
+        i = 0; transpo = choisir(morceau.transpo); temps = 60 / hasard(...morceau.tempo);
         prochaine = ctx.currentTime + .1;
         suivre();
       }
@@ -2703,30 +2839,59 @@ main, .pied { position: relative; z-index: 1; }
       salle();
       const foule = gain(.45);
       foule.connect(filtre('lowpass', 2600)).connect(place(0, .9));
-      for (let i = 0; i < 7; i++) table(i, foule);
+      for (let i = 0; i < 9; i++) table(i, foule);
       plusTard(vaisselle, 1200);
       plusTard(machine, hasard(6000, 12000));
       plusTard(porte, hasard(20000, 40000));
       plusTard(chaise, hasard(5000, 15000));
+      feu();
       poste();
     }
-    btn.addEventListener('click', async () => {
+    async function allumer(oui) {
+      if (oui === actif) return;
       if (!ctx) construire();
-      actif = !actif;
+      actif = oui;
       btn.setAttribute('aria-pressed', String(actif));
       if (actif) {
         try { await ctx.resume(); } catch (e) { /* le navigateur refuse le son */ }
         maitre.gain.cancelScheduledValues(ctx.currentTime);
-        maitre.gain.setTargetAtTime(.85, ctx.currentTime, .7);
+        maitre.gain.setTargetAtTime(niveau(), ctx.currentTime, .7);
       } else {
         maitre.gain.setTargetAtTime(0, ctx.currentTime, .25);
         setTimeout(() => { if (!actif) ctx.suspend(); }, 1200);
       }
-    });
+    }
+    btn.addEventListener('click', () => allumer(!actif));
+    // « Pousser la porte » (avec la clochette) lance l'ambiance, si le réglage le permet
+    addEventListener('porte-poussee', () => { if (reglages.porte) allumer(true); });
     document.addEventListener('visibilitychange', () => {
       if (!ctx || !actif) return;
       if (document.hidden) ctx.suspend(); else ctx.resume();
     });
+
+    /* Le panneau des réglages */
+    const volume = $('#son-volume'), musique = $('#son-musique'), aLaPorte = $('#son-porte');
+    volume.value = reglages.volume; musique.checked = !!reglages.musique; aLaPorte.checked = !!reglages.porte;
+    const afficherVolume = () => { $('#son-volume-aff').textContent = `${reglages.volume} %`; };
+    afficherVolume();
+    volume.addEventListener('input', () => {
+      reglages.volume = Number(volume.value); afficherVolume(); garder();
+      if (ctx && actif) maitre.gain.setTargetAtTime(niveau(), ctx.currentTime, .1);
+    });
+    musique.addEventListener('change', () => {
+      reglages.musique = musique.checked; garder();
+      if (radio) radio.gain.setTargetAtTime(reglages.musique ? .06 : 0, ctx.currentTime, .4);
+    });
+    aLaPorte.addEventListener('change', () => { reglages.porte = aLaPorte.checked; garder(); });
+    function ouvrirPanneau(oui) {
+      panneau.hidden = !oui;
+      btnReglages.setAttribute('aria-expanded', String(oui));
+      if (oui) { decrire(); volume.focus(); }
+    }
+    btnReglages.addEventListener('click', () => ouvrirPanneau(panneau.hidden));
+    document.addEventListener('click', (e) => { if (!panneau.hidden && !e.target.closest('.son-groupe')) ouvrirPanneau(false); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panneau.hidden) { ouvrirPanneau(false); btnReglages.focus(); } });
+    decrire();
   })();
 
   /* ---------- Surprises ---------- */
@@ -2947,7 +3112,7 @@ main, .pied { position: relative; z-index: 1; }
       if (!fermee()) return;
       clearTimeout(auto);
       try { localStorage.setItem('cafe-porte', '1'); } catch (e) {}
-      if (avecSon) clochette();
+      if (avecSon) { clochette(); dispatchEvent(new Event('porte-poussee')); }
       racine.setAttribute('data-porte', 'ouverte');
       verrouiller(false);
       setTimeout(() => {
@@ -3611,6 +3776,7 @@ main, .pied { position: relative; z-index: 1; }
     const membres = Array.isArray(w.members) ? w.members : [];
     const salons = Array.isArray(w.channels) ? w.channels : [];
     if (Number.isFinite(presents) && presents > 0) {
+      dispatchEvent(new CustomEvent('en-ligne', { detail: presents }));
       $('#stat-ligne').hidden = false;
       compter($('#en-ligne'), presents, 1.2);
     }
