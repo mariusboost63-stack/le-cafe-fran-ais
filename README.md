@@ -19,7 +19,8 @@ Tout tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript). Les ani
 - Trois étapes pour rejoindre le serveur, une FAQ, une tasse qui se remplit en bas de page et les moyens de soutenir le café.
 - À la première visite, l'entrée « Pousser la porte » : la devanture du café s'ouvre avec un tintement de clochette. Le bouton « Repasser la porte », dans le pied de page, la fait revenir.
 - « Commande ton café » : quatre questions qui révèlent la boisson et la table du café faites pour le visiteur, avec ses salons conseillés.
-- Un bouton « Ambiance » qui joue un fond sonore de café parisien, entièrement synthétisé dans la page (aucun fichier audio) : la rumeur de la salle, des tables qui bavardent et rient (voix trop lointaines pour qu'on comprenne les mots), tasses, cuillères, verres et monnaie, la machine à expresso (moulin, coups du porte-filtre, pompe, buse vapeur), la porte et sa clochette, une chaise qu'on recule, et une valse musette à l'accordéon, composée pour le site, qui passe de temps en temps au poste.
+- Un bouton « Ambiance » qui joue un fond sonore de café parisien, entièrement synthétisé dans la page (aucun fichier audio) : la rumeur de la salle, des tables qui bavardent et rient (voix trop lointaines pour qu'on comprenne les mots), tasses, cuillères, verres et monnaie, la machine à expresso (moulin, coups du porte-filtre, pompe, buse vapeur), la porte et sa clochette, une chaise qu'on recule, et un accordéon au poste : une valse musette composée pour le site, et en décembre « Douce nuit » et « Vive le vent » (airs du domaine public), avec un feu de cheminée et des grelots. Le café vit à l'heure de Paris (calme le matin, plein à midi, radio plus présente le soir, presque vide la nuit), et le nombre de tables qui parlent suit les membres en ligne. Le bouton de réglages, à côté, règle le volume, coupe la musique et choisit si « Pousser la porte » lance l'ambiance (choix gardés sur l'appareil).
+- La section « DeckFR » (`#deckfr`) : le jeu de cartes du bot, ses salons, ses cinq raretés et ses chiffres en direct (voir « DeckFR »).
 - Les animations jouent pour tout le monde, même sur les appareils réglés en « mouvement réduit ». L'interrupteur « Animations », en bas du pied de page, permet à chaque visiteur de les couper (choix gardé sur son appareil).
 - Des surprises : cliquer sur la tasse du logo la remplit, taper « café » au clavier fait pleuvoir des grains, taper « boo » lâche des chauves-souris.
 
@@ -79,6 +80,22 @@ La section « Les prochains événements » (`#prochains`) montre les événemen
 
 Pour lancer le relevé tout de suite : onglet **Actions** → **Prochains événements** → **Run workflow**. Le résumé indique combien d'événements sont publiés, ou pourquoi rien ne l'est (bot absent du serveur, secret manquant).
 
+## DeckFR
+
+La section « DeckFR » (`#deckfr`) présente le jeu de cartes du bot : ses trois salons, les cinq raretés, les étapes du jeu (boosters gratuits et achetés, collection, garantie pour les cartes légendaires et mythiques, échanges et ventes au marché) et, dès qu'elles sont publiées, ses données en direct : nombre de cartes de chaque rareté et part réelle dans les tirages, chiffres du jeu (joueurs, boosters ouverts, cartes tirées, échanges, ventes), derniers grands tirages et dernières cartes sorties. Les classements gagnent un onglet « DeckFR » (les plus grandes collections, en cartes différentes).
+
+- Toutes les heures, avec le classement, `outils/deckfr.py` lit les tables `cartes_*` de la base du bot, **en lecture seule**, et publie `deckfr.json` sur la branche `data`. Les membres privés de cartes (`users.blacklistCartes`) n'apparaissent dans aucune liste. Mêmes secrets que le classement.
+- Les **noms des raretés**, du niveau 1 au niveau 5, sont dans `index.html` (`const RARETES = ['Commune', 'Rare', 'Épique', 'Légendaire', 'Mythique']`) et dans l'éventail de la section : à ajuster s'ils diffèrent de ceux du bot.
+- Les images des cartes viennent de la colonne `recto` du catalogue. Si une image ne répond pas, la carte affiche la tasse du café à la place.
+
+## Les salons lus sur Discord
+
+Toutes les 2 heures, avec les événements, `outils/salons.py` lit les salons des trois catégories de la visite (Café Français, Centre de Convivialité, Divertissements) et publie `salons.json` sur la branche `evenements`. Le site met alors à jour tout seul la liste de chaque salle (nom, emoji, type, sujet du salon), les compteurs et le total de l'ouverture. Un salon ajouté, renommé ou supprimé sur Discord l'est aussi sur le site.
+
+- Seuls les salons que voit un simple membre sont publiés (droits de @everyone) : les salons du staff n'apparaissent jamais. `couleurs` et `discussion-vip`, réservés à un rôle, sont montrés avec un cadenas (liste `PRIVES_AFFICHES` du script).
+- Si le serveur cache tout à @everyone jusqu'à l'obtention d'un rôle, ajoute une variable de dépôt `ROLE_MEMBRE` (Settings → Secrets and variables → Actions → Variables) avec l'identifiant de ce rôle.
+- Comme pour les événements, **le bot du secret `DISCORD_TOKEN` doit être membre du serveur** (invitation sans permission, voir « Les prochains événements »). Tant qu'il ne l'est pas, rien n'est publié et le site garde les salons écrits dans le HTML.
+
 ## La petite info du jour
 
 La section « Quoi de neuf en France ? » (`#info`) affiche une info sur l'actualité en France, sous forme de gazette. Une nouvelle info paraît chaque jour à midi, et les quatre précédentes sont listées dessous.
@@ -131,12 +148,14 @@ Le site change de tenue selon la saison, réglée tout en haut de `index.html` :
 var SAISON = 'auto';
 ```
 
-- `'auto'` : version Halloween en octobre, version normale le reste de l'année. Le changement se fait tout seul le 1er novembre.
-- `'halloween'` ou `'normal'` : force une version.
+- `'auto'` : suit l'heure de Paris. Halloween en octobre, **Noël du 1er décembre à 00 h au 6 janvier inclus**, version normale le reste de l'année. La page change de tenue à minuit pile, même si un visiteur l'a déjà ouverte (avec un petit message « Joyeux Noël ! »). Il n'y a rien à publier ce jour-là.
+- `'halloween'`, `'noel'` ou `'normal'` : force une version.
 
-En version normale, la section Halloween est remplacée par une section « Événements », le lien du menu change, le compteur passe à 28 salons et les salons reprennent leurs emojis habituels.
+En version normale, la section Halloween est remplacée par une section « Événements », le lien du menu change et les salons reprennent leurs emojis habituels.
 
-Pour voir une version sans rien changer, ajoute `#saison-halloween` ou `#saison-normale` à la fin de l'adresse du site.
+**Version Noël** : section « Noël au café » (`#noel`) avec un compte à rebours jusqu'au 25 décembre (puis « Joyeux Noël ! » et « Bonne année » en janvier) et un calendrier de l'Avent : une case par jour, ouverte à minuit (heure de Paris), avec une tradition de Noël. Les textes des cases sont encodés dans `data-c`, comme les quêtes d'Halloween (même commande, avec `{ e: "emoji", t: "titre", x: "texte" }`). Il y a aussi de la neige (coupée par l'interrupteur « Animations »), une guirlande sous la barre, une couronne et la pancarte « Joyeux Noël » sur la porte, les emojis de Noël des salons (`<span class="seulement-noel">`), et les chants de Noël dans l'ambiance.
+
+Pour voir une version sans rien changer, ajoute `#saison-halloween`, `#saison-noel` ou `#saison-normale` à la fin de l'adresse du site.
 
 ## Référencement et page d'erreur
 
@@ -171,7 +190,7 @@ Le fichier `CNAME` ne servait qu'à GitHub Pages ; il peut rester.
 Tout se modifie dans `index.html` :
 
 - **Nombre de membres** : mis à jour tout seul chaque jour (voir « Nombre de membres à jour »), rien à modifier à la main.
-- **Salons et emojis** : chaque salon est une ligne `<li class="salon">`, dans l'ordre du serveur. Son emoji habituel est dans `<span class="seulement-normal">`, celui d'Halloween dans `<span class="seulement-halloween">`. Les salons privés (cadenas) utilisent l'icône `#i-texte-prive`, les salons d'annonces `#i-annonce` et les forums `#i-forum`. Pense à mettre à jour le nombre de salons de la catégorie (`salle-compte`) et le total de l'ouverture.
+- **Salons et emojis** : chaque salon est une ligne `<li class="salon">`, dans l'ordre du serveur. Son emoji habituel est dans `<span class="seulement-normal">`, celui d'Halloween dans `<span class="seulement-halloween">`, celui de Noël dans `<span class="seulement-noel">`. Une fois les salons lus sur Discord (voir « Les salons lus sur Discord »), la liste se met à jour toute seule ; le HTML sert de secours. Les salons privés (cadenas) utilisent l'icône `#i-texte-prive`, les salons d'annonces `#i-annonce` et les forums `#i-forum`. Pense à mettre à jour le nombre de salons de la catégorie (`salle-compte`) et le total de l'ouverture.
 - **Salons vocaux** : chaque ligne `<li class="vocal">` porte le nom exact du salon dans `data-vocal` (il sert à retrouver le salon dans le widget) et sa limite de places dans `data-max`.
 - **Équipe** : chaque profil est une ligne `<li class="profil">` dans la liste du badge (`<ul class="profils">`). Pour ajouter quelqu'un, copie une ligne et change le nom, le pseudo et l'image (`src`, une adresse d'image ou une image intégrée).
 - **Quêtes d'Halloween** : chaque quête est une ligne `<li class="quete">`. Sa date d'ouverture est dans `data-ouverture` (heure de Paris). Jusqu'à cette heure, la carte affiche `???` ; à l'ouverture, la page affiche toute seule le nom et la consigne de la quête, même si le visiteur est déjà sur le site. Ces textes sont rangés, encodés, dans `data-q` pour ne pas être lisibles dans le code de la page. Pour en changer un, ouvre la console du navigateur sur le site et tape :

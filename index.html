@@ -1585,7 +1585,7 @@ main, .pied { position: relative; z-index: 1; }
     <ul class="chiffres hero-revele">
       <li><b id="nb-membres" data-valeur="9496">9&#8239;496</b><span>membres</span></li>
       <li class="vivant" id="stat-ligne" hidden><b><span class="pastille" aria-hidden="true"></span><span id="en-ligne">0</span></b><span>en ligne</span></li>
-      <li><b><span class="seulement-halloween">34</span><span class="hors-halloween">32</span></b><span>salons</span></li>
+      <li><b id="nb-salons"><span class="seulement-halloween">34</span><span class="hors-halloween">32</span></b><span>salons</span></li>
       <li><b>6</b><span>salons vocaux</span></li>
     </ul>
   </section>
@@ -3640,6 +3640,68 @@ main, .pied { position: relative; z-index: 1; }
     setInterval(() => { if (!document.hidden) charger(); }, 5 * 60000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) charger(); });
     setInterval(ecrireMaj, 60000);
+  })();
+
+  /* ---------- Les salons de la visite, lus sur Discord ---------- */
+  // La liste est relevée sur Discord par GitHub Actions (outils/salons.py) et publiée sur la branche « evenements »
+  // (salons.json). Sans fichier, la page garde les salons écrits dans le HTML. Les descriptions du HTML servent quand
+  // un salon n'a pas de sujet sur Discord, et les emojis de saison du site (Halloween, Noël) restent affichés.
+  (function salonsEnDirect() {
+    const SOURCES = ['salons.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/evenements/salons.json'];
+    const ICONES = { texte: '#i-texte', annonce: '#i-annonce', forum: '#i-forum', regles: '#i-regles' };
+    const LIBELLES = { texte: 'Salon textuel', annonce: 'Salon d’annonces', forum: 'Forum', regles: 'Salon des règles' };
+    const ns = 'http://www.w3.org/2000/svg';
+    const cle = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const span = (className, textContent) => Object.assign(document.createElement('span'), { className, textContent });
+    function salon(x, ancien) {
+      const type = ICONES[x.type] ? x.type : 'texte';
+      const li = document.createElement('li');
+      li.className = 'salon';
+      const svg = document.createElementNS(ns, 'svg'), use = document.createElementNS(ns, 'use');
+      svg.setAttribute('class', 'ico'); svg.setAttribute('aria-hidden', 'true');
+      use.setAttribute('href', x.prive && type === 'texte' ? '#i-texte-prive' : ICONES[type]);
+      svg.append(use);
+      let emo;
+      if (ancien && $('.emo .seulement-normal', ancien)) {
+        emo = $('.emo', ancien).cloneNode(true);
+        if (x.emoji) $('.seulement-normal', emo).textContent = x.emoji;
+      } else emo = span('emo', x.emoji || (ancien ? $('.emo', ancien).textContent : ''));
+      emo.setAttribute('aria-hidden', 'true');
+      const sep = span('sep', '│');
+      sep.setAttribute('aria-hidden', 'true');
+      const nom = span('nom', '');
+      nom.append(span('sr', `${LIBELLES[type]}${x.prive ? ' privé' : ''} `), String(x.nom));
+      const desc = String(x.sujet || (ancien && $('.desc', ancien) ? $('.desc', ancien).textContent : ''));
+      li.append(svg, emo, sep, nom);
+      if (desc) li.append(span('desc', desc));
+      return li;
+    }
+    async function charger() {
+      const r = await chargerListe(SOURCES);
+      if (!r) return;
+      let d;
+      try { d = await r.json(); } catch (e) { return; }
+      if (!d || !Array.isArray(d.categories)) return;
+      let total = 0, change = false;
+      $$('.carte .discord-liste').forEach((liste) => {
+        const cat = d.categories.find((c) => c && cle(c.nom) === cle($('.cat', liste).textContent));
+        const salons = cat && Array.isArray(cat.salons) ? cat.salons.filter((x) => x && x.nom) : [];
+        if (!salons.length) { total += $$('.salon', liste).length; return; }
+        const connus = new Map($$('.salon', liste).map((li) => [$('.nom', li).lastChild.textContent.trim(), li]));
+        const items = salons.map((x) => salon(x, connus.get(String(x.nom))));
+        $('ul', liste).replaceChildren(...items);
+        const compte = $('.salle-compte b', liste.closest('.salle'));
+        if (compte) compte.textContent = items.length;
+        total += items.length;
+        change = true;
+      });
+      if (!change) return;
+      // Le total de l'accueil : les salons de la visite et les salons vocaux
+      total += $$('.vocal').length;
+      $$('#nb-salons span').forEach((x) => { x.textContent = total; });
+      if (anime) ST.refresh();
+    }
+    charger();
   })();
 
   /* ---------- Les prochains événements ---------- */

@@ -1,5 +1,6 @@
 # Toutes les 2 heures, relève les événements programmés du serveur Discord et les publie sur la branche
 # « evenements » (evenements.json), que le site affiche. Script : outils/evenements.py
+# Relève aussi les salons de la visite des salles (salons.json, même branche). Script : outils/salons.py
 # Secret : DISCORD_TOKEN (déjà utilisé par le classement), ou DISCORD_TOKEN_EVENEMENTS pour un autre bot.
 # Le bot doit être membre du serveur pour voir ses événements.
 # Toutes les 2 heures (et pas plus) pour rester dans les 2 000 minutes gratuites de GitHub Actions si le dépôt est privé.
@@ -32,18 +33,30 @@ jobs:
           DISCORD_TOKEN_EVENEMENTS: ${{ secrets.DISCORD_TOKEN_EVENEMENTS }}
         # Code 2 : rien à publier (secret absent ou Discord injoignable), sans faire échouer la tâche
         run: python3 outils/evenements.py "$RUNNER_TEMP/out/evenements.json" || [ $? -eq 2 ]
+      - name: Relever les salons
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_TOKEN_EVENEMENTS: ${{ secrets.DISCORD_TOKEN_EVENEMENTS }}
+          ROLE_MEMBRE: ${{ vars.ROLE_MEMBRE }}
+        run: python3 outils/salons.py "$RUNNER_TEMP/out/salons.json" || [ $? -eq 2 ]
       - name: Publier sur la branche evenements
         working-directory: ${{ runner.temp }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          [ -f out/evenements.json ] || { echo "Rien à publier"; exit 0; }
+          [ -f out/evenements.json ] || [ -f out/salons.json ] || { echo "Rien à publier"; exit 0; }
+          # Un relevé manqué garde la version précédente de son fichier
+          if git -C "$GITHUB_WORKSPACE" fetch -q --depth=1 origin evenements 2>/dev/null; then
+            for f in evenements.json salons.json; do
+              [ -f "out/$f" ] || git -C "$GITHUB_WORKSPACE" show "FETCH_HEAD:$f" > "out/$f" 2>/dev/null || rm -f "out/$f"
+            done
+          fi
           cd out
           git init -q -b evenements
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add evenements.json
-          git commit -q -m "Prochains événements"
+          git add -A
+          git commit -q -m "Prochains événements et salons"
           git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" evenements
       # Republie le site avec la nouvelle liste (dans la même tâche : pas de minute de plus)
       - name: Republier le site
