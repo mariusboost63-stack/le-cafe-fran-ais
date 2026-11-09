@@ -1,5 +1,6 @@
 # Toutes les heures, lit le top 10 des grains dans la base du bot (en lecture seule) et le publie
 # sur la branche « data » (classement.json), que le site affiche. Script : outils/classement.py
+# Relève aussi le jeu de cartes DeckFR (deckfr.json, même branche). Script : outils/deckfr.py
 # Secrets à ajouter (Settings → Secrets and variables → Actions) : CAFE_DB_URL et DISCORD_TOKEN.
 # Ils ne servent qu'ici : le site n'y a jamais accès.
 # Une fois par heure (et pas plus) pour rester dans les 2 000 minutes gratuites de GitHub Actions si le dépôt est privé.
@@ -34,18 +35,29 @@ jobs:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         # Code 2 : rien à publier (secrets absents ou base injoignable), sans faire échouer la tâche
         run: python3 outils/classement.py "$RUNNER_TEMP/out/classement.json" || [ $? -eq 2 ]
+      - name: Relever DeckFR
+        env:
+          CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: python3 outils/deckfr.py "$RUNNER_TEMP/out/deckfr.json" || [ $? -eq 2 ]
       - name: Publier sur la branche data
         working-directory: ${{ runner.temp }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          [ -f out/classement.json ] || { echo "Rien à publier"; exit 0; }
+          [ -f out/classement.json ] || [ -f out/deckfr.json ] || { echo "Rien à publier"; exit 0; }
+          # Un relevé manqué garde la version précédente de son fichier
+          if git -C "$GITHUB_WORKSPACE" fetch -q --depth=1 origin data 2>/dev/null; then
+            for f in classement.json deckfr.json; do
+              [ -f "out/$f" ] || git -C "$GITHUB_WORKSPACE" show "FETCH_HEAD:$f" > "out/$f" 2>/dev/null || rm -f "out/$f"
+            done
+          fi
           cd out
           git init -q -b data
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add classement.json
-          git commit -q -m "Classement des grains"
+          git add -A
+          git commit -q -m "Classement des grains et DeckFR"
           git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data
       # Republie le site avec la nouvelle liste (dans la même tâche : pas de minute de plus)
       - name: Republier le site

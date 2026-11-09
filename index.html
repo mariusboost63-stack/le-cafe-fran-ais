@@ -94,6 +94,8 @@ try {
   --glace: #bfe3ff;
   --b-creme: #a8744a;   /* café crème */
   --b-gourmand: #e0b793;
+  /* raretés de DeckFR */
+  --rar-1: #a6aec3; --rar-2: #6b95ff; --rar-3: #b57bff; --rar-4: #f0b232; --rar-5: #f94443;
 
   --f-titre: "Bricolage Grotesque", "Arial Black", "Helvetica Neue", system-ui, sans-serif;
   --f-texte: "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -405,6 +407,90 @@ main, .pied { position: relative; z-index: 1; }
 .progression .rail { width: 160px; height: 4px; border-radius: 4px; background: var(--trait); overflow: hidden; }
 .progression .rempli { display: block; height: 100%; transform-origin: left center; transform: scaleX(0);
   background: linear-gradient(90deg, var(--bleu-vif) 0 40%, var(--lait) 40% 70%, var(--rouge) 70%); }
+
+/* DeckFR, le jeu de cartes */
+.deckfr { padding-block: clamp(96px, 12vw, 160px); overflow: hidden; }
+.deckfr-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 72px) clamp(32px, 6vw, 96px); align-items: center; }
+.deckfr-tete { display: grid; gap: 22px; min-width: 0; }
+.deckfr-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 46ch; }
+.deckfr .h2 { background: linear-gradient(100deg, var(--lait) 30%, var(--rar-4) 60%, var(--rar-5) 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.dk-salons { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.dk-salons li { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 7px; padding: 8px 13px; border-radius: 12px; background: var(--nuit-2); border: 1px solid var(--trait); font-weight: 600; }
+.dk-salons svg { width: 17px; height: 17px; color: var(--brume); }
+.dk-salons span { font: 500 12px/1 var(--f-mono); letter-spacing: .06em; color: var(--brume); white-space: nowrap; }
+/* L'éventail de cartes */
+.dk-main { position: relative; height: clamp(300px, 34vw, 420px); display: grid; place-items: end center; padding-bottom: 20px; }
+.dk-carte {
+  --l: clamp(120px, 13vw, 168px);
+  position: absolute; bottom: 20px; left: 50%; width: var(--l); aspect-ratio: 5 / 7; margin-left: calc(var(--l) / -2);
+  display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center; padding: 16px 12px 14px; border-radius: 16px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--r) 28%, var(--nuit-2)), var(--nuit) 80%);
+  border: 2px solid var(--r); box-shadow: 0 18px 40px color-mix(in srgb, var(--ombre) 60%, transparent), inset 0 0 0 5px color-mix(in srgb, var(--r) 14%, transparent);
+  transform-origin: 50% 120%; transform: translateX(calc(var(--i) * 34%)) rotate(calc(var(--i) * 9deg)) translateY(calc(var(--i) * var(--i) * 8px));
+  transition: transform .5s cubic-bezier(.2, .9, .3, 1.3);
+}
+.dk-main:hover .dk-carte { transform: translateX(calc(var(--i) * 52%)) rotate(calc(var(--i) * 13deg)) translateY(calc(var(--i) * var(--i) * 12px - 14px)); }
+.dk-carte svg { width: 74%; fill: var(--r); position: relative; }
+.dk-carte b { position: relative; font: 500 11px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--r); }
+.dk-motif { position: absolute; inset: 7px; border-radius: 11px; opacity: .22; background: radial-gradient(circle at 50% 38%, var(--r), transparent 62%), repeating-linear-gradient(45deg, transparent 0 9px, color-mix(in srgb, var(--r) 30%, transparent) 9px 10px); }
+.dk-mythique { --r: var(--rar-5); }
+.dk-echelle .dk-mythique { border-color: color-mix(in srgb, var(--lait) 40%, var(--trait)); background: linear-gradient(to bottom, color-mix(in srgb, var(--bleu-vif) 12%, transparent), color-mix(in srgb, var(--rouge) 8%, transparent) 70%); }
+.dk-carte.dk-mythique { border: 0; padding: 18px 14px 16px; }
+.dk-carte.dk-mythique::before { content: ""; position: absolute; inset: 0; border-radius: 16px; padding: 2px; background: linear-gradient(160deg, var(--bleu-vif), var(--lait) 50%, var(--rouge)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.dk-carte.dk-mythique::after { content: ""; position: absolute; inset: 0; border-radius: 16px; background: linear-gradient(115deg, transparent 35%, color-mix(in srgb, var(--lait) 30%, transparent) 50%, transparent 65%) 0 0 / 250% 100%; animation: reflet 3.5s ease-in-out infinite; pointer-events: none; }
+@keyframes reflet { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+/* Les étapes */
+.dk-etapes { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.dk-etapes li { display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: 20px; background: var(--nuit-2); border: 1px solid var(--trait); min-width: 0; }
+.dk-etapes h3 { font: 800 21px/1.15 var(--f-titre); letter-spacing: -.01em; }
+.dk-etapes p { color: var(--brume); }
+.dk-etapes p b { color: var(--lait); }
+.dk-num { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: color-mix(in srgb, var(--rar-4) 18%, transparent); color: var(--rar-4); font: 800 16px/1 var(--f-titre); }
+@media (max-width: 1000px) { .dk-etapes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .deckfr-grille { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .dk-main { height: 250px; } .dk-carte { --l: 100px; padding: 12px 8px 10px; } .dk-carte b { font-size: 9px; } .dk-main:hover .dk-carte { transform: translateX(calc(var(--i) * 40%)) rotate(calc(var(--i) * 11deg)) translateY(calc(var(--i) * var(--i) * 10px - 10px)); } }
+@media (max-width: 560px) { .dk-etapes { grid-template-columns: minmax(0, 1fr); } }
+/* Les raretés */
+.dk-raretes { grid-column: 1 / -1; display: grid; gap: 16px; }
+.dk-titre { font: 800 var(--t-h3)/1.1 var(--f-titre); letter-spacing: -.01em; }
+.dk-echelle { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.dk-echelle li { position: relative; display: grid; gap: 6px; padding: 18px 16px 16px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--r) 45%, var(--trait)); background: linear-gradient(to bottom, color-mix(in srgb, var(--r) 14%, transparent), transparent 70%); min-width: 0; }
+.dk-echelle i { width: 26px; height: 6px; border-radius: 3px; background: var(--r); }
+.dk-echelle .dk-mythique i { background: linear-gradient(90deg, var(--bleu-vif), var(--lait), var(--rouge)); }
+.dk-echelle b { font: 800 19px/1.1 var(--f-titre); color: var(--r); }
+.dk-echelle .dk-mythique b { color: var(--lait); }
+.dk-nb, .dk-taux { font: 500 13px/1.3 var(--f-mono); color: var(--brume); }
+.dk-nb:empty, .dk-taux:empty { display: none; }
+.dk-note { color: var(--brume); font-size: 15px; }
+@media (max-width: 860px) { .dk-echelle { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
+/* En direct du bot */
+.dk-direct { grid-column: 1 / -1; display: grid; gap: clamp(28px, 4vw, 44px); }
+.dk-direct[hidden] { display: none; }
+.dk-chiffres { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; border-radius: 18px; overflow: hidden; background: var(--trait); border: 1px solid var(--trait); }
+.dk-chiffres li { display: grid; gap: 6px; padding: 20px; background: var(--nuit); }
+.dk-chiffres b { font: 800 clamp(26px, 2.6vw, 36px)/1 var(--f-titre); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.dk-chiffres span { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--brume); }
+.dk-colonnes { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 4vw, 56px); align-items: start; }
+.dk-colonnes:has(> .dk-bloc[hidden]) { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 860px) { .dk-colonnes { grid-template-columns: minmax(0, 1fr); } }
+.dk-bloc { display: grid; gap: 16px; min-width: 0; }
+.dk-bloc[hidden] { display: none; }
+.dk-grands { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--trait); }
+.dk-grands li { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 2px; border-bottom: 1px solid var(--trait); }
+.dk-grands img.dk-av { width: 38px; height: 38px; border-radius: 50%; background: var(--nuit-2); }
+.dk-grands p { min-width: 0; color: var(--brume); line-height: 1.35; }
+.dk-grands p b { color: var(--lait); font-weight: 600; }
+.dk-grands p .dk-nomcarte { color: var(--r); font-weight: 700; }
+.dk-grands time { font: 500 12px/1 var(--f-mono); color: var(--brume); white-space: nowrap; }
+.dk-nouvelles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; }
+.dk-nouvelles li { display: grid; gap: 8px; min-width: 0; }
+.dk-vignette { position: relative; aspect-ratio: 5 / 7; border-radius: 12px; overflow: hidden; border: 2px solid var(--r); background: linear-gradient(160deg, color-mix(in srgb, var(--r) 25%, var(--nuit-2)), var(--nuit)); display: grid; place-items: center; }
+.dk-vignette img { width: 100%; height: 100%; object-fit: cover; }
+.dk-vignette svg { width: 60%; fill: var(--r); opacity: .7; }
+.dk-nouvelles b { font-weight: 600; font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
+.dk-nouvelles span { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--r); }
+.dk-maj { color: var(--brume); font-size: 14px; }
+.riches-onglets button[hidden] { display: none; }
 
 /* Halloween */
 .halloween { --p-carte: color-mix(in srgb, var(--citrouille) 9%, var(--nuit)); --p-texte: var(--lait); --p-doux: color-mix(in srgb, var(--citrouille) 55%, var(--lait)); --p-survol: color-mix(in srgb, var(--citrouille) 12%, transparent);
@@ -1262,6 +1348,7 @@ main, .pied { position: relative; z-index: 1; }
     <symbol id="i-texte" viewBox="0 0 24 24"><path class="ico-svg" d="M9.5 3.5 7.5 20.5M16.5 3.5l-2 17M4.5 8.5h16M3.5 15.5h16"/></symbol>
     <symbol id="i-texte-prive" viewBox="0 0 24 24"><path class="ico-svg" d="M8.5 5.5 6.8 20.5M14 12.5l-1 8M3.5 9.5h8M3 15.5h15"/><rect x="15" y="5.6" width="7.5" height="5.4" rx="1.3" fill="currentColor"/><path class="ico-svg" d="M16.8 5.6V4.4a1.95 1.95 0 0 1 3.9 0v1.2" style="stroke-width: 1.6"/></symbol>
     <symbol id="i-annonce" viewBox="0 0 24 24"><path class="ico-svg" d="M3.5 9.5h4l10-5v15l-10-5h-4Z"/><path class="ico-svg" d="M7.5 14.5 9 20h2.6l-1.3-5M21 10.5v3"/></symbol>
+    <symbol id="i-cartes" viewBox="0 0 24 24"><rect class="ico-svg" x="9.5" y="4" width="10" height="14" rx="2" transform="rotate(12 14.5 11)"/><rect class="ico-svg" x="4.5" y="5.5" width="10" height="14" rx="2" transform="rotate(-8 9.5 12.5)"/></symbol>
     <symbol id="i-forum" viewBox="0 0 24 24"><path class="ico-svg" d="M3.5 5.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8l-3.2 2.6c-.5.4-1.3 0-1.3-.6Z"/><path class="ico-svg" d="M15.5 8.5h3a2 2 0 0 1 2 2v8.7c0 .6-.8 1-1.3.6L16 17.5h-5a2 2 0 0 1-2-2v-1"/></symbol>
     <symbol id="i-regles" viewBox="0 0 24 24"><rect class="ico-svg" x="4.5" y="3.5" width="15" height="17" rx="3"/><path class="ico-svg" d="M8.5 12.2l2.4 2.4 4.6-5"/></symbol>
     <symbol id="i-voix" viewBox="0 0 24 24"><path class="ico-svg" d="M3.5 9.5h4l5-4.5v14l-5-4.5h-4Z"/><path class="ico-svg" d="M16 9a4.2 4.2 0 0 1 0 6M18.8 6.3a8 8 0 0 1 0 11.4"/></symbol>
@@ -1324,6 +1411,7 @@ main, .pied { position: relative; z-index: 1; }
       <a href="#halloween" class="seulement-halloween">Halloween</a>
       <a href="#evenements" class="seulement-normal">Événements</a>
       <a href="#grains">Grains</a>
+      <a href="#deckfr">DeckFR</a>
       <a href="#info">Info du jour</a>
       <a href="#vocaux">Vocaux</a>
       <a href="#equipe">Équipe</a>
@@ -1745,17 +1833,71 @@ main, .pied { position: relative; z-index: 1; }
     </div>
   </section>
 
+  <section class="deckfr" id="deckfr" aria-labelledby="t-deckfr">
+    <div class="cadre deckfr-grille">
+      <div class="deckfr-tete" data-revele>
+        <p class="surtitre">Le jeu de cartes du café</p>
+        <h2 class="h2" id="t-deckfr">DeckFR</h2>
+        <p class="chapo">Ouvre des boosters, collectionne les cartes du café et échange-les avec les autres membres, ou contre des grains. Tout se joue sur le serveur, avec le bot du café.</p>
+        <ul class="dk-salons" aria-label="Les salons de DeckFR">
+          <li><svg aria-hidden="true"><use href="#i-annonce"/></svg>news-deckfr<span>les nouveautés</span></li>
+          <li><svg aria-hidden="true"><use href="#i-texte"/></svg>deckfr<span>on joue ici</span></li>
+          <li><svg aria-hidden="true"><use href="#i-forum"/></svg>trade-cartes-grains<span>échanges et ventes</span></li>
+        </ul>
+      </div>
+      <div class="dk-main" aria-hidden="true">
+        <div class="dk-carte" style="--r: var(--rar-1); --i: -2"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Commune</b></div>
+        <div class="dk-carte" style="--r: var(--rar-2); --i: -1"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Rare</b></div>
+        <div class="dk-carte" style="--r: var(--rar-3); --i: 0"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Épique</b></div>
+        <div class="dk-carte" style="--r: var(--rar-4); --i: 1"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Légendaire</b></div>
+        <div class="dk-carte dk-mythique" style="--r: var(--rar-5); --i: 2"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Mythique</b></div>
+      </div>
+      <ol class="dk-etapes">
+        <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Des boosters gratuits se rechargent avec le temps, et tu peux en acheter d'autres avec tes grains. Chaque booster contient plusieurs cartes.</p></li>
+        <li><span class="dk-num">2</span><h3>Complète ta collection</h3><p><b class="dk-total">150</b> cartes à réunir, réparties en cinq raretés. Tes doublons te servent à échanger ou à vendre.</p></li>
+        <li><span class="dk-num">3</span><h3>Une garantie pour les plus rares</h3><p>Plus tu ouvres de boosters sans tomber sur une carte légendaire ou mythique, plus elle se rapproche&nbsp;: le jeu finit par te la garantir.</p></li>
+        <li><span class="dk-num">4</span><h3>Échange et vends</h3><p>Propose un échange à un membre (les deux confirment avant que les cartes changent de main), ou mets une carte en vente contre des grains.</p></li>
+      </ol>
+      <div class="dk-raretes" data-revele>
+        <h3 class="dk-titre">Les cinq raretés</h3>
+        <ol class="dk-echelle" id="dk-echelle">
+          <li style="--r: var(--rar-1)"><i aria-hidden="true"></i><b>Commune</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
+          <li style="--r: var(--rar-2)"><i aria-hidden="true"></i><b>Rare</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
+          <li style="--r: var(--rar-3)"><i aria-hidden="true"></i><b>Épique</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
+          <li style="--r: var(--rar-4)"><i aria-hidden="true"></i><b>Légendaire</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
+          <li class="dk-mythique" style="--r: var(--rar-5)"><i aria-hidden="true"></i><b>Mythique</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
+        </ol>
+        <p class="dk-note" id="dk-note">Les chiffres du jeu arrivent directement du bot.</p>
+      </div>
+      <div class="dk-direct" id="dk-direct" hidden>
+        <ul class="dk-chiffres" id="dk-chiffres"></ul>
+        <div class="dk-colonnes">
+          <div class="dk-bloc" id="dk-grands-bloc" hidden>
+            <h3 class="dk-titre">Les derniers grands tirages</h3>
+            <ol class="dk-grands" id="dk-grands"></ol>
+          </div>
+          <div class="dk-bloc" id="dk-nouvelles-bloc" hidden>
+            <h3 class="dk-titre">Les dernières cartes sorties</h3>
+            <ol class="dk-nouvelles" id="dk-nouvelles"></ol>
+          </div>
+        </div>
+        <p class="dk-maj" id="dk-maj"></p>
+      </div>
+    </div>
+  </section>
+
   <section class="riches" id="classement" aria-labelledby="t-classement" hidden>
     <div class="cadre riches-grille">
       <div class="riches-tete" data-revele>
         <p class="surtitre">Les classements</p>
         <h2 class="h2" id="t-classement">Les champions du café</h2>
-        <p class="chapo">Les dix membres les plus riches en grains, et ceux qui font le plus avancer la suite de #infini, relevés directement dans le bot. <span id="riches-maj"></span></p>
+        <p class="chapo">Les dix membres les plus riches en grains, ceux qui font le plus avancer la suite de #infini et les plus grands collectionneurs de DeckFR, relevés directement dans le bot. <span id="riches-maj"></span></p>
       </div>
       <div class="riches-corps">
         <div class="riches-onglets" role="tablist" aria-label="Choix du classement" hidden>
           <button type="button" role="tab" id="onglet-grains" aria-controls="panneau-grains" aria-selected="true"><svg aria-hidden="true"><use href="#i-grain"/></svg>Grains</button>
-          <button type="button" role="tab" id="onglet-infini" aria-controls="panneau-infini" aria-selected="false" tabindex="-1"><svg aria-hidden="true"><use href="#i-infini"/></svg>#infini</button>
+          <button type="button" role="tab" id="onglet-infini" aria-controls="panneau-infini" aria-selected="false" tabindex="-1" hidden><svg aria-hidden="true"><use href="#i-infini"/></svg>#infini</button>
+          <button type="button" role="tab" id="onglet-deckfr" aria-controls="panneau-deckfr" aria-selected="false" tabindex="-1" hidden><svg aria-hidden="true"><use href="#i-cartes"/></svg>DeckFR</button>
         </div>
         <div class="riches-panneau" id="panneau-grains" role="tabpanel" aria-labelledby="onglet-grains">
           <p class="riches-legende">Les plus riches, en poche et en banque.</p>
@@ -1766,6 +1908,11 @@ main, .pied { position: relative; z-index: 1; }
           <p class="riches-legende">Les membres qui ont posté le plus de nombres. <span id="infini-total"></span></p>
           <ol class="top3" id="top3-infini"></ol>
           <ol class="riches-liste" id="liste-infini" start="4"></ol>
+        </div>
+        <div class="riches-panneau" id="panneau-deckfr" role="tabpanel" aria-labelledby="onglet-deckfr" hidden>
+          <p class="riches-legende">Les plus belles collections de DeckFR, en cartes différentes. <span id="deckfr-total"></span></p>
+          <ol class="top3" id="top3-deckfr"></ol>
+          <ol class="riches-liste" id="liste-deckfr" start="4"></ol>
         </div>
       </div>
     </div>
@@ -2832,20 +2979,118 @@ main, .pied { position: relative; z-index: 1; }
     return null;
   }
 
+  /* ---------- DeckFR : le jeu de cartes du bot ---------- */
+  // Les chiffres du jeu sont relevés dans la base du bot par GitHub Actions (outils/deckfr.py) et publiés sur la
+  // branche « data » (deckfr.json), puis avec le site. Sans fichier, la section garde son texte et ses raretés.
+  // Noms des raretés, du niveau 1 au niveau 5 (comme dans le bot)
+  const RARETES = ['Commune', 'Rare', 'Épique', 'Légendaire', 'Mythique'];
+  let deckfrPromesse = null, deckfrLu = 0;
+  function chargerDeckfr() {
+    if (!deckfrPromesse || Date.now() - deckfrLu > 60000) {
+      deckfrLu = Date.now();
+      deckfrPromesse = chargerListe(['deckfr.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/deckfr.json'])
+        .then((r) => (r ? r.json() : null)).catch(() => null);
+    }
+    return deckfrPromesse;
+  }
+  // Un avatar Discord (seulement depuis le CDN de Discord), avec un rond vide si l'image ne répond pas
+  function avatarDiscord(url, taille) {
+    const img = new Image();
+    img.src = /^https:\/\/cdn\.discordapp\.com\//.test(String(url || '')) ? url : 'https://cdn.discordapp.com/embed/avatars/0.png';
+    img.alt = ''; img.width = img.height = taille;
+    img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
+    img.addEventListener('error', () => { img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='; }, { once: true });
+    return img;
+  }
+  function ilYa(iso) {
+    const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
+    if (!Number.isFinite(m)) return '';
+    if (m < 1) return 'à l’instant';
+    if (m < 60) return `il y a ${m} min`;
+    const h = Math.round(m / 60);
+    if (h < 24) return `il y a ${h} h`;
+    const j = Math.round(h / 24);
+    return j < 31 ? `il y a ${j} j` : `le ${new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}`;
+  }
+  (function deckfr() {
+    const pf = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
+    const ns = 'http://www.w3.org/2000/svg';
+    const couleur = (r) => `var(--rar-${Math.min(5, Math.max(1, Number(r) || 1))})`;
+    const nomRarete = (r) => RARETES[Number(r) - 1] || `Rareté ${r}`;
+    const el = (tag, props) => Object.assign(document.createElement(tag), props || {});
+    // La tasse du café, à la place d'une image de carte absente
+    function tasse() {
+      const svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('viewBox', '8 55 234 185'); svg.setAttribute('aria-hidden', 'true');
+      ['#p-tasse', '#p-v1', '#p-v2', '#p-v3'].forEach((id) => { const u = document.createElementNS(ns, 'use'); u.setAttribute('href', id); svg.append(u); });
+      return svg;
+    }
+    function vignette(x) {
+      const v = el('div', { className: 'dk-vignette' });
+      if (/^https:\/\//.test(String(x.image || ''))) {
+        const img = el('img', { src: x.image, alt: '', loading: 'lazy', decoding: 'async', referrerPolicy: 'no-referrer' });
+        img.addEventListener('error', () => img.replaceWith(tasse()), { once: true });
+        v.append(img);
+      } else v.append(tasse());
+      return v;
+    }
+    async function charger() {
+      const d = await chargerDeckfr();
+      if (!d || !d.chiffres) return;
+      const c = d.chiffres;
+      if (Number(c.cartes) > 0) $$('.dk-total').forEach((b) => { b.textContent = nf.format(c.cartes); });
+      // Les raretés : cartes au catalogue et part réelle dans les tirages
+      const lignes = $$('#dk-echelle li');
+      (Array.isArray(d.raretes) ? d.raretes : []).forEach((x) => {
+        const li = lignes[Number(x.niveau) - 1];
+        if (!li || !Number.isFinite(Number(x.cartes))) return;
+        $('.dk-nb', li).textContent = `${nf.format(x.cartes)} carte${x.cartes > 1 ? 's' : ''}`;
+        if (Number.isFinite(Number(x.tirage)) && x.tirage !== null) $('.dk-taux', li).textContent = `${pf.format(x.tirage)} % des tirages`;
+      });
+      if (Number(c.tirees) > 0) $('#dk-note').textContent = `Les pourcentages sont relevés sur les ${nf.format(c.tirees)} cartes déjà sorties des boosters.`;
+      // Les chiffres du jeu
+      const chiffres = [[c.joueurs, 'joueurs'], [c.boosters, 'boosters ouverts'], [c.tirees, 'cartes tirées'],
+        [c.echanges, 'échanges conclus'], [c.ventes, 'ventes au marché'], [c.grains_marche, 'grains dépensés au marché']]
+        .filter(([n]) => Number(n) > 0)
+        .map(([n, t]) => { const li = el('li'); li.append(el('b', { textContent: nf.format(n) }), el('span', { textContent: t })); return li; });
+      $('#dk-chiffres').replaceChildren(...chiffres);
+      // Les derniers grands tirages
+      const grands = (Array.isArray(d.grands_tirages) ? d.grands_tirages : []).filter((x) => x && x.carte).slice(0, 8).map((x) => {
+        const li = el('li');
+        li.style.setProperty('--r', couleur(x.rarete));
+        const av = avatarDiscord(x.avatar, 38); av.className = 'dk-av';
+        const p = el('p');
+        p.append(el('b', { textContent: String(x.nom || 'Membre') }), ' a tiré ', el('span', { className: 'dk-nomcarte', textContent: String(x.carte) }), ` · ${nomRarete(x.rarete)}`);
+        const t = el('time', { textContent: ilYa(x.date) }); if (x.date) t.dateTime = x.date;
+        li.append(av, p, t);
+        return li;
+      });
+      $('#dk-grands').replaceChildren(...grands);
+      $('#dk-grands-bloc').hidden = !grands.length;
+      // Les dernières cartes sorties
+      const nouvelles = (Array.isArray(d.nouvelles) ? d.nouvelles : []).filter((x) => x && x.nom).slice(0, 8).map((x) => {
+        const li = el('li');
+        li.style.setProperty('--r', couleur(x.rarete));
+        li.append(vignette(x), el('b', { textContent: String(x.nom) }), el('span', { textContent: nomRarete(x.rarete) }));
+        return li;
+      });
+      $('#dk-nouvelles').replaceChildren(...nouvelles);
+      $('#dk-nouvelles-bloc').hidden = !nouvelles.length;
+      $('#dk-maj').textContent = d.maj ? `Chiffres relevés dans le bot ${ilYa(d.maj)}.` : '';
+      const avant = $('#dk-direct').hidden;
+      $('#dk-direct').hidden = !chiffres.length && !grands.length && !nouvelles.length;
+      if (anime && avant !== $('#dk-direct').hidden) ST.refresh();
+    }
+    charger();
+    setInterval(() => { if (!document.hidden) charger(); }, 10 * 60000);
+  })();
+
   /* ---------- Le classement des grains ---------- */
   // Le top 10 est relevé dans la base du bot par GitHub Actions (outils/classement.py) et publié sur la branche
   // « data », puis avec le site : le site ne lit que cette liste, jamais la base. Sans liste, la section reste cachée.
   (function classementGrains() {
     const SOURCES = ['classement.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/classement.json'];
-    const avatar = (x, taille) => {
-      const img = new Image();
-      img.src = /^https:\/\/cdn\.discordapp\.com\//.test(String(x.avatar || '')) ? x.avatar : 'https://cdn.discordapp.com/embed/avatars/0.png';
-      img.alt = ''; img.width = img.height = taille;
-      img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
-      // Avatar injoignable : le rond reste, vide, plutôt qu'une image cassée
-      img.addEventListener('error', () => { img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='; }, { once: true });
-      return img;
-    };
+    const avatar = (x, taille) => avatarDiscord(x.avatar, taille);
     // Valeur affichée : grains (icône grain) ou nombres postés dans #infini (icône infini)
     const valeur = (n, icone, unite) => {
       const b = Object.assign(document.createElement('b'), { className: 'rg-grains' });
@@ -2858,6 +3103,7 @@ main, .pied { position: relative; z-index: 1; }
     };
     const grains = (n) => valeur(n, '#i-grain', 'grains');
     const nombres = (n) => valeur(n, '#i-infini', Number(n) > 1 ? 'nombres' : 'nombre');
+    const cartes = (n) => valeur(n, '#i-cartes', Number(n) > 1 ? 'cartes différentes' : 'carte');
     const nom = (x) => Object.assign(document.createElement('span'), { className: 'rg-nom', textContent: String(x.nom || 'Membre') });
     let maj = NaN, affiche = '', dernier = 0;
     function ecrireMaj() {
@@ -2876,20 +3122,31 @@ main, .pied { position: relative; z-index: 1; }
         const propre = (l, cle) => (Array.isArray(l) ? l : []).filter((x) => x && Number.isFinite(Number(x[cle]))).slice(0, 10);
         const liste = propre(d.classement, 'grains');
         const listeInfini = propre(d.infini_classement, 'nombres');
+        const dk = await chargerDeckfr();
+        const listeDeckfr = propre(dk && dk.collectionneurs, 'cartes');
         if (!liste.length) return;
         maj = Date.parse(d.maj);
         ecrireMaj();
         // Rien n'a changé : on ne redessine pas
-        const signature = JSON.stringify([liste, listeInfini, d.infini]);
+        const signature = JSON.stringify([liste, listeInfini, d.infini, listeDeckfr]);
         if (signature === affiche) return;
         affiche = signature;
         remplir(liste, (x) => grains(x.grains), '#top3', '#riches-liste');
-        // Le classement de #infini n'apparaît que s'il est publié
-        $('.riches-onglets').hidden = !listeInfini.length;
+        // Les classements de #infini et de DeckFR n'apparaissent que s'ils sont publiés
+        $('#onglet-infini').hidden = !listeInfini.length;
+        $('#onglet-deckfr').hidden = !listeDeckfr.length;
+        $('.riches-onglets').hidden = !listeInfini.length && !listeDeckfr.length;
         if (listeInfini.length) {
           remplir(listeInfini, (x) => nombres(x.nombres), '#top3-infini', '#liste-infini');
           $('#infini-total').textContent = Number.isFinite(Number(d.infini)) ? `La suite en est à ${nf.format(Number(d.infini))}.` : '';
-        } else montrer('grains');
+        }
+        if (listeDeckfr.length) {
+          remplir(listeDeckfr, (x) => cartes(x.cartes), '#top3-deckfr', '#liste-deckfr');
+          const total = Number(dk.chiffres && dk.chiffres.cartes);
+          $('#deckfr-total').textContent = total > 0 ? `Le jeu compte ${nf.format(total)} cartes.` : '';
+        }
+        const ouvert = onglets.find((o) => o.getAttribute('aria-selected') === 'true');
+        if (!ouvert || ouvert.hidden) montrer('grains');
         if ($('#classement').hidden) {
           $('#classement').hidden = false;
           if (anime) ST.refresh();
@@ -2923,12 +3180,13 @@ main, .pied { position: relative; z-index: 1; }
       });
       if (anime) ST.refresh();
     }
-    onglets.forEach((o, i) => {
+    onglets.forEach((o) => {
       o.addEventListener('click', () => montrer(o.id.replace('onglet-', '')));
       o.addEventListener('keydown', (e) => {
         if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
         e.preventDefault();
-        const suivant = onglets[(i + (e.key === 'ArrowRight' ? 1 : onglets.length - 1)) % onglets.length];
+        const visibles = onglets.filter((x) => !x.hidden), j = visibles.indexOf(o);
+        const suivant = visibles[(j + (e.key === 'ArrowRight' ? 1 : visibles.length - 1)) % visibles.length];
         montrer(suivant.id.replace('onglet-', ''), true);
       });
     });
