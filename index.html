@@ -938,12 +938,12 @@ main, .pied { position: relative; z-index: 1; }
   .article { grid-template-columns: 44px minmax(0, 1fr); gap: 10px 14px; align-items: start; }
   .a-ico { width: 44px; height: 44px; border-radius: 13px; }
   .a-points { display: none; }
-  .a-prix { grid-column: 2; justify-items: start; text-align: left; grid-template-columns: auto 20px auto; }
+  .a-prix { grid-column: 2; justify-items: start; justify-content: start; text-align: left; grid-template-columns: auto 20px auto; }
   .a-temps { grid-column: 3; margin: 0 0 0 6px; }
 }
 @media (max-width: 460px) {
-  .a-prix { grid-template-columns: auto 20px; }
-  .a-temps { grid-column: 1 / -1; margin: 5px 0 0; white-space: normal; }
+  .a-prix { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; }
+  .a-temps { flex-basis: 100%; margin: 5px 0 0; white-space: normal; }
 }
 .grains-carte {
   position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2025,6 +2025,7 @@ main, .pied { position: relative; z-index: 1; }
           <p>Ouvre-la avec <code>/boutique</code> dans #casino. Sous chaque prix, le temps de vocal qu'il te faut avec le bonus <b id="boutique-bonus">×1</b>, sans compter le casino ni les récompenses.</p>
         </div>
         <ol class="articles">
+          <li class="article" data-prix="10000" style="--a: var(--rar-4)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-cadeau"/></svg></span><div class="a-texte"><h4>Booster de cartes</h4><p>Un booster de 5 cartes DeckFR à ouvrir avec <code>/ouverture</code>. Les boosters achetés ne sont pas limités par le stock de boosters gratuits.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>10&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">20 min</span> de vocal</span></p></li>
           <li class="article" data-prix="350000" style="--a: var(--a-couleurs)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-palette"/></svg></span><div class="a-texte"><h4>Accès Couleurs</h4><p>Le rôle @Accès Couleurs débloque toutes les couleurs de pseudo du serveur, et tu changes de couleur quand tu veux. Offert dès @Apprenti (niveau 15) et pour les boosters.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>350&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">11 h 40</span> de vocal</span></p></li>
           <li class="article" data-prix="1000000" style="--a: var(--a-moliere)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-livre"/></svg></span><div class="a-texte"><h4>Rôle <span>@Molière</span></h4><p>Embellis ton profil sur le Café Français avec ce rôle.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>1&#8239;000&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">33 h 20</span> de vocal</span></p></li>
           <li class="article" data-prix="3000000" style="--a: var(--a-vip)"><span class="a-ico" aria-hidden="true"><svg><use href="#i-etoile"/></svg></span><div class="a-texte"><h4>Rôle <span>@VIP</span></h4><p>Tu es affiché plus haut dans la liste des membres et tu obtiens différents avantages.</p></div><span class="a-points" aria-hidden="true"></span><p class="a-prix"><b>3&#8239;000&#8239;000</b><svg class="a-grain" aria-label="grains" role="img"><use href="#i-grain"/></svg><span class="a-temps"><span class="a-duree">100 h</span> de vocal</span></p></li>
@@ -2056,7 +2057,7 @@ main, .pied { position: relative; z-index: 1; }
         <div class="dk-carte dk-photo dk-mythique" style="--r: var(--rar-5); --i: 2"><img src="cartes/vitrine/mythique-charlemagne.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
       </div>
       <ol class="dk-etapes">
-        <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Des boosters gratuits se rechargent avec le temps, et tu peux en acheter d'autres avec tes grains. Chaque booster contient plusieurs cartes.</p></li>
+        <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Chaque booster contient 5 cartes, à ouvrir avec <code>/ouverture</code>. Des boosters gratuits se rechargent avec le temps, et la boutique en vend à 10&nbsp;000 grains, sans limite.</p></li>
         <li><span class="dk-num">2</span><h3>Complète ta collection</h3><p><b class="dk-total">150</b> cartes à réunir, réparties en cinq raretés. Tes doublons te servent à échanger ou à vendre.</p></li>
         <li><span class="dk-num">3</span><h3>Une garantie pour les plus rares</h3><p>Plus tu ouvres de boosters sans tomber sur une carte légendaire ou mythique, plus elle se rapproche&nbsp;: le jeu finit par te la garantir.</p></li>
         <li><span class="dk-num">4</span><h3>Échange et vends</h3><p>Propose un échange à un membre (les deux confirment avant que les cartes changent de main), ou mets une carte en vente contre des grains.</p></li>
