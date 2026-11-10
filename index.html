@@ -303,6 +303,31 @@ main, .pied { position: relative; z-index: 1; }
 .pastille { width: 9px; height: 9px; border-radius: 50%; background: var(--vert); box-shadow: 0 0 0 0 color-mix(in srgb, var(--vert) 60%, transparent); animation: pouls 2s infinite; flex: none; }
 @keyframes pouls { 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 .intro .hero-revele { visibility: hidden; }
+.hero-presents {
+  display: inline-flex; align-items: center; gap: 12px; padding: 6px 18px 6px 8px; border-radius: 999px; text-decoration: none;
+  background: color-mix(in srgb, var(--lait) 4%, transparent); border: 1px solid var(--trait); color: var(--brume); font-size: 14.5px;
+  transition: border-color .25s, color .25s;
+}
+.hero-presents:hover { border-color: color-mix(in srgb, var(--vert) 60%, transparent); color: var(--lait); }
+.hero-presents[hidden] { display: none; }
+.hp-pile { display: inline-flex; flex: none; }
+.hp-pile img { width: 32px; height: 32px; margin-left: -10px; border-radius: 50%; border: 2px solid var(--nuit); background: var(--nuit-2); animation: hp-arrivee .5s cubic-bezier(.3, 1.5, .5, 1) both; animation-delay: calc(var(--i) * 70ms + .2s); }
+.hp-pile img:first-child { margin-left: 0; }
+@keyframes hp-arrivee { from { transform: translateY(8px) scale(.6); opacity: 0; } }
+@media (max-width: 480px) { .hero-presents { font-size: 13.5px; max-width: 100%; } .hp-pile img:nth-child(n + 5) { display: none; } }
+/* Les volutes de vapeur qui montent au-dessus de la tasse et se dissipent */
+.fumee { position: absolute; left: 9.5%; top: -16%; width: 11.5%; height: 40%; pointer-events: none; }
+.intro .fumee { visibility: hidden; }
+.fumee i {
+  position: absolute; bottom: 0; left: calc(var(--x) * 1%); width: 36%; aspect-ratio: 1; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, color-mix(in srgb, var(--lait) 60%, transparent), transparent 68%); filter: blur(5px);
+  animation: fumee 6.4s ease-out infinite; animation-delay: var(--d);
+}
+@keyframes fumee {
+  0% { transform: translate(0, 0) scale(.45); opacity: 0; }
+  18% { opacity: .32; }
+  100% { transform: translate(var(--dx), -170%) scale(1.7); opacity: 0; }
+}
 
 /* Ruban tricolore */
 .ruban { position: relative; height: clamp(150px, 19vw, 240px); overflow: hidden; }
@@ -423,7 +448,7 @@ main, .pied { position: relative; z-index: 1; }
   background: linear-gradient(90deg, var(--bleu-vif) 0 40%, var(--lait) 40% 70%, var(--rouge) 70%); }
 
 /* DeckFR, le jeu de cartes */
-.deckfr { padding-block: clamp(96px, 12vw, 160px); overflow: hidden; }
+.deckfr { padding-block: clamp(72px, 8vw, 120px); overflow: hidden; }
 .deckfr-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 72px) clamp(32px, 6vw, 96px); align-items: center; }
 .deckfr-tete { display: grid; gap: 22px; min-width: 0; }
 .deckfr-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 46ch; }
@@ -516,7 +541,7 @@ main, .pied { position: relative; z-index: 1; }
 .riches-onglets button[hidden] { display: none; }
 
 /* Noël */
-.noel { position: relative; overflow: hidden; padding-block: clamp(96px, 13vw, 170px); }
+.noel { position: relative; overflow: hidden; padding-block: clamp(72px, 9vw, 128px); }
 .noel-lueur {
   position: absolute; inset: 0 -10% 0 25%; z-index: -1; pointer-events: none;
   background: radial-gradient(38% 40% at 62% 58%, color-mix(in srgb, var(--or) 20%, transparent), transparent),
@@ -583,7 +608,7 @@ main, .pied { position: relative; z-index: 1; }
 
 /* Halloween */
 .halloween { --p-carte: color-mix(in srgb, var(--citrouille) 9%, var(--nuit)); --p-texte: var(--lait); --p-doux: color-mix(in srgb, var(--citrouille) 55%, var(--lait)); --p-survol: color-mix(in srgb, var(--citrouille) 12%, transparent);
-  position: relative; overflow: hidden; padding-block: clamp(96px, 13vw, 170px); }
+  position: relative; overflow: hidden; padding-block: clamp(72px, 9vw, 128px); }
 .lueur {
   position: absolute; left: 20%; right: -10%; bottom: 0; height: 70%; z-index: -1; pointer-events: none;
   /* le dégradé s'éteint avant les bords de la boîte : aucune coupure en bas de section ni sur les côtés */
@@ -618,47 +643,121 @@ main, .pied { position: relative; z-index: 1; }
 .chauve use { transform-box: fill-box; transform-origin: 50% 40%; animation: battre var(--vol) ease-in-out infinite alternate; }
 @keyframes battre { to { transform: scaleY(.45) translateY(10%); } }
 
-/* Salons vocaux */
-.vocaux { padding-block: clamp(96px, 12vw, 160px); }
-.vocaux-grille { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
-@media (max-width: 860px) { .vocaux-grille { grid-template-columns: minmax(0, 1fr); } }
-.vocaux-texte { display: grid; gap: 22px; min-width: 0; }
-@media (min-width: 861px) { .vocaux-texte { position: sticky; top: 120px; } }
-.vocaux-texte .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 38ch; }
-.vocaux-liste { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--trait); min-width: 0; }
-.vocal {
-  display: grid; grid-template-columns: 22px auto minmax(0, 1fr) auto auto; align-items: center; gap: 14px;
-  padding: 20px 6px; border-bottom: 1px solid var(--trait);
-  transition: background-color .25s, padding .25s;
+/* Salons vocaux : le plan de salle du café, vu du dessus. Chaque salon est une table, avec autant de chaises que de
+   places ; les membres en vocal (widget Discord) viennent s'y asseoir avec leur avatar. */
+.vocaux { padding-block: clamp(72px, 8vw, 120px); }
+.vocaux-cadre { display: grid; gap: clamp(28px, 4vw, 44px); }
+.vocaux-texte { display: grid; gap: 18px; max-width: 760px; min-width: 0; }
+.vocaux-texte .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 52ch; }
+.salle-legende { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--brume); }
+.salle-legende span { display: inline-flex; align-items: center; gap: 9px; }
+.salle-legende .chaise { --c: 14px; }
+.plan-salle {
+  position: relative; display: grid; gap: 14px; min-width: 0;
+  padding: clamp(14px, 2.4vw, 28px); border-radius: 28px; border: 1px solid var(--trait);
+  /* le carrelage de bistrot, en damier très discret */
+  background:
+    conic-gradient(color-mix(in srgb, var(--lait) 3.5%, transparent) 25%, transparent 0 50%, color-mix(in srgb, var(--lait) 3.5%, transparent) 0 75%, transparent 0) 0 0 / 40px 40px,
+    var(--nuit-2);
 }
-.vocal:hover { background: color-mix(in srgb, var(--lait) 4%, transparent); padding-inline: 14px; }
-.vocal .ico { width: 22px; height: 22px; color: var(--brume); }
-.vocal .nom { font: 700 clamp(19px, 1.8vw, 24px)/1.2 var(--f-titre); letter-spacing: -.01em; min-width: 0; }
-.vocal .v-desc { display: block; margin-top: 4px; font: 400 14px/1.35 var(--f-texte); letter-spacing: 0; color: var(--brume); }
-.vocal .presents { display: inline-flex; margin-left: 10px; vertical-align: middle; }
-.vocal .presents img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--nuit); margin-left: -6px; }
-.eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 22px; }
+/* Le comptoir en zinc, en haut de la salle, et ses tabourets */
+.salle-comptoir {
+  position: relative; display: flex; align-items: center; gap: 14px; min-height: 50px; padding: 0 18px; border-radius: 14px;
+  background: linear-gradient(180deg, #e3e6ec, #a9b0bd 55%, #7d8594); color: var(--nuit);
+  box-shadow: inset 0 2px 0 #fff8, 0 10px 20px -12px #000;
+}
+.sc-nom { font: 500 12.5px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; }
+.sc-machine { display: inline-flex; gap: 5px; padding: 6px 7px; border-radius: 7px; background: #3a3f4a; box-shadow: inset 0 0 0 2px #5a6170; }
+.sc-machine i { width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle, var(--creme) 0 35%, #1d2028 40%); }
+/* des tasses posées sur le zinc, vues du dessus : une soucoupe, du café */
+.sc-tasses { flex: 1; align-self: stretch; background: radial-gradient(circle, var(--cafe) 0 4px, var(--lait) 4.5px 8.5px, color-mix(in srgb, #000 22%, transparent) 9px 10px, transparent 10.5px) center / 92px 26px space no-repeat; }
+.salle-tabourets { display: flex; justify-content: space-around; margin: -6px 8% 4px; }
+.salle-tabourets i { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #b5714a, #6e3a1f 70%); box-shadow: 0 3px 6px -2px #000; }
+/* Les tables */
+.salle-tables { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 1100px) { .salle-tables { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 680px) { .salle-tables { grid-template-columns: minmax(0, 1fr); } }
+.plan-salle .vocal {
+  display: grid; grid-template-rows: 1fr auto; gap: 14px; min-width: 0; padding: 18px 16px 16px; border-radius: 20px;
+  background: color-mix(in srgb, var(--nuit) 72%, transparent); border: 1px solid color-mix(in srgb, var(--lait) 8%, transparent);
+  transition: border-color .3s, box-shadow .3s; container-type: inline-size;
+}
+.plan-salle .vocal.occupe { border-color: color-mix(in srgb, var(--vert) 45%, transparent); box-shadow: 0 16px 34px -18px color-mix(in srgb, var(--vert) 55%, transparent); }
+.t-plan { position: relative; display: grid; place-content: center; justify-items: stretch; gap: 7px; min-height: 132px; }
+.t-rang { --g: clamp(2px, 1.4cqi, 5px); display: flex; justify-content: center; gap: var(--g); }
+/* 15 chaises par côté au plus : leur taille suit la largeur de la table */
+.t-rang .chaise { --c: clamp(10px, calc((100cqi - 14 * var(--g)) / 15), 16px); }
+.chaise {
+  --c: 16px; box-sizing: border-box; position: relative; display: inline-grid; place-items: center; flex: none; width: var(--c); height: var(--c);
+  border-radius: 5px; background: color-mix(in srgb, var(--lait) 9%, var(--nuit)); border: 1.5px solid color-mix(in srgb, var(--lait) 24%, transparent);
+}
+/* le dossier, côté opposé à la table */
+.t-rang:first-child .chaise { border-top-width: 4px; }
+.t-rang:last-child .chaise { border-bottom-width: 4px; }
+.chaise.prise { background: color-mix(in srgb, var(--vert) 30%, var(--nuit)); border-color: var(--vert); z-index: 1; }
+.chaise img { position: absolute; width: 26px; height: 26px; max-width: none; border-radius: 50%; box-shadow: 0 0 0 2px var(--vert), 0 4px 10px -2px #000; background: var(--nuit-2); }
+.t-table {
+  display: block; height: 36px; border-radius: 10px;
+  /* bois du café, et des tasses posées dessus */
+  background: radial-gradient(circle, var(--cafe) 0 3.5px, var(--lait) 4px 7.5px, color-mix(in srgb, #000 25%, transparent) 8px 9px, transparent 9.5px) center / 64px 100% space no-repeat,
+              linear-gradient(180deg, #8a5a34, #5e3a1f);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, #000 22%, transparent), 0 10px 18px -10px #000;
+}
+/* Gaming : une table sombre éclairée par les écrans */
+[data-forme="jeu"] .t-table {
+  background: linear-gradient(90deg, transparent 0 9px, color-mix(in srgb, var(--bleu-vif) 55%, transparent) 9px 31px, transparent 31px) center / 40px 10px space no-repeat, linear-gradient(180deg, #1f2b45, #141c2e);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--bleu-vif) 50%, transparent), 0 0 22px -6px color-mix(in srgb, var(--bleu-vif) 60%, transparent);
+}
+/* Musique : une table ronde et un vinyle */
+[data-forme="ronde"] .t-plan { min-height: 150px; }
+[data-forme="ronde"] .t-table {
+  width: 70px; height: 70px; border-radius: 50%; justify-self: center;
+  background: radial-gradient(circle, var(--rouge) 0 5px, #111 6px 22px, #2a2a2a 23px 24px, #111 25px 29px, transparent 30px), linear-gradient(180deg, #8a5a34, #5e3a1f);
+}
+[data-forme="ronde"] .chaise {
+  position: absolute; left: 50%; top: 50%; margin: calc(var(--c) / -2);
+  transform: rotate(var(--a)) translateX(56px) rotate(90deg); border-top-width: 4px;
+}
+[data-forme="ronde"] .chaise img { transform: rotate(calc(-1 * var(--a) - 90deg)); }
+/* Détente : un canapé en velours et une table basse */
+.t-canape {
+  display: flex; justify-content: center; gap: 4px; padding: 9px 12px 8px; border-radius: 16px 16px 10px 10px;
+  background: linear-gradient(180deg, #7a3a4e, #5c2a3a); border-top: 9px solid #4a2030;
+  box-shadow: inset 6px 0 0 #4a2030, inset -6px 0 0 #4a2030, 0 10px 18px -10px #000;
+}
+.t-canape .chaise { --c: 20px; border-radius: 7px; border: 0; background: color-mix(in srgb, #fff 14%, #7a3a4e); }
+.t-canape .chaise.prise { background: color-mix(in srgb, var(--vert) 35%, #7a3a4e); }
+[data-forme="canape"] .t-table { width: 58%; height: 30px; justify-self: center; border-radius: 15px; }
+.t-plus { position: absolute; right: 0; top: 0; padding: 3px 8px; border-radius: 999px; background: var(--vert); color: var(--nuit); font: 700 12.5px/1.2 var(--f-titre); }
+/* Le nom du salon, sa jauge et sa description */
+.t-info { display: grid; gap: 6px; min-width: 0; }
+.t-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 9px; margin: 0; min-width: 0; }
+.t-tete .ico { width: 18px; height: 18px; flex: none; color: var(--brume); }
+.t-tete .nom { flex: 1 1 9ch; min-width: 0; font: 700 19px/1.2 var(--f-titre); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.plan-salle .v-desc { margin: 0; font-size: 14.5px; line-height: 1.4; color: var(--brume); }
+.eq { display: none; align-items: flex-end; gap: 3px; height: 18px; flex: none; }
+.vocal.occupe .eq { display: inline-flex; }
 .eq i { width: 3px; height: 100%; border-radius: 2px; background: var(--bleu-vif); transform-origin: bottom; animation: eq 1.1s ease-in-out infinite alternate; }
 .eq i:nth-child(2) { animation-duration: .8s; animation-delay: -.3s; background: var(--lait); }
 .eq i:nth-child(3) { animation-duration: 1.3s; animation-delay: -.6s; background: var(--rouge); }
 .eq i:nth-child(4) { animation-duration: .95s; animation-delay: -.2s; background: var(--lait); }
 .eq i:nth-child(5) { animation-duration: 1.2s; animation-delay: -.9s; }
-.vocal:hover .eq i { animation-duration: .35s; }
 @keyframes eq { from { transform: scaleY(.18); } to { transform: scaleY(1); } }
 .jauge {
-  display: inline-flex; align-items: center; justify-content: center; min-width: 92px;
-  padding: 7px 10px; border-radius: 8px; background: var(--nuit-2); border: 1px solid var(--trait);
-  font: 500 12.5px/1 var(--f-mono); color: var(--brume); font-variant-numeric: tabular-nums; white-space: nowrap;
+  display: inline-flex; align-items: center; justify-content: center; flex: none; padding: 6px 9px; border-radius: 8px;
+  background: var(--nuit-2); border: 1px solid var(--trait);
+  font: 500 13px/1 var(--f-mono); color: var(--brume); font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .vocal.occupe .jauge { color: var(--vert); border-color: color-mix(in srgb, var(--vert) 45%, transparent); }
-@media (max-width: 520px) {
-  .vocal { grid-template-columns: 20px auto minmax(0, 1fr) auto; gap: 10px; }
-  .vocal .eq { display: none; }
-  .jauge { min-width: 0; }
+.salle-entree { justify-self: center; margin: 4px 0 0; padding: 7px 22px; border-radius: 8px; border: 1.5px dashed color-mix(in srgb, var(--lait) 22%, transparent); font: 500 12.5px/1 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--brume); }
+@media (max-width: 360px) {
+  .plan-salle { padding: 10px; }
+  .chaise img { width: 22px; height: 22px; }
+  .plan-salle .vocal { padding-inline: 12px; }
 }
 
 /* En direct (visible seulement avec les données du widget) */
-.direct { padding-block: clamp(80px, 10vw, 130px); text-align: center; }
+.direct { padding-block: clamp(64px, 7vw, 104px); text-align: center; }
 .direct .cadre { display: grid; gap: 22px; justify-items: center; }
 .direct .surtitre { display: inline-flex; gap: 10px; align-items: center; }
 .avatars { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; max-width: 900px; }
@@ -670,7 +769,7 @@ main, .pied { position: relative; z-index: 1; }
 @keyframes bulle { from { transform: translateY(-5px); } to { transform: translateY(5px); } }
 
 /* Étapes */
-.etapes { padding-block: clamp(96px, 12vw, 160px); }
+.etapes { padding-block: clamp(72px, 8vw, 120px); }
 .etapes .cadre { display: grid; gap: 26px; }
 .etapes-ligne { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 26px; }
 .etapes-ligne span { height: 6px; border-radius: 6px; transform-origin: left center; }
@@ -693,7 +792,7 @@ main, .pied { position: relative; z-index: 1; }
 }
 
 /* Final */
-.final { padding-block: clamp(80px, 10vw, 140px) clamp(96px, 12vw, 170px); text-align: center; }
+.final { padding-block: clamp(64px, 7vw, 108px) clamp(72px, 9vw, 128px); text-align: center; }
 .final .cadre { display: grid; justify-items: center; gap: 24px; }
 .grande-tasse { width: min(400px, 74vw); height: auto; overflow: visible; }
 .grande-tasse .contour { fill: var(--lait); }
@@ -738,7 +837,7 @@ main, .pied { position: relative; z-index: 1; }
 }
 
 /* Niveaux */
-.niveaux { --role-actif: var(--r-legende); padding-block: clamp(96px, 12vw, 160px); }
+.niveaux { --role-actif: var(--r-legende); padding-block: clamp(72px, 8vw, 120px); }
 .niveaux-grille { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
 .niveaux-panneau { display: grid; gap: 22px; min-width: 0; }
 @media (min-width: 861px) { .niveaux-panneau { position: sticky; top: 96px; } }
@@ -885,7 +984,7 @@ main, .pied { position: relative; z-index: 1; }
 }
 
 /* Économie : grains, gains et boutique */
-.economie { padding-block: clamp(96px, 12vw, 160px); }
+.economie { padding-block: clamp(72px, 8vw, 120px); }
 .economie > .cadre { display: grid; gap: clamp(40px, 6vw, 72px); }
 .eco-tete { display: grid; gap: 22px; max-width: 760px; }
 .eco-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 48ch; }
@@ -984,7 +1083,7 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 420px) { .bonus { grid-template-columns: minmax(0, 1fr); } }
 
 /* Équipe : badges suspendus */
-.equipe { padding-block: clamp(96px, 12vw, 160px); overflow: hidden; }
+.equipe { padding-block: clamp(72px, 8vw, 120px); overflow: hidden; }
 .equipe .cadre { display: grid; gap: clamp(32px, 5vw, 56px); }
 .equipe-tete { display: grid; gap: 22px; max-width: 760px; }
 .equipe-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 46ch; }
@@ -1055,8 +1154,6 @@ main, .pied { position: relative; z-index: 1; }
 [data-saison="halloween"] .seulement-normal, [data-saison="noel"] .seulement-normal,
 [data-saison="halloween"] .hors-halloween, [data-saison="noel"] .hors-noel { display: none; }
 [data-saison="normal"] .vocal .emo, [data-saison="noel"] .vocal .emo { display: none; }
-[data-saison="normal"] .vocal, [data-saison="noel"] .vocal { grid-template-columns: 22px minmax(0, 1fr) auto auto; }
-@media (max-width: 520px) { [data-saison="normal"] .vocal, [data-saison="noel"] .vocal { grid-template-columns: 20px minmax(0, 1fr) auto; } }
 
 /* Ambiance sonore */
 .barre-droite { display: flex; align-items: center; gap: 10px; }
@@ -1126,7 +1223,7 @@ main, .pied { position: relative; z-index: 1; }
 .indice-cafe { color: var(--brume); }
 
 /* Événements (hors saison) */
-.evenements { padding-block: clamp(96px, 12vw, 160px); }
+.evenements { padding-block: clamp(72px, 8vw, 120px); }
 .evenements-grille { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
 .evenements-texte { display: grid; gap: 22px; min-width: 0; }
 .evenements-texte .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 44ch; }
@@ -1181,7 +1278,7 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 520px) { .types-ev { grid-template-columns: minmax(0, 1fr); } }
 
 /* FAQ */
-.faq { padding-block: clamp(80px, 10vw, 140px); }
+.faq { padding-block: clamp(64px, 7vw, 108px); }
 .faq-grille { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
 .faq-tete { display: grid; gap: 22px; min-width: 0; }
 .faq-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 40ch; }
@@ -1265,7 +1362,7 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-height: 640px) { .portes { height: 36vh; } .store { height: 48px; } }
 
 /* Commande ton café */
-.commande { padding-block: clamp(96px, 12vw, 160px); }
+.commande { padding-block: clamp(72px, 8vw, 120px); }
 .commande > .cadre { display: grid; gap: clamp(32px, 5vw, 56px); }
 .commande-tete { display: grid; gap: 22px; max-width: 760px; }
 .commande-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 46ch; }
@@ -1336,7 +1433,7 @@ main, .pied { position: relative; z-index: 1; }
 
 
 /* Le classement des grains : les plus riches du café */
-.riches { padding-block: clamp(80px, 10vw, 140px); }
+.riches { padding-block: clamp(64px, 7vw, 108px); }
 .riches-grille { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
 .riches-tete { display: grid; gap: 22px; min-width: 0; }
 .riches-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 38ch; }
@@ -1391,7 +1488,7 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 860px) { .riches-grille { grid-template-columns: minmax(0, 1fr); } }
 
 /* Les prochains événements, relevés dans l'onglet « Événements » du serveur */
-.prochains { padding-block: clamp(80px, 10vw, 140px); }
+.prochains { padding-block: clamp(64px, 7vw, 108px); }
 .prochains-tete { display: grid; gap: 22px; margin-bottom: clamp(36px, 5vw, 60px); }
 .prochains-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 52ch; }
 .prochains-liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px; }
@@ -1434,7 +1531,7 @@ main, .pied { position: relative; z-index: 1; }
 }
 
 /* La petite info du jour : la gazette du comptoir */
-.gazette { padding-block: clamp(80px, 10vw, 140px); overflow-x: clip; }
+.gazette { padding-block: clamp(64px, 7vw, 108px); overflow-x: clip; }
 .gazette-grille { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); grid-template-areas: "tete journal" "avant journal"; gap: clamp(28px, 4vw, 44px) clamp(32px, 6vw, 96px); align-items: start; }
 .gazette-tete { grid-area: tete; display: grid; gap: 22px; min-width: 0; }
 .gazette-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 38ch; }
@@ -1470,6 +1567,13 @@ main, .pied { position: relative; z-index: 1; }
 
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
+
+/* Lisibilité sur mobile : aucun texte sous 13 px */
+@media (max-width: 720px) {
+  :root { --t-etiquette: 13px; }
+  .dk-grands time, .dk-nouvelles span, .a-temps, .badge-rang, .profil-pseudo, .profil-fonction, .bilan-etat,
+  .journal-ligne, .journal-source, .gazette-liste time, .dk-salons span { font-size: 13px; }
+}
 </style>
 </head>
 <body>
@@ -1603,6 +1707,7 @@ main, .pied { position: relative; z-index: 1; }
             <g class="l pt"><path id="p-pt" d="M908.8 136.0C898.4 135.0 890.1 130.6 886.2 124.0C885.5 122.9 885.0 121.8 885.0 121.6C885.0 121.4 884.8 121.0 884.6 120.6C884.0 119.6 883.4 115.9 883.4 113.5C883.3 110.0 884.6 104.3 885.6 103.3C885.8 103.0 886.0 102.7 886.0 102.6C886.0 102.1 887.5 100.2 889.3 98.3C891.1 96.5 896.4 93.0 897.4 93.0C897.6 93.0 898.1 92.8 898.5 92.5C898.8 92.2 899.5 92.0 900.0 92.0C900.4 92.0 901.1 91.8 901.5 91.5C901.8 91.2 902.7 91.0 903.3 91.0C904.0 91.0 905.1 90.8 905.8 90.5C907.8 89.8 922.5 89.8 924.2 90.5C924.9 90.8 926.0 91.0 926.6 91.0C927.3 91.0 928.2 91.2 928.7 91.5C929.1 91.8 929.8 92.0 930.1 92.0C931.1 92.0 935.8 94.4 938.1 96.1C943.5 100.1 946.2 104.8 946.9 111.7C947.1 113.7 947.0 114.5 946.0 119.0C945.4 122.0 943.5 125.3 940.7 128.0C938.2 130.5 937.6 130.9 935.0 132.2C932.4 133.5 928.7 134.7 925.3 135.5C922.4 136.1 913.2 136.4 908.8 136.0Z"/></g>
           </g>
         </svg></h1>
+        <span class="fumee" aria-hidden="true"><i style="--x:8;--dx:-14px;--d:0s"></i><i style="--x:38;--dx:10px;--d:-1.6s"></i><i style="--x:62;--dx:-6px;--d:-3.1s"></i><i style="--x:24;--dx:16px;--d:-4.4s"></i><i style="--x:50;--dx:-12px;--d:-5.3s"></i></span>
         <button class="tasse-clic" id="tasse-clic" type="button" aria-pressed="false" aria-label="Servir un café"></button>
       </div>
     </div>
@@ -1617,6 +1722,7 @@ main, .pied { position: relative; z-index: 1; }
       <li><b id="nb-salons"><span class="seulement-halloween">34</span><span class="hors-halloween">32</span></b><span>salons</span></li>
       <li><b>6</b><span>salons vocaux</span></li>
     </ul>
+    <a class="hero-presents" id="hero-presents" href="#direct" hidden><span class="hp-pile" aria-hidden="true"></span><span class="hp-texte"></span></a>
   </section>
 
   <div class="ruban" aria-hidden="true">
@@ -2147,20 +2253,26 @@ main, .pied { position: relative; z-index: 1; }
   </section>
 
   <section class="vocaux" id="vocaux" aria-labelledby="t-vocaux">
-    <div class="cadre vocaux-grille">
+    <div class="cadre vocaux-cadre">
       <div class="vocaux-texte" data-revele>
         <p class="surtitre">Salons vocaux</p>
         <h2 class="h2" id="t-vocaux">Et si on se parlait&nbsp;?</h2>
         <p class="chapo">Six salons vocaux, du canapé au gaming. Entre, prends une chaise et allume ton micro. Chaque tranche de 10 minutes à plusieurs te rapporte 5&nbsp;000 grains.</p>
+        <p class="salle-legende" aria-hidden="true"><span><i class="chaise"></i>Place libre</span><span><i class="chaise prise"></i>Membre en vocal, en direct</span></p>
       </div>
-      <ul class="vocaux-liste">
-        <li class="vocal" data-vocal="Ici c&#x27;est Détente !" data-max="0"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="nom">Ici c&#x27;est Détente&nbsp;!<span class="presents"></span><span class="v-desc">Pour se poser et discuter tranquillement.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">ouvert à tous</span></li>
-        <li class="vocal" data-vocal="Public" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public<span class="presents"></span><span class="v-desc">Le vocal ouvert à tous, jusqu&#x27;à 30 personnes.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Public²" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public²<span class="presents"></span><span class="v-desc">Un deuxième salon quand le premier est plein.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Public³" data-max="30"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public³<span class="presents"></span><span class="v-desc">Un troisième, pour se répartir en petits groupes.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></li>
-        <li class="vocal" data-vocal="Musique" data-max="5"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎶</span><span class="nom">Musique<span class="presents"></span><span class="v-desc">Écouter de la musique ensemble, à 5 maximum.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">5 places</span></li>
-        <li class="vocal" data-vocal="Gaming" data-max="15"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="nom">Gaming<span class="presents"></span><span class="v-desc">Pour jouer en équipe, jusqu&#x27;à 15.</span></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">15 places</span></li>
-      </ul>
+      <div class="plan-salle">
+        <div class="salle-comptoir" aria-hidden="true"><span class="sc-machine"><i></i><i></i></span><span class="sc-nom">Le comptoir</span><span class="sc-tasses"></span></div>
+        <div class="salle-tabourets" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <ul class="vocaux-liste salle-tables">
+        <li class="vocal" data-vocal="Ici c&#x27;est Détente !" data-max="0" data-forme="canape"><div class="t-plan" aria-hidden="true"></div><div class="t-info"><p class="t-tete"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎃</span><span class="nom">Ici c&#x27;est Détente&nbsp;!</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">ouvert à tous</span></p><p class="v-desc">Pour se poser et discuter tranquillement.</p><p class="t-qui sr"></p></div></li>
+        <li class="vocal" data-vocal="Musique" data-max="5" data-forme="ronde"><div class="t-plan" aria-hidden="true"></div><div class="t-info"><p class="t-tete"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🎶</span><span class="nom">Musique</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">5 places</span></p><p class="v-desc">Écouter de la musique ensemble, à 5 maximum.</p><p class="t-qui sr"></p></div></li>
+        <li class="vocal" data-vocal="Gaming" data-max="15" data-forme="jeu"><div class="t-plan" aria-hidden="true"></div><div class="t-info"><p class="t-tete"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">🧟</span><span class="nom">Gaming</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">15 places</span></p><p class="v-desc">Pour jouer en équipe, jusqu&#x27;à 15.</p><p class="t-qui sr"></p></div></li>
+        <li class="vocal" data-vocal="Public" data-max="30" data-forme="longue"><div class="t-plan" aria-hidden="true"></div><div class="t-info"><p class="t-tete"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></p><p class="v-desc">Le vocal ouvert à tous, jusqu&#x27;à 30 personnes.</p><p class="t-qui sr"></p></div></li>
+        <li class="vocal" data-vocal="Public²" data-max="30" data-forme="longue"><div class="t-plan" aria-hidden="true"></div><div class="t-info"><p class="t-tete"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public²</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></p><p class="v-desc">Un deuxième salon quand le premier est plein.</p><p class="t-qui sr"></p></div></li>
+        <li class="vocal" data-vocal="Public³" data-max="30" data-forme="longue"><div class="t-plan" aria-hidden="true"></div><div class="t-info"><p class="t-tete"><svg class="ico" aria-hidden="true"><use href="#i-voix"/></svg><span class="emo" aria-hidden="true">⚰️</span><span class="nom">Public³</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="jauge">30 places</span></p><p class="v-desc">Un troisième, pour se répartir en petits groupes.</p><p class="t-qui sr"></p></div></li>
+        </ul>
+        <p class="salle-entree" aria-hidden="true">Entrée</p>
+      </div>
     </div>
   </section>
 
@@ -3861,6 +3973,63 @@ main, .pied { position: relative; z-index: 1; }
     document.addEventListener('visibilitychange', () => { if (!document.hidden) { charger(); afficher(); } });
   })();
 
+  /* ---------- Salons vocaux : le plan de salle ---------- */
+  // Chaque salon est une table, avec autant de chaises que de places (8 places de canapé pour le salon sans limite).
+  // Les membres en vocal, donnés par le widget Discord, s'y assoient avec leur avatar, du milieu vers les bouts.
+  const salle = (() => {
+    const PLACES_CANAPE = 8;
+    const bout = (className) => Object.assign(document.createElement('span'), { className });
+    const versLeMilieu = (n) => Array.from({ length: n }, (_, i) => i).sort((a, b) => Math.abs(a - (n - 1) / 2) - Math.abs(b - (n - 1) / 2));
+    function dresser(li) {
+      const plan = $('.t-plan', li), forme = li.dataset.forme, max = Number(li.dataset.max) || 0;
+      const n = forme === 'canape' || !max ? PLACES_CANAPE : max;
+      const chaises = Array.from({ length: n }, () => bout('chaise'));
+      let ordre;
+      if (forme === 'ronde') {
+        chaises.forEach((c, i) => c.style.setProperty('--a', `${i * 360 / n - 90}deg`));
+        plan.replaceChildren(bout('t-table'), ...chaises);
+        ordre = chaises.map((_, i) => i);
+      } else if (forme === 'canape') {
+        const canape = bout('t-canape');
+        canape.append(...chaises);
+        plan.replaceChildren(canape, bout('t-table'));
+        ordre = versLeMilieu(n);
+      } else {
+        // une longue table : la moitié des chaises de chaque côté, on s'assoit au milieu d'abord, en alternant les côtés
+        const k = Math.ceil(n / 2), haut = bout('t-rang'), bas = bout('t-rang');
+        haut.append(...chaises.slice(0, k));
+        bas.append(...chaises.slice(k));
+        plan.replaceChildren(haut, bout('t-table'), bas);
+        const places = chaises.map((_, i) => (i < k ? { i, d: Math.abs(i - (k - 1) / 2), cote: 0 } : { i, d: Math.abs(i - k - (n - k - 1) / 2), cote: 1 }));
+        ordre = places.sort((a, b) => a.d - b.d || a.cote - b.cote).map((p) => p.i);
+      }
+      li.chaises = chaises;
+      li.ordre = ordre;
+    }
+    function asseoir(li, membres) {
+      const chaises = li.chaises || [];
+      chaises.forEach((c) => { c.classList.remove('prise'); c.replaceChildren(); c.removeAttribute('title'); });
+      membres.slice(0, chaises.length).forEach((m, j) => {
+        const c = chaises[li.ordre[j]];
+        c.classList.add('prise');
+        c.title = String(m.username || '');
+        const img = avatar(m);
+        if (img) { img.width = img.height = 26; c.append(img); }
+      });
+      // plus de monde que de chaises : un badge « +N »
+      const plan = $('.t-plan', li), reste = membres.length - chaises.length;
+      let plus = $('.t-plus', plan);
+      if (reste > 0) {
+        if (!plus) { plus = bout('t-plus'); plan.append(plus); }
+        plus.textContent = `+${reste}`;
+      } else if (plus) plus.remove();
+      const noms = membres.map((m) => String(m.username || '')).filter(Boolean);
+      $('.t-qui', li).textContent = noms.length ? `En vocal : ${noms.join(', ')}.` : '';
+    }
+    $$('.plan-salle .vocal').forEach(dresser);
+    return { asseoir };
+  })();
+
   /* ---------- Widget Discord (fonctionne une fois le site hébergé) ---------- */
   const normaliser = (s) => String(s || '').normalize('NFC').replace(/^[^\p{L}\p{N}]+/u, '').replace(/\s+/g, ' ').trim().toLowerCase();
   function avatar(m) {
@@ -3871,6 +4040,7 @@ main, .pied { position: relative; z-index: 1; }
     img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
     return img;
   }
+  let dernierEnLigne = 0;
   function appliquerWidget(w) {
     if (!w || typeof w !== 'object') return;
     const presents = Number(w.presence_count);
@@ -3879,7 +4049,8 @@ main, .pied { position: relative; z-index: 1; }
     if (Number.isFinite(presents) && presents > 0) {
       dispatchEvent(new CustomEvent('en-ligne', { detail: presents }));
       $('#stat-ligne').hidden = false;
-      compter($('#en-ligne'), presents, 1.2);
+      compter($('#en-ligne'), presents, 1.2, dernierEnLigne);
+      dernierEnLigne = presents;
     }
     const parNom = new Map(salons.map((c) => [normaliser(c.name), c.id]));
     $$('.vocal').forEach((li) => {
@@ -3890,9 +4061,7 @@ main, .pied { position: relative; z-index: 1; }
       const n = dedans.length;
       $('.jauge', li).textContent = max ? `${n} / ${max}` : `${n} ${n > 1 ? 'connectés' : 'connecté'}`;
       li.classList.toggle('occupe', n > 0);
-      const pile = $('.presents', li);
-      pile.textContent = '';
-      dedans.slice(0, 4).forEach((m) => { const img = avatar(m); if (img) pile.append(img); });
+      salle.asseoir(li, dedans);
     });
     if (membres.length) {
       const ul = $('#avatars');
@@ -3910,18 +4079,38 @@ main, .pied { position: relative; z-index: 1; }
         ul.append(li);
       });
       $('#direct-nombre').textContent = nf.format(Number.isFinite(presents) && presents > 0 ? presents : membres.length);
+      // Accueil : une pile d'avatars de membres en ligne, qui mène à la section « En direct »
+      const avecAvatar = membres.filter((m) => /^https:\/\/cdn\.discordapp\.com\//.test(String(m.avatar_url || '')));
+      if (avecAvatar.length) {
+        const total = Number.isFinite(presents) && presents > 0 ? presents : membres.length;
+        const noms = avecAvatar.slice(0, 2).map((m) => String(m.username || '')).filter(Boolean);
+        $('#hero-presents .hp-pile').replaceChildren(...avecAvatar.slice(0, 7).map((m, i) => {
+          const img = avatar(m);
+          img.width = img.height = 32;
+          img.style.setProperty('--i', i);
+          return img;
+        }));
+        const autres = Math.max(0, total - noms.length);
+        $('#hero-presents .hp-texte').textContent = noms.length === 2 && autres
+          ? `${noms[0]}, ${noms[1]} et ${nf.format(autres)} autres sont au café en ce moment`
+          : `${nf.format(total)} ${total > 1 ? 'membres sont' : 'membre est'} au café en ce moment`;
+        $('#hero-presents').hidden = false;
+      }
       $('#direct').hidden = false;
       if (anime) ST.refresh();
     }
   }
-  (async () => {
+  async function chargerWidget() {
     try {
       const ctrl = new AbortController();
       setTimeout(() => ctrl.abort(), 7000);
       const r = await fetch(WIDGET, { signal: ctrl.signal, cache: 'no-store' });
       if (r.ok) appliquerWidget(await r.json());
     } catch (e) { /* hors ligne ou bloqué : on garde les valeurs fixes */ }
-  })();
+  }
+  chargerWidget();
+  // Page restée ouverte : la salle des vocaux et les présents se mettent à jour toutes les 2 minutes
+  setInterval(() => { if (!document.hidden) chargerWidget(); }, 120000);
   // Nombre exact de membres, demandé à Discord par l'invitation publique
   (async () => {
     try {
