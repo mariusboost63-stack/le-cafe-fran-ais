@@ -186,6 +186,8 @@ En version normale, la section Halloween est remplacée par une section « Évé
 
 **Version Noël** : section « Noël au café » (`#noel`) avec un compte à rebours jusqu'au 25 décembre (puis « Joyeux Noël ! » et « Bonne année » en janvier) et un calendrier de l'Avent : une case par jour, ouverte à minuit (heure de Paris), avec une tradition de Noël. Les textes des cases sont encodés dans `data-c`, comme les quêtes d'Halloween (même commande, avec `{ e: "emoji", t: "titre", x: "texte" }`). Il y a aussi de la neige (coupée par l'interrupteur « Animations »), une guirlande sous la barre, une couronne et la pancarte « Joyeux Noël » sur la porte, les emojis de Noël des salons (`<span class="seulement-noel">`), et les chants de Noël dans l'ambiance.
 
+Le site suit la DA de Noël du serveur : un fond qui va du bordeaux au vert sapin (les couleurs `--nuit`, `--nuit-2`, `--trait` changent en Noël), la tasse du logo coiffée d'un bonnet (`#p-bonnet`, ajouté partout où la tasse apparaît avec `<use class="bonnet seulement-noel">`), des bouquets de branches de sapin avec boules rouges, petites lumières dorées et ruban crème dans les coins de l'ouverture, de la section Noël et de la porte d'entrée (`<div class="deco-noel" data-deco="…">`, dessinés par le script « décors de Noël »), des flocons en cristal, une couronne de sapin sur la porte, une guirlande de lumières dorées sous la barre, et l'icône de l'onglet avec le bonnet sur le dégradé de la DA.
+
 Pour voir une version sans rien changer, ajoute `#saison-halloween`, `#saison-noel` ou `#saison-normale` à la fin de l'adresse du site.
 
 ## Référencement et page d'erreur

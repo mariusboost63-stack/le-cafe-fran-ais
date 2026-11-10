@@ -664,16 +664,15 @@ main, .pied { position: relative; z-index: 1; }
 .guirlande { position: absolute; left: 0; right: 0; bottom: -15px; height: 18px; pointer-events: none;
   background: radial-gradient(circle at 50% -30px, transparent 37px, color-mix(in srgb, var(--lait) 45%, transparent) 37px 38.5px, transparent 39.5px) 0 0 / 48px 18px repeat-x; }
 .guirlande::before, .guirlande::after { content: ""; position: absolute; inset: 0; animation: clignote 1.8s steps(1) infinite; }
-.guirlande::before { background: radial-gradient(ellipse 3.5px 5px at 50% 12px, var(--rouge) 90%, transparent) 0 0 / 192px 18px repeat-x, radial-gradient(ellipse 3.5px 5px at 50% 12px, var(--sapin) 90%, transparent) 96px 0 / 192px 18px repeat-x; filter: drop-shadow(0 0 4px var(--rouge)); }
-.guirlande::after { background: radial-gradient(ellipse 3.5px 5px at 50% 12px, var(--or) 90%, transparent) 48px 0 / 192px 18px repeat-x, radial-gradient(ellipse 3.5px 5px at 50% 12px, var(--bleu-vif) 90%, transparent) 144px 0 / 192px 18px repeat-x; filter: drop-shadow(0 0 4px var(--or)); animation-delay: -.9s; }
+.guirlande::before { background: radial-gradient(ellipse 3.5px 5px at 50% 12px, #fff1c2 90%, transparent) 0 0 / 192px 18px repeat-x, radial-gradient(ellipse 3.5px 5px at 50% 12px, #f5c451 90%, transparent) 96px 0 / 192px 18px repeat-x; filter: drop-shadow(0 0 5px #ffd36b); }
+.guirlande::after { background: radial-gradient(ellipse 3.5px 5px at 50% 12px, #ffe08a 90%, transparent) 48px 0 / 192px 18px repeat-x, radial-gradient(ellipse 3.5px 5px at 50% 12px, #e0353f 90%, transparent) 144px 0 / 192px 18px repeat-x; filter: drop-shadow(0 0 5px #ffd36b); animation-delay: -.9s; }
 @keyframes clignote { 0% { opacity: 1; } 50% { opacity: .35; } }
 /* La neige */
 .neige { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 45; pointer-events: none; display: none; }
 [data-saison="noel"] .neige { display: block; }
 /* La couronne sur la porte */
-.couronne { position: absolute; top: 72%; left: 50%; width: 56px; height: 56px; margin-left: -28px; border-radius: 50%;
-  border: 10px dotted var(--sapin); box-shadow: inset 0 0 0 3px #1f6b45, 0 0 0 3px #1f6b45; }
-.couronne::after { content: ""; position: absolute; left: 50%; bottom: -16px; width: 18px; height: 14px; margin-left: -9px; background: var(--rouge); border-radius: 4px 4px 9px 9px; }
+.couronne { position: absolute; top: 60%; left: 50%; width: 76px; height: 85px; margin-left: -38px; }
+.couronne svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 5px 6px rgb(0 0 0 / .45)); }
 
 /* Halloween */
 .halloween { --p-carte: color-mix(in srgb, var(--citrouille) 9%, var(--nuit)); --p-texte: var(--lait); --p-doux: color-mix(in srgb, var(--citrouille) 55%, var(--lait)); --p-survol: color-mix(in srgb, var(--citrouille) 12%, transparent);
@@ -1996,6 +1995,41 @@ main, .pied { position: relative; z-index: 1; }
   .journal { transform: rotate(-.6deg); }
 }
 
+/* Noël, d'après la DA du serveur : un fond du bordeaux au vert sapin, la tasse au bonnet, des branches de sapin dans
+   les coins avec des boules rouges, une guirlande de lumières dorées, un ruban crème et des flocons en cristal */
+[data-saison="noel"] { --nuit: #10231b; --nuit-2: #183128; --trait: #2c4a3d; --brume: #b5beb7; }
+[data-saison="noel"] body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(85% 70% at 0% 0%, #5e1724 0%, transparent 65%), radial-gradient(70% 60% at 100% 100%, #0f3322 0%, transparent 70%),
+    linear-gradient(150deg, #3a101a 0%, #22191b 32%, #13281e 66%, #0c1f16 100%);
+}
+[data-saison="noel"] .pied { background: #0b1b14; }
+[data-saison="noel"][data-porte] .porte-ecran { background: radial-gradient(ellipse 70% 60% at 50% 70%, color-mix(in srgb, var(--or) 14%, transparent), transparent 70%), linear-gradient(150deg, #4a1320, #1d1a1a 45%, #10291e); }
+[data-saison="noel"] .facade { position: relative; z-index: 1; }
+.deco-noel { display: none; }
+[data-saison="noel"] .deco-noel { display: block; position: absolute; z-index: 0; pointer-events: none; width: clamp(170px, 32vw, 470px); aspect-ratio: 520 / 420; }
+.deco-noel > svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 14px 16px rgb(0 0 0 / .35)); }
+.deco-hg { left: 0; top: 0; }
+.deco-bd { right: 0; bottom: 0; }
+.deco-hd { right: 0; top: 0; transform: scaleX(-1); }
+.deco-bg { left: 0; bottom: 0; transform: scaleX(-1); }
+[data-saison="noel"] .deco-flocons { inset: 0; width: auto; aspect-ratio: auto; }
+.flocon { position: absolute; height: auto; color: #f3ead7; opacity: .8; animation: flotte 7s ease-in-out infinite alternate; animation-delay: var(--d, 0s); }
+@keyframes flotte { from { transform: translateY(-6px) rotate(-12deg); } to { transform: translateY(8px) rotate(18deg); } }
+[data-saison="noel"] .hero { position: relative; isolation: isolate; }
+.hero .deco-noel { z-index: -1; }
+.hero .deco-hg { top: 58px; }
+.luciole { animation: luciole 2.4s ease-in-out infinite alternate; animation-delay: var(--d, 0s); }
+@keyframes luciole { from { opacity: .35; } to { opacity: 1; } }
+@media (max-width: 720px) {
+  [data-saison="noel"] .deco-noel { width: clamp(130px, 40vw, 220px); }
+  .hero .deco-hg { top: 50px; translate: -34% -18%; }
+  .hero .deco-bd { translate: 20% 10%; }
+  .noel .deco-hd { translate: 30% -22%; }
+  .noel .deco-bg { translate: -25% 15%; }
+  .flocon { opacity: .55; }
+}
+
 /* Le site en pages : la page courante dans le menu, le fil d'Ariane, les pages voisines en bas, l'accueil « Au menu » */
 .hors-page { display: none !important; }
 #contenu:focus, #fil-page:focus { outline: none; }
@@ -2087,6 +2121,21 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
 <body>
 <svg class="defs" aria-hidden="true" focusable="false">
   <defs>
+    <!-- Noël (DA du serveur) : le bonnet posé sur la tasse, dans le repère de la tasse ; les dégradés des décors -->
+    <linearGradient id="bonnet-rouge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0453f"/><stop offset=".6" stop-color="#d0202c"/><stop offset="1" stop-color="#9c1220"/></linearGradient>
+    <linearGradient id="bonnet-blanc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#f1eff6"/><stop offset="1" stop-color="#d6d4de"/></linearGradient>
+    <radialGradient id="bonnet-pompon" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#eeedf3"/><stop offset="1" stop-color="#cfcdd8"/></radialGradient>
+    <g id="p-bonnet">
+      <path fill="url(#bonnet-rouge)" d="M196 113C197 93 210 79 229 77C250 75 266 88 272 110C273 114 270 117 266 116C263 104 256 97 248 96C252 105 255 115 256 125Z"/>
+      <path fill="#000" opacity=".14" d="M248 96C252 105 255 115 256 125L238 121C243 112 246 104 248 96Z"/>
+      <rect x="193" y="111" width="66" height="19" rx="9.5" fill="url(#bonnet-blanc)" transform="rotate(14 226 120.5)"/>
+      <circle cx="270" cy="119" r="9.5" fill="url(#bonnet-pompon)"/>
+    </g>
+    <radialGradient id="deco-boule" cx="34%" cy="30%" r="75%"><stop offset="0" stop-color="#ff8a80"/><stop offset=".35" stop-color="#d8232f"/><stop offset="1" stop-color="#5c0810"/></radialGradient>
+    <linearGradient id="deco-or" x1="0" x2="1"><stop offset="0" stop-color="#8a6420"/><stop offset=".5" stop-color="#f3d27a"/><stop offset="1" stop-color="#8a6420"/></linearGradient>
+    <linearGradient id="deco-ruban" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f7edd6"/><stop offset=".5" stop-color="#d9c49b"/><stop offset="1" stop-color="#f3e6c8"/></linearGradient>
+    <filter id="deco-lueur" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="2.4"/></filter>
+    <symbol id="flocon" viewBox="-12 -12 24 24"><g stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"><path id="flocon-bras" d="M0 0V-11M0-6.5-3-9M0-6.5 3-9M0-3.2-2-4.8M0-3.2 2-4.8"/><use href="#flocon-bras" transform="rotate(60)"/><use href="#flocon-bras" transform="rotate(120)"/><use href="#flocon-bras" transform="rotate(180)"/><use href="#flocon-bras" transform="rotate(240)"/><use href="#flocon-bras" transform="rotate(300)"/></g></symbol>
     <clipPath id="clip-interieur"><path d="M150.7 200.0C132.1 197.1 118.5 187.6 111.2 172.4C110.3 170.6 109.4 168.7 109.1 168.2C108.9 167.7 108.7 167.1 108.7 166.8C108.7 166.6 108.5 165.9 108.2 165.3C107.0 162.3 105.7 154.3 105.7 149.5C105.7 144.0 107.6 134.2 109.3 130.8C109.4 130.4 109.8 129.6 110.2 128.8C110.8 127.3 110.9 127.1 112.2 124.7C113.3 122.5 113.7 122.3 113.7 124.0C113.7 125.3 113.7 125.3 118.4 125.3C123.1 125.3 123.1 125.3 121.6 127.0C119.2 129.5 117.6 132.2 116.0 136.3C115.2 138.4 115.2 139.1 115.9 139.8C116.5 140.3 120.1 140.3 161.4 140.3L206.2 140.3L206.6 142.9C207.3 147.4 207.4 150.7 207.0 153.7C206.8 155.2 206.5 157.4 206.3 158.5C206.2 159.7 205.9 161.1 205.7 161.7C204.1 167.4 203.9 167.9 201.7 172.3C198.6 178.9 193.3 185.3 187.3 189.9C185.6 191.2 183.9 192.3 183.7 192.5C183.4 192.6 182.7 193.0 182.2 193.3C178.1 195.9 172.3 198.0 164.7 199.7C162.4 200.2 153.1 200.4 150.7 200.0Z"/></clipPath>
     <symbol id="i-texte" viewBox="0 0 24 24"><path class="ico-svg" d="M9.5 3.5 7.5 20.5M16.5 3.5l-2 17M4.5 8.5h16M3.5 15.5h16"/></symbol>
     <symbol id="i-texte-prive" viewBox="0 0 24 24"><path class="ico-svg" d="M8.5 5.5 6.8 20.5M14 12.5l-1 8M3.5 9.5h8M3 15.5h15"/><rect x="15" y="5.6" width="7.5" height="5.4" rx="1.3" fill="currentColor"/><path class="ico-svg" d="M16.8 5.6V4.4a1.95 1.95 0 0 1 3.9 0v1.2" style="stroke-width: 1.6"/></symbol>
@@ -2124,12 +2173,14 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
 <canvas class="neige" id="neige" aria-hidden="true"></canvas>
 
 <div class="porte-ecran" id="porte" role="dialog" aria-modal="true" aria-labelledby="porte-titre">
+  <div class="deco-noel deco-hg" data-deco="haut-gauche" aria-hidden="true"></div>
+  <div class="deco-noel deco-bd" data-deco="bas-droite" aria-hidden="true"></div>
   <div class="facade">
-    <p class="enseigne" id="porte-titre"><span class="sr">Entrée du Café Français</span><svg viewBox="4 0 1052 292" aria-hidden="true"><use href="#p-tasse" style="fill: var(--lait)"/><use href="#p-v1" style="fill: var(--bleu)"/><use href="#p-v2" style="fill: var(--lait)"/><use href="#p-v3" style="fill: var(--rouge)"/><use href="#p-L" style="fill: var(--lait)"/><use href="#p-e" style="fill: var(--lait)"/><use href="#p-c" style="fill: var(--lait)"/><use href="#p-a1" style="fill: var(--lait)"/><use href="#p-f" style="fill: var(--lait)"/><use href="#p-e2" style="fill: var(--lait)"/><use href="#p-acc" style="fill: var(--lait)"/><use href="#p-F" style="fill: var(--lait)"/><use href="#p-r" style="fill: var(--lait)"/><use href="#p-a2" style="fill: var(--lait)"/><use href="#p-n" style="fill: var(--lait)"/><use href="#p-cc" style="fill: var(--lait)"/><use href="#p-a3" style="fill: var(--lait)"/><use href="#p-i" style="fill: var(--lait)"/><use href="#p-s" style="fill: var(--lait)"/><use href="#p-pt" style="fill: var(--lait)"/></svg></p>
+    <p class="enseigne" id="porte-titre"><span class="sr">Entrée du Café Français</span><svg viewBox="4 0 1052 292" aria-hidden="true"><use href="#p-tasse" style="fill: var(--lait)"/><use href="#p-v1" style="fill: var(--bleu)"/><use href="#p-v2" style="fill: var(--lait)"/><use href="#p-v3" style="fill: var(--rouge)"/><use class="bonnet seulement-noel" href="#p-bonnet"/><use href="#p-L" style="fill: var(--lait)"/><use href="#p-e" style="fill: var(--lait)"/><use href="#p-c" style="fill: var(--lait)"/><use href="#p-a1" style="fill: var(--lait)"/><use href="#p-f" style="fill: var(--lait)"/><use href="#p-e2" style="fill: var(--lait)"/><use href="#p-acc" style="fill: var(--lait)"/><use href="#p-F" style="fill: var(--lait)"/><use href="#p-r" style="fill: var(--lait)"/><use href="#p-a2" style="fill: var(--lait)"/><use href="#p-n" style="fill: var(--lait)"/><use href="#p-cc" style="fill: var(--lait)"/><use href="#p-a3" style="fill: var(--lait)"/><use href="#p-i" style="fill: var(--lait)"/><use href="#p-s" style="fill: var(--lait)"/><use href="#p-pt" style="fill: var(--lait)"/></svg></p>
     <div class="store" aria-hidden="true"></div>
     <div class="portes" aria-hidden="true">
       <div class="lumiere"></div>
-      <div class="battant battant-g"><span class="vitre" data-texte="Le Café"></span><span class="poignee"></span><span class="couronne seulement-noel"></span></div>
+      <div class="battant battant-g"><span class="vitre" data-texte="Le Café"></span><span class="poignee"></span><span class="couronne seulement-noel" data-deco="couronne"></span></div>
       <div class="battant battant-d"><span class="vitre" data-texte="Français"></span><span class="poignee"></span><span class="pancarte"><span class="hors-noel">Ouvert</span><span class="seulement-noel">Joyeux Noël</span></span></div>
     </div>
     <div class="porte-actions">
@@ -2150,6 +2201,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       <svg class="mini-tasse" viewBox="8 116 234 120" aria-hidden="true">
         <g clip-path="url(#clip-interieur)"><rect class="niveau" x="96" y="202" width="124" height="120"/></g>
         <use href="#p-tasse"/>
+        <use class="bonnet seulement-noel" href="#p-bonnet"/>
       </svg>
       <span>Le Café Français</span>
     </a>
@@ -2191,13 +2243,16 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   </div>
 
   <section class="hero" id="haut">
+    <div class="deco-noel deco-flocons" data-deco="flocons" aria-hidden="true"></div>
+    <div class="deco-noel deco-hg" data-deco="haut-gauche" aria-hidden="true"></div>
+    <div class="deco-noel deco-bd" data-deco="bas-droite" aria-hidden="true"></div>
     <p class="surtitre hero-revele"><span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>Serveur Discord francophone · ouvert depuis le 8&nbsp;avril&nbsp;2021</p>
     <div class="logo-scene hero-revele">
       <div class="logo-incline">
         <h1 class="logo-titre"><span class="sr">Le Café Français</span>
         <svg class="logo" id="logo" viewBox="4 0 1052 292" aria-hidden="true">
           <g clip-path="url(#clip-interieur)"><g class="logo-cafe"><path class="vague vague-creme" d="M60 0q5 -3 10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0V130H60Z"/><path class="vague vague-cafe" transform="translate(0 5)" d="M60 0q5 -3 10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0V130H60Z"/></g></g>
-          <g class="tasse"><path id="p-tasse" d="M150.8 232.3C147.7 232.0 144.7 231.6 144.2 231.4C143.7 231.2 142.8 231.0 142.3 231.0C141.4 231.0 139.8 230.6 136.8 229.6C136.3 229.4 135.4 229.2 134.8 229.1C134.3 229.0 133.5 228.7 133.2 228.5C132.8 228.2 132.2 228.0 131.8 228.0C131.4 228.0 130.8 227.8 130.5 227.5C130.1 227.2 129.6 227.0 129.4 227.0C128.5 227.0 119.6 222.5 117.0 220.7C116.5 220.4 115.9 220.0 115.6 219.8C110.9 217.1 101.8 208.8 97.9 203.9C94.3 199.3 88.0 189.8 88.0 188.9C88.0 188.7 86.4 185.0 85.5 183.2C85.2 182.7 85.0 182.0 85.0 181.7C85.0 181.4 84.8 180.9 84.5 180.5C84.3 180.1 84.0 179.5 83.9 179.0C83.8 178.5 83.6 177.7 83.4 177.2C82.8 175.4 82.1 172.6 81.5 170.0C81.3 168.6 80.8 166.7 80.6 165.7C80.0 162.7 79.8 146.4 80.4 143.2C80.7 141.7 80.9 140.4 80.8 140.1C80.6 139.6 50.4 139.5 47.0 140.0C40.0 141.0 33.8 146.8 31.6 154.3C29.2 162.9 33.6 173.2 41.3 176.9C46.0 179.1 45.6 179.1 53.4 179.3C60.3 179.4 60.7 179.5 60.9 180.1C61.2 181.2 60.6 196.9 60.2 197.7C59.8 198.5 59.6 198.5 55.7 198.6C44.6 198.9 36.4 196.7 28.5 191.5C22.8 187.7 15.5 178.2 14.1 172.8C14.0 172.3 13.7 171.5 13.5 171.0C13.2 170.6 13.0 169.8 13.0 169.3C13.0 168.8 12.8 167.9 12.5 167.2C11.8 165.5 11.8 154.1 12.5 151.8C12.8 150.9 13.0 149.8 13.0 149.4C13.0 149.0 13.2 148.2 13.5 147.6C13.7 147.0 14.4 145.3 15.0 143.9C20.0 132.0 32.2 122.7 45.3 120.8C48.4 120.4 54.1 120.3 81.3 120.3C99.1 120.3 113.7 120.4 113.7 120.5C113.7 120.7 112.6 122.9 112.0 124.0C111.1 125.4 110.3 127.1 109.5 128.8C109.2 129.6 108.8 130.4 108.6 130.8C106.9 134.2 105.0 144.0 105.0 149.5C105.0 154.3 106.3 162.3 107.5 165.3C107.8 165.9 108.0 166.6 108.0 166.8C108.0 167.1 108.2 167.7 108.5 168.2C108.7 168.7 109.6 170.6 110.5 172.4C119.2 190.4 138.4 201.8 158.5 200.9C162.8 200.7 164.0 200.5 169.2 199.3C173.1 198.4 179.3 195.8 182.2 194.0C182.7 193.6 183.4 193.2 183.7 193.1C185.1 192.5 190.6 187.9 193.4 185.1C197.1 181.3 200.3 176.8 202.4 172.3C204.5 167.9 204.7 167.4 206.4 161.7C206.8 160.5 207.0 159.2 207.7 153.3C208.1 150.1 208.0 148.2 207.1 141.5L206.8 139.8L161.5 139.7C117.9 139.5 116.2 139.5 116.1 138.9C115.8 137.6 118.3 132.0 120.6 128.9C122.2 126.7 126.3 123.0 128.7 121.6L130.7 120.3L180.9 120.4L231.1 120.5L231.5 121.3C231.9 122.2 232.6 123.6 233.4 125.8C234.2 127.6 234.7 129.1 235.0 130.3C235.1 131.0 235.4 132.0 235.6 132.7C236.3 135.1 236.7 136.9 237.0 139.0C237.2 140.2 237.5 141.8 237.7 142.5C238.3 144.4 238.3 163.4 237.7 164.8C237.4 165.4 237.1 166.8 237.0 168.0C236.7 170.2 236.2 172.3 235.6 174.2C235.4 174.7 235.2 175.7 235.1 176.3C235.0 177.0 234.7 177.8 234.5 178.2C234.2 178.5 234.0 179.1 234.0 179.5C234.0 179.9 233.8 180.7 233.5 181.2C233.3 181.7 232.9 182.7 232.6 183.3C231.3 186.6 227.5 193.8 225.9 196.3C224.8 197.8 224.0 199.2 224.0 199.3C224.0 199.5 223.8 199.8 223.5 200.0C223.2 200.3 222.1 201.6 221.1 202.9C218.5 206.3 211.2 213.6 207.3 216.5C202.0 220.5 196.4 223.8 191.1 226.0C189.3 226.8 187.7 227.5 187.5 227.7C187.3 227.9 186.8 228.0 186.3 228.0C185.9 228.0 185.3 228.2 185.1 228.4C184.9 228.6 184.1 228.9 183.4 229.0C182.7 229.2 181.7 229.4 181.2 229.6C178.0 230.7 173.6 231.6 170.0 232.0C168.6 232.2 166.1 232.4 164.3 232.6C160.2 233.1 157.6 233.0 150.8 232.3Z"/></g>
+          <g class="tasse"><path id="p-tasse" d="M150.8 232.3C147.7 232.0 144.7 231.6 144.2 231.4C143.7 231.2 142.8 231.0 142.3 231.0C141.4 231.0 139.8 230.6 136.8 229.6C136.3 229.4 135.4 229.2 134.8 229.1C134.3 229.0 133.5 228.7 133.2 228.5C132.8 228.2 132.2 228.0 131.8 228.0C131.4 228.0 130.8 227.8 130.5 227.5C130.1 227.2 129.6 227.0 129.4 227.0C128.5 227.0 119.6 222.5 117.0 220.7C116.5 220.4 115.9 220.0 115.6 219.8C110.9 217.1 101.8 208.8 97.9 203.9C94.3 199.3 88.0 189.8 88.0 188.9C88.0 188.7 86.4 185.0 85.5 183.2C85.2 182.7 85.0 182.0 85.0 181.7C85.0 181.4 84.8 180.9 84.5 180.5C84.3 180.1 84.0 179.5 83.9 179.0C83.8 178.5 83.6 177.7 83.4 177.2C82.8 175.4 82.1 172.6 81.5 170.0C81.3 168.6 80.8 166.7 80.6 165.7C80.0 162.7 79.8 146.4 80.4 143.2C80.7 141.7 80.9 140.4 80.8 140.1C80.6 139.6 50.4 139.5 47.0 140.0C40.0 141.0 33.8 146.8 31.6 154.3C29.2 162.9 33.6 173.2 41.3 176.9C46.0 179.1 45.6 179.1 53.4 179.3C60.3 179.4 60.7 179.5 60.9 180.1C61.2 181.2 60.6 196.9 60.2 197.7C59.8 198.5 59.6 198.5 55.7 198.6C44.6 198.9 36.4 196.7 28.5 191.5C22.8 187.7 15.5 178.2 14.1 172.8C14.0 172.3 13.7 171.5 13.5 171.0C13.2 170.6 13.0 169.8 13.0 169.3C13.0 168.8 12.8 167.9 12.5 167.2C11.8 165.5 11.8 154.1 12.5 151.8C12.8 150.9 13.0 149.8 13.0 149.4C13.0 149.0 13.2 148.2 13.5 147.6C13.7 147.0 14.4 145.3 15.0 143.9C20.0 132.0 32.2 122.7 45.3 120.8C48.4 120.4 54.1 120.3 81.3 120.3C99.1 120.3 113.7 120.4 113.7 120.5C113.7 120.7 112.6 122.9 112.0 124.0C111.1 125.4 110.3 127.1 109.5 128.8C109.2 129.6 108.8 130.4 108.6 130.8C106.9 134.2 105.0 144.0 105.0 149.5C105.0 154.3 106.3 162.3 107.5 165.3C107.8 165.9 108.0 166.6 108.0 166.8C108.0 167.1 108.2 167.7 108.5 168.2C108.7 168.7 109.6 170.6 110.5 172.4C119.2 190.4 138.4 201.8 158.5 200.9C162.8 200.7 164.0 200.5 169.2 199.3C173.1 198.4 179.3 195.8 182.2 194.0C182.7 193.6 183.4 193.2 183.7 193.1C185.1 192.5 190.6 187.9 193.4 185.1C197.1 181.3 200.3 176.8 202.4 172.3C204.5 167.9 204.7 167.4 206.4 161.7C206.8 160.5 207.0 159.2 207.7 153.3C208.1 150.1 208.0 148.2 207.1 141.5L206.8 139.8L161.5 139.7C117.9 139.5 116.2 139.5 116.1 138.9C115.8 137.6 118.3 132.0 120.6 128.9C122.2 126.7 126.3 123.0 128.7 121.6L130.7 120.3L180.9 120.4L231.1 120.5L231.5 121.3C231.9 122.2 232.6 123.6 233.4 125.8C234.2 127.6 234.7 129.1 235.0 130.3C235.1 131.0 235.4 132.0 235.6 132.7C236.3 135.1 236.7 136.9 237.0 139.0C237.2 140.2 237.5 141.8 237.7 142.5C238.3 144.4 238.3 163.4 237.7 164.8C237.4 165.4 237.1 166.8 237.0 168.0C236.7 170.2 236.2 172.3 235.6 174.2C235.4 174.7 235.2 175.7 235.1 176.3C235.0 177.0 234.7 177.8 234.5 178.2C234.2 178.5 234.0 179.1 234.0 179.5C234.0 179.9 233.8 180.7 233.5 181.2C233.3 181.7 232.9 182.7 232.6 183.3C231.3 186.6 227.5 193.8 225.9 196.3C224.8 197.8 224.0 199.2 224.0 199.3C224.0 199.5 223.8 199.8 223.5 200.0C223.2 200.3 222.1 201.6 221.1 202.9C218.5 206.3 211.2 213.6 207.3 216.5C202.0 220.5 196.4 223.8 191.1 226.0C189.3 226.8 187.7 227.5 187.5 227.7C187.3 227.9 186.8 228.0 186.3 228.0C185.9 228.0 185.3 228.2 185.1 228.4C184.9 228.6 184.1 228.9 183.4 229.0C182.7 229.2 181.7 229.4 181.2 229.6C178.0 230.7 173.6 231.6 170.0 232.0C168.6 232.2 166.1 232.4 164.3 232.6C160.2 233.1 157.6 233.0 150.8 232.3Z"/><use class="bonnet seulement-noel" href="#p-bonnet"/></g>
           <g class="vapeur">
             <g class="v v1"><g class="ondule"><path id="p-v1" d="M125.4 88.2C123.6 86.4 121.3 84.0 120.5 82.9C119.6 81.9 118.8 81.0 118.7 81.0C118.3 81.0 116.1 77.1 114.9 74.5C113.6 71.7 113.6 67.3 114.9 65.1C116.9 61.9 118.3 60.7 122.2 58.6C123.1 58.2 125.1 57.1 126.7 56.3C128.3 55.4 130.0 54.7 130.4 54.6C130.8 54.5 132.4 53.9 133.8 53.3C135.3 52.8 137.7 51.9 139.2 51.3C140.6 50.8 142.7 50.1 143.7 49.6C144.7 49.2 145.8 48.8 146.2 48.6C148.8 47.6 154.9 44.5 156.6 43.3C158.7 41.7 164.0 36.3 164.0 35.6C164.0 35.4 164.2 35.0 164.5 34.6C165.6 33.4 166.0 27.0 165.1 23.5C163.5 17.3 162.9 15.0 162.4 14.2C161.9 13.1 161.9 11.5 162.6 11.5C163.8 11.5 172.4 20.9 174.4 24.5C175.9 27.1 177.8 31.0 178.4 32.8C179.2 35.2 179.3 39.6 178.5 41.9C178.2 42.7 178.0 43.6 178.0 43.9C178.0 44.5 175.6 47.6 174.3 48.7C173.7 49.1 173.0 49.7 172.7 50.0C171.6 51.1 162.5 55.3 161.4 55.3C161.2 55.3 160.2 55.8 159.1 56.3C158.1 56.9 156.8 57.3 156.4 57.3C156.0 57.3 154.9 57.7 154.1 58.2C153.2 58.6 152.3 59.0 152.1 59.0C151.8 59.0 150.6 59.4 149.4 60.0C148.3 60.6 147.2 61.0 147.0 61.0C146.7 61.0 142.5 63.3 140.8 64.4C140.1 64.9 139.3 65.3 139.1 65.3C138.6 65.3 134.2 69.3 133.8 70.1C133.7 70.5 133.1 71.4 132.6 72.0C130.7 74.5 130.3 76.5 130.1 84.0C129.9 90.2 129.7 91.7 129.0 91.7C128.9 91.7 127.3 90.1 125.4 88.2Z"/></g></g>
             <g class="v v2"><g class="ondule"><path id="p-v2" d="M155.2 92.9C150.9 88.6 149.3 86.2 147.5 82.2C146.8 80.4 146.8 77.0 147.7 75.3C149.0 72.6 153.2 69.4 157.7 67.5C158.9 67.0 160.0 66.5 160.1 66.3C160.3 66.1 160.8 66.0 161.1 66.0C161.5 66.0 162.1 65.8 162.5 65.5C162.8 65.2 163.4 65.0 163.8 65.0C164.2 65.0 164.8 64.8 165.1 64.5C165.5 64.2 166.1 64.0 166.4 64.0C166.7 64.0 167.4 63.8 167.9 63.5C168.4 63.3 169.5 62.8 170.3 62.5C171.2 62.2 172.4 61.7 173.0 61.4C173.6 61.1 174.7 60.7 175.3 60.4C177.0 59.7 178.7 58.8 180.0 58.0C180.6 57.7 181.5 57.2 181.9 57.0C183.2 56.4 187.2 52.4 188.1 50.7C189.5 48.0 189.9 45.1 189.2 41.3C188.7 38.0 188.2 36.0 187.5 34.0C186.6 31.4 186.3 30.3 186.5 30.1C187.1 29.5 195.6 39.4 197.5 42.9C198.0 43.8 198.5 44.7 198.6 45.0C201.3 49.8 201.3 55.2 198.6 58.9C196.7 61.4 193.9 63.3 188.7 65.6C188.0 65.9 187.1 66.3 186.6 66.5C186.0 66.8 185.4 67.0 185.2 67.0C184.9 67.0 184.2 67.2 183.6 67.5C183.0 67.7 181.9 68.2 181.2 68.4C172.7 71.7 171.3 72.4 168.0 74.5C165.6 76.1 162.5 78.9 162.0 80.1C161.8 80.5 161.5 81.1 161.4 81.3C160.1 83.6 159.9 84.5 159.8 90.5C159.7 94.6 159.6 96.5 159.3 96.6C159.1 96.7 157.3 95.0 155.2 92.9Z"/></g></g>
@@ -2418,6 +2473,9 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
 
   <section class="noel seulement-noel" id="noel" aria-labelledby="t-noel">
     <div class="noel-lueur" aria-hidden="true"></div>
+    <div class="deco-noel deco-hd" data-deco="haut-gauche" aria-hidden="true"></div>
+    <div class="deco-noel deco-bg" data-deco="bas-droite" aria-hidden="true"></div>
+    <div class="deco-noel deco-flocons" data-deco="flocons" aria-hidden="true"></div>
     <div class="cadre noel-grille">
       <div class="noel-texte">
         <p class="surtitre"><span class="pastille" aria-hidden="true"></span><span id="noel-etat">Événement de saison</span></p>
@@ -2945,6 +3003,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           <g class="v v1"><g class="ondule"><use href="#p-v1"/></g></g>
           <g class="v v2"><g class="ondule"><use href="#p-v2"/></g></g>
           <g class="v v3"><g class="ondule"><use href="#p-v3"/></g></g>
+          <use class="bonnet seulement-noel" href="#p-bonnet"/>
         </svg>
         <span class="sucre" aria-hidden="true"></span>
       </div>
@@ -2996,7 +3055,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   <div class="pied-store" aria-hidden="true"></div>
   <div class="cadre pied-grille">
     <div class="pied-marque">
-      <a class="pied-logo" href="#haut" aria-label="Le Café Français, retour en haut"><svg viewBox="6 40 240 198" aria-hidden="true"><use href="#p-tasse" style="fill: var(--lait)"/><use href="#p-v1" style="fill: var(--bleu-vif)"/><use href="#p-v2" style="fill: var(--lait)"/><use href="#p-v3" style="fill: var(--rouge)"/></svg><span>Le Café Français</span></a>
+      <a class="pied-logo" href="/" aria-label="Le Café Français, accueil"><svg viewBox="6 40 240 198" aria-hidden="true"><use href="#p-tasse" style="fill: var(--lait)"/><use href="#p-v1" style="fill: var(--bleu-vif)"/><use href="#p-v2" style="fill: var(--lait)"/><use href="#p-v3" style="fill: var(--rouge)"/><use class="bonnet seulement-noel" href="#p-bonnet"/></svg><span>Le Café Français</span></a>
       <p>Le serveur Discord francophone où l'on vient discuter, jouer et se retrouver autour d'un café, depuis 2021.</p>
       <p class="pied-ouvert"><span class="pastille" aria-hidden="true"></span>Ouvert jour et nuit · <a href="https://discord.gg/france" target="_blank" rel="noopener">discord.gg/france</a></p>
     </div>
@@ -3868,11 +3927,17 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       const dt = Math.min(.05, (t - (avant || t)) / 1000);
       avant = t;
       c.clearRect(0, 0, l, h);
-      c.fillStyle = '#f2f1f9';
+      c.fillStyle = '#f2f1f9'; c.strokeStyle = '#f3ead7'; c.lineWidth = 1.1; c.lineCap = 'round';
       flocons.forEach((f, i) => {
         f.y += f.v * dt; f.p += f.d * dt; f.x += Math.sin(f.p) * 14 * dt;
         if (f.y > h + 6) flocons[i] = flocon(false);
-        c.globalAlpha = f.a; c.beginPath(); c.arc(f.x, f.y, f.r, 0, 6.283); c.fill();
+        c.globalAlpha = f.a;
+        if (f.r > 2.6) {
+          // un petit cristal à six branches
+          c.beginPath();
+          for (let k = 0; k < 3; k++) { const a = f.p * .5 + k * 1.047, dx = Math.cos(a) * f.r * 1.7, dy = Math.sin(a) * f.r * 1.7; c.moveTo(f.x - dx, f.y - dy); c.lineTo(f.x + dx, f.y + dy); }
+          c.stroke();
+        } else { c.beginPath(); c.arc(f.x, f.y, f.r, 0, 6.283); c.fill(); }
       });
       c.globalAlpha = 1;
       boucle = requestAnimationFrame(dessiner);
@@ -4987,6 +5052,120 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       else el.textContent = nf.format(n);
       $('#nb-final').textContent = nf.format(n);
     } catch (e) { /* hors ligne ou bloqué : on garde le nombre écrit dans la page */ }
+  })();
+
+  /* ---------- Noël : branches de sapin, boules, lumières dorées, ruban et couronne (d'après la DA de Noël) ---------- */
+  // Des bouquets de branches dans les coins, des boules rouges, une guirlande de petites lumières dorées et un ruban
+  // crème, comme sur la bannière de Noël du serveur. Tout est tiré d'une graine fixe : le dessin est le même à chaque
+  // visite. Les dégradés (#deco-boule, #deco-or, #deco-ruban, #deco-lueur) sont dans le <svg class="defs"> du haut.
+  (function decorsNoel() {
+    const NS = 'http://www.w3.org/2000/svg';
+    const alea = (graine) => { let s = graine % 2147483647 || 1; return () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646; };
+    const r1 = (n) => Math.round(n * 10) / 10;
+    const VERTS = ['#123f26', '#1a5531', '#22693c', '#2f8048', '#3c9656'];
+    // Une branche : une tige un peu courbée, des aiguilles serrées des deux côtés, et quelques rameaux
+    function branche(x, y, angle, long, hasard, couches) {
+      const a = angle * Math.PI / 180, courbe = (hasard() - .5) * .5;
+      const tiges = [];
+      const tige = (px, py, b, l, t0) => {
+        for (let t = t0; t <= 1; t += (.016 + hasard() * .01) * (long / l) ** .5) {
+          const cx = px + Math.cos(b) * l * t, cy = py + Math.sin(b) * l * t;
+          const lg = (1 - t * .5) * (17 + hasard() * 9) * (l < long ? .85 : 1);
+          for (const cote of [-1, 1]) {
+            const ang = b + cote * (.75 + hasard() * .35) + (hasard() - .5) * .2;
+            couches[Math.floor(hasard() * couches.length)].push(`M${r1(cx)} ${r1(cy)}l${r1(Math.cos(ang) * lg)} ${r1(Math.sin(ang) * lg)}`);
+          }
+        }
+        tiges.push(`M${r1(px)} ${r1(py)}l${r1(Math.cos(b) * l)} ${r1(Math.sin(b) * l)}`);
+      };
+      tige(x, y, a, long, .02);
+      for (let t = .18; t < .88; t += .1 + hasard() * .08) {
+        const b = a + courbe * t, px = x + Math.cos(b) * long * t, py = y + Math.sin(b) * long * t;
+        tige(px, py, b + (hasard() < .5 ? -1 : 1) * (.5 + hasard() * .3), long * (.3 + hasard() * .2) * (1 - t * .45), .06);
+      }
+      return tiges;
+    }
+    const aiguilles = (couches, epais) => couches.map((c, k) => `<path d="${c.join('')}" stroke="${VERTS[k]}" stroke-width="${r1(epais - k * .2)}" stroke-linecap="round" fill="none"/>`).join('');
+    function boule(x, y, r, fil) {
+      return `<g transform="translate(${r1(x)} ${r1(y)})"><path d="M0 ${-r - 5}v${-fil}" stroke="#c9a24a" stroke-width="1.2"/>` +
+        `<rect x="-4.5" y="${-r - 7}" width="9" height="7" rx="2" fill="url(#deco-or)"/><circle r="${r}" fill="url(#deco-boule)"/>` +
+        `<ellipse cx="${r1(-r * .36)}" cy="${r1(-r * .38)}" rx="${r1(r * .3)}" ry="${r1(r * .17)}" fill="#fff" opacity=".5" transform="rotate(-35 ${r1(-r * .36)} ${r1(-r * .38)})"/></g>`;
+    }
+    function lucioles(d, pas) {
+      const fil = document.createElementNS(NS, 'path'), tmp = document.createElementNS(NS, 'svg');
+      fil.setAttribute('d', d);
+      tmp.style.cssText = 'position:absolute;width:0;height:0';
+      tmp.append(fil); document.body.append(tmp);
+      let s = `<path d="${d}" stroke="#3a3426" stroke-width="1.1" fill="none" opacity=".8"/>`;
+      for (let l = 10, i = 0, lg = fil.getTotalLength(); l < lg; l += pas, i++) {
+        const p = fil.getPointAtLength(l);
+        s += `<g class="luciole" style="--d:${r1(-(i * .37) % 2.4)}s"><circle cx="${r1(p.x)}" cy="${r1(p.y)}" r="6" fill="#ffd36b" filter="url(#deco-lueur)"/><circle cx="${r1(p.x)}" cy="${r1(p.y)}" r="2.4" fill="#fff6d8"/></g>`;
+      }
+      tmp.remove();
+      return s;
+    }
+    const ruban = (d) => `<path d="${d}" stroke="#a88a57" stroke-width="19" fill="none"/><path d="${d}" stroke="url(#deco-ruban)" stroke-width="15" fill="none"/><path d="${d}" stroke="#fffaf0" stroke-width="3" fill="none" opacity=".6" transform="translate(-2 -3)"/>`;
+    // Un bouquet de branches qui part d'un coin, avec ses boules, son ruban et sa guirlande
+    function bouquet(o) {
+      const hasard = alea(o.graine), couches = VERTS.map(() => []);
+      let tiges = [];
+      for (let i = 0; i < 10; i++) {
+        const ang = o.de + (o.a - o.de) * (i + hasard() * .6) / 10;
+        tiges = tiges.concat(branche(o.x + (hasard() - .5) * 30, o.y + (hasard() - .5) * 30, ang, o.long * (.65 + hasard() * .45), hasard, couches));
+      }
+      return `<svg viewBox="0 0 520 420" aria-hidden="true" focusable="false"><path d="${tiges.join('')}" stroke="#2a3a22" stroke-width="2.2" stroke-linecap="round" fill="none"/>` +
+        aiguilles(couches, 2.7) + ruban(o.ruban) + lucioles(o.lumieres, 26) + o.boules.map(([x, y, r, f]) => boule(x, y, r, f)).join('') + '</svg>';
+    }
+    // La couronne de la porte d'entrée : des aiguilles en cercle, trois boules et un nœud rouge
+    function couronne() {
+      const hasard = alea(5), couches = VERTS.map(() => []);
+      for (let k = 0; k < 260; k++) {
+        const t = k / 260 * Math.PI * 2, rr = 29 + (hasard() - .5) * 10, x = 50 + Math.cos(t) * rr, y = 50 + Math.sin(t) * rr;
+        const ang = t + Math.PI / 2 + (hasard() - .5) * 1.8, lg = 8 + hasard() * 7;
+        couches[Math.floor(hasard() * couches.length)].push(`M${r1(x)} ${r1(y)}l${r1(Math.cos(ang) * lg)} ${r1(Math.sin(ang) * lg)}`);
+      }
+      const petite = (a, r) => { const x = 50 + Math.cos(a) * 30, y = 50 + Math.sin(a) * 30; return `<circle cx="${r1(x)}" cy="${r1(y)}" r="${r}" fill="url(#deco-boule)"/><circle cx="${r1(x - r * .35)}" cy="${r1(y - r * .35)}" r="${r1(r * .28)}" fill="#fff" opacity=".55"/>`; };
+      return `<svg viewBox="0 0 100 112" aria-hidden="true" focusable="false">${aiguilles(couches, 2.4)}${petite(-2.4, 5)}${petite(-.6, 4.5)}${petite(.9, 4)}${petite(2.4, 4.5)}` +
+        '<path d="M50 80 38 104 46 102 50 108 54 98Z M50 80 62 104 54 102 50 108 46 98Z" fill="#a8141f"/>' +
+        '<path d="M50 80C40 70 28 72 30 80C32 88 44 86 50 80C56 86 68 88 70 80C72 72 60 70 50 80Z" fill="#d8232f" stroke="#8c0f19" stroke-width="1.5"/>' +
+        '<circle cx="50" cy="80" r="5" fill="#b3141f"/></svg>';
+    }
+    // Les flocons en cristal, posés çà et là
+    const FLOCONS = [[8, 30, 26, 0], [20, 72, 16, 1.2], [88, 22, 22, .6], [93, 60, 14, 2], [74, 86, 18, .3], [50, 12, 12, 1.6], [34, 48, 10, 2.4]];
+    const flocons = () => FLOCONS.map(([x, y, t, d]) => `<svg class="flocon" style="left:${x}%;top:${y}%;width:${t}px;--d:${d}s" viewBox="-12 -12 24 24" aria-hidden="true" focusable="false"><use href="#flocon"/></svg>`).join('');
+    const DECORS = {
+      'haut-gauche': () => bouquet({ graine: 7, x: -20, y: -20, de: 8, a: 82, long: 360, boules: [[150, 95, 22, 30], [70, 210, 17, 18], [255, 60, 14, 22]],
+        ruban: 'M-10 120C60 90 120 150 90 190C60 230 140 250 170 300', lumieres: 'M0 40C120 120 200 40 330 70C400 85 430 30 470 20' }),
+      'bas-droite': () => bouquet({ graine: 11, x: 540, y: 440, de: 188, a: 262, long: 360, boules: [[380, 330, 22, 24], [450, 230, 16, 20]],
+        ruban: 'M530 300C470 320 430 280 400 250C370 220 330 260 300 300', lumieres: 'M520 380C420 300 340 380 230 360C160 350 120 400 60 410' }),
+      couronne, flocons,
+    };
+    function habiller() {
+      if (racine.getAttribute('data-saison') !== 'noel') return;
+      $$('[data-deco]').forEach((el) => { if (!el.firstChild && DECORS[el.dataset.deco]) el.innerHTML = DECORS[el.dataset.deco](); });
+    }
+    habiller();
+    addEventListener('saison', habiller);
+
+    // L'icône de l'onglet et la couleur du navigateur : la tasse au bonnet, sur le dégradé de la DA
+    const icone = $('link[rel="icon"]'), couleur = $('meta[name="theme-color"]');
+    const iconeNormale = icone && icone.getAttribute('href'), couleurNormale = couleur && couleur.getAttribute('content');
+    let iconeNoel = '';
+    function onglet() {
+      const noel = racine.getAttribute('data-saison') === 'noel';
+      if (noel && !iconeNoel) {
+        const d = (id) => document.getElementById(id).getAttribute('d');
+        const svg = `<svg xmlns="${NS}" viewBox="-8 16 300 300"><defs><linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a1d2b"/><stop offset="1" stop-color="#123a26"/></linearGradient></defs>` +
+          `<rect x="-8" y="16" width="300" height="300" rx="66" fill="url(#f)"/><path fill="#2b5cc4" d="${d('p-v1')}"/><path fill="#f2f1f9" d="${d('p-v2')}"/><path fill="#f94443" d="${d('p-v3')}"/><path fill="#f2f1f9" d="${d('p-tasse')}"/>` +
+          '<path fill="#d8232f" d="M196 113C197 93 210 79 229 77C250 75 266 88 272 110C273 114 270 117 266 116C263 104 256 97 248 96C252 105 255 115 256 125Z"/>' +
+          '<rect x="193" y="111" width="66" height="19" rx="9.5" fill="#fff" transform="rotate(14 226 120.5)"/><circle cx="270" cy="119" r="9.5" fill="#fff"/></svg>';
+        iconeNoel = 'data:image/svg+xml,' + encodeURIComponent(svg);
+      }
+      if (icone) icone.setAttribute('href', noel ? iconeNoel : iconeNormale);
+      if (couleur) couleur.setAttribute('content', noel ? '#10231b' : couleurNormale);
+    }
+    onglet();
+    addEventListener('saison', onglet);
   })();
 
   /* ---------- Le site en pages ---------- */
