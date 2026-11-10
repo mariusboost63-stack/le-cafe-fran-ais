@@ -65,36 +65,58 @@ def lire_base(adresse):
                 "niveau": r, "cartes": catalogue.get(r, 0),
                 "tirage": round(100 * tirees.get(r, 0) / nb_tirees, 2) if nb_tirees else None,
             } for r in sorted(set(catalogue) | set(tirees))]
+            # Chaque partie est lue à part : un souci sur l'une n'empêche pas de publier les autres
+            def partie(nom, lire, defaut):
+                try:
+                    return lire()
+                except pymysql.MySQLError as err:
+                    code = err.args[0] if err.args and isinstance(err.args[0], int) else ""
+                    signaler(f"DeckFR : {nom} illisible ({type(err).__name__} {code}).".replace(" )", ")"), "warning")
+                    return defaut
+
+            def un(sql, args=None):
+                c.execute(sql, args)
+                return c.fetchone()
+
+            def tous(sql, args=None):
+                c.execute(sql, args)
+                return c.fetchall()
+
+            # Les membres privés de cartes, lus à part : la table users n'a pas la même collation que les tables
+            # cartes_*, une jointure de texte entre les deux est refusée par la base (erreur 1267)
+            exclus = partie("membres exclus", lambda: {str(i) for (i,) in tous("SELECT id FROM users WHERE blacklistCartes = 1")}, set())
             # Les chiffres du jeu
-            c.execute("SELECT COUNT(*), COALESCE(SUM(boosters_ouverts), 0) FROM cartes_profils WHERE boosters_ouverts > 0")
-            joueurs, boosters = (int(x) for x in c.fetchone())
-            # Échanges conclus : les deux joueurs ont confirmé, ou le statut le dit
-            c.execute("SELECT COUNT(*) FROM cartes_echanges WHERE (conf_a = 1 AND conf_b = 1)"
-                      " OR LOWER(statut) IN ('termine', 'terminé', 'accepte', 'accepté', 'conclu', 'valide', 'validé', 'fini', 'effectue', 'effectué')")
-            echanges = int(c.fetchone()[0])
+            joueurs, boosters = partie("profils", lambda: tuple(int(x) for x in un(
+                "SELECT COUNT(*), COALESCE(SUM(boosters_ouverts), 0) FROM cartes_profils WHERE boosters_ouverts > 0")), (0, 0))
+            # Échanges conclus : les deux joueurs ont confirmé, ou le statut le dit (comparé ici, pas dans la base)
+            faits = {"termine", "terminé", "accepte", "accepté", "conclu", "valide", "validé", "fini", "effectue", "effectué"}
+            echanges = partie("échanges", lambda: sum(int(n) for statut, a, b, n in tous(
+                "SELECT statut, conf_a, conf_b, COUNT(*) FROM cartes_echanges GROUP BY statut, conf_a, conf_b")
+                if (a and b) or str(statut or "").strip().lower() in faits), 0)
             # Ventes au marché : une carte qui a trouvé un acheteur
-            c.execute("SELECT COUNT(*), COALESCE(SUM(prix), 0) FROM cartes_marches WHERE acheteur IS NOT NULL AND acheteur <> ''")
-            ventes, grains_marche = (int(x) for x in c.fetchone())
+            ventes, grains_marche = partie("marché", lambda: tuple(int(x) for x in un(
+                "SELECT COUNT(*), COALESCE(SUM(prix), 0) FROM cartes_marches WHERE acheteur IS NOT NULL AND acheteur <> ''")), (0, 0))
             sortie["chiffres"] = {"cartes": total, "joueurs": joueurs, "boosters": boosters, "tirees": nb_tirees,
                                   "echanges": echanges, "ventes": ventes, "grains_marche": grains_marche}
             max_rarete = max(catalogue) if catalogue else 5
-            # Les meilleurs collectionneurs : le plus de cartes différentes (encore en jeu)
-            c.execute("SELECT c.user_id, COUNT(DISTINCT c.carte_id) AS n, COALESCE(SUM(c.quantite), 0)"
-                      " FROM cartes_collections c JOIN cartes_catalogue k ON k.id = c.carte_id AND k.actif = 1"
-                      " LEFT JOIN users u ON u.id = c.user_id"
-                      " WHERE c.quantite > 0 AND COALESCE(u.blacklistCartes, 0) = 0"
-                      " GROUP BY c.user_id ORDER BY n DESC, MIN(c.premiere_obtention) ASC LIMIT %s", (TAILLE,))
-            sortie["top"] = [(str(i), int(n), int(q)) for i, n, q in c.fetchall()]
-            # Les derniers grands tirages : les deux raretés les plus hautes
-            c.execute("SELECT o.user_id, k.nom, oc.rarete, k.recto, o.cree_le FROM cartes_ouvertures_cartes oc"
-                      " JOIN cartes_ouvertures o ON o.id = oc.ouverture_id JOIN cartes_catalogue k ON k.id = oc.carte_id"
-                      " LEFT JOIN users u ON u.id = o.user_id"
-                      " WHERE oc.rarete >= %s AND COALESCE(u.blacklistCartes, 0) = 0"
-                      " ORDER BY o.cree_le DESC, oc.position ASC LIMIT %s", (max_rarete - 1, TIRAGES))
-            sortie["grands"] = [(str(i), str(nom), int(r), image(img), date_iso(t)) for i, nom, r, img, t in c.fetchall()]
+            # Les meilleurs collectionneurs : le plus de cartes différentes (encore en jeu), sans les membres exclus
+            top = partie("collections", lambda: tous(
+                "SELECT c.user_id, COUNT(DISTINCT c.carte_id) AS n, COALESCE(SUM(c.quantite), 0)"
+                " FROM cartes_collections c JOIN cartes_catalogue k ON k.id = c.carte_id AND k.actif = 1"
+                " WHERE c.quantite > 0 GROUP BY c.user_id ORDER BY n DESC, MIN(c.premiere_obtention) ASC LIMIT %s",
+                (TAILLE + len(exclus),)), [])
+            sortie["top"] = [(str(i), int(n), int(q)) for i, n, q in top if str(i) not in exclus][:TAILLE]
+            # Les derniers grands tirages : les deux raretés les plus hautes, sans les membres exclus
+            grands = partie("tirages", lambda: tous(
+                "SELECT o.user_id, k.nom, oc.rarete, k.recto, o.cree_le FROM cartes_ouvertures_cartes oc"
+                " JOIN cartes_ouvertures o ON o.id = oc.ouverture_id JOIN cartes_catalogue k ON k.id = oc.carte_id"
+                " WHERE oc.rarete >= %s ORDER BY o.cree_le DESC, oc.position ASC LIMIT %s", (max_rarete - 1, TIRAGES * 5)), [])
+            sortie["grands"] = [(str(i), str(nom), int(r), image(img), date_iso(t)) for i, nom, r, img, t in grands
+                                if str(i) not in exclus][:TIRAGES]
             # Les dernières cartes sorties
-            c.execute("SELECT nom, rarete, recto, cree_le FROM cartes_catalogue WHERE actif = 1 ORDER BY cree_le DESC, id DESC LIMIT %s", (NOUVELLES,))
-            sortie["nouvelles"] = [{"nom": str(nom), "rarete": int(r), "image": image(img), "date": date_iso(t)} for nom, r, img, t in c.fetchall()]
+            nouvelles = partie("catalogue récent", lambda: tous(
+                "SELECT nom, rarete, recto, cree_le FROM cartes_catalogue WHERE actif = 1 ORDER BY cree_le DESC, id DESC LIMIT %s", (NOUVELLES,)), [])
+            sortie["nouvelles"] = [{"nom": str(nom), "rarete": int(r), "image": image(img), "date": date_iso(t)} for nom, r, img, t in nouvelles]
             return sortie
     finally:
         connexion.close()
