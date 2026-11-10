@@ -1332,60 +1332,105 @@ main, .pied { position: relative; z-index: 1; }
 }
 .indice-cafe { color: var(--brume); }
 
-/* Événements (hors saison) */
+/* Événements (hors saison) : le tableau d'affichage en liège du café. Une affiche punaisée pour le prochain
+   rendez-vous, des post-it pour les animations de tous les jours, un ticket souvenir du dernier événement. */
 .evenements { padding-block: clamp(72px, 8vw, 120px); }
-.evenements-grille { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
-.evenements-texte { display: grid; gap: 22px; min-width: 0; }
-.evenements-texte .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 44ch; }
-.bilan-ev {
-  position: relative; overflow: hidden; isolation: isolate; display: grid; gap: 22px;
-  padding: clamp(20px, 2.6vw, 30px); border-radius: 24px;
-  background: linear-gradient(150deg, color-mix(in srgb, var(--citrouille) 16%, var(--nuit-2)), var(--nuit-2) 62%);
-  border: 1px solid color-mix(in srgb, var(--citrouille) 38%, var(--trait));
-  box-shadow: 0 24px 60px -30px color-mix(in srgb, var(--citrouille) 60%, transparent);
+.evenements-cadre { display: grid; gap: clamp(28px, 4vw, 44px); }
+.evenements-tete { display: grid; gap: 18px; max-width: 760px; }
+.evenements-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 54ch; }
+.liege {
+  --papier: #f6f0e2; --encre: #1d2433;
+  position: relative; display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); grid-template-areas: "affiche notes" "souvenir souvenir";
+  gap: clamp(26px, 3vw, 36px) clamp(24px, 3.4vw, 44px); padding: clamp(30px, 4vw, 52px) clamp(20px, 3.4vw, 46px);
+  border: clamp(9px, 1vw, 13px) solid #6b4124; border-radius: 22px;
+  /* le liège : des grains clairs et foncés sur un fond brun doré */
+  background:
+    radial-gradient(circle at 30% 40%, color-mix(in srgb, #000 16%, transparent) 0 1px, transparent 1.6px) 0 0 / 7px 7px,
+    radial-gradient(circle at 70% 20%, color-mix(in srgb, #fff 16%, transparent) 0 1px, transparent 1.6px) 3px 2px / 11px 11px,
+    radial-gradient(circle at 50% 70%, color-mix(in srgb, #3b1d08 22%, transparent) 0 1.4px, transparent 2px) 0 0 / 15px 13px,
+    radial-gradient(70% 60% at 20% 15%, color-mix(in srgb, #fff 10%, transparent), transparent 70%),
+    linear-gradient(160deg, #c8935b, #b07943 55%, #9b6637);
+  box-shadow: inset 0 0 32px color-mix(in srgb, #000 35%, transparent), inset 0 2px 0 color-mix(in srgb, #fff 25%, transparent), 0 34px 60px -34px #000;
 }
-.bilan-ev::before {
-  content: ""; position: absolute; z-index: -1; right: -18%; top: -40%; width: 70%; aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--citrouille) 30%, transparent), transparent);
+/* La punaise et le scotch */
+.punaise {
+  position: absolute; z-index: 2; top: -9px; left: 50%; width: 22px; height: 22px; margin-left: -11px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #fff9 0 2.5px, transparent 3.5px), radial-gradient(circle at 50% 50%, var(--pc, #e0353f) 0 55%, color-mix(in srgb, var(--pc, #e0353f) 60%, #000) 100%);
+  box-shadow: 2px 5px 6px -2px color-mix(in srgb, #000 65%, transparent);
 }
-.bilan-chauve { position: absolute; z-index: -1; right: 22px; top: 18px; width: 58px; height: 29px; color: color-mix(in srgb, var(--citrouille) 40%, transparent); transform: rotate(-8deg); }
-.bilan-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding-right: 64px; }
-.bilan-titre { font: 800 clamp(24px, 2.4vw, 30px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.01em; }
-.bilan-titre em { font-style: normal; color: var(--citrouille); }
-.bilan-etat { padding: 5px 10px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--citrouille) 45%, transparent); font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--citrouille); }
-.bilan-ev ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.bilan-ev li { display: grid; gap: 8px; align-content: start; padding: 16px 0 16px clamp(16px, 2vw, 26px); border-left: 1px solid color-mix(in srgb, var(--citrouille) 28%, transparent); min-width: 0; }
-.bilan-ev li:nth-child(odd) { padding-left: 0; padding-right: clamp(12px, 2vw, 22px); border-left: 0; }
-.bilan-ev li:nth-child(n+3) { border-top: 1px solid color-mix(in srgb, var(--citrouille) 28%, transparent); }
-.bilan-ev li:nth-child(-n+2) { padding-top: 2px; }
-.bilan-ev b { display: flex; align-items: baseline; font: 800 clamp(38px, 4vw, 56px)/.9 var(--f-titre); font-stretch: 85%; font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--citrouille); text-shadow: 0 0 26px color-mix(in srgb, var(--citrouille) 45%, transparent); }
-.bilan-ev b .plus { font-size: .55em; margin-left: 2px; }
-.bilan-ev li > span { color: var(--brume); font-size: 14.5px; line-height: 1.3; }
-.astuce-ev { max-width: 46ch; padding: 14px 18px; border-radius: 14px; border: 1px dashed var(--trait); color: var(--brume); }
-.types-ev { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-.types-ev li {
-  --ev: var(--bleu-vif);
-  position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 12px;
-  padding: 26px 24px 24px; border-radius: 22px; min-width: 0;
-  background: linear-gradient(160deg, color-mix(in srgb, var(--ev) 10%, var(--nuit-2)), var(--nuit-2) 55%);
-  border: 1px solid color-mix(in srgb, var(--ev) 22%, var(--trait));
-  transition: transform .35s cubic-bezier(.2, .8, .2, 1), border-color .3s, box-shadow .35s;
+.scotch {
+  position: absolute; z-index: 2; top: -12px; left: 50%; width: 76px; height: 24px; translate: -50% 0; rotate: var(--sr, -4deg);
+  background: color-mix(in srgb, #fff 48%, transparent); box-shadow: 0 1px 2px color-mix(in srgb, #000 18%, transparent);
+  -webkit-mask: linear-gradient(90deg, transparent 0 2px, #000 2px calc(100% - 2px), transparent 0); mask: linear-gradient(90deg, transparent 0 2px, #000 2px calc(100% - 2px), transparent 0);
 }
-.types-ev li:nth-child(2) { --ev: var(--lait); }
-.types-ev li:nth-child(3) { --ev: var(--rouge); }
-.types-ev li:nth-child(4) { --ev: var(--creme); }
-.types-ev li::after { content: ""; position: absolute; left: 24px; right: 24px; top: 0; height: 2px; border-radius: 0 0 2px 2px; background: var(--ev); opacity: .7; }
-.types-ev li:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--ev) 55%, transparent); box-shadow: 0 22px 44px -26px color-mix(in srgb, var(--ev) 70%, transparent); }
-.ev-ico { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; color: var(--ev); background: color-mix(in srgb, var(--ev) 14%, transparent); border: 1px solid color-mix(in srgb, var(--ev) 32%, transparent); }
-.ev-ico svg { width: 28px; height: 28px; }
-.ev-fond { position: absolute; z-index: -1; right: -26px; bottom: -30px; width: 150px; height: 150px; color: var(--ev); opacity: .07; transform: rotate(-12deg); transition: transform .5s cubic-bezier(.2, .8, .2, 1), opacity .3s; }
-.types-ev li:hover .ev-fond { transform: rotate(-4deg) scale(1.08); opacity: .11; }
-.types-ev h3 { margin-top: 4px; font: 800 23px/1.15 var(--f-titre); letter-spacing: -.01em; }
-.types-ev p { color: var(--brume); }
-.ev-salon { margin-top: auto; align-self: flex-start; padding: 4px 10px; border-radius: 8px; font: 600 14px/1.2 var(--f-texte); color: var(--ev); background: color-mix(in srgb, var(--ev) 13%, transparent); }
-@media (prefers-reduced-motion: reduce) { .types-ev li, .ev-fond { transition: none; } .types-ev li:hover { transform: none; } }
-@media (max-width: 860px) { .evenements-grille { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 520px) { .types-ev { grid-template-columns: minmax(0, 1fr); } }
+/* L'affiche du prochain rendez-vous */
+.affiche {
+  grid-area: affiche; position: relative; align-self: start; display: grid; gap: 14px; padding: 34px clamp(22px, 2.6vw, 34px) 28px;
+  background: var(--papier); color: var(--encre); rotate: -1.4deg;
+  box-shadow: 0 2px 0 color-mix(in srgb, #000 8%, transparent), 0 22px 34px -16px color-mix(in srgb, #000 70%, transparent);
+  transition: rotate .4s, translate .4s;
+}
+.affiche::before { content: ""; position: absolute; inset: 0 0 auto; height: 8px; background: linear-gradient(90deg, var(--bleu) 33.3%, #fff 33.3% 66.6%, var(--rouge) 66.6%); box-shadow: 0 1px 0 color-mix(in srgb, #000 12%, transparent); }
+.af-sur { font: 500 var(--t-etiquette)/1.2 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--rouge-fonce); }
+.af-titre { font: 800 clamp(40px, 4.6vw, 64px)/.9 var(--f-titre); font-stretch: 82%; letter-spacing: -.03em; }
+.af-date { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; padding: 12px 0; border-block: 2px dashed color-mix(in srgb, var(--encre) 22%, transparent); }
+.af-date b { font: 800 clamp(46px, 5vw, 70px)/.9 var(--f-titre); font-stretch: 80%; letter-spacing: -.03em; color: var(--rouge-fonce); font-variant-numeric: tabular-nums; }
+.af-date span { font-weight: 600; color: color-mix(in srgb, var(--encre) 75%, var(--papier)); }
+.af-texte { font-size: 16.5px; line-height: 1.5; }
+.af-astuce { padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, var(--encre) 6%, transparent); font-size: 14.5px; line-height: 1.45; color: color-mix(in srgb, var(--encre) 80%, var(--papier)); }
+.af-astuce .mention { color: var(--encre); background: color-mix(in srgb, var(--encre) 10%, transparent); }
+/* Les post-it des animations de tous les jours */
+.notes { grid-area: notes; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 22px; }
+.note {
+  --fond: #ffe68c; position: relative; display: grid; align-content: start; gap: 8px; min-width: 0; padding: 22px 18px 18px;
+  background: linear-gradient(180deg, color-mix(in srgb, #fff 18%, var(--fond)), var(--fond) 30%); color: var(--encre); rotate: var(--nr, -2deg);
+  box-shadow: 0 16px 22px -14px color-mix(in srgb, #000 70%, transparent), inset 0 -18px 18px -18px color-mix(in srgb, #000 22%, transparent);
+  transition: rotate .35s, translate .35s, box-shadow .35s;
+}
+.note-bleue { --fond: #bfdcff; --nr: 1.8deg; --sr: 5deg; }
+.note-rose { --fond: #ffc7d3; --nr: 2.2deg; --sr: -6deg; }
+.note-verte { --fond: #caf0c2; --nr: -1.3deg; --sr: 3deg; }
+.note h3 { font: 700 clamp(28px, 2.6vw, 34px)/.95 var(--f-craie, "Caveat", cursive); }
+.note p { font-size: 14.5px; line-height: 1.4; color: color-mix(in srgb, var(--encre) 82%, var(--fond)); }
+.note .ev-salon { justify-self: start; margin-top: 4px; padding: 3px 9px; border-radius: 999px; background: color-mix(in srgb, var(--encre) 12%, transparent); font: 600 13px/1.3 var(--f-mono); color: var(--encre); }
+.note:hover, .affiche:hover, .souvenir:hover { rotate: 0deg; translate: 0 -4px; }
+.note:hover { box-shadow: 0 24px 30px -16px color-mix(in srgb, #000 75%, transparent); }
+/* Le ticket souvenir du dernier événement */
+.souvenir { grid-area: souvenir; position: relative; justify-self: center; width: min(100%, 780px); rotate: .8deg; filter: drop-shadow(0 14px 14px color-mix(in srgb, #000 45%, transparent)); transition: rotate .4s, translate .4s; }
+.sv-ticket {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px 22px; align-items: center;
+  padding: 24px 26px 22px 34px; background: var(--papier); color: var(--encre);
+  /* les bords crantés d'un ticket */
+  -webkit-mask: radial-gradient(circle 8px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 8px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+  mask: radial-gradient(circle 8px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 8px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+}
+.sv-tete { display: grid; gap: 6px; padding-right: 22px; border-right: 2px dashed color-mix(in srgb, var(--encre) 22%, transparent); }
+.sv-sur { font: 500 var(--t-etiquette)/1.2 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--encre) 65%, var(--papier)); }
+.souvenir h3 { font: 800 clamp(24px, 2.3vw, 30px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; }
+.souvenir h3 em { font-style: normal; color: #d8620e; }
+.tampon {
+  justify-self: start; margin-top: 4px; padding: 3px 10px; border: 2.5px solid var(--rouge-fonce); border-radius: 6px; rotate: -7deg;
+  font: 800 15px/1.2 var(--f-titre); letter-spacing: .16em; text-transform: uppercase; color: var(--rouge-fonce); opacity: .85;
+}
+.sv-chiffres { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.sv-chiffres li { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.sv-chiffres b { display: flex; align-items: baseline; font: 800 clamp(28px, 2.8vw, 38px)/.9 var(--f-titre); letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: #d8620e; }
+.sv-chiffres b .plus { font-size: .55em; margin-left: 1px; }
+.sv-chiffres li > span { font-size: 13.5px; line-height: 1.3; color: color-mix(in srgb, var(--encre) 75%, var(--papier)); }
+@media (max-width: 1080px) {
+  .liege { grid-template-columns: minmax(0, 1fr); grid-template-areas: "affiche" "notes" "souvenir"; }
+  .souvenir { width: 100%; max-width: 560px; }
+  .affiche { justify-self: center; max-width: 560px; }
+}
+@media (max-width: 640px) {
+  .sv-ticket { grid-template-columns: minmax(0, 1fr); padding: 24px 22px 20px; }
+  .sv-tete { padding: 0 0 14px; border-right: 0; border-bottom: 2px dashed color-mix(in srgb, var(--encre) 22%, transparent); }
+  .sv-chiffres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .notes { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .note { padding: 20px 16px 16px; }
+}
 
 /* FAQ */
 .faq { padding-block: clamp(64px, 7vw, 108px); }
@@ -1731,7 +1776,7 @@ main, .pied { position: relative; z-index: 1; }
 /* Lisibilité sur mobile : aucun texte sous 13 px */
 @media (max-width: 720px) {
   :root { --t-etiquette: 13px; }
-  .dk-grands time, .dk-nouvelles span, .a-temps, .badge-rang, .profil-pseudo, .profil-fonction, .bilan-etat,
+  .dk-grands time, .dk-nouvelles span, .a-temps, .badge-rang, .profil-pseudo, .profil-fonction,
   .journal-ligne, .journal-source, .gazette-liste time, .dk-salons span { font-size: 13px; }
 }
 </style>
@@ -2061,32 +2106,44 @@ main, .pied { position: relative; z-index: 1; }
   </section>
 
   <section class="evenements seulement-normal" id="evenements" aria-labelledby="t-evenements">
-    <div class="cadre evenements-grille">
-      <div class="evenements-texte" data-revele>
+    <div class="cadre evenements-cadre">
+      <div class="evenements-tete" data-revele>
         <p class="surtitre">Événements</p>
-        <h2 class="h2" id="t-evenements">Le prochain événement se prépare</h2>
-        <p class="chapo">Le café organise régulièrement des événements pour toute la communauté. Le dernier en date, Halloween 2026, a rassemblé le serveur autour de jeux, de quêtes et d'une chasse aux citrouilles.</p>
-        <div class="bilan-ev">
-          <svg class="bilan-chauve" aria-hidden="true" viewBox="0 0 48 24"><use href="#i-chauve"/></svg>
-          <div class="bilan-tete">
-            <p class="bilan-titre"><em>Halloween 2026</em> en chiffres</p>
-            <span class="bilan-etat">Terminé</span>
-          </div>
-          <ul>
-            <li><b data-n="7">7</b><span>jeux et quêtes d'Halloween</span></li>
-            <li><b data-n="13">13</b><span>finalistes</span></li>
-            <li><b data-n="10">10</b><span>participants récompensés</span></li>
-            <li><b><span class="sr">Plus de </span><span data-n="300">300</span><span class="plus" aria-hidden="true">+</span></b><span>citrouilles récoltées</span></li>
-          </ul>
-        </div>
-        <p class="astuce-ev">Prends le rôle @Notif Animation dans «&nbsp;Salons et rôles&nbsp;» pour être prévenu dès qu'un événement commence.</p>
+        <h2 class="h2" id="t-evenements">Au programme du café</h2>
+        <p class="chapo">Tout ce qui se prépare est affiché ici, comme sur le tableau en liège près du comptoir&nbsp;: le prochain grand rendez-vous, les animations de tous les jours et le souvenir du dernier événement.</p>
       </div>
-      <ul class="types-ev">
-        <li><svg class="ev-fond" aria-hidden="true"><use href="#i-cadeau"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-cadeau"/></svg></span><h3>Concours</h3><p>Des concours réguliers, avec de nombreux lots à gagner.</p><span class="ev-salon">#concours</span></li>
-        <li><svg class="ev-fond" aria-hidden="true"><use href="#i-infini"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-infini"/></svg></span><h3>L'infini</h3><p>Faites avancer ensemble la suite de nombres : des rôles et des grains à gagner, et un classement des meilleurs.</p><span class="ev-salon">#infini</span></li>
-        <li><svg class="ev-fond" aria-hidden="true"><use href="#i-masque"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-masque"/></svg></span><h3>Confessions anonymes</h3><p>Confie ce que tu as sur le cœur, en toute discrétion : personne ne sait que c'est toi.</p><span class="ev-salon">#confessions</span></li>
-        <li><svg class="ev-fond" aria-hidden="true"><use href="#i-texte"/></svg><span class="ev-ico" aria-hidden="true"><svg><use href="#i-texte"/></svg></span><h3>Fils à thème</h3><p>Des fils de discussion pour raconter, partager et participer ensemble.</p></li>
-      </ul>
+      <div class="liege">
+        <article class="affiche" aria-labelledby="af-titre">
+          <span class="punaise" aria-hidden="true"></span>
+          <p class="af-sur">Prochain rendez-vous</p>
+          <h3 class="af-titre" id="af-titre">Noël au café</h3>
+          <p class="af-date"><b id="af-jours">J-21</b><span id="af-quand">le 1er décembre à minuit</span></p>
+          <p class="af-texte" id="af-texte">Le café sort les guirlandes&nbsp;: de la neige sur le site, un calendrier de l'Avent à ouvrir chaque jour et des chants de Noël à l'accordéon dans l'ambiance sonore.</p>
+          <p class="af-astuce">Prends le rôle <span class="mention mention-gris">@Notif Animation</span> dans «&nbsp;Salons et rôles&nbsp;» pour être prévenu dès qu'un événement commence.</p>
+        </article>
+        <ul class="notes" aria-label="Les animations de tous les jours">
+          <li class="note"><span class="scotch" aria-hidden="true"></span><h3>Concours</h3><p>Des concours réguliers, avec de nombreux lots à gagner.</p><span class="ev-salon">#concours</span></li>
+          <li class="note note-bleue"><span class="scotch" aria-hidden="true"></span><h3>L'infini</h3><p>Faites avancer ensemble la suite de nombres&nbsp;: des rôles et des grains à gagner, et un classement des meilleurs.</p><span class="ev-salon">#infini</span></li>
+          <li class="note note-rose"><span class="scotch" aria-hidden="true"></span><h3>Confessions anonymes</h3><p>Confie ce que tu as sur le cœur, en toute discrétion&nbsp;: personne ne sait que c'est toi.</p><span class="ev-salon">#confessions</span></li>
+          <li class="note note-verte"><span class="scotch" aria-hidden="true"></span><h3>Fils à thème</h3><p>Des fils de discussion pour raconter, partager et participer ensemble.</p></li>
+        </ul>
+        <article class="souvenir" aria-labelledby="t-souvenir">
+          <span class="punaise" aria-hidden="true" style="--pc: #2f7de1"></span>
+          <div class="sv-ticket">
+            <div class="sv-tete">
+              <p class="sv-sur">Le dernier en date</p>
+              <h3 id="t-souvenir"><em>Halloween</em> 2026</h3>
+              <span class="tampon">Terminé</span>
+            </div>
+            <ul class="sv-chiffres">
+              <li><b data-n="7">7</b><span>jeux et quêtes</span></li>
+              <li><b data-n="13">13</b><span>finalistes</span></li>
+              <li><b data-n="10">10</b><span>participants récompensés</span></li>
+              <li><b><span class="sr">Plus de </span><span data-n="300">300</span><span class="plus" aria-hidden="true">+</span></b><span>citrouilles récoltées</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -4211,6 +4268,29 @@ main, .pied { position: relative; z-index: 1; }
     charger();
   })();
 
+  /* ---------- Événements : le prochain rendez-vous du café ---------- */
+  // Les deux grands rendez-vous du site : Halloween le 1er octobre, Noël le 1er décembre (minuit, heure de Paris)
+  (function prochainRendezVous() {
+    const RDV = [
+      { mois: 10, decalage: 2, titre: 'Halloween au café', quand: 'le 1er octobre à minuit', texte: 'Le café se déguise : le site passe en mode Halloween, avec ses chauves-souris, ses citrouilles et ses surprises.' },
+      { mois: 12, decalage: 1, titre: 'Noël au café', quand: 'le 1er décembre à minuit', texte: 'Le café sort les guirlandes : de la neige sur le site, un calendrier de l’Avent à ouvrir chaque jour et des chants de Noël à l’accordéon dans l’ambiance sonore.' }
+    ];
+    function maj() {
+      const maintenant = Date.now(), annee = new Date().getUTCFullYear();
+      const prochains = [annee, annee + 1].flatMap((a) => RDV.map((r) => ({ ...r, debut: Date.UTC(a, r.mois - 1, 1) - r.decalage * 3600000 })))
+        .filter((r) => r.debut > maintenant).sort((x, y) => x.debut - y.debut);
+      const r = prochains[0];
+      if (!r) return;
+      const jours = Math.ceil((r.debut - maintenant) / 86400000);
+      $('#af-titre').textContent = r.titre;
+      $('#af-jours').textContent = jours > 1 ? `J-${jours}` : 'Demain';
+      $('#af-quand').textContent = r.quand;
+      $('#af-texte').textContent = r.texte;
+    }
+    maj();
+    setInterval(maj, 3600000);
+  })();
+
   /* ---------- Les prochains événements ---------- */
   // Les événements programmés sur Discord sont relevés par GitHub Actions (outils/evenements.py) et publiés sur la
   // branche « evenements », puis avec le site. Sans événement à venir, la section reste cachée.
@@ -4788,12 +4868,13 @@ main, .pied { position: relative; z-index: 1; }
   g.from('.journal', { y: 60, rotation: -7, opacity: .25, duration: 1, ease: 'back.out(1.5)', scrollTrigger: { trigger: '.gazette', start: 'top 75%', once: true } });
 
   /* ---------- Événements et FAQ ---------- */
-  $$('.bilan-ev [data-n]').forEach((el) => {
+  $$('.souvenir [data-n]').forEach((el) => {
     const n = Number(el.dataset.n);
     el.textContent = '0';
-    ST.create({ trigger: '.bilan-ev', start: 'top 85%', once: true, onEnter: () => compter(el, n, n > 50 ? 2 : 1.4) });
+    ST.create({ trigger: '.souvenir', start: 'top 88%', once: true, onEnter: () => compter(el, n, n > 50 ? 2 : 1.4) });
   });
-  g.from('.types-ev li', { y: 40, opacity: .25, duration: .8, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '.types-ev', start: 'top 85%', once: true } });
+  g.from('.affiche', { y: -40, rotation: -8, opacity: .25, duration: 1, ease: 'back.out(1.6)', scrollTrigger: { trigger: '.liege', start: 'top 80%', once: true } });
+  g.from('.note', { y: -30, scale: 1.12, opacity: 0, duration: .7, stagger: .12, ease: 'back.out(2)', scrollTrigger: { trigger: '.notes', start: 'top 85%', once: true } });
   g.from('.question', { y: 30, opacity: .25, duration: .7, stagger: .06, ease: 'power3.out', scrollTrigger: { trigger: '.faq-liste', start: 'top 85%', once: true } });
 
   /* ---------- Équipe : les badges tombent et se balancent ---------- */
