@@ -5425,8 +5425,18 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   echelle.classList.add('en-cours');
   echelle.style.setProperty('--p', 0);
   palier(-1);
-  paliers.forEach((p, i) => ST.create({ trigger: p, start: 'top 60%', onEnter: () => palier(i), onLeaveBack: () => palier(i - 1) }));
-  ST.create({ trigger: echelle, start: 'top 60%', end: 'bottom 60%', onUpdate: (self) => echelle.style.setProperty('--p', self.progress.toFixed(3)) });
+  // Où chaque palier s'allume : quand il passe aux 60 % de l'écran, mais jamais tout en haut de la page. La page
+  // Niveaux commence par l'échelle : sans ça, les premiers paliers seraient déjà allumés et le compteur ne pourrait
+  // plus redescendre à 0. Les premiers s'allument donc l'un après l'autre dès qu'on descend un peu, et le dernier
+  // reste atteignable en bas de la page.
+  function departs() {
+    const ecart = 70, max = ST.maxScroll(window) - 10, pos = [];
+    paliers.forEach((p, i) => pos.push(Math.max(p.getBoundingClientRect().top + scrollY - innerHeight * .6, i ? pos[i - 1] + ecart : 40)));
+    for (let i = pos.length - 1; i >= 0; i--) pos[i] = Math.max(i ? 1 : 0, Math.min(pos[i], max - (pos.length - 1 - i) * ecart));
+    return pos;
+  }
+  paliers.forEach((p, i) => ST.create({ trigger: p, start: () => departs()[i], invalidateOnRefresh: true, onEnter: () => palier(i), onLeaveBack: () => palier(i - 1) }));
+  ST.create({ trigger: echelle, start: () => departs()[0], end: () => departs()[paliers.length - 1], invalidateOnRefresh: true, onUpdate: (self) => echelle.style.setProperty('--p', self.progress.toFixed(3)) });
 
   /* ---------- Commande ton café ---------- */
   g.from('.ticket-cadre', { y: 60, rotation: 8, opacity: .25, duration: 1, ease: 'back.out(1.6)', scrollTrigger: { trigger: '.comptoir', start: 'top 82%', once: true } });
