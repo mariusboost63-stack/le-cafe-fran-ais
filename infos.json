@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-10",
+      "publication": "2026-11-10T12:00:00+01:00",
+      "theme": "Économie",
+      "titre": "Conférence sociale : le Smic relevé de 1,6 % dès le 1er décembre",
+      "texte": "À l'issue de la conférence sociale réunie lundi à Matignon, le ministre du Travail, Jean-Pierre Farandou, a annoncé une hausse du Smic de 1,6 % dès le 1er décembre, au lieu du 1er janvier. Le salaire minimum passera ainsi d'environ 1 478 à 1 502 euros net par mois pour un temps plein, soit près de 24 euros de plus.",
+      "source": {
+        "nom": "franceinfo",
+        "url": "https://www.franceinfo.fr/economie/greve/augmentation-du-smic-allegements-de-charges-pour-les-entreprises-ce-qu-il-faut-retenir-des-annonces-du-gouvernement-a-l-issue-de-la-conference-sociale_8274527.html"
+      }
+    },
+    {
       "date": "2026-11-09",
       "publication": "2026-11-09T12:00:00+01:00",
       "theme": "International",
