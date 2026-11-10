@@ -58,6 +58,15 @@
    Pour prévisualiser : ajoute #saison-halloween, #saison-noel ou #saison-normale à l'adresse. */
 var SAISON = 'auto';
 var SAISONS_APERCU = { '#saison-halloween': 'halloween', '#saison-noel': 'noel', '#saison-normale': 'normal' };
+/* Une page rechargée repart toujours du haut : le navigateur ne restaure pas la position, et l'ancre d'une section
+   (#classement…) est retirée de l'adresse. Un lien ouvert pour la première fois avec une ancre y mène toujours. */
+var RECHARGEE = false;
+try {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  var navigation = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  RECHARGEE = navigation ? navigation.type === 'reload' : (performance.navigation && performance.navigation.type === 1);
+  if (RECHARGEE && location.hash && !SAISONS_APERCU[location.hash]) history.replaceState(null, '', location.pathname + location.search);
+} catch (e) {}
 function saisonDuJour(t) {
   var m, j, d = t || new Date();
   try {
@@ -2633,6 +2642,12 @@ main, .pied { position: relative; z-index: 1; }
   const reduit = racine.getAttribute('data-animations') === 'reduites';
   const g = window.gsap;
   const ST = window.ScrollTrigger;
+  // Rechargement : retour en haut, y compris après le placement des animations au défilement
+  if (RECHARGEE) {
+    if (ST && ST.clearScrollMemory) ST.clearScrollMemory('manual');
+    scrollTo(0, 0);
+    addEventListener('load', () => requestAnimationFrame(() => scrollTo(0, 0)), { once: true });
+  }
   const anime = !reduit && !!g && !!ST;
   const nf = new Intl.NumberFormat('fr-FR');
   const WIDGET = 'https://discord.com/api/guilds/829698572927762432/widget.json';
