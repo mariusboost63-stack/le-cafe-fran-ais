@@ -85,9 +85,9 @@ Pour lancer le relevé tout de suite : onglet **Actions** → **Prochains évén
 La section « DeckFR » (`#deckfr`) présente le jeu de cartes du bot : ses trois salons, les cinq raretés, les étapes du jeu (boosters gratuits et achetés, collection, garantie pour les cartes légendaires et mythiques, échanges et ventes au marché) et, dès qu'elles sont publiées, ses données en direct : nombre de cartes de chaque rareté et part réelle dans les tirages, chiffres du jeu (joueurs, boosters ouverts, cartes tirées, échanges, ventes), derniers grands tirages et dernières cartes sorties. Les classements gagnent un onglet « DeckFR » (les plus grandes collections, en cartes différentes).
 
 - Toutes les heures, avec le classement, `outils/deckfr.py` lit les tables `cartes_*` de la base du bot, **en lecture seule**, et publie `deckfr.json` sur la branche `data`. Les membres privés de cartes (`users.blacklistCartes`) n'apparaissent dans aucune liste. Mêmes secrets que le classement.
-- Les **noms des raretés**, du niveau 1 au niveau 5, sont dans `index.html` (`const RARETES = ['Commune', 'Rare', 'Épique', 'Légendaire', 'Mythique']`) et dans l'éventail de la section : à ajuster s'ils diffèrent de ceux du bot.
+- Les **noms des raretés**, du niveau 1 au niveau 5, sont dans `index.html` (`const RARETES = ['Commun', 'Rare', 'Épique', 'Légendaire', 'Mythique']`), comme sur les cartes du bot. L'éventail de la section montre une vraie carte par rareté (`cartes/vitrine/`).
 - **Images des cartes** : la base du bot ne garde que le nom du fichier de chaque carte (colonnes `recto` et `verso`, par exemple `Charlemagne_recto_1793899753176.png`) ; les images elles-mêmes sont sur le serveur du bot. Pour les afficher, dépose les fichiers `…_recto_….png` dans un dossier **`cartes/`** à la racine du dépôt (mêmes noms que dans la base) : il est publié avec le site. Une image absente est remplacée par la tasse du café. Si le bot sert ses images sur une adresse web, change `IMAGES_CARTES` dans `index.html`.
-- Couleurs des raretés : variables `--rar-1` à `--rar-5` en haut de `index.html` (commune en vert).
+- Couleurs des raretés, reprises des cartes du bot : variables `--rar-1` à `--rar-5` en haut de `index.html` (commun argent, rare bleu, épique violet, légendaire or, mythique rose avec un dégradé arc-en-ciel `--holo`).
 
 ## Les salons lus sur Discord
 

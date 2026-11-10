@@ -106,7 +106,8 @@ try {
   --b-gourmand: #e0b793;
   /* raretés de DeckFR */
   --sapin: #2fa866; --or: #f0c04a;
-  --rar-1: #3fbf6f; --rar-2: #6b95ff; --rar-3: #b57bff; --rar-4: #f0b232; --rar-5: #f94443;
+  --rar-1: #c5ccd6; --rar-2: #4b9bff; --rar-3: #b26cff; --rar-4: #f5c040; --rar-5: #ff5a7f;
+  --holo: linear-gradient(135deg, #ff5f6d, #ffb347, #f9f871, #5ef2a0, #4fd1ff, #a77bff, #ff6fd8);
 
   --f-titre: "Bricolage Grotesque", "Arial Black", "Helvetica Neue", system-ui, sans-serif;
   --f-texte: "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -441,14 +442,22 @@ main, .pied { position: relative; z-index: 1; }
   transition: transform .5s cubic-bezier(.2, .9, .3, 1.3);
 }
 .dk-main:hover .dk-carte { transform: translateX(calc(var(--i) * 52%)) rotate(calc(var(--i) * 13deg)) translateY(calc(var(--i) * var(--i) * 12px - 14px)); }
+/* Les vraies cartes du bot dans l'éventail */
+.dk-carte.dk-photo { padding: 0; border: 0; background: none; aspect-ratio: 930 / 1350; border-radius: 7% / 4.8%; box-shadow: 0 18px 40px color-mix(in srgb, var(--ombre) 60%, transparent); }
+.dk-carte.dk-photo::before { content: none; }
+.dk-carte.dk-photo img { display: block; width: 100%; height: 100%; border-radius: inherit; }
+.dk-carte.dk-photo.dk-mythique::after { border-radius: inherit; background-size: 300% 100%; mix-blend-mode: overlay; }
+.dk-main .dk-carte.dk-photo { --l: clamp(130px, 14vw, 182px); }
 .dk-carte svg { width: 74%; fill: var(--r); position: relative; }
 .dk-carte b { position: relative; font: 500 11px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--r); }
 .dk-motif { position: absolute; inset: 7px; border-radius: 11px; opacity: .22; background: radial-gradient(circle at 50% 38%, var(--r), transparent 62%), repeating-linear-gradient(45deg, transparent 0 9px, color-mix(in srgb, var(--r) 30%, transparent) 9px 10px); }
 .dk-mythique { --r: var(--rar-5); }
-.dk-echelle .dk-mythique { border-color: color-mix(in srgb, var(--lait) 40%, var(--trait)); background: linear-gradient(to bottom, color-mix(in srgb, var(--bleu-vif) 12%, transparent), color-mix(in srgb, var(--rouge) 8%, transparent) 70%); }
+.dk-echelle .dk-mythique { border-color: color-mix(in srgb, var(--rar-5) 55%, var(--trait)); background: linear-gradient(to bottom, color-mix(in srgb, var(--rar-5) 14%, transparent), color-mix(in srgb, #a77bff 8%, transparent) 70%); }
 .dk-carte.dk-mythique { border: 0; padding: 18px 14px 16px; }
-.dk-carte.dk-mythique::before { content: ""; position: absolute; inset: 0; border-radius: 16px; padding: 2px; background: linear-gradient(160deg, var(--bleu-vif), var(--lait) 50%, var(--rouge)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.dk-carte.dk-mythique::before { content: ""; position: absolute; inset: 0; border-radius: 16px; padding: 2px; background: var(--holo); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
 .dk-carte.dk-mythique::after { content: ""; position: absolute; inset: 0; border-radius: 16px; background: linear-gradient(115deg, transparent 35%, color-mix(in srgb, var(--lait) 30%, transparent) 50%, transparent 65%) 0 0 / 250% 100%; animation: reflet 3.5s ease-in-out infinite; pointer-events: none; }
+.dk-carte.dk-photo.dk-mythique { padding: 0; }
+.dk-carte.dk-photo.dk-mythique::before { content: none; }
 @keyframes reflet { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 /* Les étapes */
 .dk-etapes { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
@@ -459,7 +468,7 @@ main, .pied { position: relative; z-index: 1; }
 .dk-num { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: color-mix(in srgb, var(--rar-4) 18%, transparent); color: var(--rar-4); font: 800 16px/1 var(--f-titre); }
 @media (max-width: 1000px) { .dk-etapes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 860px) { .deckfr-grille { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 560px) { .dk-main { height: 250px; } .dk-carte { --l: 100px; padding: 12px 8px 10px; } .dk-carte b { font-size: 9px; } .dk-main:hover .dk-carte { transform: translateX(calc(var(--i) * 40%)) rotate(calc(var(--i) * 11deg)) translateY(calc(var(--i) * var(--i) * 10px - 10px)); } }
+@media (max-width: 560px) { .dk-main { height: 250px; } .dk-carte, .dk-main .dk-carte.dk-photo { --l: 100px; } .dk-carte:not(.dk-photo) { padding: 12px 8px 10px; } .dk-carte b { font-size: 9px; } .dk-main:hover .dk-carte { transform: translateX(calc(var(--i) * 40%)) rotate(calc(var(--i) * 11deg)) translateY(calc(var(--i) * var(--i) * 10px - 10px)); } }
 @media (max-width: 560px) { .dk-etapes { grid-template-columns: minmax(0, 1fr); } }
 /* Les raretés */
 .dk-raretes { grid-column: 1 / -1; display: grid; gap: 16px; }
@@ -467,9 +476,9 @@ main, .pied { position: relative; z-index: 1; }
 .dk-echelle { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
 .dk-echelle li { position: relative; display: grid; gap: 6px; padding: 18px 16px 16px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--r) 45%, var(--trait)); background: linear-gradient(to bottom, color-mix(in srgb, var(--r) 14%, transparent), transparent 70%); min-width: 0; }
 .dk-echelle i { width: 26px; height: 6px; border-radius: 3px; background: var(--r); }
-.dk-echelle .dk-mythique i { background: linear-gradient(90deg, var(--bleu-vif), var(--lait), var(--rouge)); }
+.dk-echelle .dk-mythique i { background: var(--holo); }
 .dk-echelle b { font: 800 19px/1.1 var(--f-titre); color: var(--r); }
-.dk-echelle .dk-mythique b { color: var(--lait); }
+.dk-echelle .dk-mythique b { background: var(--holo); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .dk-nb, .dk-taux { font: 500 13px/1.3 var(--f-mono); color: var(--brume); }
 .dk-nb:empty, .dk-taux:empty { display: none; }
 .dk-note { color: var(--brume); font-size: 15px; }
@@ -495,8 +504,9 @@ main, .pied { position: relative; z-index: 1; }
 .dk-grands time { font: 500 12px/1 var(--f-mono); color: var(--brume); white-space: nowrap; }
 .dk-nouvelles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; }
 .dk-nouvelles li { display: grid; gap: 8px; min-width: 0; }
-.dk-vignette { position: relative; aspect-ratio: 5 / 7; border-radius: 12px; overflow: hidden; border: 2px solid var(--r); background: linear-gradient(160deg, color-mix(in srgb, var(--r) 25%, var(--nuit-2)), var(--nuit)); display: grid; place-items: center; }
+.dk-vignette { position: relative; aspect-ratio: 930 / 1350; border-radius: 7% / 4.8%; overflow: hidden; border: 2px solid var(--r); background: linear-gradient(160deg, color-mix(in srgb, var(--r) 25%, var(--nuit-2)), var(--nuit)); display: grid; place-items: center; }
 .dk-vignette img { width: 100%; height: 100%; object-fit: cover; }
+.dk-vignette:has(img) { border: 0; background: none; }
 .dk-vignette svg { width: 60%; fill: var(--r); opacity: .7; }
 .dk-nouvelles b { font-weight: 600; font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
 .dk-nouvelles span { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--r); }
@@ -2020,11 +2030,11 @@ main, .pied { position: relative; z-index: 1; }
         </ul>
       </div>
       <div class="dk-main" aria-hidden="true">
-        <div class="dk-carte" style="--r: var(--rar-1); --i: -2"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Commune</b></div>
-        <div class="dk-carte" style="--r: var(--rar-2); --i: -1"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Rare</b></div>
-        <div class="dk-carte" style="--r: var(--rar-3); --i: 0"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Épique</b></div>
-        <div class="dk-carte" style="--r: var(--rar-4); --i: 1"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Légendaire</b></div>
-        <div class="dk-carte dk-mythique" style="--r: var(--rar-5); --i: 2"><span class="dk-motif"></span><svg viewBox="8 55 234 185"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg><b>Mythique</b></div>
+        <div class="dk-carte dk-photo" style="--r: var(--rar-1); --i: -2"><img src="cartes/vitrine/commun-charles-le-mauvais.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo" style="--r: var(--rar-2); --i: -1"><img src="cartes/vitrine/rare-charles-ix.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo" style="--r: var(--rar-3); --i: 0"><img src="cartes/vitrine/epique-louis-philippe.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo" style="--r: var(--rar-4); --i: 1"><img src="cartes/vitrine/legendaire-louis-ix.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo dk-mythique" style="--r: var(--rar-5); --i: 2"><img src="cartes/vitrine/mythique-charlemagne.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
       </div>
       <ol class="dk-etapes">
         <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Des boosters gratuits se rechargent avec le temps, et tu peux en acheter d'autres avec tes grains. Chaque booster contient plusieurs cartes.</p></li>
@@ -2035,7 +2045,7 @@ main, .pied { position: relative; z-index: 1; }
       <div class="dk-raretes" data-revele>
         <h3 class="dk-titre">Les cinq raretés</h3>
         <ol class="dk-echelle" id="dk-echelle">
-          <li style="--r: var(--rar-1)"><i aria-hidden="true"></i><b>Commune</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
+          <li style="--r: var(--rar-1)"><i aria-hidden="true"></i><b>Commun</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
           <li style="--r: var(--rar-2)"><i aria-hidden="true"></i><b>Rare</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
           <li style="--r: var(--rar-3)"><i aria-hidden="true"></i><b>Épique</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
           <li style="--r: var(--rar-4)"><i aria-hidden="true"></i><b>Légendaire</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
@@ -3428,7 +3438,7 @@ main, .pied { position: relative; z-index: 1; }
   // Les chiffres du jeu sont relevés dans la base du bot par GitHub Actions (outils/deckfr.py) et publiés sur la
   // branche « data » (deckfr.json), puis avec le site. Sans fichier, la section garde son texte et ses raretés.
   // Noms des raretés, du niveau 1 au niveau 5 (comme dans le bot)
-  const RARETES = ['Commune', 'Rare', 'Épique', 'Légendaire', 'Mythique'];
+  const RARETES = ['Commun', 'Rare', 'Épique', 'Légendaire', 'Mythique'];
   // Le dossier des images des cartes : la base du bot ne donne que le nom du fichier (« Charlemagne_recto_….png »).
   // Les fichiers déposés dans le dossier cartes/ du dépôt sont publiés avec le site.
   const IMAGES_CARTES = 'cartes/';
