@@ -3429,6 +3429,14 @@ main, .pied { position: relative; z-index: 1; }
   // branche « data » (deckfr.json), puis avec le site. Sans fichier, la section garde son texte et ses raretés.
   // Noms des raretés, du niveau 1 au niveau 5 (comme dans le bot)
   const RARETES = ['Commune', 'Rare', 'Épique', 'Légendaire', 'Mythique'];
+  // Le dossier des images des cartes : la base du bot ne donne que le nom du fichier (« Charlemagne_recto_….png »).
+  // Les fichiers déposés dans le dossier cartes/ du dépôt sont publiés avec le site.
+  const IMAGES_CARTES = 'cartes/';
+  const imageCarte = (x) => {
+    const v = String(x || '');
+    if (/^https:\/\//.test(v)) return v;
+    return /^[\w.-]{1,120}\.(png|jpe?g|webp|gif)$/i.test(v) ? IMAGES_CARTES + encodeURIComponent(v) : '';
+  };
   let deckfrPromesse = null, deckfrLu = 0;
   function chargerDeckfr() {
     if (!deckfrPromesse || Date.now() - deckfrLu > 60000) {
@@ -3472,8 +3480,9 @@ main, .pied { position: relative; z-index: 1; }
     }
     function vignette(x) {
       const v = el('div', { className: 'dk-vignette' });
-      if (/^https:\/\//.test(String(x.image || ''))) {
-        const img = el('img', { src: x.image, alt: '', loading: 'lazy', decoding: 'async', referrerPolicy: 'no-referrer' });
+      const adresse = imageCarte(x.image);
+      if (adresse) {
+        const img = el('img', { src: adresse, alt: '', loading: 'lazy', decoding: 'async', referrerPolicy: 'no-referrer' });
         img.addEventListener('error', () => img.replaceWith(tasse()), { once: true });
         v.append(img);
       } else v.append(tasse());

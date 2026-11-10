@@ -14,6 +14,7 @@ import datetime
 import json
 import os
 import pathlib
+import re
 import sys
 import time
 
@@ -37,9 +38,13 @@ def date_iso(v):
     return datetime.datetime.fromtimestamp(v, datetime.timezone.utc).replace(microsecond=0).isoformat()
 
 
-def image(url):
-    u = str(url or "").strip()
-    return u if u.startswith("https://") and len(u) < 500 else None
+def image(valeur):
+    """L'image d'une carte : une adresse https, ou le nom du fichier sur le serveur du bot (« Charlemagne_recto_….png »),
+    que le site cherche dans son dossier cartes/."""
+    u = str(valeur or "").strip()
+    if u.startswith("https://") and len(u) < 500:
+        return u
+    return u if re.fullmatch(r"[\w.-]{1,120}\.(png|jpe?g|webp|gif)", u, re.I) else None
 
 
 def lire_base(adresse):

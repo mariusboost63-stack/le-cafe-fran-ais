@@ -25,7 +25,10 @@ runs:
         site="$RUNNER_TEMP/site"; rm -rf "$site"; mkdir -p "$site"
         # Toujours la dernière version de main, même si un push a eu lieu pendant la tâche
         git fetch -q --depth=1 origin main
-        git archive FETCH_HEAD index.html 404.html robots.txt sitemap.xml infos.json apercu.png cgu mentions-legales infos polices js | tar -x -C "$site"
+        # Le dossier cartes/ (images des cartes DeckFR) n'est publié que s'il existe
+        chemins="index.html 404.html robots.txt sitemap.xml infos.json apercu.png cgu mentions-legales infos polices js"
+        git cat-file -e FETCH_HEAD:cartes 2>/dev/null && chemins="$chemins cartes"
+        git archive FETCH_HEAD $chemins | tar -x -C "$site"
         for b in data:classement.json data:deckfr.json evenements:evenements.json evenements:salons.json; do
           branche="${b%%:*}"; fichier="${b#*:}"
           if git fetch -q --depth=1 origin "$branche" 2>/dev/null; then git show "FETCH_HEAD:$fichier" > "$site/$fichier" 2>/dev/null || rm -f "$site/$fichier"; fi

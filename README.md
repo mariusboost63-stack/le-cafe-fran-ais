@@ -86,7 +86,8 @@ La section « DeckFR » (`#deckfr`) présente le jeu de cartes du bot : ses troi
 
 - Toutes les heures, avec le classement, `outils/deckfr.py` lit les tables `cartes_*` de la base du bot, **en lecture seule**, et publie `deckfr.json` sur la branche `data`. Les membres privés de cartes (`users.blacklistCartes`) n'apparaissent dans aucune liste. Mêmes secrets que le classement.
 - Les **noms des raretés**, du niveau 1 au niveau 5, sont dans `index.html` (`const RARETES = ['Commune', 'Rare', 'Épique', 'Légendaire', 'Mythique']`) et dans l'éventail de la section : à ajuster s'ils diffèrent de ceux du bot.
-- Les images des cartes viennent de la colonne `recto` du catalogue. Si une image ne répond pas, la carte affiche la tasse du café à la place.
+- **Images des cartes** : la base du bot ne garde que le nom du fichier de chaque carte (colonnes `recto` et `verso`, par exemple `Charlemagne_recto_1793899753176.png`) ; les images elles-mêmes sont sur le serveur du bot. Pour les afficher, dépose les fichiers `…_recto_….png` dans un dossier **`cartes/`** à la racine du dépôt (mêmes noms que dans la base) : il est publié avec le site. Une image absente est remplacée par la tasse du café. Si le bot sert ses images sur une adresse web, change `IMAGES_CARTES` dans `index.html`.
+- Couleurs des raretés : variables `--rar-1` à `--rar-5` en haut de `index.html` (commune en vert).
 
 ## Les salons lus sur Discord
 
