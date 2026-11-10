@@ -777,57 +777,249 @@ main, .pied { position: relative; z-index: 1; }
 .membre[data-statut="dnd"]::after { background: var(--rouge); }
 @keyframes bulle { from { transform: translateY(-5px); } to { transform: translateY(5px); } }
 
-/* Étapes */
+/* Pousser la porte : la devanture du café. Une enseigne dorée, le store tricolore, deux vitrines et la porte
+   (une étape sur chaque vitre), le trottoir et son paillasson. */
 .etapes { padding-block: clamp(72px, 8vw, 120px); }
-.etapes .cadre { display: grid; gap: 26px; }
-.etapes-ligne { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 26px; }
-.etapes-ligne span { height: 6px; border-radius: 6px; transform-origin: left center; }
-.etapes-ligne span:nth-child(1) { background: var(--bleu-vif); }
-.etapes-ligne span:nth-child(2) { background: var(--lait); }
-.etapes-ligne span:nth-child(3) { background: var(--rouge); }
-.etapes-liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-.etapes-liste li { display: grid; gap: 14px; align-content: start; padding: 10px 28px 0 0; }
-.etapes-liste .chiffre { font: 800 clamp(80px, 9vw, 132px)/.9 var(--f-titre); font-stretch: 80%; color: transparent; -webkit-text-stroke: 2px var(--c); }
-.etapes-liste li:nth-child(1) { --c: var(--bleu-vif); }
-.etapes-liste li:nth-child(2) { --c: var(--lait); }
-.etapes-liste li:nth-child(3) { --c: var(--rouge); }
-.etapes-liste h3 { font: 700 var(--t-h3)/1.15 var(--f-titre); letter-spacing: -.01em; }
-.etapes-liste p { color: var(--brume); max-width: 34ch; }
-.etapes-liste p b { color: var(--lait); font-weight: 600; }
-@media (max-width: 760px) {
-  .etapes-ligne { display: none; }
-  .etapes-liste { grid-template-columns: minmax(0, 1fr); gap: 36px; }
-  .etapes-liste li { padding: 0 0 0 18px; border-left: 4px solid var(--c); }
+.etapes-cadre { display: grid; gap: clamp(30px, 4vw, 48px); }
+.etapes-tete { display: grid; gap: 18px; max-width: 760px; }
+.etapes-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 50ch; }
+.devanture {
+  --peint: #0f2a5c; --peint-fonce: #0a1d42; --moulure: #24498f; --interieur: #3a2b26;
+  --dore: linear-gradient(180deg, #fff0b5, #f0c04a 42%, #b07a1f 78%, #f3d27a);
+  position: relative; width: min(1080px, 100%); margin-inline: auto; display: grid;
+}
+.dv-enseigne {
+  display: flex; align-items: center; justify-content: center; gap: clamp(14px, 3vw, 40px);
+  margin: 0 3%; padding: clamp(14px, 1.8vw, 22px) clamp(14px, 3vw, 40px);
+  border-radius: 10px 10px 0 0; background: linear-gradient(180deg, var(--moulure), var(--peint) 20%, var(--peint-fonce));
+  box-shadow: inset 0 0 0 4px var(--peint-fonce), inset 0 0 0 6px color-mix(in srgb, #f0c04a 50%, transparent);
+}
+.dv-enseigne b {
+  font: 800 clamp(19px, 6.2vw, 50px)/1.05 var(--f-titre); font-stretch: 86%; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap;
+  background: var(--dore); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 rgb(0 0 0 / .5));
+}
+.dv-cote { font: 500 13px/1 var(--f-mono); letter-spacing: .2em; text-transform: uppercase; color: #e5c06a; }
+/* Le store, comme sur l'écran d'entrée : bleu, blanc, rouge, festonné */
+.dv-auvent { position: relative; z-index: 2; margin-inline: -1%; filter: drop-shadow(0 12px 9px rgb(0 0 0 / .45)); }
+.dv-auvent::before { content: ""; display: block; height: 8px; border-radius: 4px; background: linear-gradient(180deg, #3d4a63, #1c2333); }
+.dv-store {
+  --b: 40px; height: clamp(50px, 5.6vw, 72px);
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / .3), transparent 45%, rgb(255 255 255 / .1) 72%, rgb(0 0 0 / .14)),
+    repeating-linear-gradient(90deg, var(--bleu) 0 var(--b), var(--lait) var(--b) calc(var(--b) * 2), var(--rouge-fonce) calc(var(--b) * 2) calc(var(--b) * 3));
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 16px) no-repeat, radial-gradient(circle 20px at 20px 0, #000 96%, #0000 100%) bottom left / 40px 16px repeat-x;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 16px) no-repeat, radial-gradient(circle 20px at 20px 0, #000 96%, #0000 100%) bottom left / 40px 16px repeat-x;
+}
+.dv-auvent .guirlande { bottom: -12px; }
+/* La façade peinte, ses vitrines et sa porte */
+.dv-facade {
+  list-style: none; margin: -10px 3% 0; padding: clamp(28px, 3vw, 40px) clamp(12px, 1.6vw, 20px) 0;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .88fr) minmax(0, 1fr); gap: clamp(10px, 1.4vw, 18px);
+  background: linear-gradient(90deg, var(--peint-fonce), var(--peint) 5%, var(--peint) 95%, var(--peint-fonce));
+}
+.dv-vitrine, .dv-porte { position: relative; display: grid; grid-template-rows: 1fr auto; min-width: 0; }
+/* l'allège (le panneau de bois sous la vitrine) et le bas de porte */
+.dv-vitrine::after, .dv-porte::after {
+  content: ""; height: clamp(46px, 5vw, 68px); margin-top: 10px; border-radius: 3px; background: var(--peint);
+  box-shadow: inset 0 0 0 2px var(--moulure), inset 0 0 0 9px var(--peint), inset 0 0 0 11px var(--peint-fonce);
+}
+.dv-porte { padding: 10px 10px 0; border-radius: 160px 160px 0 0 / 110px 110px 0 0; background: var(--peint-fonce); box-shadow: inset 0 0 0 2px var(--moulure); }
+.dv-porte::after { height: clamp(30px, 3vw, 44px); }
+.dv-vitre {
+  position: relative; display: grid; align-content: start; gap: 10px; padding: clamp(20px, 2.2vw, 28px);
+  border: 4px solid var(--moulure); border-radius: 4px; color: var(--lait);
+  background:
+    linear-gradient(118deg, transparent 0 30%, rgb(255 255 255 / .07) 30% 38%, transparent 38% 43%, rgb(255 255 255 / .05) 43% 45%, transparent 45%),
+    radial-gradient(110% 70% at 50% 0%, color-mix(in srgb, #ffd9a0 30%, transparent), transparent 70%),
+    linear-gradient(180deg, #5b4334, var(--interieur) 60%, #2a2024);
+  box-shadow: inset 0 0 40px rgb(0 0 0 / .45);
+}
+.dv-porte .dv-vitre { border-radius: 150px 150px 4px 4px / 100px 100px 4px 4px; padding-top: clamp(88px, 8vw, 100px); }
+.dv-num {
+  justify-self: start; font: 800 clamp(58px, 6vw, 88px)/.85 var(--f-titre); font-stretch: 80%;
+  background: var(--dore); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 rgb(0 0 0 / .5));
+}
+.dv-vitre h3 { font: 700 var(--t-h3)/1.15 var(--f-titre); letter-spacing: -.01em; }
+.dv-vitre p { color: #eadfd2; max-width: 34ch; }
+.dv-vitre p b { color: #f6d98a; font-weight: 600; white-space: nowrap; }
+.dv-pancarte {
+  position: absolute; top: 46px; left: 50%; translate: -50% 0; transform-origin: 50% -16px; white-space: nowrap;
+  padding: 7px 12px; border-radius: 6px; background: var(--lait); color: var(--rouge-fonce); box-shadow: 0 6px 10px -4px rgb(0 0 0 / .55);
+  font: 500 13px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; animation: balance 2.8s ease-in-out infinite alternate;
+}
+.dv-pancarte::before { content: ""; position: absolute; left: 50%; top: -16px; width: 1.5px; height: 16px; background: #d8c9a8; }
+[data-saison="halloween"] .dv-pancarte { background: var(--citrouille); color: var(--nuit); }
+[data-saison="noel"] .dv-pancarte { background: var(--rouge-fonce); color: var(--lait); }
+.dv-poignee { position: absolute; right: 2px; top: 52%; width: 6px; height: 46px; border-radius: 4px; background: linear-gradient(90deg, #b07a1f, #ffe6a0, #b07a1f); box-shadow: 0 2px 4px rgb(0 0 0 / .5); }
+/* Le trottoir et le paillasson devant la porte */
+.dv-trottoir {
+  display: grid; place-items: center; padding: 8px 0 10px; border-radius: 0 0 10px 10px;
+  background: linear-gradient(180deg, #2f3749, #222938); box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 26px 36px -22px #000;
+}
+.dv-paillasson {
+  padding: 7px 24px; border-radius: 5px; background: repeating-linear-gradient(90deg, #8a5a34 0 2px, #7a4d2b 2px 4px);
+  box-shadow: inset 0 0 0 2px #5f3a1f; color: #f1d9b0; font: 700 13px/1 var(--f-mono); letter-spacing: .3em; text-transform: uppercase;
+}
+@media (max-width: 900px) { .dv-cote { display: none; } }
+@media (max-width: 820px) {
+  .dv-facade { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-inline: 2%; padding: 26px 12px 14px; }
+  .dv-vitrine::after, .dv-porte::after { display: none; }
+  .dv-vitrine, .dv-porte { grid-template-rows: auto; }
+  .dv-porte { padding-bottom: 10px; border-radius: 140px 140px 4px 4px / 84px 84px 4px 4px; }
+  .dv-porte .dv-vitre { border-radius: 130px 130px 4px 4px / 76px 76px 4px 4px; }
+  .dv-vitre p { max-width: none; }
 }
 
-/* Final */
-.final { padding-block: clamp(64px, 7vw, 108px) clamp(72px, 9vw, 128px); text-align: center; }
-.final .cadre { display: grid; justify-items: center; gap: 24px; }
-.grande-tasse { width: min(400px, 74vw); height: auto; overflow: visible; }
+/* FAQ : une conversation au comptoir. Les questions du visiteur à droite, les réponses de l'équipe à gauche. */
+.faq { padding-block: clamp(64px, 7vw, 108px); }
+.faq-grille { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+.faq-tete { display: grid; gap: 22px; min-width: 0; }
+.faq-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 40ch; }
+.faq-tete .chapo b { color: var(--lait); font-weight: 600; }
+@media (min-width: 861px) { .faq-tete { position: sticky; top: 110px; } }
+.faq-sonnette { display: flex; align-items: center; gap: 16px; color: var(--brume); font-size: 15px; max-width: 34ch; }
+.sonnette { flex: none; width: 58px; height: auto; overflow: visible; fill: #d9dde6; transform-origin: 50% 90%; }
+.sonnette rect:last-child { fill: var(--grain); }
+.sonnette .sn-reflet { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; opacity: .75; }
+.faq-sonnette:hover .sonnette { animation: sonne .6s; }
+@keyframes sonne { 20% { rotate: -10deg; } 40% { rotate: 8deg; } 60% { rotate: -5deg; } 80% { rotate: 2deg; } }
+.faq-liste { display: grid; gap: 12px; min-width: 0; }
+.faq-jour { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; font: 500 var(--t-etiquette)/1.2 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
+.faq-jour::before, .faq-jour::after { content: ""; flex: 1; height: 1px; background: var(--trait); }
+.question { display: grid; interpolate-size: allow-keywords; }
+.question summary {
+  --pl: var(--lait);
+  list-style: none; justify-self: end; max-width: min(90%, 560px); display: flex; align-items: center; gap: 14px;
+  padding: 13px 14px 13px 20px; border-radius: 22px 22px 6px 22px; background: var(--bleu); color: var(--lait); cursor: pointer;
+  font: 700 clamp(17px, 1.5vw, 20px)/1.3 var(--f-titre); letter-spacing: -.005em; box-shadow: 0 12px 22px -14px #000;
+  transition: background-color .25s, color .25s;
+}
+.question summary::-webkit-details-marker { display: none; }
+.question summary::after {
+  content: ""; flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--pl) 40%, transparent);
+  background: linear-gradient(var(--pl), var(--pl)) center / 11px 2px no-repeat, linear-gradient(var(--pl), var(--pl)) center / 2px 11px no-repeat;
+  transition: transform .35s;
+}
+.question summary:hover { background: color-mix(in srgb, var(--bleu) 80%, var(--lait)); }
+.question summary:focus-visible { outline: 2px solid var(--lait); outline-offset: 3px; }
+.question[open] summary { --pl: var(--nuit); background: var(--lait); color: var(--nuit); }
+.question[open] summary::after { transform: rotate(135deg); }
+.question::details-content { block-size: 0; overflow: hidden; transition: block-size .4s ease, content-visibility .4s allow-discrete; }
+.question[open]::details-content { block-size: auto; }
+.reponse { display: flex; align-items: flex-end; gap: 10px; max-width: min(94%, 600px); padding: 12px 2px 8px; }
+.question[open] .reponse { animation: repond .45s cubic-bezier(.3, 1.3, .5, 1) both; }
+@keyframes repond { from { opacity: 0; transform: translateY(10px) scale(.97); } }
+.r-avatar { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--creme); }
+.r-avatar svg { width: 26px; height: auto; fill: var(--nuit); }
+.r-bulle { display: grid; gap: 4px; min-width: 0; padding: 12px 16px 14px; border-radius: 22px 22px 22px 6px; background: var(--nuit-2); border: 1px solid var(--trait); color: color-mix(in srgb, var(--lait) 86%, var(--brume)); }
+.r-nom { font: 500 var(--t-etiquette)/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--creme); }
+.r-bulle a { color: var(--lait); }
+@media (max-width: 860px) { .faq-grille { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 480px) { .question summary { max-width: 94%; } .reponse { max-width: 100%; } .r-avatar { width: 32px; height: 32px; } .r-avatar svg { width: 22px; } }
+
+/* Final : le café est servi sur le zinc */
+.final { padding-block: clamp(64px, 7vw, 108px) clamp(72px, 9vw, 120px); text-align: center; }
+.final-cadre { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 22px; }
+.service { position: relative; display: grid; justify-items: center; margin-bottom: -22px; }
+.grande-tasse { width: min(380px, 70vw); height: auto; overflow: visible; }
 .grande-tasse .contour { fill: var(--lait); }
 .grande-tasse .v1 { fill: var(--bleu); }
 .grande-tasse .v2 { fill: var(--lait); }
 .grande-tasse .v3 { fill: var(--rouge); }
+.soucoupe { fill: color-mix(in srgb, var(--lait) 80%, var(--brume)); }
+.soucoupe-creux { fill: color-mix(in srgb, var(--brume) 72%, var(--nuit)); }
+.soucoupe-ombre { fill: rgb(0 0 0 / .4); }
 .vague { animation: vague 2.6s linear infinite; }
 .vague-cafe { fill: var(--cafe); animation-direction: reverse; animation-duration: 3.4s; }
 .vague-creme { fill: var(--creme); }
 @keyframes vague { to { transform: translateX(-20px); } }
+/* le sachet de sucre posé à côté de la soucoupe */
+.sucre {
+  position: absolute; right: -16%; bottom: 14px; width: 54px; height: 15px; border-radius: 3px; rotate: -10deg;
+  background: linear-gradient(90deg, var(--lait) 0 22%, var(--bleu) 22% 30%, var(--lait) 30% 70%, var(--rouge-fonce) 70% 78%, var(--lait) 78%);
+  box-shadow: 0 4px 6px -2px rgb(0 0 0 / .5);
+}
+.zinc {
+  width: min(760px, 100%); height: 16px; border-radius: 8px; margin-bottom: clamp(16px, 3vw, 30px);
+  background: linear-gradient(180deg, #e8ecf2, #a4adbd 40%, #6b7487 72%, #8f98aa);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .5), 0 24px 32px -18px #000;
+}
 .final .h-final { font: 800 var(--t-geant)/.9 var(--f-titre); font-stretch: 84%; letter-spacing: -.035em; }
 .final .chapo { font-size: var(--t-chapo); color: var(--brume); }
-.invitation { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 6px; }
-.invitation code { padding: 11px 16px; border-radius: 10px; background: var(--nuit-2); border: 1px solid var(--trait); user-select: all; }
+.final-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 16px; margin-top: 4px; }
+.invitation { box-sizing: border-box; display: inline-flex; align-items: stretch; max-width: 100%; border-radius: 999px; background: var(--nuit-2); border: 1px solid var(--trait); overflow: hidden; }
+.invitation code { display: block; align-self: center; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 16px 0 20px; font-size: 15px; color: var(--lait); user-select: all; }
 .copier {
-  display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; border-radius: 10px;
-  background: transparent; color: var(--lait); border: 1px solid var(--trait); font: 600 15px/1 var(--f-texte); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; padding: 14px 18px; border: 0; border-left: 1px solid var(--trait);
+  background: transparent; color: var(--lait); font: 600 15px/1 var(--f-texte); cursor: pointer; transition: background-color .2s;
 }
-.copier:hover { border-color: var(--lait); }
+.copier:hover { background: color-mix(in srgb, var(--lait) 8%, transparent); }
+.copier:focus-visible { outline: 2px solid var(--lait); outline-offset: -4px; border-radius: 999px; }
 .copier svg { width: 18px; height: 18px; }
-.copie-etat { width: 100%; min-height: 1.4em; font-size: 14px; color: var(--vert); }
+.copie-etat { min-height: 1.4em; margin-top: -8px; font-size: 14px; color: var(--vert); }
+@media (max-width: 360px) { .invitation code { padding: 0 10px 0 16px; font-size: 14px; } .copier { padding-inline: 14px; } .copier svg { display: none; } }
+/* Le pot à pourboires : soutenir le café */
+.pourboires {
+  box-sizing: border-box; width: 100%; max-width: 980px; margin-top: clamp(28px, 4vw, 52px); text-align: left;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "bocal tete" "bocal liste"; gap: 20px clamp(24px, 4vw, 48px); align-items: start;
+  padding: clamp(22px, 3vw, 40px); border-radius: 28px; border: 1px solid var(--trait);
+  background: radial-gradient(70% 90% at 0% 100%, color-mix(in srgb, var(--creme) 14%, transparent), transparent 70%), var(--nuit-2);
+}
+.bocal { grid-area: bocal; align-self: center; width: clamp(110px, 12vw, 150px); height: auto; overflow: visible; }
+.bc-verre { fill: color-mix(in srgb, var(--lait) 6%, transparent); stroke: color-mix(in srgb, var(--lait) 55%, transparent); stroke-width: 2.5; }
+.bc-fond { fill: color-mix(in srgb, var(--creme) 14%, transparent); }
+.bc-piece { fill: var(--or); stroke: #a8751c; stroke-width: 1.5; }
+.bc-tombe { opacity: 0; }
+.bc-grains { color: var(--grain); }
+.bc-reflet { fill: none; stroke: color-mix(in srgb, var(--lait) 55%, transparent); stroke-width: 3; stroke-linecap: round; }
+.bc-col { fill: #2a3448; stroke: color-mix(in srgb, var(--lait) 55%, transparent); stroke-width: 2; }
+.bc-etiquette { fill: var(--lait); }
+.bc-texte { font: 500 9px var(--f-mono); letter-spacing: .06em; fill: var(--rouge-fonce); }
+.pb-tete { grid-area: tete; display: grid; gap: 8px; }
+.pb-titre { font: 800 clamp(28px, 3vw, 40px)/1 var(--f-titre); font-stretch: 86%; letter-spacing: -.02em; }
+.pb-chapo { color: var(--brume); }
+.pb-liste { grid-area: liste; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.pb-liste li { display: grid; gap: 8px; align-content: start; min-width: 0; padding: 20px; border-radius: 18px; background: color-mix(in srgb, var(--nuit) 70%, transparent); border: 1px solid var(--trait); }
+.pb-ico { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
+.pb-ico svg { width: 22px; height: 22px; }
+.pb-boost { --c: var(--a-nitro); }
+.pb-vote { --c: var(--or); }
+.pb-liste h4 { margin: 0; font: 700 21px/1.15 var(--f-titre); letter-spacing: -.01em; }
+.pb-liste p { color: var(--brume); font-size: 15.5px; }
+.pb-liste a { color: var(--lait); }
+@media (max-width: 760px) {
+  .pourboires { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "bocal tete" "liste liste"; align-items: center; }
+  .bocal { width: 84px; }
+  .pb-liste { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 360px) { .pourboires { grid-template-areas: "bocal" "tete" "liste"; grid-template-columns: minmax(0, 1fr); } .bocal { width: 76px; } }
 
-.pied { border-top: 1px solid var(--trait); padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px)); }
-.pied .cadre { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; color: var(--brume); font-size: 14px; }
+/* Pied de page : le store du café, puis l'enseigne, le plan du site et les petits plus */
+.pied { background: #0d1320; color: var(--brume); font-size: 15px; }
+.pied-store {
+  --b: 28px; height: 24px; opacity: .92;
+  background: linear-gradient(180deg, rgb(0 0 0 / .25), transparent 60%), repeating-linear-gradient(90deg, var(--bleu) 0 var(--b), var(--lait) var(--b) calc(var(--b) * 2), var(--rouge-fonce) calc(var(--b) * 2) calc(var(--b) * 3));
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 12px) no-repeat, radial-gradient(circle 14px at 14px 0, #000 96%, #0000 100%) bottom left / 28px 12px repeat-x;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 12px) no-repeat, radial-gradient(circle 14px at 14px 0, #000 96%, #0000 100%) bottom left / 28px 12px repeat-x;
+}
 .pied a { color: var(--lait); }
-.pied .auteur { color: var(--lait); font-weight: 600; }
+.pied-grille { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 36px clamp(32px, 5vw, 72px); padding-block: clamp(40px, 5vw, 60px) 34px; }
+.pied-marque { display: grid; gap: 14px; align-content: start; max-width: 42ch; }
+.pied-logo { justify-self: start; display: inline-flex; align-items: center; gap: 12px; color: var(--lait); text-decoration: none; font: 800 24px/1 var(--f-titre); font-stretch: 88%; letter-spacing: -.01em; }
+.pied .pied-logo { color: var(--lait); }
+.pied-logo svg { width: 46px; height: auto; }
+.pied-ouvert { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; color: var(--lait); }
+.pied-titre { margin-bottom: 14px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--creme); }
+.pied-nav ul, .pied-plus ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.pied-nav ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; }
+.pied-nav a { text-decoration: none; transition: color .2s; }
+.pied-nav a:hover { color: var(--creme); text-decoration: underline; text-underline-offset: 3px; }
+.pied-bas { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 20px calc(22px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--trait); font-size: 14px; }
+.pied .auteur { font-weight: 600; }
+.indice-cafe { color: var(--brume); }
+@media (hover: none) and (pointer: coarse) { .indice-cafe { display: none; } }
+@media (max-width: 900px) { .pied-grille { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pied-marque { grid-column: 1 / -1; } }
+@media (max-width: 520px) { .pied-grille { grid-template-columns: minmax(0, 1fr); } }
 /* Interrupteur des animations */
 .pied-anim { display: inline-flex; align-items: center; gap: 12px; }
 .interrupteur { position: relative; flex: none; width: 50px; height: 28px; padding: 0; border-radius: 999px; border: 1px solid var(--trait); background: color-mix(in srgb, var(--lait) 8%, transparent); cursor: pointer; transition: background-color .25s, border-color .25s; }
@@ -836,7 +1028,7 @@ main, .pied { position: relative; z-index: 1; }
 .interrupteur[aria-checked="true"] .int-bouton { transform: translateX(22px); background: var(--lait); }
 .interrupteur:hover { border-color: var(--lait); }
 .interrupteur:focus-visible { outline: 2px solid var(--lait); outline-offset: 3px; }
-.int-etat { min-width: 11ch; font: 500 12px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brume); }
+.int-etat { min-width: 11ch; font: 500 13px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brume); }
 
 /* Descriptions des salons */
 .salon .desc { grid-column: 4; font: 400 14px/1.35 var(--f-texte); color: var(--p-doux); }
@@ -1150,13 +1342,6 @@ main, .pied { position: relative; z-index: 1; }
 @media (max-width: 1000px) { .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .badges { grid-template-columns: minmax(0, 1fr); } .balance { padding-top: 72px; } .cordon { height: 90px; } }
 
-/* Soutenir */
-.soutenir { width: 100%; max-width: 900px; margin-top: clamp(40px, 6vw, 72px); padding-top: 32px; border-top: 1px solid var(--trait); display: grid; gap: 20px; text-align: left; }
-.soutenir ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 44px; }
-.soutenir h3 { font: 700 var(--t-h3)/1.15 var(--f-titre); letter-spacing: -.01em; margin-bottom: 8px; }
-.soutenir p { color: var(--brume); }
-@media (max-width: 640px) { .soutenir ul { grid-template-columns: minmax(0, 1fr); } }
-
 /* Saisons */
 [data-saison="normal"] .seulement-halloween, [data-saison="noel"] .seulement-halloween,
 [data-saison="normal"] .seulement-noel, [data-saison="halloween"] .seulement-noel,
@@ -1339,8 +1524,6 @@ main, .pied { position: relative; z-index: 1; }
   60% { transform: translate(60vw, 4vh) rotate(-6deg); }
   to { transform: translate(115vw, -8vh) rotate(8deg); }
 }
-.indice-cafe { color: var(--brume); }
-
 /* Événements (hors saison) : le tableau d'affichage en liège du café. Une affiche punaisée pour le prochain
    rendez-vous, des post-it pour les animations de tous les jours, un ticket souvenir du dernier événement. */
 .evenements { padding-block: clamp(72px, 8vw, 120px); }
@@ -1440,32 +1623,6 @@ main, .pied { position: relative; z-index: 1; }
   .notes { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .note { padding: 20px 16px 16px; }
 }
-
-/* FAQ */
-.faq { padding-block: clamp(64px, 7vw, 108px); }
-.faq-grille { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
-.faq-tete { display: grid; gap: 22px; min-width: 0; }
-.faq-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 40ch; }
-@media (min-width: 861px) { .faq-tete { position: sticky; top: 110px; } }
-.faq-liste { display: grid; border-top: 1px solid var(--trait); min-width: 0; }
-.question { border-bottom: 1px solid var(--trait); interpolate-size: allow-keywords; }
-.question summary {
-  list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 20px;
-  padding: 22px 4px; cursor: pointer; font: 700 clamp(19px, 1.8vw, 24px)/1.25 var(--f-titre); letter-spacing: -.01em;
-}
-.question summary::-webkit-details-marker { display: none; }
-.question summary::after {
-  content: ""; flex: none; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--trait);
-  background: linear-gradient(var(--lait), var(--lait)) center / 12px 2px no-repeat, linear-gradient(var(--lait), var(--lait)) center / 2px 12px no-repeat;
-  transition: transform .35s, border-color .35s;
-}
-.question summary:hover::after { border-color: var(--lait); }
-.question[open] summary::after { transform: rotate(135deg); border-color: var(--creme); }
-.question::details-content { block-size: 0; overflow: hidden; transition: block-size .4s ease, content-visibility .4s allow-discrete; }
-.question[open]::details-content { block-size: auto; }
-.reponse { padding: 0 4px 24px; color: var(--brume); max-width: 60ch; }
-.reponse a { color: var(--lait); }
-@media (max-width: 860px) { .faq-grille { grid-template-columns: minmax(0, 1fr); } }
 
 /* Pousser la porte */
 .porte-ecran { display: none; }
@@ -2549,16 +2706,43 @@ main, .pied { position: relative; z-index: 1; }
     </div>
   </section>
 
-  <section class="etapes" aria-labelledby="t-etapes">
-    <div class="cadre">
-      <p class="surtitre" data-revele>Comment entrer</p>
-      <h2 class="h2" id="t-etapes" data-revele>Pousser la porte</h2>
-      <div class="etapes-ligne" aria-hidden="true"><span></span><span></span><span></span></div>
-      <ol class="etapes-liste">
-        <li data-revele><span class="chiffre" aria-hidden="true">1</span><h3>Rejoins le serveur</h3><p>Clique sur «&nbsp;Rejoindre&nbsp;» ou entre <b>discord.gg/france</b> dans Discord.</p></li>
-        <li data-revele><span class="chiffre" aria-hidden="true">2</span><h3>Lis les règles</h3><p>Tout est dans <b>#nos-règles</b> : respect obligatoire, pas de pub ni de spam, pas d'infos personnelles. Deux minutes de lecture.</p></li>
-        <li data-revele><span class="chiffre" aria-hidden="true">3</span><h3>Dis bonjour</h3><p>Présente-toi dans <b>#présentation</b>, puis rejoins la conversation dans <b>#discussion</b>.</p></li>
-      </ol>
+  <section class="etapes" id="entrer" aria-labelledby="t-etapes">
+    <div class="cadre etapes-cadre">
+      <div class="etapes-tete" data-revele>
+        <p class="surtitre">Comment entrer</p>
+        <h2 class="h2" id="t-etapes">Pousser la porte</h2>
+        <p class="chapo">Trois gestes et tu es à l'intérieur. Ici, la porte reste ouverte jour et nuit.</p>
+      </div>
+      <div class="devanture">
+        <p class="dv-enseigne" aria-hidden="true"><span class="dv-cote">Depuis</span><b>Le Café Français</b><span class="dv-cote">2021</span></p>
+        <div class="dv-auvent" aria-hidden="true"><div class="dv-store"></div><div class="guirlande seulement-noel"></div></div>
+        <ol class="dv-facade">
+          <li class="dv-vitrine">
+            <div class="dv-vitre">
+              <span class="dv-num" aria-hidden="true">1</span>
+              <h3>Rejoins le serveur</h3>
+              <p>Clique sur «&nbsp;Rejoindre&nbsp;» ou entre <b>discord.gg/france</b> dans Discord.</p>
+            </div>
+          </li>
+          <li class="dv-porte">
+            <div class="dv-vitre">
+              <span class="dv-pancarte" aria-hidden="true"><span class="seulement-normal">Ouvert</span><span class="seulement-halloween">Entre si tu l'oses</span><span class="seulement-noel">Joyeux Noël</span></span>
+              <span class="dv-num" aria-hidden="true">2</span>
+              <h3>Lis les règles</h3>
+              <p>Tout est dans <b>#nos-règles</b>&nbsp;: respect obligatoire, pas de pub ni de spam, pas d'infos personnelles. Deux minutes de lecture.</p>
+            </div>
+            <span class="dv-poignee" aria-hidden="true"></span>
+          </li>
+          <li class="dv-vitrine">
+            <div class="dv-vitre">
+              <span class="dv-num" aria-hidden="true">3</span>
+              <h3>Dis bonjour</h3>
+              <p>Présente-toi dans <b>#présentation</b>, puis rejoins la conversation dans <b>#discussion</b>.</p>
+            </div>
+          </li>
+        </ol>
+        <div class="dv-trottoir" aria-hidden="true"><span class="dv-paillasson">Bienvenue</span></div>
+      </div>
     </div>
   </section>
 
@@ -2567,47 +2751,78 @@ main, .pied { position: relative; z-index: 1; }
       <div class="faq-tete" data-revele>
         <p class="surtitre">Questions fréquentes</p>
         <h2 class="h2" id="t-faq">Avant de passer la porte</h2>
-        <p class="chapo">Les réponses aux questions qu'on nous pose le plus. Pour le reste, l'équipe te répond dans #support.</p>
+        <p class="chapo">Les questions qu'on nous pose le plus souvent au comptoir. Pour tout le reste, l'équipe te répond dans <b>#support</b>.</p>
+        <p class="faq-sonnette"><svg class="sonnette" viewBox="0 0 64 50" aria-hidden="true"><rect x="29" y="2" width="6" height="7" rx="2"/><path d="M8 38a24 24 0 0 1 48 0Z"/><path class="sn-reflet" d="M17 31a16 16 0 0 1 9-10"/><rect x="2" y="39" width="60" height="8" rx="3"/></svg><span>Choisis une question&nbsp;: l'équipe te répond aussitôt.</span></p>
       </div>
       <div class="faq-liste">
-        <details class="question" name="faq"><summary>Quel âge faut-il avoir&nbsp;?</summary><div class="reponse"><p>Il faut avoir au moins 15 ans pour rejoindre le café.</p></div></details>
-        <details class="question" name="faq"><summary>Faut-il parler français&nbsp;?</summary><div class="reponse"><p>Pas forcément. Le café est francophone, mais tout le monde est le bienvenu, et le salon #international permet de discuter dans d'autres langues.</p></div></details>
-        <details class="question" name="faq"><summary>Comment rejoindre l'équipe&nbsp;?</summary><div class="reponse"><p>Les candidatures se font dans le salon #recrutements. <a href="#equipe">Voir l'équipe actuelle</a>.</p></div></details>
-        <details class="question" name="faq"><summary>Comment signaler un problème ou un membre&nbsp;?</summary><div class="reponse"><p>Ouvre un ticket dans #support et explique la situation. L'équipe de modération s'en occupe rapidement.</p></div></details>
-        <details class="question" name="faq"><summary>Comment monter de niveau&nbsp;?</summary><div class="reponse"><p>En participant&nbsp;: chaque message et chaque minute en vocal te rapportent de l'XP. Chaque palier débloque un rôle et des avantages. <a href="#niveaux">Voir les niveaux</a>.</p></div></details>
-        <details class="question" name="faq"><summary>Comment gagner des grains&nbsp;?</summary><div class="reponse"><p>En vocal, avec <code>/journalier</code> et <code>/hebdomadaire</code>, ou au casino. <a href="#grains">Tout est expliqué ici</a>.</p></div></details>
-        <details class="question" name="faq"><summary>Comment être prévenu des événements&nbsp;?</summary><div class="reponse"><p>Prends le rôle @Notif Animation dans «&nbsp;Salons et rôles&nbsp;». Tu seras prévenu de chaque événement et de chaque quête.</p></div></details>
+        <p class="faq-jour" aria-hidden="true"><span>Aujourd'hui, au comptoir</span></p>
+        <details class="question" name="faq"><summary><span class="q-texte">Quel âge faut-il avoir&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Il faut avoir au moins 15 ans pour rejoindre le café.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Faut-il parler français&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Pas forcément. Le café est francophone, mais tout le monde est le bienvenu, et le salon #international permet de discuter dans d'autres langues.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Comment rejoindre l'équipe&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Les candidatures se font dans le salon #recrutements. <a href="#equipe">Voir l'équipe actuelle</a>.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Comment signaler un problème ou un membre&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Ouvre un ticket dans #support et explique la situation. L'équipe de modération s'en occupe rapidement.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Comment monter de niveau&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>En participant&nbsp;: chaque message et chaque minute en vocal te rapportent de l'XP. Chaque palier débloque un rôle et des avantages. <a href="#niveaux">Voir les niveaux</a>.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Comment gagner des grains&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>En vocal, avec <code>/journalier</code> et <code>/hebdomadaire</code>, ou au casino. <a href="#grains">Tout est expliqué ici</a>.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Comment être prévenu des événements&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Prends le rôle @Notif Animation dans «&nbsp;Salons et rôles&nbsp;». Tu seras prévenu de chaque événement et de chaque quête.</p></div></div></details>
       </div>
     </div>
   </section>
 
   <section class="final" id="rejoindre" aria-labelledby="t-final">
-    <div class="cadre">
-      <svg class="grande-tasse" viewBox="6 2 240 236" aria-hidden="true">
-        <g clip-path="url(#clip-interieur)">
-          <g class="liquide" transform="translate(0 141)">
-            <path class="vague vague-creme" d="M60 0q5 -3 10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0V130H60Z"/>
-            <path class="vague vague-cafe" transform="translate(0 5)" d="M60 0q5 -3 10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0V130H60Z"/>
+    <div class="cadre final-cadre">
+      <div class="service" aria-hidden="true">
+        <svg class="grande-tasse" viewBox="6 2 240 250" aria-hidden="true">
+          <ellipse class="soucoupe-ombre" cx="152" cy="250" rx="96" ry="5"/>
+          <ellipse class="soucoupe" cx="150" cy="240" rx="94" ry="12"/>
+          <ellipse class="soucoupe-creux" cx="150" cy="236" rx="54" ry="5"/>
+          <g clip-path="url(#clip-interieur)">
+            <g class="liquide" transform="translate(0 141)">
+              <path class="vague vague-creme" d="M60 0q5 -3 10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0V130H60Z"/>
+              <path class="vague vague-cafe" transform="translate(0 5)" d="M60 0q5 -3 10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0V130H60Z"/>
+            </g>
           </g>
-        </g>
-        <use class="contour" href="#p-tasse"/>
-        <g class="v v1"><g class="ondule"><use href="#p-v1"/></g></g>
-        <g class="v v2"><g class="ondule"><use href="#p-v2"/></g></g>
-        <g class="v v3"><g class="ondule"><use href="#p-v3"/></g></g>
-      </svg>
+          <use class="contour" href="#p-tasse"/>
+          <g class="v v1"><g class="ondule"><use href="#p-v1"/></g></g>
+          <g class="v v2"><g class="ondule"><use href="#p-v2"/></g></g>
+          <g class="v v3"><g class="ondule"><use href="#p-v3"/></g></g>
+        </svg>
+        <span class="sucre" aria-hidden="true"></span>
+      </div>
+      <div class="zinc" aria-hidden="true"></div>
       <h2 class="h-final" id="t-final">Ton café est servi.</h2>
       <p class="chapo"><span id="nb-final">9&#8239;503</span> membres t'attendent déjà au comptoir.</p>
-      <a class="btn btn-plein aimant" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre Le Café Français<svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
-      <div class="invitation">
-        <code id="lien-invitation">discord.gg/france</code>
-        <button class="copier" id="copier" type="button"><svg aria-hidden="true"><use href="#i-copie"/></svg>Copier le lien</button>
-        <p class="copie-etat" id="copie-etat" role="status" aria-live="polite"></p>
+      <div class="final-actions">
+        <a class="btn btn-plein aimant" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre Le Café Français<svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+        <div class="invitation">
+          <code id="lien-invitation">discord.gg/france</code>
+          <button class="copier" id="copier" type="button"><svg aria-hidden="true"><use href="#i-copie"/></svg>Copier</button>
+        </div>
       </div>
-      <div class="soutenir" data-revele>
-        <p class="surtitre">Soutenir le café</p>
-        <ul>
-          <li><h3>Booste le serveur</h3><p>Ton boost aide le café à grandir. En échange, tu gagnes deux fois plus d'XP, tu peux envoyer des images dans tous les salons et tu accèdes aux salons privés.</p></li>
-          <li><h3>Bump et vote</h3><p>C'est gratuit. Utilise régulièrement <code>/bump</code> et <a href="https://discordinvites.net/servers/829698572927762432" target="_blank" rel="noopener">vote pour le café sur discordinvites.net</a> pour le faire connaître. Les votants gagnent aussi un bonus de grains ×2 en vocal et à l'écrit.</p></li>
+      <p class="copie-etat" id="copie-etat" role="status" aria-live="polite"></p>
+      <div class="pourboires" data-revele>
+        <svg class="bocal" viewBox="0 0 120 150" aria-hidden="true">
+          <defs><clipPath id="clip-bocal"><path d="M38 32c-14 6-21 18-21 33v55c0 10 7 17 17 17h52c10 0 17-7 17-17V65c0-15-7-27-21-33Z"/></clipPath></defs>
+          <g clip-path="url(#clip-bocal)">
+            <rect class="bc-fond" x="0" y="96" width="120" height="60"/>
+            <ellipse class="bc-piece" cx="40" cy="118" rx="11" ry="4"/>
+            <ellipse class="bc-piece" cx="66" cy="124" rx="11" ry="4"/>
+            <ellipse class="bc-piece" cx="86" cy="112" rx="11" ry="4"/>
+            <g class="bc-grains"><use href="#i-grain" x="22" y="100" width="18" height="18"/><use href="#i-grain" x="52" y="104" width="16" height="16"/><use href="#i-grain" x="74" y="122" width="18" height="18"/><use href="#i-grain" x="88" y="96" width="14" height="14"/><use href="#i-grain" x="30" y="124" width="14" height="14"/></g>
+          </g>
+          <ellipse class="bc-piece bc-tombe" cx="60" cy="14" rx="9" ry="9"/>
+          <path class="bc-verre" d="M38 32c-14 6-21 18-21 33v55c0 10 7 17 17 17h52c10 0 17-7 17-17V65c0-15-7-27-21-33Z"/>
+          <path class="bc-reflet" d="M27 70c0-10 4-18 11-23M26 82v26"/>
+          <rect class="bc-col" x="34" y="20" width="52" height="13" rx="4"/>
+          <rect class="bc-etiquette" x="21" y="64" width="78" height="24" rx="4"/>
+          <text class="bc-texte" x="60" y="80" text-anchor="middle">POURBOIRES</text>
+        </svg>
+        <div class="pb-tete">
+          <p class="surtitre">Soutenir le café</p>
+          <h3 class="pb-titre">Le pot à pourboires</h3>
+          <p class="pb-chapo">Le café vit grâce à ses habitués. Deux façons de lui donner un coup de pouce&nbsp;:</p>
+        </div>
+        <ul class="pb-liste">
+          <li class="pb-boost"><span class="pb-ico" aria-hidden="true"><svg><use href="#i-gemme"/></svg></span><h4>Booste le serveur</h4><p>Ton boost aide le café à grandir. En échange, tu gagnes deux fois plus d'XP, tu peux envoyer des images dans tous les salons et tu accèdes aux salons privés.</p></li>
+          <li class="pb-vote"><span class="pb-ico" aria-hidden="true"><svg><use href="#i-etoile"/></svg></span><h4>Bump et vote</h4><p>C'est gratuit. Utilise régulièrement <code>/bump</code> et <a href="https://discordinvites.net/servers/829698572927762432" target="_blank" rel="noopener">vote pour le café sur discordinvites.net</a> pour le faire connaître. Les votants gagnent aussi un bonus de grains ×2 en vocal et à l'écrit.</p></li>
         </ul>
       </div>
     </div>
@@ -2615,15 +2830,46 @@ main, .pied { position: relative; z-index: 1; }
 </main>
 
 <footer class="pied">
-  <div class="cadre">
-    <p>Le Café Français · serveur Discord francophone depuis 2021 · <a href="https://discord.gg/france" target="_blank" rel="noopener">discord.gg/france</a></p>
-    <p class="indice-cafe">Envie d'un café&nbsp;? Tape «&nbsp;café&nbsp;» sur ton clavier. <button class="revoir-porte" id="revoir-porte" type="button">Repasser la porte</button></p>
-    <p>Développé par <a class="auteur" href="https://mvriuus.fr" target="_blank" rel="noopener">mvriuus</a> · Le Café Français n'est pas affilié à Discord Inc. · <a href="mentions-legales/">Mentions légales</a> · <a href="cgu/">CGU</a></p>
-    <div class="pied-anim">
-      <span id="anim-etiquette">Animations</span>
-      <button class="interrupteur" id="animations" type="button" role="switch" aria-checked="true" aria-labelledby="anim-etiquette"><span class="int-bouton" aria-hidden="true"></span></button>
-      <span class="int-etat" id="anim-etat" aria-hidden="true">Activées</span>
+  <div class="pied-store" aria-hidden="true"></div>
+  <div class="cadre pied-grille">
+    <div class="pied-marque">
+      <a class="pied-logo" href="#haut" aria-label="Le Café Français, retour en haut"><svg viewBox="6 40 240 198" aria-hidden="true"><use href="#p-tasse" style="fill: var(--lait)"/><use href="#p-v1" style="fill: var(--bleu-vif)"/><use href="#p-v2" style="fill: var(--lait)"/><use href="#p-v3" style="fill: var(--rouge)"/></svg><span>Le Café Français</span></a>
+      <p>Le serveur Discord francophone où l'on vient discuter, jouer et se retrouver autour d'un café, depuis 2021.</p>
+      <p class="pied-ouvert"><span class="pastille" aria-hidden="true"></span>Ouvert jour et nuit · <a href="https://discord.gg/france" target="_blank" rel="noopener">discord.gg/france</a></p>
     </div>
+    <nav class="pied-nav" aria-labelledby="pied-menu">
+      <p class="pied-titre" id="pied-menu">Au menu</p>
+      <ul>
+        <li><a href="#carte">La carte</a></li>
+        <li><a href="#niveaux">Niveaux</a></li>
+        <li class="seulement-halloween"><a href="#halloween">Halloween</a></li>
+        <li class="seulement-noel"><a href="#noel">Noël</a></li>
+        <li class="seulement-normal"><a href="#evenements">Événements</a></li>
+        <li><a href="#grains">Grains</a></li>
+        <li><a href="#deckfr">DeckFR</a></li>
+        <li><a href="#classement">Classement</a></li>
+        <li><a href="#info">Info du jour</a></li>
+        <li><a href="#equipe">Équipe</a></li>
+        <li><a href="#faq">Questions</a></li>
+        <li><a href="#rejoindre">Rejoindre</a></li>
+      </ul>
+    </nav>
+    <div class="pied-plus">
+      <p class="pied-titre">Les petits plus</p>
+      <ul>
+        <li class="indice-cafe">Envie d'un café&nbsp;? Tape «&nbsp;café&nbsp;» sur ton clavier.</li>
+        <li><button class="revoir-porte" id="revoir-porte" type="button">Repasser la porte</button></li>
+        <li class="pied-anim">
+          <span id="anim-etiquette">Animations</span>
+          <button class="interrupteur" id="animations" type="button" role="switch" aria-checked="true" aria-labelledby="anim-etiquette"><span class="int-bouton" aria-hidden="true"></span></button>
+          <span class="int-etat" id="anim-etat" aria-hidden="true">Activées</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="cadre pied-bas">
+    <p>Développé par <a class="auteur" href="https://mvriuus.fr" target="_blank" rel="noopener">mvriuus</a> · Le Café Français n'est pas affilié à Discord Inc.</p>
+    <p><a href="mentions-legales/">Mentions légales</a> · <a href="cgu/">CGU</a></p>
   </div>
 </footer>
 <canvas class="pluie-ecran" id="pluie-ecran" aria-hidden="true"></canvas>
@@ -4890,13 +5136,19 @@ main, .pied { position: relative; z-index: 1; }
   });
   g.from('.affiche', { y: -40, rotation: -8, opacity: .25, duration: 1, ease: 'back.out(1.6)', scrollTrigger: { trigger: '.liege', start: 'top 80%', once: true } });
   g.from('.note', { y: -30, scale: 1.12, opacity: 0, duration: .7, stagger: .12, ease: 'back.out(2)', scrollTrigger: { trigger: '.notes', start: 'top 85%', once: true } });
-  g.from('.question', { y: 30, opacity: .25, duration: .7, stagger: .06, ease: 'power3.out', scrollTrigger: { trigger: '.faq-liste', start: 'top 85%', once: true } });
+  g.from('.question summary', { x: 40, opacity: 0, duration: .6, stagger: .07, ease: 'power3.out', scrollTrigger: { trigger: '.faq-liste', start: 'top 85%', once: true } });
 
   /* ---------- Équipe : les badges tombent et se balancent ---------- */
   g.from('.badge', { y: -200, rotation: (i) => [-16, 12, -9, 14][i % 4], duration: 1.8, ease: 'elastic.out(1, .4)', stagger: .12, transformOrigin: '50% 0%', scrollTrigger: { trigger: '.badges', start: 'top bottom', once: true } });
 
-  /* ---------- Étapes : le ruban tricolore se trace ---------- */
-  g.from('.etapes-ligne span', { scaleX: 0, ease: 'none', stagger: .5, scrollTrigger: { trigger: '.etapes', start: 'top 70%', end: 'bottom 75%', scrub: true } });
+  /* ---------- Pousser la porte : le store se déroule, puis les vitrines s'allument une à une ---------- */
+  g.from('.dv-store', { scaleY: 0, transformOrigin: '50% 0%', duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.devanture', start: 'top 82%', once: true } });
+  g.fromTo('.dv-vitre', { filter: 'brightness(0.3)' }, { filter: 'brightness(1)', duration: .7, stagger: .35, ease: 'power1.out', clearProps: 'filter', scrollTrigger: { trigger: '.dv-facade', start: 'top 75%', once: true } });
+
+  /* ---------- Le pot à pourboires : une pièce tombe dans le bocal ---------- */
+  g.timeline({ scrollTrigger: { trigger: '.pourboires', start: 'top 80%', once: true } })
+    .fromTo('.bc-tombe', { y: -46, opacity: 1 }, { y: 96, duration: .75, ease: 'power2.in' })
+    .to('.bc-tombe', { scaleY: .45, transformOrigin: '50% 100%', opacity: 0, duration: .25 });
 
   /* ---------- Final : la tasse se remplit ---------- */
   const service = g.timeline({ scrollTrigger: { trigger: '.final', start: 'top 85%', end: 'center 60%', scrub: 1 } });
