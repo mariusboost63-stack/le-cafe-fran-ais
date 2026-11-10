@@ -48,9 +48,24 @@
 </script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Le Café Français, serveur Discord francophone : discussions, jeux, salons vocaux et événements. Rejoins-nous sur discord.gg/france.">
-<link rel="preload" href="polices/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="polices/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="polices/polices.css">
+<link rel="preload" href="/polices/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/polices/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/polices/polices.css">
+<!-- Les pages du site : une adresse par page, toutes servies par ce fichier (copié dans chaque dossier à la publication par
+     outils/pages.py, qui y met aussi le titre et la description de la page). « ancres » : les sections de la page. -->
+<script type="application/json" id="pages-du-site">
+[
+ {"id": "accueil", "chemin": "/", "nom": "Accueil", "titre": "Le Café Français · Serveur Discord francophone", "description": "Le Café Français, serveur Discord francophone : discussions, jeux, salons vocaux et événements. Rejoins-nous sur discord.gg/france.", "resume": "La visite du café et ce qui s'y passe en ce moment.", "ancres": ["haut", "ruban", "carte", "vocaux", "direct", "au-menu"]},
+ {"id": "niveaux", "chemin": "/niveaux/", "nom": "Niveaux", "titre": "Niveaux · Le Café Français", "description": "Les niveaux du Café Français : gagne de l'XP en discutant et en vocal, et débloque un rôle et des avantages à chaque palier.", "resume": "Grimpe les paliers en discutant et débloque des rôles.", "ancres": ["niveaux"]},
+ {"id": "evenements", "chemin": "/evenements/", "nom": "Événements", "titre": "Événements · Le Café Français", "description": "Les grands rendez-vous du Café Français, Halloween et Noël, et les animations de tous les jours : concours, #infini, confessions.", "resume": "Les grands rendez-vous et les animations du café.", "saisons": {"noel": {"nom": "Noël", "titre": "Noël au café · Le Café Français", "resume": "Le calendrier de l'Avent et le café en habits de fête."}, "halloween": {"nom": "Halloween", "titre": "Halloween au café · Le Café Français", "resume": "Les quêtes, les citrouilles et le café déguisé."}}, "ancres": ["evenements", "noel", "halloween", "prochains"]},
+ {"id": "grains", "chemin": "/grains/", "nom": "Grains", "titre": "Grains et boutique · Le Café Français", "description": "Les grains, la monnaie du Café Français : comment en gagner et ce qu'on achète à la boutique.", "resume": "La monnaie du café, comment en gagner et la boutique.", "ancres": ["grains"]},
+ {"id": "deckfr", "chemin": "/deckfr/", "nom": "DeckFR", "titre": "DeckFR, le jeu de cartes · Le Café Français", "description": "DeckFR, le jeu de cartes du Café Français : boosters, cinq raretés, collection, échanges et ventes.", "resume": "Le jeu de cartes du bot : ouvre, collectionne, échange.", "ancres": ["deckfr"]},
+ {"id": "classement", "chemin": "/classement/", "nom": "Classement", "titre": "Classement · Le Café Français", "description": "Les champions du Café Français : les plus riches en grains, les piliers de #infini, les collectionneurs de DeckFR et les plus fidèles.", "resume": "Les plus riches, les plus fidèles, les collectionneurs.", "ancres": ["classement"]},
+ {"id": "info-du-jour", "chemin": "/info-du-jour/", "nom": "Info du jour", "titre": "L'info du jour · Le Café Français", "description": "La petite info du jour du Café Français, publiée chaque jour à midi.", "resume": "Une petite actu, chaque jour à midi.", "ancres": ["info"]},
+ {"id": "equipe", "chemin": "/equipe/", "nom": "Équipe", "titre": "L'équipe · Le Café Français", "description": "L'équipe du Café Français : gérants, administrateurs, responsables et modérateurs.", "resume": "Ceux qui font tourner le café.", "ancres": ["equipe"]},
+ {"id": "premiers-pas", "chemin": "/premiers-pas/", "nom": "Premiers pas", "titre": "Premiers pas · Le Café Français", "description": "Rejoindre le Café Français en trois gestes, trouver sa place et les réponses aux questions fréquentes.", "resume": "Comment entrer, ta boisson et les questions fréquentes.", "ancres": ["entrer", "commande", "faq", "rejoindre"]}
+]
+</script>
 <script>
 /* Saison du site : 'auto', 'halloween', 'noel' ou 'normal'.
    'auto' suit l'heure de Paris : Halloween en octobre, Noël du 1er décembre à 00 h au 6 janvier inclus, version
@@ -67,6 +82,42 @@ try {
   RECHARGEE = navigation ? navigation.type === 'reload' : (performance.navigation && performance.navigation.type === 1);
   if (RECHARGEE && location.hash && !SAISONS_APERCU[location.hash]) history.replaceState(null, '', location.pathname + location.search);
 } catch (e) {}
+/* Le site en pages : la page vient de l'adresse (cafe-fr.com/classement/…). Un style posé tout de suite cache les
+   sections des autres pages, sans attendre le reste. Les anciennes adresses (cafe-fr.com/#classement) mènent à la
+   bonne page. Sans JavaScript, tout reste affiché sur une seule page. */
+var PAGES = [], PAGE = null;
+function pageDuChemin(c) {
+  c = String(c || '/').replace(/index\.html$/, '');
+  if (c.slice(-1) !== '/') c += '/';
+  for (var i = 0; i < PAGES.length; i++) if (PAGES[i].chemin === c) return PAGES[i];
+  return null;
+}
+function pageDeLAncre(id) {
+  for (var i = 0; i < PAGES.length; i++) if (PAGES[i].ancres.indexOf(id) >= 0) return PAGES[i];
+  return null;
+}
+function stylePage(p) {
+  var ids = [];
+  PAGES.forEach(function (q) { if (q !== p) ids = ids.concat(q.ancres); });
+  if (!ids.length) return '';
+  // deux règles : un navigateur sans :has() ignore la seconde sans perdre la première
+  return ids.map(function (id) { return '#' + id; }).join(',') + '{display:none!important}\n' +
+    ids.map(function (id) { return '.pin-spacer:has(>#' + id + ')'; }).join(',') + '{display:none!important}';
+}
+try {
+  PAGES = JSON.parse(document.getElementById('pages-du-site').textContent);
+  PAGE = pageDuChemin(location.pathname) || PAGES[0];
+  var ancre = decodeURIComponent(location.hash.slice(1)), ailleurs = ancre && pageDeLAncre(ancre);
+  if (ailleurs && ailleurs !== PAGE) {
+    PAGE = ailleurs;
+    history.replaceState(null, '', ailleurs.chemin + location.search + (ailleurs.ancres[0] === ancre ? '' : '#' + ancre));
+  }
+  document.documentElement.setAttribute('data-page', PAGE.id);
+  var stylePageEl = document.createElement('style');
+  stylePageEl.id = 'style-page';
+  stylePageEl.textContent = stylePage(PAGE);
+  document.head.appendChild(stylePageEl);
+} catch (e) { PAGES = []; }
 function saisonDuJour(t) {
   var m, j, d = t || new Date();
   try {
@@ -79,7 +130,7 @@ try {
   var r = document.documentElement, h = location.hash, s = SAISON;
   if (SAISONS_APERCU[h]) s = SAISONS_APERCU[h]; else if (s === 'auto') s = saisonDuJour();
   r.setAttribute('data-saison', s);
-  if (!h || SAISONS_APERCU[h]) { try { if (!localStorage.getItem('cafe-porte')) r.setAttribute('data-porte', 'fermee'); } catch (e) {} }
+  if ((!h || SAISONS_APERCU[h]) && (!PAGE || PAGE.id === 'accueil')) { try { if (!localStorage.getItem('cafe-porte')) r.setAttribute('data-porte', 'fermee'); } catch (e) {} }
   try { if (localStorage.getItem('cafe-animations') === 'reduites') r.setAttribute('data-animations', 'reduites'); } catch (e) {}
   if (!r.hasAttribute('data-animations')) { r.classList.add('intro'); setTimeout(function () { r.classList.remove('intro'); }, 2200); }
 } catch (e) {}
@@ -216,13 +267,14 @@ main, .pied { position: relative; z-index: 1; }
 .barre nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--brume); transition: color .2s; }
 .barre nav a:hover { color: var(--lait); }
 @media (max-width: 1200px) { .barre nav { gap: 16px; } .barre nav a { font-size: 14.5px; } .son-texte { display: none; } .son { padding: 0 13px; } }
-@media (max-width: 960px) { .barre nav { display: none; } .marque span { font-size: 15px; } }
+@media (max-width: 1180px) { .barre nav { display: none; } }
+@media (max-width: 960px) { .marque span { font-size: 15px; } }
 .marque span { white-space: nowrap; }
 @media (max-width: 420px) { .marque { gap: 8px; } .marque span { font-size: 14px; } .mini-tasse { width: 38px; } }
 
 /* Menu mobile */
 .menu-btn { display: none; }
-@media (max-width: 960px) {
+@media (max-width: 1180px) {
   .menu-btn {
     display: inline-grid; place-items: center; flex: none; width: 41px; height: 41px; padding: 0; border-radius: 999px; cursor: pointer;
     border: 1.5px solid var(--trait); background: transparent; color: var(--lait); transition: border-color .2s;
@@ -1936,6 +1988,83 @@ main, .pied { position: relative; z-index: 1; }
   .journal { transform: rotate(-.6deg); }
 }
 
+/* Le site en pages : la page courante dans le menu, le fil d'Ariane, les pages voisines en bas, l'accueil « Au menu » */
+.hors-page { display: none !important; }
+#contenu:focus, #fil-page:focus { outline: none; }
+.barre nav a[aria-current="page"] { color: var(--lait); text-decoration: underline 2px var(--creme); text-underline-offset: 9px; }
+@media (max-width: 1180px) {
+  .barre.menu-ouvert nav a[aria-current="page"] { text-decoration: none; color: var(--creme); }
+  .barre.menu-ouvert nav a[aria-current="page"]::after { content: " · tu es ici"; font: 500 13px/1 var(--f-mono); letter-spacing: .06em; color: var(--brume); }
+}
+@media (min-width: 1181px) and (max-width: 1299px) { .barre nav a[data-page="accueil"] { display: none; } }
+.barre nav a { white-space: nowrap; }
+@keyframes page-arrive { from { opacity: 0; } }
+.page-arrive main { animation: page-arrive .45s ease-out both; }
+
+.page-tete { display: none; }
+html[data-page]:not([data-page="accueil"]) .page-tete {
+  display: block; position: relative; z-index: 2;
+  padding-top: calc(68px + env(safe-area-inset-top, 0px) + clamp(22px, 3vw, 36px)); margin-bottom: calc(-1 * clamp(36px, 4.6vw, 70px));
+}
+.fil { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
+.fil a { display: inline-flex; align-items: center; gap: 8px; color: var(--brume); text-decoration: none; transition: color .2s; }
+.fil a:hover { color: var(--lait); }
+.fil a svg { width: 22px; height: auto; fill: currentColor; }
+.fil h1 { margin: 0; font: inherit; color: var(--creme); }
+.fil-sep { opacity: .5; }
+
+.suite { display: none; }
+html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-block: clamp(8px, 2vw, 24px) clamp(64px, 8vw, 104px); }
+.suite .cadre { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 14px; }
+.suite a { display: grid; align-content: start; gap: 6px; padding: 22px 26px; border-radius: 20px; border: 1px solid var(--trait); background: var(--nuit-2); color: var(--lait); text-decoration: none; transition: border-color .25s, translate .25s; }
+.suite a:hover { border-color: var(--lait); translate: 0 -3px; }
+.suite small { font: 500 var(--t-etiquette)/1.2 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
+.suite b { font: 800 clamp(26px, 2.8vw, 36px)/1 var(--f-titre); font-stretch: 86%; letter-spacing: -.01em; }
+.suite span { color: var(--brume); font-size: 15px; }
+.suite .suite-suiv { grid-column: 2; text-align: right; background: var(--lait); color: var(--nuit); border-color: var(--lait); }
+.suite .suite-suiv:hover { background: var(--creme); border-color: var(--creme); }
+.suite .suite-suiv small, .suite .suite-suiv span { color: color-mix(in srgb, var(--nuit) 66%, var(--lait)); }
+@media (max-width: 640px) {
+  .suite .cadre { grid-template-columns: minmax(0, 1fr); }
+  .suite .suite-suiv { grid-column: auto; grid-row: 1; }
+  .suite a { padding: 18px 20px; }
+}
+
+/* L'accueil « Au menu » : une carte par page, avec un aperçu en direct */
+.au-menu { padding-block: clamp(48px, 6vw, 88px) clamp(64px, 7vw, 104px); }
+.au-menu .cadre { display: grid; gap: clamp(22px, 3vw, 32px); }
+.am-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 14px 40px; }
+.am-tete > div { display: grid; gap: 16px; }
+.am-tete > p { max-width: 42ch; color: var(--brume); }
+.am-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.am-carte {
+  --c: var(--creme); position: relative; box-sizing: border-box; display: grid; grid-template-rows: auto auto 1fr auto; gap: 10px; height: 100%; min-height: 230px; padding: 22px; overflow: hidden;
+  border-radius: 22px; background: var(--nuit-2); border: 1px solid var(--trait); color: var(--lait); text-decoration: none; transition: translate .25s, border-color .25s, background-color .25s;
+}
+.am-carte:hover { translate: 0 -4px; border-color: var(--c); background: color-mix(in srgb, var(--c) 6%, var(--nuit-2)); }
+.am-carte:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
+.am-num { position: absolute; right: 16px; top: 2px; font: 800 92px/1 var(--f-titre); font-stretch: 80%; color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--c) 40%, transparent); pointer-events: none; }
+.am-ico { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
+.am-ico svg { width: 24px; height: 24px; fill: currentColor; }
+.am-carte h3 { font: 800 25px/1.05 var(--f-titre); font-stretch: 88%; letter-spacing: -.01em; }
+.am-carte p { color: var(--brume); font-size: 15px; }
+.am-live { justify-self: start; align-self: end; display: inline-flex; align-items: flex-start; gap: 8px; max-width: 100%; padding: 7px 12px; border-radius: 999px; background: color-mix(in srgb, var(--c) 14%, transparent); font-size: 14px; font-weight: 600; }
+.am-live > span { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.am-live i { flex: none; width: 8px; height: 8px; margin-top: .45em; border-radius: 50%; background: var(--c); }
+@media (max-width: 1100px) { .am-grille { grid-template-columns: repeat(2, minmax(0, 1fr)); } .am-carte { min-height: 0; } }
+@media (max-width: 560px) {
+  .am-carte { padding: 18px 16px; gap: 8px; border-radius: 18px; }
+  .am-carte h3 { font-size: 21px; }
+  .am-carte p { display: none; }
+  .am-num { font-size: 64px; right: 10px; }
+  .am-ico { width: 40px; height: 40px; border-radius: 12px; }
+  .am-ico svg { width: 21px; height: 21px; }
+  .am-live { align-items: flex-start; padding: 6px 10px; border-radius: 12px; font-size: 13px; line-height: 1.3; }
+  .am-live > span { -webkit-line-clamp: 3; }
+}
+.pied-nav a[aria-current="page"] { color: var(--creme); }
+@media (max-width: 340px) { .am-grille { grid-template-columns: minmax(0, 1fr); } }
+
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
 
@@ -2002,31 +2131,30 @@ main, .pied { position: relative; z-index: 1; }
   </div>
 </div>
 
-<a class="saut" href="#carte">Aller au contenu</a>
+<a class="saut" href="#contenu">Aller au contenu</a>
 <canvas class="fond" aria-hidden="true"></canvas>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="barre" id="barre">
   <div class="guirlande seulement-noel" aria-hidden="true"></div>
   <div class="barre-int">
-    <a class="marque" href="#haut" aria-label="Le Café Français, retour en haut">
+    <a class="marque" href="/" aria-label="Le Café Français, accueil">
       <svg class="mini-tasse" viewBox="8 116 234 120" aria-hidden="true">
         <g clip-path="url(#clip-interieur)"><rect class="niveau" x="96" y="202" width="124" height="120"/></g>
         <use href="#p-tasse"/>
       </svg>
       <span>Le Café Français</span>
     </a>
-    <nav id="menu" aria-label="Sections">
-      <a href="#carte">La carte</a>
-      <a href="#niveaux">Niveaux</a>
-      <a href="#halloween" class="seulement-halloween">Halloween</a>
-      <a href="#noel" class="seulement-noel">Noël</a>
-      <a href="#evenements" class="seulement-normal">Événements</a>
-      <a href="#grains">Grains</a>
-      <a href="#deckfr">DeckFR</a>
-      <a href="#classement">Classement</a>
-      <a href="#info">Info du jour</a>
-      <a href="#equipe">Équipe</a>
+    <nav id="menu" aria-label="Pages du site">
+      <a href="/" data-page="accueil">Accueil</a>
+      <a href="/niveaux/" data-page="niveaux">Niveaux</a>
+      <a href="/evenements/" data-page="evenements"><span class="seulement-normal">Événements</span><span class="seulement-noel">Noël</span><span class="seulement-halloween">Halloween</span></a>
+      <a href="/grains/" data-page="grains">Grains</a>
+      <a href="/deckfr/" data-page="deckfr">DeckFR</a>
+      <a href="/classement/" data-page="classement">Classement</a>
+      <a href="/info-du-jour/" data-page="info-du-jour">Info du jour</a>
+      <a href="/equipe/" data-page="equipe">Équipe</a>
+      <a href="/premiers-pas/" data-page="premiers-pas">Premiers pas</a>
     </nav>
     <div class="barre-droite">
       <div class="son-groupe">
@@ -2047,7 +2175,13 @@ main, .pied { position: relative; z-index: 1; }
   </div>
 </header>
 
-<main>
+<main id="contenu" tabindex="-1">
+  <div class="page-tete">
+    <div class="cadre">
+      <nav class="fil" aria-label="Fil d'Ariane"><a href="/" data-page="accueil"><svg viewBox="8 116 234 120" aria-hidden="true"><use href="#p-tasse"/></svg>Accueil</a><span class="fil-sep" aria-hidden="true">/</span><h1 id="fil-page" tabindex="-1">Le Café Français</h1></nav>
+    </div>
+  </div>
+
   <section class="hero" id="haut">
     <p class="surtitre hero-revele"><span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>Serveur Discord francophone · ouvert depuis le 8&nbsp;avril&nbsp;2021</p>
     <div class="logo-scene hero-revele">
@@ -2098,7 +2232,7 @@ main, .pied { position: relative; z-index: 1; }
     <a class="hero-presents" id="hero-presents" href="#direct" hidden><span class="hp-pile" aria-hidden="true"></span><span class="hp-texte"></span></a>
   </section>
 
-  <div class="ruban" aria-hidden="true">
+  <div class="ruban" id="ruban" aria-hidden="true">
     <div class="bande bande-rouge"><div class="defile"><span>Bonjour</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Salut</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Coucou</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bienvenue</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bonsoir</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Ça va&nbsp;?</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Wesh</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Hello</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Hola</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Ciao</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bonjour</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Salut</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Coucou</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bienvenue</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bonsoir</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Ça va&nbsp;?</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Wesh</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Hello</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Hola</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Ciao</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></div></div>
     <div class="bande bande-bleu"><div class="defile"><span>Bonjour</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Salut</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Coucou</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bienvenue</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bonsoir</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Ça va&nbsp;?</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Wesh</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Hello</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Hola</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Ciao</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bonjour</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Salut</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Coucou</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bienvenue</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Bonsoir</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Ça va&nbsp;?</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Wesh</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Hello</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Hola</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg><span>Ciao</span><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></div></div>
   </div>
@@ -2197,45 +2331,6 @@ main, .pied { position: relative; z-index: 1; }
       </article>
     </div>
     <div class="progression" aria-hidden="true">Visite<span class="rail"><span class="rempli"></span></span></div>
-  </section>
-
-  <section class="commande" id="commande" aria-labelledby="t-commande">
-    <div class="cadre">
-      <div class="commande-tete" data-revele>
-        <p class="surtitre">Le petit jeu du comptoir</p>
-        <h2 class="h2" id="t-commande">Commande ton café</h2>
-        <p class="chapo">Quatre questions, une commande, et on te dit quelle table du café est faite pour toi.</p>
-      </div>
-      <div class="comptoir">
-        <div class="quiz" id="quiz">
-          <div>
-            <p class="quiz-etape"><span>Question 1 sur 4</span><span class="quiz-points" aria-hidden="true"><i class="fait"></i><i></i><i></i><i></i></span></p>
-            <h3 class="quiz-question" tabindex="-1">Tu t'installes où&nbsp;?</h3>
-            <ul class="quiz-reponses">
-              <li><button type="button"><span class="quiz-lettre" aria-hidden="true">A</span><span>Au comptoir, pour lancer une partie</span></button></li>
-              <li><button type="button"><span class="quiz-lettre" aria-hidden="true">B</span><span>En terrasse, pour papoter</span></button></li>
-              <li><button type="button"><span class="quiz-lettre" aria-hidden="true">C</span><span>Dans le salon, casque sur les oreilles</span></button></li>
-              <li><button type="button"><span class="quiz-lettre" aria-hidden="true">D</span><span>Près du tableau d'affichage, pour ne rien rater</span></button></li>
-            </ul>
-          </div>
-        </div>
-        <div class="ticket-zone">
-          <div class="ticket-cadre">
-            <div class="ticket" aria-label="Ta commande">
-              <p class="ticket-tete"><strong>Le Café Français</strong>Bon de commande n°&nbsp;<span id="ticket-num">042</span></p>
-              <ol class="ticket-lignes" id="ticket-lignes" aria-live="polite"><li class="ticket-vide">En attente de ta commande…</li></ol>
-              <p class="ticket-tampon" id="ticket-tampon" aria-hidden="true">Servi</p>
-            </div>
-          </div>
-          <button class="btn btn-ligne btn-petit ticket-partager" id="ticket-partager" type="button" hidden><svg aria-hidden="true"><use href="#i-partage"/></svg>Partager ma commande</button>
-          <dialog class="apercu-partage" id="apercu-partage" aria-label="Ton bon de commande en image">
-            <img alt="Ton bon de commande du Café Français" width="1080" height="1350">
-            <p>Appuie longuement sur l'image pour l'enregistrer, puis partage-la où tu veux.</p>
-            <form method="dialog"><button class="btn btn-plein btn-petit">Fermer</button></form>
-          </dialog>
-        </div>
-      </div>
-    </div>
   </section>
 
   <section class="niveaux" id="niveaux" aria-labelledby="t-niveaux">
@@ -2544,11 +2639,11 @@ main, .pied { position: relative; z-index: 1; }
         </ul>
       </div>
       <div class="dk-main" aria-hidden="true">
-        <div class="dk-carte dk-photo" style="--r: var(--rar-1); --i: -2"><img src="cartes/vitrine/commun-charles-le-mauvais.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
-        <div class="dk-carte dk-photo" style="--r: var(--rar-2); --i: -1"><img src="cartes/vitrine/rare-charles-ix.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
-        <div class="dk-carte dk-photo" style="--r: var(--rar-3); --i: 0"><img src="cartes/vitrine/epique-louis-philippe.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
-        <div class="dk-carte dk-photo" style="--r: var(--rar-4); --i: 1"><img src="cartes/vitrine/legendaire-louis-ix.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
-        <div class="dk-carte dk-photo dk-mythique" style="--r: var(--rar-5); --i: 2"><img src="cartes/vitrine/mythique-charlemagne.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo" style="--r: var(--rar-1); --i: -2"><img src="/cartes/vitrine/commun-charles-le-mauvais.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo" style="--r: var(--rar-2); --i: -1"><img src="/cartes/vitrine/rare-charles-ix.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo" style="--r: var(--rar-3); --i: 0"><img src="/cartes/vitrine/epique-louis-philippe.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo" style="--r: var(--rar-4); --i: 1"><img src="/cartes/vitrine/legendaire-louis-ix.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
+        <div class="dk-carte dk-photo dk-mythique" style="--r: var(--rar-5); --i: 2"><img src="/cartes/vitrine/mythique-charlemagne.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
       </div>
       <ol class="dk-etapes">
         <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Chaque booster contient 5 cartes, à ouvrir avec <code>/ouverture</code>. Des boosters gratuits se rechargent avec le temps, et la boutique en vend à 10&nbsp;000 grains, sans limite.</p></li>
@@ -2646,7 +2741,7 @@ main, .pied { position: relative; z-index: 1; }
       <div class="gazette-avant" id="info-avant" hidden>
         <p class="surtitre">Les jours précédents</p>
         <ul class="gazette-liste" id="info-liste"></ul>
-        <a class="gazette-tout" href="infos/">Toutes les éditions<svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+        <a class="gazette-tout" href="/infos/">Toutes les éditions<svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
       </div>
     </div>
   </section>
@@ -2706,6 +2801,25 @@ main, .pied { position: relative; z-index: 1; }
     </div>
   </section>
 
+  <section class="au-menu" id="au-menu" aria-labelledby="t-au-menu">
+    <div class="cadre">
+      <div class="am-tete" data-revele>
+        <div><p class="surtitre">Au menu</p><h2 class="h2" id="t-au-menu">Par où continuer&nbsp;?</h2></div>
+        <p>Une page par sujet, courte et claire. Choisis ce qui te tente&nbsp;: le menu en haut te suit sur toutes les pages.</p>
+      </div>
+      <ul class="am-grille">
+        <li><a class="am-carte" href="/niveaux/" data-page="niveaux" style="--c: var(--bleu-vif)"><span class="am-num" aria-hidden="true">1</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-etoile"/></svg></span><h3 data-nom-page="niveaux">Niveaux</h3><p data-resume-page="niveaux">Grimpe les paliers en discutant et débloque des rôles.</p><span class="am-live"><i aria-hidden="true"></i><span>10 paliers à grimper</span></span></a></li>
+        <li><a class="am-carte" href="/evenements/" data-page="evenements" style="--c: var(--rouge)"><span class="am-num" aria-hidden="true">2</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-cadeau"/></svg></span><h3><span class="seulement-normal">Événements</span><span class="seulement-noel">Noël</span><span class="seulement-halloween">Halloween</span></h3><p><span class="seulement-normal">Les grands rendez-vous et les animations du café.</span><span class="seulement-noel">Le calendrier de l'Avent et le café en habits de fête.</span><span class="seulement-halloween">Les quêtes, les citrouilles et le café déguisé.</span></p><span class="am-live"><i aria-hidden="true"></i><span>Le prochain rendez-vous</span></span></a></li>
+        <li><a class="am-carte" href="/grains/" data-page="grains" style="--c: var(--creme)"><span class="am-num" aria-hidden="true">3</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-grain"/></svg></span><h3 data-nom-page="grains">Grains</h3><p data-resume-page="grains">La monnaie du café, comment en gagner et la boutique.</p><span class="am-live"><i aria-hidden="true"></i><span>Booster à 10&#8239;000 grains</span></span></a></li>
+        <li><a class="am-carte" href="/deckfr/" data-page="deckfr" style="--c: var(--rar-3)"><span class="am-num" aria-hidden="true">4</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-cartes"/></svg></span><h3 data-nom-page="deckfr">DeckFR</h3><p data-resume-page="deckfr">Le jeu de cartes du bot : ouvre, collectionne, échange.</p><span class="am-live"><i aria-hidden="true"></i><span>5 raretés à collectionner</span></span></a></li>
+        <li><a class="am-carte" href="/classement/" data-page="classement" style="--c: var(--or)"><span class="am-num" aria-hidden="true">5</span><span class="am-ico" aria-hidden="true"><svg viewBox="0 0 40 26"><use href="#i-couronne"/></svg></span><h3 data-nom-page="classement">Classement</h3><p data-resume-page="classement">Les plus riches, les plus fidèles, les collectionneurs.</p><span class="am-live"><i aria-hidden="true"></i><span>Qui est en tête&nbsp;?</span></span></a></li>
+        <li><a class="am-carte" href="/info-du-jour/" data-page="info-du-jour" style="--c: var(--rouge)"><span class="am-num" aria-hidden="true">6</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-annonce"/></svg></span><h3 data-nom-page="info-du-jour">Info du jour</h3><p data-resume-page="info-du-jour">Une petite actu, chaque jour à midi.</p><span class="am-live"><i aria-hidden="true"></i><span>L'info de midi</span></span></a></li>
+        <li><a class="am-carte" href="/equipe/" data-page="equipe" style="--c: var(--vert)"><span class="am-num" aria-hidden="true">7</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-perso"/></svg></span><h3 data-nom-page="equipe">Équipe</h3><p data-resume-page="equipe">Ceux qui font tourner le café.</p><span class="am-live"><i aria-hidden="true"></i><span>Gérants, admins et responsables</span></span></a></li>
+        <li><a class="am-carte" href="/premiers-pas/" data-page="premiers-pas" style="--c: var(--lait)"><span class="am-num" aria-hidden="true">8</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-fleche"/></svg></span><h3 data-nom-page="premiers-pas">Premiers pas</h3><p data-resume-page="premiers-pas">Comment entrer, ta boisson et les questions fréquentes.</p><span class="am-live"><i aria-hidden="true"></i><span>3 gestes pour entrer</span></span></a></li>
+      </ul>
+    </div>
+  </section>
+
   <section class="etapes" id="entrer" aria-labelledby="t-etapes">
     <div class="cadre etapes-cadre">
       <div class="etapes-tete" data-revele>
@@ -2746,6 +2860,45 @@ main, .pied { position: relative; z-index: 1; }
     </div>
   </section>
 
+  <section class="commande" id="commande" aria-labelledby="t-commande">
+    <div class="cadre">
+      <div class="commande-tete" data-revele>
+        <p class="surtitre">Le petit jeu du comptoir</p>
+        <h2 class="h2" id="t-commande">Commande ton café</h2>
+        <p class="chapo">Quatre questions, une commande, et on te dit quelle table du café est faite pour toi.</p>
+      </div>
+      <div class="comptoir">
+        <div class="quiz" id="quiz">
+          <div>
+            <p class="quiz-etape"><span>Question 1 sur 4</span><span class="quiz-points" aria-hidden="true"><i class="fait"></i><i></i><i></i><i></i></span></p>
+            <h3 class="quiz-question" tabindex="-1">Tu t'installes où&nbsp;?</h3>
+            <ul class="quiz-reponses">
+              <li><button type="button"><span class="quiz-lettre" aria-hidden="true">A</span><span>Au comptoir, pour lancer une partie</span></button></li>
+              <li><button type="button"><span class="quiz-lettre" aria-hidden="true">B</span><span>En terrasse, pour papoter</span></button></li>
+              <li><button type="button"><span class="quiz-lettre" aria-hidden="true">C</span><span>Dans le salon, casque sur les oreilles</span></button></li>
+              <li><button type="button"><span class="quiz-lettre" aria-hidden="true">D</span><span>Près du tableau d'affichage, pour ne rien rater</span></button></li>
+            </ul>
+          </div>
+        </div>
+        <div class="ticket-zone">
+          <div class="ticket-cadre">
+            <div class="ticket" aria-label="Ta commande">
+              <p class="ticket-tete"><strong>Le Café Français</strong>Bon de commande n°&nbsp;<span id="ticket-num">042</span></p>
+              <ol class="ticket-lignes" id="ticket-lignes" aria-live="polite"><li class="ticket-vide">En attente de ta commande…</li></ol>
+              <p class="ticket-tampon" id="ticket-tampon" aria-hidden="true">Servi</p>
+            </div>
+          </div>
+          <button class="btn btn-ligne btn-petit ticket-partager" id="ticket-partager" type="button" hidden><svg aria-hidden="true"><use href="#i-partage"/></svg>Partager ma commande</button>
+          <dialog class="apercu-partage" id="apercu-partage" aria-label="Ton bon de commande en image">
+            <img alt="Ton bon de commande du Café Français" width="1080" height="1350">
+            <p>Appuie longuement sur l'image pour l'enregistrer, puis partage-la où tu veux.</p>
+            <form method="dialog"><button class="btn btn-plein btn-petit">Fermer</button></form>
+          </dialog>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="faq" id="faq" aria-labelledby="t-faq">
     <div class="cadre faq-grille">
       <div class="faq-tete" data-revele>
@@ -2758,10 +2911,10 @@ main, .pied { position: relative; z-index: 1; }
         <p class="faq-jour" aria-hidden="true"><span>Aujourd'hui, au comptoir</span></p>
         <details class="question" name="faq"><summary><span class="q-texte">Quel âge faut-il avoir&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Il faut avoir au moins 15 ans pour rejoindre le café.</p></div></div></details>
         <details class="question" name="faq"><summary><span class="q-texte">Faut-il parler français&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Pas forcément. Le café est francophone, mais tout le monde est le bienvenu, et le salon #international permet de discuter dans d'autres langues.</p></div></div></details>
-        <details class="question" name="faq"><summary><span class="q-texte">Comment rejoindre l'équipe&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Les candidatures se font dans le salon #recrutements. <a href="#equipe">Voir l'équipe actuelle</a>.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Comment rejoindre l'équipe&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Les candidatures se font dans le salon #recrutements. <a href="/equipe/">Voir l'équipe actuelle</a>.</p></div></div></details>
         <details class="question" name="faq"><summary><span class="q-texte">Comment signaler un problème ou un membre&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Ouvre un ticket dans #support et explique la situation. L'équipe de modération s'en occupe rapidement.</p></div></div></details>
-        <details class="question" name="faq"><summary><span class="q-texte">Comment monter de niveau&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>En participant&nbsp;: chaque message et chaque minute en vocal te rapportent de l'XP. Chaque palier débloque un rôle et des avantages. <a href="#niveaux">Voir les niveaux</a>.</p></div></div></details>
-        <details class="question" name="faq"><summary><span class="q-texte">Comment gagner des grains&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>En vocal, avec <code>/journalier</code> et <code>/hebdomadaire</code>, ou au casino. <a href="#grains">Tout est expliqué ici</a>.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Comment monter de niveau&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>En participant&nbsp;: chaque message et chaque minute en vocal te rapportent de l'XP. Chaque palier débloque un rôle et des avantages. <a href="/niveaux/">Voir les niveaux</a>.</p></div></div></details>
+        <details class="question" name="faq"><summary><span class="q-texte">Comment gagner des grains&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>En vocal, avec <code>/journalier</code> et <code>/hebdomadaire</code>, ou au casino. <a href="/grains/">Tout est expliqué ici</a>.</p></div></div></details>
         <details class="question" name="faq"><summary><span class="q-texte">Comment être prévenu des événements&nbsp;?</span></summary><div class="reponse"><span class="r-avatar" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg></span><div class="r-bulle"><p class="r-nom">L'équipe du café</p><p>Prends le rôle @Notif Animation dans «&nbsp;Salons et rôles&nbsp;». Tu seras prévenu de chaque événement et de chaque quête.</p></div></div></details>
       </div>
     </div>
@@ -2827,6 +2980,8 @@ main, .pied { position: relative; z-index: 1; }
       </div>
     </div>
   </section>
+
+  <nav class="suite" id="suite" aria-label="Pages voisines"><div class="cadre"></div></nav>
 </main>
 
 <footer class="pied">
@@ -2840,18 +2995,16 @@ main, .pied { position: relative; z-index: 1; }
     <nav class="pied-nav" aria-labelledby="pied-menu">
       <p class="pied-titre" id="pied-menu">Au menu</p>
       <ul>
-        <li><a href="#carte">La carte</a></li>
-        <li><a href="#niveaux">Niveaux</a></li>
-        <li class="seulement-halloween"><a href="#halloween">Halloween</a></li>
-        <li class="seulement-noel"><a href="#noel">Noël</a></li>
-        <li class="seulement-normal"><a href="#evenements">Événements</a></li>
-        <li><a href="#grains">Grains</a></li>
-        <li><a href="#deckfr">DeckFR</a></li>
-        <li><a href="#classement">Classement</a></li>
-        <li><a href="#info">Info du jour</a></li>
-        <li><a href="#equipe">Équipe</a></li>
-        <li><a href="#faq">Questions</a></li>
-        <li><a href="#rejoindre">Rejoindre</a></li>
+        <li><a href="/" data-page="accueil">Accueil</a></li>
+        <li><a href="/niveaux/" data-page="niveaux">Niveaux</a></li>
+        <li><a href="/evenements/" data-page="evenements"><span class="seulement-normal">Événements</span><span class="seulement-noel">Noël</span><span class="seulement-halloween">Halloween</span></a></li>
+        <li><a href="/grains/" data-page="grains">Grains</a></li>
+        <li><a href="/deckfr/" data-page="deckfr">DeckFR</a></li>
+        <li><a href="/classement/" data-page="classement">Classement</a></li>
+        <li><a href="/info-du-jour/" data-page="info-du-jour">Info du jour</a></li>
+        <li><a href="/equipe/" data-page="equipe">Équipe</a></li>
+        <li><a href="/premiers-pas/" data-page="premiers-pas">Premiers pas</a></li>
+        <li><a href="/premiers-pas/#faq">Questions</a></li>
       </ul>
     </nav>
     <div class="pied-plus">
@@ -2869,15 +3022,16 @@ main, .pied { position: relative; z-index: 1; }
   </div>
   <div class="cadre pied-bas">
     <p>Développé par <a class="auteur" href="https://mvriuus.fr" target="_blank" rel="noopener">mvriuus</a> · Le Café Français n'est pas affilié à Discord Inc.</p>
-    <p><a href="mentions-legales/">Mentions légales</a> · <a href="cgu/">CGU</a></p>
+    <p><a href="/mentions-legales/">Mentions légales</a> · <a href="/cgu/">CGU</a></p>
   </div>
 </footer>
 <canvas class="pluie-ecran" id="pluie-ecran" aria-hidden="true"></canvas>
 <div class="envolee" id="envolee" aria-hidden="true"></div>
 <p class="toast" id="toast" role="status" aria-live="polite"></p>
+<p class="sr" id="annonce-page" aria-live="polite"></p>
 
-<script src="js/gsap.min.js"></script>
-<script src="js/ScrollTrigger.min.js"></script>
+<script src="/js/gsap.min.js"></script>
+<script src="/js/ScrollTrigger.min.js"></script>
 <script>
 (() => {
   'use strict';
@@ -4027,7 +4181,7 @@ main, .pied { position: relative; z-index: 1; }
         : Number(maintenant.hour) < 12 ? 'La prochaine arrive aujourd\u2019hui à midi.' : 'La prochaine arrive bientôt.';
     };
     try {
-      const r = await fetch('infos.json', { cache: 'no-cache' });
+      const r = await fetch('/infos.json', { cache: 'no-cache' });
       if (!r.ok) throw new Error(r.status);
       const infos = ((await r.json()).infos || []).filter((x) => x && x.titre && Date.parse(x.publication) <= Date.now());
       if (!infos.length) throw new Error('aucune info');
@@ -4074,7 +4228,7 @@ main, .pied { position: relative; z-index: 1; }
   const RARETES = ['Commun', 'Rare', 'Épique', 'Légendaire', 'Mythique'];
   // Le dossier des images des cartes : la base du bot ne donne que le nom du fichier (« Charlemagne_recto_….png »).
   // Les fichiers déposés dans le dossier cartes/ du dépôt sont publiés avec le site.
-  const IMAGES_CARTES = 'cartes/';
+  const IMAGES_CARTES = '/cartes/';
   const imageCarte = (x) => {
     const v = String(x || '');
     if (/^https:\/\//.test(v)) return v;
@@ -4084,7 +4238,7 @@ main, .pied { position: relative; z-index: 1; }
   function chargerDeckfr() {
     if (!deckfrPromesse || Date.now() - deckfrLu > 60000) {
       deckfrLu = Date.now();
-      deckfrPromesse = chargerListe(['deckfr.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/deckfr.json'])
+      deckfrPromesse = chargerListe(['/deckfr.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/deckfr.json'])
         .then((r) => (r ? r.json() : null)).catch(() => null);
     }
     return deckfrPromesse;
@@ -4282,7 +4436,7 @@ main, .pied { position: relative; z-index: 1; }
   // Le top 10 est relevé dans la base du bot par GitHub Actions (outils/classement.py) et publié sur la branche
   // « data », puis avec le site : le site ne lit que cette liste, jamais la base. Sans liste, la section reste cachée.
   (function classementGrains() {
-    const SOURCES = ['classement.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/classement.json'];
+    const SOURCES = ['/classement.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/classement.json'];
     const ns = 'http://www.w3.org/2000/svg';
     const el = (tag, props) => Object.assign(document.createElement(tag), props || {});
     const icone = (id, classe) => {
@@ -4472,7 +4626,7 @@ main, .pied { position: relative; z-index: 1; }
   // (salons.json). Sans fichier, la page garde les salons écrits dans le HTML. Les descriptions du HTML servent quand
   // un salon n'a pas de sujet sur Discord, et les emojis de saison du site (Halloween, Noël) restent affichés.
   (function salonsEnDirect() {
-    const SOURCES = ['salons.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/evenements/salons.json'];
+    const SOURCES = ['/salons.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/evenements/salons.json'];
     const ICONES = { texte: '#i-texte', annonce: '#i-annonce', forum: '#i-forum', regles: '#i-regles' };
     const LIBELLES = { texte: 'Salon textuel', annonce: 'Salon d’annonces', forum: 'Forum', regles: 'Salon des règles' };
     const ns = 'http://www.w3.org/2000/svg';
@@ -4556,7 +4710,7 @@ main, .pied { position: relative; z-index: 1; }
   // Les événements programmés sur Discord sont relevés par GitHub Actions (outils/evenements.py) et publiés sur la
   // branche « evenements », puis avec le site. Sans événement à venir, la section reste cachée.
   (function prochainsEvenements() {
-    const SOURCES = ['evenements.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/evenements/evenements.json'];
+    const SOURCES = ['/evenements.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/evenements/evenements.json'];
     const PARIS = 'Europe/Paris';
     const fmt = (o) => new Intl.DateTimeFormat('fr-FR', { timeZone: PARIS, ...o });
     const fJour = fmt({ year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -4827,16 +4981,158 @@ main, .pied { position: relative; z-index: 1; }
     } catch (e) { /* hors ligne ou bloqué : on garde le nombre écrit dans la page */ }
   })();
 
-  /* ---------- Liens internes : défilement doux ---------- */
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest && e.target.closest('a[href^="#"]');
-    if (!a || a.classList.contains('saut')) return;
-    const id = a.getAttribute('href').slice(1);
-    const cible = id && document.getElementById(id);
-    if (!cible) return;
-    e.preventDefault();
-    scrollTo({ top: cible.getBoundingClientRect().top + scrollY, behavior: reduit ? 'auto' : 'smooth' });
-  });
+  /* ---------- Le site en pages ---------- */
+  // Chaque page a son adresse (cafe-fr.com/classement/…), mais on passe de l'une à l'autre sans recharger : l'ambiance
+  // sonore continue, et les boutons Précédent et Suivant du navigateur ramènent à la page et à l'endroit quittés.
+  // Un lien vers une section (#faq, /premiers-pas/#faq) ouvre sa page puis y descend. La liste est dans #pages-du-site.
+  const pages = (() => {
+    if (!PAGES.length) return null;
+    const stylePageEl = $('#style-page');
+    const saison = () => racine.getAttribute('data-saison');
+    const variante = (p) => (p.saisons && p.saisons[saison()]) || {};
+    const nom = (p) => variante(p).nom || p.nom;
+    const resume = (p) => variante(p).resume || p.resume;
+    const parId = (id) => PAGES.find((p) => p.id === id);
+    let courante = PAGE;
+    // La page d'un élément : celle de la section qui le contient
+    function pageDe(id) {
+      const el = id && document.getElementById(id);
+      if (!el) return null;
+      return PAGES.find((p) => p.ancres.some((a) => { const s = document.getElementById(a); return s && s.contains(el); })) || null;
+    }
+    function habiller(p) {
+      document.title = variante(p).titre || p.titre;
+      const url = 'https://cafe-fr.com' + p.chemin;
+      const meta = (sel, attr, val) => { const m = $(sel); if (m) m.setAttribute(attr, val); };
+      meta('meta[name="description"]', 'content', p.description);
+      meta('meta[property="og:description"]', 'content', p.description);
+      meta('meta[property="og:title"]', 'content', p.id === 'accueil' ? 'Le Café Français' : nom(p) + ' · Le Café Français');
+      meta('meta[property="og:url"]', 'content', url);
+      meta('link[rel="canonical"]', 'href', url);
+      $$('a[data-page]').forEach((a) => { if (a.dataset.page === p.id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+      $$('[data-nom-page]').forEach((el) => { const q = parId(el.dataset.nomPage); if (q) el.textContent = nom(q); });
+      $$('[data-resume-page]').forEach((el) => { const q = parId(el.dataset.resumePage); if (q) el.textContent = resume(q); });
+      $('#fil-page').textContent = nom(p);
+      // En bas de page : la page d'avant et la page d'après (la dernière ramène à l'accueil)
+      const i = PAGES.indexOf(p), prec = PAGES[i - 1], suiv = PAGES[i + 1] || PAGES[0];
+      const lien = (q, cls, sens) => `<a class="${cls}" href="${q.chemin}" data-page="${q.id}"><small>${sens}</small><b>${q === PAGES[0] && cls === 'suite-suiv' ? "Retour à l'accueil" : nom(q)}</b><span>${resume(q)}</span></a>`;
+      $('#suite .cadre').innerHTML = (prec ? lien(prec, 'suite-prec', '← Page précédente') : '') + lien(suiv, 'suite-suiv', suiv === PAGES[0] ? 'Fin de la visite' : 'Page suivante →');
+    }
+    function montrer(p) {
+      stylePageEl.textContent = stylePage(p);
+      racine.setAttribute('data-page', p.id);
+      // Repli pour les navigateurs sans :has() : l'espace laissé par une section épinglée d'une autre page
+      $$('.pin-spacer').forEach((sp) => sp.classList.toggle('hors-page', !!sp.firstElementChild && p.ancres.indexOf(sp.firstElementChild.id) < 0));
+      habiller(p);
+      if (ST) ST.refresh();
+    }
+    // Hauteur d'un élément dans la page. La première section de la page : tout en haut, avec le fil d'Ariane.
+    function hauteur(id) {
+      const el = id && document.getElementById(id);
+      if (!el || !el.getClientRects().length) return 0;
+      const premiere = $$('main > section, main > .pin-spacer > section').find((s) => s.getClientRects().length);
+      return el === premiere ? 0 : el.getBoundingClientRect().top + scrollY;
+    }
+    function changer(p, ancre, y) {
+      courante = p;
+      montrer(p);
+      scrollTo({ top: Number.isFinite(y) ? y : hauteur(ancre), behavior: 'auto' });
+      if (!reduit) { racine.classList.remove('page-arrive'); void racine.offsetWidth; racine.classList.add('page-arrive'); }
+      // Pour les lecteurs d'écran et le clavier : on annonce la page et on place le focus sur son titre
+      const titre = p.id === 'accueil' ? $('#contenu') : $('#fil-page');
+      if (titre) titre.focus({ preventScroll: true });
+      $('#annonce-page').textContent = `Page ${nom(p)}`;
+      dispatchEvent(new CustomEvent('page', { detail: p.id }));
+    }
+    function aller(p, ancre) {
+      if (p === courante) {
+        scrollTo({ top: hauteur(ancre), behavior: reduit ? 'auto' : 'smooth' });
+        return;
+      }
+      try { history.replaceState({ ...(history.state || {}), y: scrollY }, ''); } catch (e) { /* rien */ }
+      const garder = ancre && ancre !== p.ancres[0];
+      history.pushState({ page: p.id }, '', p.chemin + (garder ? '#' + ancre : ''));
+      changer(p, garder ? ancre : '');
+    }
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest && e.target.closest('a[href]');
+      if (!a || a.classList.contains('saut') || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if ((a.target && a.target !== '_self') || a.hasAttribute('download')) return;
+      const href = a.getAttribute('href');
+      let url;
+      try { url = new URL(href, location.href); } catch (err) { return; }
+      if (url.origin !== location.origin) return;
+      const ancre = decodeURIComponent(url.hash.slice(1));
+      if (SAISONS_APERCU['#' + ancre]) return;
+      let p;
+      if (href.charAt(0) === '#') {
+        if (!ancre || !document.getElementById(ancre)) return;
+        p = pageDe(ancre) || courante;
+      } else {
+        p = pageDuChemin(url.pathname);
+        if (!p) return; // une autre partie du site (archives de l'info, mentions légales…)
+        if (ancre && pageDe(ancre)) p = pageDe(ancre);
+      }
+      e.preventDefault();
+      aller(p, ancre);
+    });
+    addEventListener('popstate', (e) => {
+      const p = pageDuChemin(location.pathname) || PAGES[0];
+      const ancre = decodeURIComponent(location.hash.slice(1));
+      const y = e.state && Number.isFinite(e.state.y) ? e.state.y : undefined;
+      if (p === courante) { scrollTo({ top: Number.isFinite(y) ? y : hauteur(ancre), behavior: 'auto' }); return; }
+      changer(p, ancre, y);
+    });
+    // Une ancre tapée à la main dans l'adresse (#classement) : sa page s'ouvre
+    addEventListener('hashchange', () => {
+      const ancre = decodeURIComponent(location.hash.slice(1));
+      if (!ancre || SAISONS_APERCU['#' + ancre]) return;
+      const p = pageDe(ancre);
+      if (!p || p === courante) { scrollTo({ top: hauteur(ancre), behavior: reduit ? 'auto' : 'smooth' }); return; }
+      const garder = ancre !== p.ancres[0];
+      history.replaceState({ page: p.id }, '', p.chemin + (garder ? '#' + ancre : ''));
+      changer(p, garder ? ancre : '');
+    });
+    // Le défilement de chaque page est retenu, pour y revenir avec le bouton Précédent
+    let attente = 0;
+    addEventListener('scroll', () => { clearTimeout(attente); attente = setTimeout(() => { try { history.replaceState({ ...(history.state || {}), page: courante.id, y: scrollY }, ''); } catch (e) { /* rien */ } }, 200); }, { passive: true });
+    addEventListener('saison', () => habiller(courante));
+    habiller(courante);
+    return { courante: () => courante, aller, nom, parId };
+  })();
+
+  /* ---------- Accueil : « Au menu », un aperçu en direct de chaque page ---------- */
+  (function auMenu() {
+    const texte = (sel) => { const el = $(sel); return el ? el.textContent.replace(/\s+/g, ' ').trim() : ''; };
+    const visible = (sel) => { const el = $(sel); return !!el && !el.hidden; };
+    const APERCUS = {
+      niveaux: () => { const n = $$('#niveaux .palier').length; return n ? `${n} paliers à grimper` : ''; },
+      evenements: () => {
+        const s = racine.getAttribute('data-saison');
+        if (s === 'noel') { const j = texte('#n-j'); return j && /^\d+$/.test(j) && +j > 0 ? `Noël dans ${j} jour${+j > 1 ? 's' : ''}` : 'Joyeux Noël au café'; }
+        if (s === 'halloween') return texte('#j-moins') || "C'est Halloween au café";
+        const t = texte('#af-titre'), j = texte('#af-jours');
+        return t && j ? `${t} : ${j.replace('-', '\u2011')}` : '';
+      },
+      grains: () => 'Booster à 10\u202f000 grains',
+      deckfr: () => '5 raretés à collectionner',
+      classement: () => { const n = texte('#top3-grains li:first-child .rg-nom'); return n ? `N°1 : ${n}` : ''; },
+      'info-du-jour': () => { const t = texte('#info-titre'); return t && !/arrive…$/.test(t) ? t : ''; },
+      equipe: () => visible('#recrute') ? 'On recrute en ce moment' : '',
+      'premiers-pas': () => { const n = texte('#nb-final'); return n ? `${n} membres t'attendent` : ''; },
+    };
+    function maj() {
+      $$('.am-carte').forEach((a) => {
+        const f = APERCUS[a.dataset.page], v = f && f(), el = $('.am-live span', a);
+        if (v && el && el.textContent !== v) el.textContent = v;
+      });
+    }
+    maj();
+    setTimeout(maj, 1500);
+    setInterval(() => { if (racine.getAttribute('data-page') === 'accueil' && !document.hidden) maj(); }, 5000);
+    addEventListener('saison', maj);
+    addEventListener('page', maj);
+  })();
 
   /* ---------- Réduire ou réactiver les animations ---------- */
   (function animations() {
@@ -4931,7 +5227,7 @@ main, .pied { position: relative; z-index: 1; }
   $$('#menu a').forEach((a) => a.addEventListener('click', () => menu(false)));
   addEventListener('click', (e) => { if (menuOuvert() && !barre.contains(e.target)) menu(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && menuOuvert()) { menu(false); menuBtn.focus(); } });
-  matchMedia('(min-width: 961px)').addEventListener('change', (e) => { if (e.matches) menu(false); });
+  matchMedia('(min-width: 1181px)').addEventListener('change', (e) => { if (e.matches) menu(false); });
   const niveau = $('.mini-tasse .niveau');
   const rubans = $$('.defile').map((el) => el.getAnimations ? el.getAnimations()[0] : null).filter(Boolean);
   const logoIncline = $('.logo-incline');

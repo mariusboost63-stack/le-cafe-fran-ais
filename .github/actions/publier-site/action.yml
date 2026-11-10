@@ -29,6 +29,9 @@ runs:
         chemins="index.html 404.html robots.txt sitemap.xml infos.json apercu.png cgu mentions-legales infos polices js"
         git cat-file -e FETCH_HEAD:cartes 2>/dev/null && chemins="$chemins cartes"
         git archive FETCH_HEAD $chemins | tar -x -C "$site"
+        # Une copie de index.html par page du site (cafe-fr.com/classement/…), avec son titre et sa description
+        git show FETCH_HEAD:outils/pages.py > "$RUNNER_TEMP/pages.py"
+        python3 "$RUNNER_TEMP/pages.py" "$site"
         for b in data:classement.json data:deckfr.json evenements:evenements.json evenements:salons.json; do
           branche="${b%%:*}"; fichier="${b#*:}"
           if git fetch -q --depth=1 origin "$branche" 2>/dev/null; then git show "FETCH_HEAD:$fichier" > "$site/$fichier" 2>/dev/null || rm -f "$site/$fichier"; fi
