@@ -19,6 +19,7 @@ import sys
 import time
 
 from classement import lire_adresse, profil, signaler
+from historique import Historique
 
 TAILLE = 10       # collectionneurs
 TIRAGES = 8       # derniers grands tirages
@@ -105,12 +106,14 @@ def lire_base(adresse):
                                   "echanges": echanges, "ventes": ventes, "grains_marche": grains_marche}
             max_rarete = max(catalogue) if catalogue else 5
             # Les meilleurs collectionneurs : le plus de cartes différentes (encore en jeu), sans les membres exclus
-            top = partie("collections", lambda: tous(
+            # (toutes les collections : la photo du jour sert aux flèches de progression)
+            toutes = partie("collections", lambda: tous(
                 "SELECT c.user_id, COUNT(DISTINCT c.carte_id) AS n, COALESCE(SUM(c.quantite), 0)"
                 " FROM cartes_collections c JOIN cartes_catalogue k ON k.id = c.carte_id AND k.actif = 1"
-                " WHERE c.quantite > 0 GROUP BY c.user_id ORDER BY n DESC, MIN(c.premiere_obtention) ASC LIMIT %s",
-                (TAILLE + len(exclus),)), [])
-            sortie["top"] = [(str(i), int(n), int(q)) for i, n, q in top if str(i) not in exclus][:TAILLE]
+                " WHERE c.quantite > 0 GROUP BY c.user_id ORDER BY n DESC, MIN(c.premiere_obtention) ASC"), [])
+            toutes = [(str(i), int(n), int(q)) for i, n, q in toutes if str(i) not in exclus]
+            sortie["collections"] = {i: n for i, n, _ in toutes}
+            sortie["top"] = toutes[:TAILLE]
             # Les derniers grands tirages : les deux raretés les plus hautes, sans les membres exclus
             grands = partie("tirages", lambda: tous(
                 "SELECT o.user_id, k.nom, oc.rarete, k.recto, o.cree_le FROM cartes_ouvertures_cartes oc"
@@ -153,14 +156,23 @@ def main():
         return profils[identifiant]
 
     total = d["chiffres"]["cartes"] or 1
-    collectionneurs = [{"rang": rang, **membre(i), "cartes": n, "pourcent": round(100 * n / total, 1), "exemplaires": q}
-                       for rang, (i, n, q) in enumerate(d.pop("top"), 1)]
+    meilleurs = d.pop("top")
+    historique = Historique(os.environ.get("HISTORIQUE"))
+    evolutions = historique.evolutions("deckfr", [(i, n) for i, n, _ in meilleurs])
+    historique.photo("deckfr", d.pop("collections"))
+    collectionneurs = []
+    for rang, ((i, n, q), evo) in enumerate(zip(meilleurs, evolutions), 1):
+        ligne = {"rang": rang, **membre(i), "cartes": n, "pourcent": round(100 * n / total, 1), "exemplaires": q}
+        if evo is not None:
+            ligne["evolution"] = evo
+        collectionneurs.append(ligne)
     grands = [{**membre(i), "carte": nom, "rarete": r, "image": img, "date": quand} for i, nom, r, img, quand in d.pop("grands")]
     donnees = {"maj": datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat(), **d,
                "collectionneurs": collectionneurs, "grands_tirages": grands}
     sortie = pathlib.Path(sys.argv[1])
     sortie.parent.mkdir(parents=True, exist_ok=True)
     sortie.write_text(json.dumps(donnees, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    historique.enregistrer()
     signaler(f"DeckFR publié : {d['chiffres']['cartes']} cartes, {len(collectionneurs)} collectionneurs, {len(grands)} grands tirages.")
     return 0
 

@@ -29,16 +29,24 @@ jobs:
           python-version: "3.12"
       - name: Installer PyMySQL
         run: pip install --quiet pymysql==1.1.1
+      # L'historique des classements (une photo par jour, identifiants hachés) sert aux flèches de progression
+      # et au champion de la semaine : on reprend celui de la branche data avant les relevés
+      - name: Reprendre l'historique
+        run: |
+          mkdir -p "$RUNNER_TEMP/out"
+          if git fetch -q --depth=1 origin data 2>/dev/null; then git show FETCH_HEAD:historique.json > "$RUNNER_TEMP/out/historique.json" 2>/dev/null || rm -f "$RUNNER_TEMP/out/historique.json"; fi
       - name: Relever le classement
         env:
           CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          HISTORIQUE: ${{ runner.temp }}/out/historique.json
         # Code 2 : rien à publier (secrets absents ou base injoignable), sans faire échouer la tâche
         run: python3 outils/classement.py "$RUNNER_TEMP/out/classement.json" || [ $? -eq 2 ]
       - name: Relever DeckFR
         env:
           CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          HISTORIQUE: ${{ runner.temp }}/out/historique.json
         run: python3 outils/deckfr.py "$RUNNER_TEMP/out/deckfr.json" || [ $? -eq 2 ]
       - name: Publier sur la branche data
         working-directory: ${{ runner.temp }}
@@ -48,7 +56,7 @@ jobs:
           [ -f out/classement.json ] || [ -f out/deckfr.json ] || { echo "Rien à publier"; exit 0; }
           # Un relevé manqué garde la version précédente de son fichier
           if git -C "$GITHUB_WORKSPACE" fetch -q --depth=1 origin data 2>/dev/null; then
-            for f in classement.json deckfr.json; do
+            for f in classement.json deckfr.json historique.json; do
               [ -f "out/$f" ] || git -C "$GITHUB_WORKSPACE" show "FETCH_HEAD:$f" > "out/$f" 2>/dev/null || rm -f "out/$f"
             done
           fi
