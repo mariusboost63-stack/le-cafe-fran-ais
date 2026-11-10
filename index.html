@@ -106,6 +106,14 @@ function stylePage(p) {
 }
 try {
   PAGES = JSON.parse(document.getElementById('pages-du-site').textContent);
+  // Arrivée par la page d'erreur d'un hébergement sans dossier par page (404.html → /?page=classement) : on remet
+  // l'adresse de la page (cafe-fr.com/classement/), sans recharger
+  var demande = /[?&]page=([a-z-]+)/.exec(location.search);
+  if (demande) {
+    var cible = PAGES.filter(function (q) { return q.id === demande[1]; })[0];
+    var reste = location.search.replace(/[?&]page=[a-z-]+/, '').replace(/^&/, '?');
+    if (cible) history.replaceState(null, '', cible.chemin + reste + location.hash);
+  }
   PAGE = pageDuChemin(location.pathname) || PAGES[0];
   var ancre = decodeURIComponent(location.hash.slice(1)), ailleurs = ancre && pageDeLAncre(ancre);
   if (ailleurs && ailleurs !== PAGE) {

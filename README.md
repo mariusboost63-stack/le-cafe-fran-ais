@@ -28,6 +28,7 @@ Le site est découpé en pages courtes, chacune avec son adresse :
 - L'accueil se termine par « Au menu » : une carte par page avec un aperçu en direct (prochain rendez-vous, n° 1 du classement, titre de l'info du jour, recrutement…).
 - Les anciennes adresses avec une ancre (`cafe-fr.com/#classement`, `#faq`…) mènent à la bonne page. Un lien vers une section d'une autre page s'écrit `/premiers-pas/#faq`.
 - La porte d'entrée ne s'affiche qu'en arrivant par l'accueil : un lien direct vers une page y mène sans détour.
+- Sur un hébergement qui n'a pas ces copies (GitHub Pages), `404.html` renvoie aussitôt une page du site vers l'accueil (`/?page=classement`), qui ouvre la bonne page et remet son adresse : le rechargement marche partout. La liste des pages y est recopiée : ajoute-y toute nouvelle page.
 - Pour la publication, `outils/pages.py` copie `index.html` dans le dossier de chaque page (`classement/index.html`…) avec le titre, la description et l'adresse de la page, pour les aperçus de liens et les moteurs de recherche. Les chemins du site sont absolus (`/js/…`, `/polices/…`, `/classement.json`) pour marcher depuis n'importe quelle page.
 - Sans JavaScript, tout reste affiché sur une seule page.
 

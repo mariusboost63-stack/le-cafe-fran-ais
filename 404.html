@@ -3,6 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+/* Les pages du site (cafe-fr.com/classement/…) sont toutes affichées par index.html. Un hébergement qui n'a pas
+   leur dossier (GitHub Pages : seule la publication Cloudflare en fait une copie) montre cette page d'erreur. Pour
+   une page du site, on file tout de suite à l'accueil, qui ouvre la bonne page et remet son adresse.
+   Même liste que dans index.html (#pages-du-site) : ajoute ici toute nouvelle page. */
+(function () {
+  var PAGES = ['niveaux', 'evenements', 'grains', 'deckfr', 'classement', 'info-du-jour', 'equipe', 'premiers-pas'];
+  var m = /^\/([a-z-]+)\/?(?:index\.html)?$/.exec(location.pathname);
+  if (m && PAGES.indexOf(m[1]) >= 0) {
+    document.documentElement.style.visibility = 'hidden';
+    location.replace('/?page=' + m[1] + location.search.replace(/^\?/, '&') + location.hash);
+  }
+})();
+</script>
 <title>Page introuvable — Le Café Français</title>
 <meta name="description" content="Cette page n'existe pas. Le café, lui, est toujours ouvert.">
 <meta name="robots" content="noindex">
