@@ -131,7 +131,8 @@ try {
   }
 }
 
-html { scrollbar-gutter: stable; }
+/* overflow-x: clip : rien ne peut élargir la page (sur mobile, le navigateur dézoomerait tout le site) */
+html { scrollbar-gutter: stable; overflow-x: clip; }
 [hidden] { display: none !important; }
 img { max-width: 100%; }
 body {
@@ -205,6 +206,7 @@ main, .pied { position: relative; z-index: 1; }
 .barre nav { display: flex; gap: 24px; }
 .barre nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--brume); transition: color .2s; }
 .barre nav a:hover { color: var(--lait); }
+@media (max-width: 1200px) { .barre nav { gap: 16px; } .barre nav a { font-size: 14.5px; } .son-texte { display: none; } .son { padding: 0 13px; } }
 @media (max-width: 960px) { .barre nav { display: none; } .marque span { font-size: 15px; } }
 .marque span { white-space: nowrap; }
 @media (max-width: 420px) { .marque { gap: 8px; } .marque span { font-size: 14px; } .mini-tasse { width: 38px; } }
@@ -237,7 +239,7 @@ main, .pied { position: relative; z-index: 1; }
   .barre .btn-petit { padding: 10px 14px; }
   .barre .son { padding: 0 11px; }
 }
-@media (max-width: 399px) { .marque span { display: none; } }
+@media (max-width: 480px) { .marque span { display: none; } }
 
 /* Boutons */
 .btn {
@@ -939,6 +941,10 @@ main, .pied { position: relative; z-index: 1; }
   .a-prix { grid-column: 2; justify-items: start; text-align: left; grid-template-columns: auto 20px auto; }
   .a-temps { grid-column: 3; margin: 0 0 0 6px; }
 }
+@media (max-width: 460px) {
+  .a-prix { grid-template-columns: auto 20px; }
+  .a-temps { grid-column: 1 / -1; margin: 5px 0 0; white-space: normal; }
+}
 .grains-carte {
   position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(28px, 5vw, 72px); padding: clamp(24px, 4vw, 56px); border-radius: 28px;
@@ -1070,7 +1076,7 @@ main, .pied { position: relative; z-index: 1; }
 .son-barres i:nth-child(2) { animation-delay: -.4s; }
 .son-barres i:nth-child(3) { animation-delay: -.7s; }
 .son-barres i:nth-child(4) { animation-delay: -.2s; }
-@media (max-width: 520px) { .son-texte { display: none; } .son { padding: 0 13px; } }
+@media (max-width: 620px) { .son-texte { display: none; } .son { padding: 0 13px; } }
 
 .son-groupe { position: relative; display: flex; align-items: center; }
 .son-groupe[hidden] { display: none; }
@@ -1347,7 +1353,8 @@ main, .pied { position: relative; z-index: 1; }
 .rg-nom { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .rg-grains { display: inline-flex; align-items: center; gap: 6px; font: 800 18px/1 var(--f-titre); font-variant-numeric: tabular-nums; }
 .rg-grains svg { width: 17px; height: 17px; color: var(--creme); }
-.top3 li:nth-child(1) .rg-grains { font-size: 23px; color: var(--ambre); }
+.top3 li:nth-child(1) .rg-grains { font-size: clamp(16px, 2.1vw, 23px); color: var(--ambre); }
+.top3 .rg-grains { flex-wrap: wrap; justify-content: center; max-width: 100%; }
 .riches-liste { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--trait); }
 .riches-liste li { display: grid; grid-template-columns: 28px 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--trait); }
 .rg-place { font: 500 13px/1 var(--f-mono); color: var(--brume); text-align: center; }
@@ -1368,6 +1375,19 @@ main, .pied { position: relative; z-index: 1; }
 .riches-legende { color: var(--brume); font-size: 15px; }
 .riches-legende b { color: var(--lait); font-variant-numeric: tabular-nums; }
 .rg-grains .i-inf { color: var(--bleu-vif); }
+@media (max-width: 480px) {
+  .top3 { gap: 8px; }
+  .top3 li { padding-inline: 6px; }
+  .top3 .rg-grains { flex-wrap: wrap; justify-content: center; gap: 4px; font-size: clamp(13px, 4vw, 15px); }
+  .top3 li:nth-child(1) .rg-grains { font-size: clamp(13.5px, 4.4vw, 17px); }
+  .riches-onglets { max-width: 100%; }
+  .riches-onglets button { padding-inline: 12px; font-size: 14px; }
+}
+@media (max-width: 360px) {
+  .riches-onglets button svg { display: none; }
+  .top3 .rg-grains svg { width: 14px; height: 14px; }
+  .top3 .rg-nom { font-size: 15px; }
+}
 @media (max-width: 860px) { .riches-grille { grid-template-columns: minmax(0, 1fr); } }
 
 /* Les prochains événements, relevés dans l'onglet « Événements » du serveur */
@@ -1410,12 +1430,11 @@ main, .pied { position: relative; z-index: 1; }
   .top3 li { padding-inline: 6px; }
   .top3 img { width: 52px; height: 52px; }
   .top3 li:nth-child(1) img { width: 66px; height: 66px; }
-  .rg-grains { font-size: 15px; }
-  .top3 li:nth-child(1) .rg-grains { font-size: 18px; }
+  .riches-liste .rg-grains { font-size: 15px; }
 }
 
 /* La petite info du jour : la gazette du comptoir */
-.gazette { padding-block: clamp(80px, 10vw, 140px); }
+.gazette { padding-block: clamp(80px, 10vw, 140px); overflow-x: clip; }
 .gazette-grille { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); grid-template-areas: "tete journal" "avant journal"; gap: clamp(28px, 4vw, 44px) clamp(32px, 6vw, 96px); align-items: start; }
 .gazette-tete { grid-area: tete; display: grid; gap: 22px; min-width: 0; }
 .gazette-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 38ch; }
