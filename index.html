@@ -2365,7 +2365,7 @@ main, .pied { position: relative; z-index: 1; }
       <div class="riches-tete" data-revele>
         <p class="surtitre">Les classements</p>
         <h2 class="h2" id="t-classement">Les champions du café</h2>
-        <p class="chapo">Les plus riches en grains, les piliers de #infini, les plus grands collectionneurs de DeckFR, les habitués du vocal et les plus fidèles au <code>/journalier</code>, relevés directement dans le bot. Les flèches montrent les places gagnées ou perdues depuis hier. <span id="riches-maj"></span></p>
+        <p class="chapo">Les plus riches en grains, les piliers de #infini, les plus grands collectionneurs de DeckFR et les plus fidèles au <code>/journalier</code>, relevés directement dans le bot. Les flèches montrent les places gagnées ou perdues depuis hier. <span id="riches-maj"></span></p>
         <div class="champion" id="champion" hidden>
           <div class="ch-avatar"></div>
           <div class="ch-texte"><p class="ch-titre"><svg aria-hidden="true"><use href="#i-trophee"/></svg><span>Champion de la semaine</span></p><p class="ch-nom"></p><p class="ch-gain"></p></div>
@@ -2377,7 +2377,6 @@ main, .pied { position: relative; z-index: 1; }
           <button type="button" role="tab" id="onglet-grains" aria-controls="panneau-grains" aria-selected="true"><svg aria-hidden="true"><use href="#i-grain"/></svg>Grains</button>
           <button type="button" role="tab" id="onglet-infini" aria-controls="panneau-infini" aria-selected="false" tabindex="-1" hidden><svg aria-hidden="true"><use href="#i-infini"/></svg>#infini</button>
           <button type="button" role="tab" id="onglet-deckfr" aria-controls="panneau-deckfr" aria-selected="false" tabindex="-1" hidden><svg aria-hidden="true"><use href="#i-cartes"/></svg>DeckFR</button>
-          <button type="button" role="tab" id="onglet-vocal" aria-controls="panneau-vocal" aria-selected="false" tabindex="-1" hidden><svg aria-hidden="true"><use href="#i-micro"/></svg>Vocal</button>
           <button type="button" role="tab" id="onglet-serie" aria-controls="panneau-serie" aria-selected="false" tabindex="-1" hidden><svg aria-hidden="true"><use href="#i-jour"/></svg>Série</button>
         </div>
         <div class="riches-panneau" id="panneau-grains" role="tabpanel" aria-labelledby="onglet-grains">
@@ -2394,11 +2393,6 @@ main, .pied { position: relative; z-index: 1; }
           <p class="riches-legende">Les plus belles collections de DeckFR, en cartes différentes. <span id="deckfr-total"></span></p>
           <ol class="top3" id="top3-deckfr"></ol>
           <ol class="riches-liste" id="liste-deckfr" start="4"></ol>
-        </div>
-        <div class="riches-panneau" id="panneau-vocal" role="tabpanel" aria-labelledby="onglet-vocal" hidden>
-          <p class="riches-legende">Les membres qui ont passé le plus de temps en vocal, en heures.</p>
-          <ol class="top3" id="top3-vocal"></ol>
-          <ol class="riches-liste" id="liste-vocal" start="4"></ol>
         </div>
         <div class="riches-panneau" id="panneau-serie" role="tabpanel" aria-labelledby="onglet-serie" hidden>
           <p class="riches-legende">Les plus longues séries de <code>/journalier</code>, en jours d'affilée.</p>
@@ -3992,7 +3986,6 @@ main, .pied { position: relative; z-index: 1; }
       grains: (x) => valeur(x.grains, '#i-grain', 'grains'),
       infini: (x) => valeur(x.nombres, '#i-infini', Number(x.nombres) > 1 ? 'nombres' : 'nombre'),
       deckfr: (x) => valeur(x.cartes, '#i-cartes', Number(x.cartes) > 1 ? 'cartes différentes' : 'carte'),
-      vocal: (x) => { const h = Math.max(1, Math.round(Number(x.minutes) / 60)); return valeur(h, '#i-micro', `heure${h > 1 ? 's' : ''} en vocal`, 'h'); },
       serie: (x) => valeur(x.jours, '#i-jour', `jour${Number(x.jours) > 1 ? 's' : ''} d'affilée`, 'j')
     };
     // La progression depuis hier : ▲ places gagnées, ▼ places perdues, ou « Nouveau »
@@ -4097,7 +4090,7 @@ main, .pied { position: relative; z-index: 1; }
         const dk = await chargerDeckfr();
         const listes = {
           grains: propre(d.classement, 'grains'), infini: propre(d.infini_classement, 'nombres'),
-          deckfr: propre(dk && dk.collectionneurs, 'cartes'), vocal: propre(d.vocal_classement, 'minutes'), serie: propre(d.serie_classement, 'jours')
+          deckfr: propre(dk && dk.collectionneurs, 'cartes'), serie: propre(d.serie_classement, 'jours')
         };
         if (!listes.grains.length) return;
         maj = Date.parse(d.maj);

@@ -1,6 +1,6 @@
 """Historique quotidien des classements, pour les flèches de progression (▲ ▼ « Nouveau ») et le champion de la semaine.
 
-Une photo par jour (heure de Paris) de chaque classement : grains, #infini, vocal, série, DeckFR, et le total des grains.
+Une photo par jour (heure de Paris) de chaque classement : grains, #infini, série, DeckFR, et le total des grains.
 Elle est gardée 9 jours dans historique.json, sur la branche « data » du dépôt, mais jamais publiée sur le site.
 Le dépôt pouvant être public, les membres n'y apparaissent que sous un identifiant haché (HMAC) dont la clé est
 tirée d'un secret du dépôt : on ne peut pas relier un total à un membre.

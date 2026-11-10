@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Classements du serveur, lus dans la base du bot et publiés sans rien de sensible : le top 10 des grains (poche et
-banque), de #infini (nombres postés), du temps en vocal et de la série de /journalier, avec la progression depuis
+banque), de #infini (nombres postés) et de la série de /journalier, avec la progression depuis
 hier (historique.py), le champion de la semaine, les chiffres de l'économie et les postes ouverts au recrutement.
 
 Lancé toutes les heures par GitHub Actions (.github/workflows/classement.yml). Le résultat, classement.json,
@@ -78,8 +78,8 @@ def lire_base(adresse):
             # Le salon #infini : nombres postés par membre, et le total de la suite
             d["infini"] = partie("Classement #infini", "SELECT id, infiniStats FROM users WHERE infiniStats > 0", {}, lambda l: {str(i): int(n) for i, n in l})
             d["infini_total"] = partie("Compteur #infini", "SELECT COALESCE(SUM(infiniStats), 0) FROM users", None, lambda l: int(l[0][0]))
-            # Le temps passé en vocal (minutes), et la série de /journalier
-            d["vocal"] = partie("Temps en vocal", "SELECT id, minutes FROM gains_vocal_minutes WHERE minutes > 0", {}, lambda l: {str(i): int(m) for i, m in l})
+            # La série de /journalier. (La table gains_vocal_minutes ne garde que les minutes en cours avant le prochain gain,
+            # pas le temps total en vocal : elle ne peut pas servir de classement.)
             d["serie"] = partie("Séries", "SELECT id, streak FROM users WHERE streak > 0 AND blacklistGrains IS NULL", {}, lambda l: {str(i): int(n) for i, n in l})
             # Les postes ouverts au recrutement
             d["recrutement"] = partie("Recrutement", "SELECT poste, vague FROM recrutement WHERE ouvert = 1", [],
@@ -161,7 +161,6 @@ def main():
     champion = historique.plus_forte_hausse("grains", fortunes, 7)
     classement = classer("grains", fortunes, "grains")
     classement_infini = classer("infini", d["infini"], "nombres")
-    classement_vocal = classer("vocal", d["vocal"], "minutes", d["exclus"])
     classement_serie = classer("serie", d["serie"], "jours")
     # L'économie du café : les grains en circulation, la part en banque, et l'évolution sur 7 jours
     total = sum(fortunes.values())
@@ -177,7 +176,7 @@ def main():
     donnees = {"maj": maj, "classement": classement, "economie": economie}
     if d["infini_total"] is not None:
         donnees["infini"] = d["infini_total"]
-    for cle, liste in (("infini_classement", classement_infini), ("vocal_classement", classement_vocal), ("serie_classement", classement_serie)):
+    for cle, liste in (("infini_classement", classement_infini), ("serie_classement", classement_serie)):
         if liste:
             donnees[cle] = liste
     if champion:
@@ -186,7 +185,7 @@ def main():
     donnees["recrutement"] = d["recrutement"]
     sortie.write_text(json.dumps(donnees, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     historique.enregistrer()
-    signaler(f"Classements publiés : {len(classement)} (grains), {len(classement_infini)} (#infini), {len(classement_vocal)} (vocal), "
+    signaler(f"Classements publiés : {len(classement)} (grains), {len(classement_infini)} (#infini), "
              f"{len(classement_serie)} (série) ; champion de la semaine : {'oui' if champion else 'pas encore'} ; postes ouverts : {len(d['recrutement'])}.")
     return 0
 
