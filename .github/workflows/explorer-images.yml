@@ -1,0 +1,52 @@
+# TEMPORAIRE (branche de travail uniquement) : regarde où sont les images des cartes DeckFR, demandé par le
+# propriétaire du dépôt. Lit seulement les colonnes recto et verso du catalogue, en lecture seule.
+name: Explorer les images des cartes (temporaire)
+
+on:
+  push:
+    branches: [claude/trusting-shannon-sdtc2p]
+    paths: [.github/workflows/explorer-images.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  explorer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet pymysql==1.1.1
+      - name: Images des cartes
+        env:
+          CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
+        shell: python
+        run: |
+          import os, urllib.parse, urllib.request, pymysql
+          u = urllib.parse.urlsplit(os.environ["CAFE_DB_URL"].strip().removeprefix("jdbc:"))
+          cx = pymysql.connect(host=u.hostname, port=u.port or 3306, database=u.path.strip("/"), user=urllib.parse.unquote(u.username),
+                               password=urllib.parse.unquote(u.password or ""), connect_timeout=10, read_timeout=20, charset="utf8mb4")
+          with cx.cursor() as c:
+              try: c.execute("SET SESSION TRANSACTION READ ONLY")
+              except pymysql.MySQLError: pass
+              a_tester = []
+              for col in ("recto", "verso"):
+                  c.execute(f"SELECT COUNT(*), SUM({col} IS NOT NULL AND {col} <> ''), MIN(CHAR_LENGTH({col})), MAX(CHAR_LENGTH({col})) FROM cartes_catalogue")
+                  print(f"## {col} : lignes, remplies, longueur min, max =", c.fetchone())
+                  c.execute(f"SELECT LEFT({col}, 30) AS debut, COUNT(*) FROM cartes_catalogue GROUP BY LEFT({col}, 30) ORDER BY COUNT(*) DESC LIMIT 8")
+                  for ligne in c.fetchall(): print("   début :", ligne)
+                  c.execute(f"SELECT id, rarete, {col} FROM cartes_catalogue WHERE {col} IS NOT NULL AND {col} <> '' ORDER BY id LIMIT 4")
+                  exemples = c.fetchall()
+                  for ligne in exemples: print("   exemple :", ligne)
+                  a_tester += [str(v) for _, _, v in exemples[:1]]
+              # Une adresse web répond-elle ?
+              for v in a_tester:
+                  if v.startswith("http"):
+                      try:
+                          with urllib.request.urlopen(urllib.request.Request(v, method="HEAD", headers={"User-Agent": "cafe-fr.com"}), timeout=10) as r:
+                              print("   réponse :", r.status, r.headers.get("Content-Type"))
+                      except Exception as e:
+                          print("   réponse : erreur", type(e).__name__, getattr(e, "code", ""))
+          cx.close()
