@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-11",
+      "publication": "2026-11-11T12:00:00+01:00",
+      "theme": "Sport",
+      "titre": "Route du Rhum : record battu et victoire de Corentin Horeau en Imoca",
+      "texte": "Le skipper Corentin Horeau (MACSF) a remporté la Route du Rhum dans la catégorie des monocoques Imoca, en franchissant la ligne à Pointe-à-Pitre, en Guadeloupe, dans la nuit de mardi à mercredi. Il améliore nettement le record de la catégorie. Chez les Ultim, Tom Laperche s'était imposé le 8 novembre, en battant lui aussi le record.",
+      "source": {
+        "nom": "Outre-mer La 1ère",
+        "url": "https://la1ere.franceinfo.fr/route-du-rhum-2026-chez-les-imoca-corentin-horeau-remporte-la-course-et-atomise-le-record-1756221.html"
+      }
+    },
+    {
       "date": "2026-11-10",
       "publication": "2026-11-10T12:00:00+01:00",
       "theme": "Économie",
