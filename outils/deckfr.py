@@ -104,7 +104,9 @@ def lire_base(adresse):
                 "SELECT COUNT(*), COALESCE(SUM(prix), 0) FROM cartes_marches WHERE acheteur IS NOT NULL AND acheteur <> ''")), (0, 0))
             sortie["chiffres"] = {"cartes": total, "joueurs": joueurs, "boosters": boosters, "tirees": nb_tirees,
                                   "echanges": echanges, "ventes": ventes, "grains_marche": grains_marche}
-            max_rarete = max(catalogue) if catalogue else 5
+            # Les deux raretés les plus hautes qu'on peut vraiment tirer : une rareté qui n'est jamais sortie d'un booster
+            # (cartes spéciales, offertes à part) ne vide pas la liste des grands tirages
+            max_rarete = max((r for r, n in tirees.items() if n), default=max(catalogue) if catalogue else 5)
             # Les meilleurs collectionneurs : le plus de cartes différentes (encore en jeu), sans les membres exclus
             # (toutes les collections : la photo du jour sert aux flèches de progression)
             toutes = partie("collections", lambda: tous(
