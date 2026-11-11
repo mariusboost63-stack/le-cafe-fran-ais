@@ -59,7 +59,7 @@
  {"id": "niveaux", "chemin": "/niveaux/", "nom": "Niveaux", "titre": "Niveaux · Le Café Français", "description": "Les niveaux du Café Français : gagne de l'XP en discutant et en vocal, et débloque un rôle et des avantages à chaque palier.", "resume": "Grimpe les paliers en discutant et débloque des rôles.", "ancres": ["niveaux"]},
  {"id": "evenements", "chemin": "/evenements/", "nom": "Événements", "titre": "Événements · Le Café Français", "description": "Les grands rendez-vous du Café Français, Halloween et Noël, et les animations de tous les jours : concours, #infini, confessions.", "resume": "Les grands rendez-vous et les animations du café.", "saisons": {"noel": {"nom": "Noël", "titre": "Noël au café · Le Café Français", "resume": "Le calendrier de l'Avent et le café en habits de fête."}, "halloween": {"nom": "Halloween", "titre": "Halloween au café · Le Café Français", "resume": "Les quêtes, les citrouilles et le café déguisé."}}, "ancres": ["evenements", "noel", "halloween", "prochains"]},
  {"id": "grains", "chemin": "/grains/", "nom": "Grains", "titre": "Grains et boutique · Le Café Français", "description": "Les grains, la monnaie du Café Français : comment en gagner et ce qu'on achète à la boutique.", "resume": "La monnaie du café, comment en gagner et la boutique.", "ancres": ["grains"]},
- {"id": "deckfr", "chemin": "/deckfr/", "nom": "DeckFR", "titre": "DeckFR, le jeu de cartes · Le Café Français", "description": "DeckFR, le jeu de cartes du Café Français : boosters, cinq raretés, collection, échanges et ventes.", "resume": "Le jeu de cartes du bot : ouvre, collectionne, échange.", "ancres": ["deckfr"]},
+ {"id": "deckfr", "chemin": "/deckfr/", "nom": "DeckFR", "titre": "DeckFR, le jeu de cartes · Le Café Français", "description": "DeckFR, le jeu de cartes du Café Français : boosters, sept raretés, collection, échanges et ventes.", "resume": "Le jeu de cartes du bot : ouvre, collectionne, échange.", "ancres": ["deckfr"]},
  {"id": "classement", "chemin": "/classement/", "nom": "Classement", "titre": "Classement · Le Café Français", "description": "Les champions du Café Français : les plus riches en grains, les piliers de #infini, les collectionneurs de DeckFR et les plus fidèles.", "resume": "Les plus riches, les plus fidèles, les collectionneurs.", "ancres": ["classement"]},
  {"id": "info-du-jour", "chemin": "/info-du-jour/", "nom": "Info du jour", "titre": "L'info du jour · Le Café Français", "description": "La petite info du jour du Café Français, publiée chaque jour à midi.", "resume": "Une petite actu, chaque jour à midi.", "ancres": ["info"]},
  {"id": "equipe", "chemin": "/equipe/", "nom": "Équipe", "titre": "L'équipe · Le Café Français", "description": "L'équipe du Café Français : gérants, administrateurs, responsables et modérateurs.", "resume": "Ceux qui font tourner le café.", "ancres": ["equipe"]},
@@ -174,7 +174,7 @@ try {
   --b-gourmand: #e0b793;
   /* raretés de DeckFR */
   --sapin: #2fa866; --or: #f0c04a;
-  --rar-1: #c5ccd6; --rar-2: #4b9bff; --rar-3: #b26cff; --rar-4: #f5c040; --rar-5: #ff5a7f;
+  --rar-1: #c5ccd6; --rar-2: #4b9bff; --rar-3: #b26cff; --rar-4: #f5c040; --rar-5: #ff5a7f; --rar-6: #1fbf98; --rar-7: #ff4fd8;
   --holo: linear-gradient(135deg, #ff5f6d, #ffb347, #f9f871, #5ef2a0, #4fd1ff, #a77bff, #ff6fd8);
 
   --f-titre: "Bricolage Grotesque", "Arial Black", "Helvetica Neue", system-ui, sans-serif;
@@ -569,7 +569,7 @@ main, .pied { position: relative; z-index: 1; }
 /* Les raretés */
 .dk-raretes { grid-column: 1 / -1; display: grid; gap: 16px; }
 .dk-titre { font: 800 var(--t-h3)/1.1 var(--f-titre); letter-spacing: -.01em; }
-.dk-echelle { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.dk-echelle { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
 .dk-echelle li { position: relative; display: grid; gap: 6px; padding: 18px 16px 16px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--r) 45%, var(--trait)); background: linear-gradient(to bottom, color-mix(in srgb, var(--r) 14%, transparent), transparent 70%); min-width: 0; }
 .dk-echelle i { width: 26px; height: 6px; border-radius: 3px; background: var(--r); }
 .dk-echelle .dk-mythique i { background: var(--holo); }
@@ -608,6 +608,63 @@ main, .pied { position: relative; z-index: 1; }
 .dk-nouvelles span { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--r); }
 .dk-maj { color: var(--brume); font-size: 14px; }
 .riches-onglets button[hidden] { display: none; }
+
+/* DeckFR : les raretés bonus (Mystère, Spécial) et la galerie de toutes les cartes */
+.dk-echelle .dk-bonus { border-style: dashed; }
+.dk-echelle .dk-special i { background: linear-gradient(90deg, var(--rar-7), #ffd1f4, var(--rar-7)); }
+.dk-catalogue { grid-column: 1 / -1; display: grid; gap: 18px; min-width: 0; }
+.dk-catalogue[hidden] { display: none; }
+.dk-cat-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 24px; }
+.dk-cat-tete p { color: var(--brume); font-size: 15px; }
+.dk-cat-nb { font: 500 14px/1 var(--f-mono); color: var(--brume); margin-left: 6px; }
+.dk-cat-outils { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.dk-filtres { display: flex; flex-wrap: wrap; gap: 8px; }
+.dk-filtre {
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 13px; border-radius: 999px; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--r) 45%, var(--trait)); background: transparent; color: var(--r); font: 600 14px/1 var(--f-texte);
+  transition: background-color .2s, color .2s;
+}
+.dk-filtre span { font: 500 12.5px/1 var(--f-mono); color: var(--brume); }
+.dk-filtre:hover { background: color-mix(in srgb, var(--r) 12%, transparent); }
+.dk-filtre[aria-pressed="true"] { background: var(--r); border-color: var(--r); color: var(--nuit); }
+.dk-filtre[aria-pressed="true"] span { color: color-mix(in srgb, var(--nuit) 70%, transparent); }
+.dk-filtre:focus-visible { outline: 2px solid var(--lait); outline-offset: 2px; }
+.dk-cherche input {
+  width: min(260px, 100%); box-sizing: border-box; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--trait);
+  background: var(--nuit-2); color: var(--lait); font: 400 15px/1.2 var(--f-texte);
+}
+.dk-cherche input:focus { outline: 2px solid var(--lait); outline-offset: 2px; }
+.dk-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 14px; }
+.dk-grille li { display: grid; gap: 6px; min-width: 0; align-content: start; }
+.dk-grille b { font-weight: 600; font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
+.dk-grille span { font: 500 12.5px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--r); }
+.dk-grille .dk-mythique > span { background: var(--holo); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.dk-cat-carte { position: relative; display: block; width: 100%; aspect-ratio: 400 / 581; padding: 0; border: 0; background: none; cursor: pointer; perspective: 900px; }
+.dk-face {
+  position: absolute; inset: 0; border-radius: 6% / 4.2%; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--r) 25%, var(--nuit-2)), var(--nuit)); box-shadow: 0 10px 18px -10px rgb(0 0 0 / .7);
+  transition: rotate .6s cubic-bezier(.3, 1.2, .5, 1);
+}
+.dk-face img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.dk-verso { rotate: y 180deg; }
+.dk-cat-carte[aria-pressed="true"] .dk-recto { rotate: y -180deg; }
+.dk-cat-carte[aria-pressed="true"] .dk-verso { rotate: y 0deg; }
+.dk-cat-carte:hover .dk-face { box-shadow: 0 16px 26px -12px rgb(0 0 0 / .8), 0 0 0 2px var(--r); }
+.dk-cat-carte:focus-visible { outline: 2px solid var(--r); outline-offset: 4px; border-radius: 8px; }
+.dk-vide { color: var(--brume); }
+.dk-plus { justify-self: center; }
+@media (max-width: 340px) { .dk-grille, .dk-nouvelles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.dk-grands li:has(.dk-vignette) { grid-template-columns: 38px minmax(0, 1fr) 34px auto; }
+.dk-grands .dk-vignette { width: 34px; border-width: 1px; }
+@media (max-width: 560px) {
+  .dk-grille, .dk-nouvelles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 10px; }
+  .dk-grille b, .dk-nouvelles b { font-size: 13.5px; }
+  .dk-grille span { font-size: 11px; letter-spacing: .05em; }
+  .dk-cherche, .dk-cherche input { width: 100%; }
+  .dk-grands li:has(.dk-vignette) { grid-template-columns: 34px minmax(0, 1fr) 30px; }
+  .dk-grands li:has(.dk-vignette) time { grid-column: 2 / -1; }
+  .dk-grands .dk-vignette { width: 30px; }
+}
 
 /* Noël */
 .noel { position: relative; overflow: hidden; padding-block: clamp(72px, 9vw, 128px); }
@@ -2713,18 +2770,20 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       </div>
       <ol class="dk-etapes">
         <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Chaque booster contient 5 cartes, à ouvrir avec <code>/ouverture</code>. Des boosters gratuits se rechargent avec le temps, et la boutique en vend à 10&nbsp;000 grains, sans limite.</p></li>
-        <li><span class="dk-num">2</span><h3>Complète ta collection</h3><p><b class="dk-total">150</b> cartes à réunir, réparties en cinq raretés. Tes doublons te servent à échanger ou à vendre.</p></li>
+        <li><span class="dk-num">2</span><h3>Complète ta collection</h3><p><b class="dk-total">156</b> cartes à réunir, réparties en sept raretés, dont deux raretés bonus. Tes doublons te servent à échanger ou à vendre.</p></li>
         <li><span class="dk-num">3</span><h3>Une garantie pour les plus rares</h3><p>Plus tu ouvres de boosters sans tomber sur une carte légendaire ou mythique, plus elle se rapproche&nbsp;: le jeu finit par te la garantir.</p></li>
         <li><span class="dk-num">4</span><h3>Échange et vends</h3><p>Propose un échange à un membre (les deux confirment avant que les cartes changent de main), ou mets une carte en vente contre des grains.</p></li>
       </ol>
       <div class="dk-raretes" data-revele>
-        <h3 class="dk-titre">Les cinq raretés</h3>
+        <h3 class="dk-titre">Les sept raretés</h3>
         <ol class="dk-echelle" id="dk-echelle">
           <li style="--r: var(--rar-1)"><i aria-hidden="true"></i><b>Commun</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
           <li style="--r: var(--rar-2)"><i aria-hidden="true"></i><b>Rare</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
           <li style="--r: var(--rar-3)"><i aria-hidden="true"></i><b>Épique</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
           <li style="--r: var(--rar-4)"><i aria-hidden="true"></i><b>Légendaire</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
           <li class="dk-mythique" style="--r: var(--rar-5)"><i aria-hidden="true"></i><b>Mythique</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
+          <li class="dk-bonus" style="--r: var(--rar-6)"><i aria-hidden="true"></i><b>Mystère</b><span class="dk-nb"></span><span class="dk-taux">Rareté bonus</span></li>
+          <li class="dk-bonus dk-special" style="--r: var(--rar-7)"><i aria-hidden="true"></i><b>Spécial</b><span class="dk-nb"></span><span class="dk-taux">Rareté bonus</span></li>
         </ol>
         <p class="dk-note" id="dk-note">Les chiffres du jeu arrivent directement du bot.</p>
       </div>
@@ -2741,6 +2800,19 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           </div>
         </div>
         <p class="dk-maj" id="dk-maj"></p>
+      </div>
+      <div class="dk-catalogue" id="dk-catalogue" hidden>
+        <div class="dk-cat-tete">
+          <h3 class="dk-titre">Toutes les cartes<span class="dk-cat-nb" id="dk-cat-nb"></span></h3>
+          <p>Clique sur une carte pour la retourner.</p>
+        </div>
+        <div class="dk-cat-outils">
+          <div class="dk-filtres" id="dk-filtres" role="group" aria-label="Filtrer par rareté"></div>
+          <label class="dk-cherche"><span class="sr">Chercher une carte</span><input type="search" id="dk-cherche" placeholder="Chercher une carte…" autocomplete="off"></label>
+        </div>
+        <ul class="dk-grille" id="dk-grille"></ul>
+        <p class="dk-vide" id="dk-vide" hidden>Aucune carte ne porte ce nom.</p>
+        <button class="btn btn-ligne btn-petit dk-plus" id="dk-plus" type="button" hidden>Voir plus de cartes</button>
       </div>
     </div>
   </section>
@@ -2877,7 +2949,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         <li><a class="am-carte" href="/niveaux/" data-page="niveaux" style="--c: var(--bleu-vif)"><span class="am-num" aria-hidden="true">1</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-etoile"/></svg></span><h3 data-nom-page="niveaux">Niveaux</h3><p data-resume-page="niveaux">Grimpe les paliers en discutant et débloque des rôles.</p><span class="am-live"><i aria-hidden="true"></i><span>10 paliers à grimper</span></span></a></li>
         <li><a class="am-carte" href="/evenements/" data-page="evenements" style="--c: var(--rouge)"><span class="am-num" aria-hidden="true">2</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-cadeau"/></svg></span><h3><span class="seulement-normal">Événements</span><span class="seulement-noel">Noël</span><span class="seulement-halloween">Halloween</span></h3><p><span class="seulement-normal">Les grands rendez-vous et les animations du café.</span><span class="seulement-noel">Le calendrier de l'Avent et le café en habits de fête.</span><span class="seulement-halloween">Les quêtes, les citrouilles et le café déguisé.</span></p><span class="am-live"><i aria-hidden="true"></i><span>Le prochain rendez-vous</span></span></a></li>
         <li><a class="am-carte" href="/grains/" data-page="grains" style="--c: var(--creme)"><span class="am-num" aria-hidden="true">3</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-grain"/></svg></span><h3 data-nom-page="grains">Grains</h3><p data-resume-page="grains">La monnaie du café, comment en gagner et la boutique.</p><span class="am-live"><i aria-hidden="true"></i><span>Booster à 10&#8239;000 grains</span></span></a></li>
-        <li><a class="am-carte" href="/deckfr/" data-page="deckfr" style="--c: var(--rar-3)"><span class="am-num" aria-hidden="true">4</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-cartes"/></svg></span><h3 data-nom-page="deckfr">DeckFR</h3><p data-resume-page="deckfr">Le jeu de cartes du bot : ouvre, collectionne, échange.</p><span class="am-live"><i aria-hidden="true"></i><span>5 raretés à collectionner</span></span></a></li>
+        <li><a class="am-carte" href="/deckfr/" data-page="deckfr" style="--c: var(--rar-3)"><span class="am-num" aria-hidden="true">4</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-cartes"/></svg></span><h3 data-nom-page="deckfr">DeckFR</h3><p data-resume-page="deckfr">Le jeu de cartes du bot : ouvre, collectionne, échange.</p><span class="am-live"><i aria-hidden="true"></i><span>7 raretés à collectionner</span></span></a></li>
         <li><a class="am-carte" href="/classement/" data-page="classement" style="--c: var(--or)"><span class="am-num" aria-hidden="true">5</span><span class="am-ico" aria-hidden="true"><svg viewBox="0 0 40 26"><use href="#i-couronne"/></svg></span><h3 data-nom-page="classement">Classement</h3><p data-resume-page="classement">Les plus riches, les plus fidèles, les collectionneurs.</p><span class="am-live"><i aria-hidden="true"></i><span>Qui est en tête&nbsp;?</span></span></a></li>
         <li><a class="am-carte" href="/info-du-jour/" data-page="info-du-jour" style="--c: var(--rouge)"><span class="am-num" aria-hidden="true">6</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-annonce"/></svg></span><h3 data-nom-page="info-du-jour">Info du jour</h3><p data-resume-page="info-du-jour">Une petite actu, chaque jour à midi.</p><span class="am-live"><i aria-hidden="true"></i><span>L'info de midi</span></span></a></li>
         <li><a class="am-carte" href="/equipe/" data-page="equipe" style="--c: var(--vert)"><span class="am-num" aria-hidden="true">7</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-perso"/></svg></span><h3 data-nom-page="equipe">Équipe</h3><p data-resume-page="equipe">Ceux qui font tourner le café.</p><span class="am-live"><i aria-hidden="true"></i><span>Gérants, admins et responsables</span></span></a></li>
@@ -4297,16 +4369,15 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   /* ---------- DeckFR : le jeu de cartes du bot ---------- */
   // Les chiffres du jeu sont relevés dans la base du bot par GitHub Actions (outils/deckfr.py) et publiés sur la
   // branche « data » (deckfr.json), puis avec le site. Sans fichier, la section garde son texte et ses raretés.
-  // Noms des raretés, du niveau 1 au niveau 5 (comme dans le bot)
-  const RARETES = ['Commun', 'Rare', 'Épique', 'Légendaire', 'Mythique'];
-  // Le dossier des images des cartes : la base du bot ne donne que le nom du fichier (« Charlemagne_recto_….png »).
-  // Les fichiers déposés dans le dossier cartes/ du dépôt sont publiés avec le site.
-  const IMAGES_CARTES = '/cartes/';
-  const imageCarte = (x) => {
-    const v = String(x || '');
-    if (/^https:\/\//.test(v)) return v;
-    return /^[\w.-]{1,120}\.(png|jpe?g|webp|gif)$/i.test(v) ? IMAGES_CARTES + encodeURIComponent(v) : '';
-  };
+  // Noms des raretés, du niveau 1 au niveau 7, comme dans le bot. Mystère (6) et Spécial (7) sont des raretés bonus.
+  const RARETES = ['Commun', 'Rare', 'Épique', 'Légendaire', 'Mythique', 'Mystère', 'Spécial'];
+  const BONUS = new Set([6, 7]);
+  const nomRarete = (r) => RARETES[Number(r) - 1] || `Rareté ${r}`;
+  const couleurRarete = (r) => `var(--rar-${Math.min(RARETES.length, Math.max(1, Number(r) || 1))})`;
+  // Les images des cartes, tirées du fichier des cartes du bot : cartes/<nom-de-la-carte>-recto.webp et -verso.webp
+  // (le nom sans accents ni signes, « Aliénor d'Aquitaine » → alienor-d-aquitaine). La liste est dans cartes/catalogue.json.
+  const slugCarte = (nom) => String(nom || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const imageCarte = (nom, face = 'recto') => (slugCarte(nom) ? `/cartes/${slugCarte(nom)}-${face}.webp` : '');
   let deckfrPromesse = null, deckfrLu = 0;
   function chargerDeckfr() {
     if (!deckfrPromesse || Date.now() - deckfrLu > 60000) {
@@ -4338,8 +4409,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   (function deckfr() {
     const pf = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
     const ns = 'http://www.w3.org/2000/svg';
-    const couleur = (r) => `var(--rar-${Math.min(5, Math.max(1, Number(r) || 1))})`;
-    const nomRarete = (r) => RARETES[Number(r) - 1] || `Rareté ${r}`;
+    const couleur = couleurRarete;
     const el = (tag, props) => Object.assign(document.createElement(tag), props || {});
     // La tasse du café, à la place d'une image de carte absente
     function tasse() {
@@ -4350,7 +4420,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     }
     function vignette(x) {
       const v = el('div', { className: 'dk-vignette' });
-      const adresse = imageCarte(x.image);
+      const adresse = imageCarte(x.nom);
       if (adresse) {
         const img = el('img', { src: adresse, alt: '', loading: 'lazy', decoding: 'async', referrerPolicy: 'no-referrer' });
         img.addEventListener('error', () => img.replaceWith(tasse()), { once: true });
@@ -4369,7 +4439,8 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         const li = lignes[Number(x.niveau) - 1];
         if (!li || !Number.isFinite(Number(x.cartes))) return;
         $('.dk-nb', li).textContent = `${nf.format(x.cartes)} carte${x.cartes > 1 ? 's' : ''}`;
-        if (Number.isFinite(Number(x.tirage)) && x.tirage !== null) $('.dk-taux', li).textContent = `${pf.format(x.tirage)} % des tirages`;
+        if (BONUS.has(Number(x.niveau))) $('.dk-taux', li).textContent = Number(x.tirage) > 0 ? `Bonus · ${pf.format(x.tirage)} % des tirages` : 'Rareté bonus';
+        else if (Number.isFinite(Number(x.tirage)) && x.tirage !== null) $('.dk-taux', li).textContent = `${pf.format(x.tirage)} % des tirages`;
       });
       if (Number(c.tirees) > 0) $('#dk-note').textContent = `Les pourcentages sont relevés sur les ${nf.format(c.tirees)} cartes déjà sorties des boosters.`;
       // Les chiffres du jeu
@@ -4386,7 +4457,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         const p = el('p');
         p.append(el('b', { textContent: String(x.nom || 'Membre') }), ' a tiré ', el('span', { className: 'dk-nomcarte', textContent: String(x.carte) }), ` · ${nomRarete(x.rarete)}`);
         const t = el('time', { textContent: ilYa(x.date) }); if (x.date) t.dateTime = x.date;
-        li.append(av, p, t);
+        li.append(av, p, vignette({ nom: x.carte }), t);
         return li;
       });
       $('#dk-grands').replaceChildren(...grands);
@@ -4407,6 +4478,73 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     }
     charger();
     setInterval(() => { if (!document.hidden) charger(); }, 10 * 60000);
+  })();
+
+  /* ---------- DeckFR : toutes les cartes, recto et verso (cartes/catalogue.json et les images du bot) ---------- */
+  // Les plus rares d'abord. Un filtre par rareté, une recherche par nom, 24 cartes à la fois ; un clic retourne la
+  // carte (son verso ne se charge qu'à ce moment-là).
+  (function catalogueDeckfr() {
+    const bloc = $('#dk-catalogue');
+    if (!bloc) return;
+    const grille = $('#dk-grille'), plus = $('#dk-plus'), cherche = $('#dk-cherche'), filtres = $('#dk-filtres'), vide = $('#dk-vide');
+    const PAS = 24;
+    const simple = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    let cartes = [], filtre = 0, montrees = PAS;
+    const el = (tag, props) => Object.assign(document.createElement(tag), props || {});
+    function carte(c) {
+      const li = el('li');
+      li.style.setProperty('--r', couleurRarete(c.rarete));
+      if (c.rarete === 5) li.classList.add('dk-mythique');
+      const bouton = el('button', { type: 'button', className: 'dk-cat-carte' });
+      bouton.setAttribute('aria-pressed', 'false');
+      bouton.setAttribute('aria-label', `${c.nom}, ${nomRarete(c.rarete)}. Retourner la carte`);
+      const recto = el('img', { src: imageCarte(c.nom), alt: '', loading: 'lazy', decoding: 'async', width: 400, height: 581 });
+      const verso = el('img', { alt: '', decoding: 'async', width: 400, height: 581 });
+      const face = (cls, img) => { const s = el('span', { className: 'dk-face ' + cls }); s.append(img); return s; };
+      bouton.append(face('dk-recto', recto), face('dk-verso', verso));
+      bouton.addEventListener('click', () => {
+        if (!verso.getAttribute('src')) verso.src = imageCarte(c.nom, 'verso');
+        bouton.setAttribute('aria-pressed', String(bouton.getAttribute('aria-pressed') !== 'true'));
+      });
+      li.append(bouton, el('b', { textContent: c.nom }), el('span', { textContent: nomRarete(c.rarete) }));
+      return li;
+    }
+    function afficher() {
+      const q = simple(cherche.value.trim());
+      const liste = cartes.filter((c) => (!filtre || c.rarete === filtre) && (!q || simple(c.nom).includes(q)));
+      grille.replaceChildren(...liste.slice(0, montrees).map(carte));
+      const reste = liste.length - montrees;
+      plus.hidden = reste <= 0;
+      plus.textContent = `Voir plus de cartes (encore ${nf.format(reste)})`;
+      vide.hidden = liste.length > 0;
+    }
+    function choisir(niveau) {
+      filtre = niveau; montrees = PAS;
+      $$('button', filtres).forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.niveau) === niveau)));
+      afficher();
+    }
+    plus.addEventListener('click', () => { montrees += PAS; afficher(); });
+    cherche.addEventListener('input', () => { montrees = PAS; afficher(); });
+    fetch('/cartes/catalogue.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (!d || !Array.isArray(d.cartes) || !d.cartes.length) return;
+      cartes = d.cartes.filter((c) => c && c.nom && Number.isInteger(c.rarete))
+        .sort((a, b) => b.rarete - a.rarete || String(a.nom).localeCompare(String(b.nom), 'fr'));
+      const compte = (n) => cartes.filter((c) => c.rarete === n).length;
+      const bouton = (niveau, texte, n) => {
+        const b = el('button', { type: 'button', className: 'dk-filtre' });
+        b.dataset.niveau = niveau;
+        b.style.setProperty('--r', niveau ? couleurRarete(niveau) : 'var(--lait)');
+        b.append(texte, el('span', { textContent: nf.format(n) }));
+        b.addEventListener('click', () => choisir(niveau));
+        return b;
+      };
+      const niveaux = [...new Set(cartes.map((c) => c.rarete))].sort((a, b) => a - b);
+      filtres.replaceChildren(bouton(0, 'Toutes', cartes.length), ...niveaux.map((n) => bouton(n, nomRarete(n), compte(n))));
+      $('#dk-cat-nb').textContent = nf.format(cartes.length);
+      bloc.hidden = false;
+      choisir(0);
+      if (anime) ST.refresh();
+    }).catch(() => { /* sans catalogue, la galerie reste cachée */ });
   })();
 
   /* ---------- L'équipe : on recrute, présence, fiches au dos des badges, carrousel sur mobile ---------- */
@@ -5302,7 +5440,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         return t && j ? `${t} : ${j.replace('-', '\u2011')}` : '';
       },
       grains: () => 'Booster à 10\u202f000 grains',
-      deckfr: () => '5 raretés à collectionner',
+      deckfr: () => '7 raretés à collectionner',
       classement: () => { const n = texte('#top3-grains li:first-child .rg-nom'); return n ? `N°1 : ${n}` : ''; },
       'info-du-jour': () => { const t = texte('#info-titre'); return t && !/arrive…$/.test(t) ? t : ''; },
       equipe: () => visible('#recrute') ? 'On recrute en ce moment' : '',
