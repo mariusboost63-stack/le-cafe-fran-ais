@@ -2571,7 +2571,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           <div class="avis-carte"><img src="/cartes/la-mascotte-recto-floue.webp" alt="La carte de la Mascotte d'Or, floutée" width="400" height="581" loading="lazy" decoding="async"><span class="avis-tampon" id="avis-tampon" hidden>Trouvée</span></div>
           <h3 class="avis-titre" id="avis-titre">La Mascotte d'Or</h3>
           <p class="avis-texte">Une carte en or, unique, de rareté Spécial, cachée dans les boosters DeckFR. Un seul gagnant&nbsp;: le premier qui la tire.</p>
-          <p class="avis-prime"><small>Récompense</small><b>5 boosts Nitro</b></p>
+          <p class="avis-prime"><small>Récompense</small><b>5 Nitro Boosts</b></p>
           <p class="avis-etat" id="avis-etat">Pas encore trouvée&nbsp;: ouvre tes boosters avec <code>/ouverture</code>.</p>
         </article>
         <article class="affiche" aria-labelledby="af-titre">
@@ -2853,9 +2853,9 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         <div class="dk-tresor-texte">
           <p class="dk-tresor-sur"><span class="pastille" aria-hidden="true"></span><span id="dk-tresor-statut">Événement en cours</span> · Le One Piece du Café Français</p>
           <h3 id="dk-tresor-titre">Un trésor se cache dans les boosters</h3>
-          <p id="dk-tresor-texte">La Mascotte d'Or, une carte en or unique de rareté Spécial, n'attend qu'un seul gagnant&nbsp;: le premier qui la tire remporte <b>5 boosts Nitro</b>.</p>
+          <p id="dk-tresor-texte">La Mascotte d'Or, une carte en or unique de rareté Spécial, n'attend qu'un seul gagnant&nbsp;: le premier qui la tire remporte <b>5 Nitro Boosts</b>.</p>
         </div>
-        <p class="dk-tresor-prime"><small>Récompense</small><b>5</b><span>boosts Nitro</span></p>
+        <p class="dk-tresor-prime"><small>Récompense</small><b>5</b><span>Nitro Boosts</span></p>
       </aside>
       <ol class="dk-etapes">
         <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Chaque booster contient 5 cartes, à ouvrir avec <code>/ouverture</code>. Des boosters gratuits se rechargent avec le temps, et la boutique en vend à 10&nbsp;000 grains, sans limite.</p></li>
@@ -4467,7 +4467,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   // (le nom sans accents ni signes, « Aliénor d'Aquitaine » → alienor-d-aquitaine). La liste est dans cartes/catalogue.json.
   const slugCarte = (nom) => String(nom || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   // L'événement « Le One Piece du Café Français » : la Mascotte d'Or est cachée dans les boosters, et le premier qui la
-  // tire gagne 5 boosts Nitro. Tant qu'elle n'est pas révélée, le site ne publie que ses images floutées
+  // tire gagne 5 Nitro Boosts. Tant qu'elle n'est pas révélée, le site ne publie que ses images floutées
   // (cartes/la-mascotte-recto-floue.webp…). Une fois trouvée : remettre ses images nettes dans cartes/ et passer
   // revele à true. Le gagnant vient du relevé du bot (deckfr.json, « tresors ») ; l'événement disparaît une semaine après.
   const TRESOR = { carte: 'La Mascotte', revele: false, jours: 7 };
@@ -4489,7 +4489,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     $('#avis-etat').textContent = `Trouvée par ${qui} le ${quand}. Bravo !`;
     $('#dk-tresor-statut').textContent = 'Trésor trouvé';
     $('#dk-tresor-titre').textContent = `${qui} a trouvé la Mascotte d'Or !`;
-    $('#dk-tresor-texte').textContent = `Le ${quand}, ${qui} a tiré la carte en or de la Mascotte et remporte 5 boosts Nitro.`;
+    $('#dk-tresor-texte').textContent = `Le ${quand}, ${qui} a tiré la carte en or de la Mascotte et remporte 5 Nitro Boosts.`;
     dispatchEvent(new CustomEvent('tresor'));
   }
   let deckfrPromesse = null, deckfrLu = 0;
