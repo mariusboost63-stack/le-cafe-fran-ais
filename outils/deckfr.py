@@ -68,7 +68,7 @@ def lire_base(adresse):
             tirees = {int(r): int(n) for r, n in c.fetchall()}
             nb_tirees = sum(tirees.values())
             sortie["raretes"] = [{
-                "niveau": r, "cartes": catalogue.get(r, 0),
+                "niveau": r, "cartes": catalogue.get(r, 0), "tirees": tirees.get(r, 0),
                 "tirage": round(100 * tirees.get(r, 0) / nb_tirees, 2) if nb_tirees else None,
             } for r in sorted(set(catalogue) | set(tirees))]
             # Chaque partie est lue à part : un souci sur l'une n'empêche pas de publier les autres
@@ -116,13 +116,25 @@ def lire_base(adresse):
             toutes = [(str(i), int(n), int(q)) for i, n, q in toutes if str(i) not in exclus]
             sortie["collections"] = {i: n for i, n, _ in toutes}
             sortie["top"] = toutes[:TAILLE]
-            # Les derniers grands tirages : les deux raretés les plus hautes, sans les membres exclus
+            # Les derniers grands tirages : Légendaire et au-dessus (ou les deux raretés les plus hautes déjà sorties,
+            # si le jeu en a moins), sans les membres exclus
             grands = partie("tirages", lambda: tous(
                 "SELECT o.user_id, k.nom, oc.rarete, k.recto, o.cree_le FROM cartes_ouvertures_cartes oc"
                 " JOIN cartes_ouvertures o ON o.id = oc.ouverture_id JOIN cartes_catalogue k ON k.id = oc.carte_id"
-                " WHERE oc.rarete >= %s ORDER BY o.cree_le DESC, oc.position ASC LIMIT %s", (max_rarete - 1, TIRAGES * 5)), [])
+                " WHERE oc.rarete >= %s ORDER BY o.cree_le DESC, oc.position ASC LIMIT %s", (min(4, max_rarete - 1), TIRAGES * 5)), [])
             sortie["grands"] = [(str(i), str(nom), int(r), image(img), date_iso(t)) for i, nom, r, img, t in grands
                                 if str(i) not in exclus][:TIRAGES]
+            # Les cartes bonus (Mystère, Spécial) : qui a tiré chacune en premier, et quand. Sert aux chasses au trésor
+            # (« la Mascotte d'Or est cachée dans les boosters ») : le site annonce le gagnant. Un membre exclu reste
+            # anonyme, mais la carte compte bien comme trouvée.
+            premieres = partie("cartes bonus", lambda: tous(
+                "SELECT k.nom, oc.rarete, o.user_id, o.cree_le FROM cartes_ouvertures_cartes oc"
+                " JOIN cartes_ouvertures o ON o.id = oc.ouverture_id JOIN cartes_catalogue k ON k.id = oc.carte_id"
+                " WHERE oc.rarete >= 6 ORDER BY o.cree_le ASC, oc.position ASC LIMIT 500"), [])
+            vues = {}
+            for nom, r, i, t in premieres:
+                vues.setdefault(str(nom), (str(nom), int(r), None if str(i) in exclus else str(i), date_iso(t)))
+            sortie["tresors"] = list(vues.values())
             # Les dernières cartes sorties
             nouvelles = partie("catalogue récent", lambda: tous(
                 "SELECT nom, rarete, recto, cree_le FROM cartes_catalogue WHERE actif = 1 ORDER BY cree_le DESC, id DESC LIMIT %s", (NOUVELLES,)), [])
@@ -169,8 +181,9 @@ def main():
             ligne["evolution"] = evo
         collectionneurs.append(ligne)
     grands = [{**membre(i), "carte": nom, "rarete": r, "image": img, "date": quand} for i, nom, r, img, quand in d.pop("grands")]
+    tresors = [{"carte": nom, "rarete": r, "date": quand, **(membre(i) if i else {})} for nom, r, i, quand in d.pop("tresors", [])]
     donnees = {"maj": datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat(), **d,
-               "collectionneurs": collectionneurs, "grands_tirages": grands}
+               "collectionneurs": collectionneurs, "grands_tirages": grands, "tresors": tresors}
     sortie = pathlib.Path(sys.argv[1])
     sortie.parent.mkdir(parents=True, exist_ok=True)
     sortie.write_text(json.dumps(donnees, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
