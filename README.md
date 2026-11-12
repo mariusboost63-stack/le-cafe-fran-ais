@@ -109,6 +109,11 @@ Sous les classements, un livre d'or à feuilleter (couverture en cuir, pages qui
 - **Records de tous les temps** : le tout premier booster, la première Mythique, le plus de boosters, la plus grosse ouverture, le plus de Mythiques, le plus beau booster, la vente la plus chère au marché, les cartes la plus rare et la plus tirée. Chaque heure, avec le classement, `outils/records.py` les lit dans la base du bot (**en lecture seule**, mêmes secrets) et publie `records.json` sur la branche `data`. Les membres privés de cartes (`blacklistCartes`) n'y figurent jamais, et seuls le pseudo et l'avatar sont publiés.
 - Un record sans donnée n'a pas de page ; le livre reste caché tant qu'il n'a pas au moins trois records.
 
+## La boîte à idées et la Bourse des cartes
+
+- **La boîte à idées** (page Équipe) : les suggestions du serveur et leurs votes, sur des petits papiers, des plus récentes ou des plus soutenues. Chaque heure, avec le classement, `outils/idees.py` les lit dans la base du bot (**en lecture seule**) et publie `idees.json` sur la branche `data`. Jamais l'auteur ni les images ; les mentions, liens et la mise en forme Discord sont retirés ; les membres privés de suggestions ne sont pas publiés. Pour masquer une idée, ajoute son numéro dans `MASQUEES` (`outils/idees.py`). Les statuts publiés sont dans `STATUTS` : pour l'instant seulement « au vote » (1).
+- **La Bourse des cartes** (page DeckFR) : la cote de chaque carte d'après les ventes au marché (prix médian d'un exemplaire), le dernier cours, la variation et le nombre de ventes, la bande des dernières ventes et les offres en cours. `outils/bourse.py` publie `bourse.json` (branche `data`) chaque heure. Seules les ventes depuis l'ouverture de DeckFR comptent, et à partir de 1 000 grains l'exemplaire (`DON`) : en dessous, c'est un cadeau entre membres.
+
 ## Les prochains événements
 
 La section « Les prochains événements » (`#prochains`) montre les événements programmés dans l'onglet « Événements » du serveur Discord : date, heure, lieu, description, nombre d'intéressés et image de couverture. Elle reste cachée quand aucun événement n'est à venir, et un événement disparaît du site dès qu'il est terminé.

@@ -2677,6 +2677,107 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
 .dk-essai-bilan em { font-style: normal; color: var(--creme); }
 @media (max-width: 560px) { .dk-tirage li { width: calc((100% - 20px) / 3); } }
 
+/* La boîte à idées : une boîte en bois avec sa fente, et les idées sur des petits papiers scotchés */
+.idees { display: grid; gap: clamp(20px, 2.6vw, 30px); margin-top: clamp(56px, 7vw, 96px); }
+.idees[hidden] { display: none; }
+.id-tete { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: clamp(18px, 3vw, 40px); }
+.id-boite {
+  position: relative; display: grid; place-content: center; justify-items: center; gap: 4px; width: clamp(150px, 15vw, 190px); aspect-ratio: 1.2; box-sizing: border-box; padding-top: 22px; border-radius: 6px;
+  color: #f3d892; rotate: -2deg;
+  background: repeating-linear-gradient(92deg, color-mix(in srgb, #000 10%, transparent) 0 2px, transparent 2px 11px, color-mix(in srgb, #fff 5%, transparent) 11px 12px, transparent 12px 23px), linear-gradient(180deg, #8a5530, #5e3519);
+  box-shadow: inset 0 0 0 5px color-mix(in srgb, #000 22%, transparent), inset 0 2px 0 color-mix(in srgb, #fff 18%, transparent), 0 24px 30px -16px #000;
+}
+.id-fente { position: absolute; top: 16px; left: 22%; right: 22%; height: 9px; border-radius: 5px; background: #1a0d05; box-shadow: inset 0 3px 4px #000, 0 1px 0 color-mix(in srgb, #fff 20%, transparent); }
+.id-boite b { padding: 4px 10px; border-radius: 3px; font: 800 clamp(17px, 1.7vw, 21px)/1 var(--f-titre); color: #3a2a10; background: linear-gradient(180deg, #f6df9c, #c9a24f); box-shadow: 0 2px 3px color-mix(in srgb, #000 40%, transparent); }
+.id-boite i { font: 700 15px/1 var(--f-craie, "Caveat", cursive); font-style: normal; opacity: .85; }
+.id-texte { display: grid; gap: 12px; min-width: 0; }
+.id-titre { font: 800 clamp(28px, 3.2vw, 44px)/1 var(--f-titre); font-stretch: 86%; letter-spacing: -.02em; }
+.id-texte > p:last-child { max-width: 58ch; color: var(--brume); }
+.id-outils { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; }
+.id-tri { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; border: 1px solid var(--trait); background: var(--nuit-2); }
+.id-tri button { padding: 8px 14px; border: 0; border-radius: 999px; background: transparent; color: var(--brume); font: 700 14px/1 var(--f-titre); cursor: pointer; }
+.id-tri button[aria-pressed="true"] { background: var(--lait); color: var(--nuit); }
+.id-tri button:focus-visible { outline: 2px solid var(--lait); outline-offset: 2px; }
+.id-compte { font: 500 13px/1.3 var(--f-mono); color: var(--brume); }
+.id-papiers { list-style: none; margin: 0; padding: 14px 0 0; columns: 3 260px; column-gap: clamp(16px, 2vw, 26px); }
+.id-papier {
+  --encre: #1d2433; position: relative; display: grid; gap: 12px; break-inside: avoid; margin: 0 0 clamp(22px, 2.4vw, 30px); padding: 24px 20px 16px; border-radius: 2px; color: var(--encre);
+  background: linear-gradient(175deg, #fffaf0, #f2e8d2); box-shadow: 0 16px 22px -14px #000; rotate: -.9deg;
+}
+.id-papier:nth-child(3n + 2) { rotate: .8deg; background: repeating-linear-gradient(180deg, transparent 0 23px, color-mix(in srgb, #0c3b83 10%, transparent) 23px 24px), linear-gradient(175deg, #fffdf7, #f4eedf); }
+.id-papier:nth-child(3n) { rotate: -.3deg; background: linear-gradient(175deg, #fff8dc, #f6e7b6); }
+/* le morceau de scotch */
+.id-papier::before { content: ""; position: absolute; top: -10px; left: 50%; width: 72px; height: 22px; margin-left: -36px; rotate: -3deg; background: color-mix(in srgb, #fff 55%, transparent); box-shadow: 0 1px 2px color-mix(in srgb, #000 15%, transparent); }
+.id-idee { font-size: 15.5px; line-height: 1.5; overflow-wrap: anywhere; }
+.id-votes { display: grid; gap: 6px; }
+.id-barre { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: color-mix(in srgb, #1d2433 12%, transparent); }
+.id-barre i { display: block; height: 100%; }
+.id-barre .pour { background: #1f7a4c; }
+.id-barre .contre { background: #b3212b; margin-left: 2px; }
+.id-chiffres { font: 500 12.5px/1.3 var(--f-mono); color: color-mix(in srgb, #1d2433 70%, #f6f0e2); }
+.id-chiffres b { color: #1d2433; font-weight: 500; }
+.id-pied { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 10px; border-top: 1px dashed color-mix(in srgb, #1d2433 22%, transparent); }
+.id-pied time { font: 500 12px/1 var(--f-mono); color: color-mix(in srgb, #1d2433 60%, #f6f0e2); }
+.id-tampon { --t: #0c3b83; padding: 3px 8px; border: 2px solid var(--t); border-radius: 4px; color: var(--t); font: 800 12px/1 var(--f-titre); letter-spacing: .1em; text-transform: uppercase; rotate: -4deg; opacity: .85; }
+.id-tampon.acceptee { --t: #1f7a4c; }
+.id-tampon.refusee { --t: #b3212b; }
+.id-plus { justify-self: center; }
+@media (max-width: 560px) {
+  .id-tete { grid-template-columns: minmax(0, 1fr); }
+  .id-boite { width: 150px; justify-self: center; }
+}
+
+/* La Bourse des cartes : la bande du téléscripteur, puis le cours des cartes imprimé comme la page Bourse d'un journal */
+.dk-bourse { grid-column: 1 / -1; display: grid; gap: 20px; min-width: 0; }
+.dk-bourse[hidden] { display: none; }
+.bo-tete { display: grid; gap: 10px; max-width: 760px; }
+.bo-tete p { color: var(--brume); }
+.bo-telex { overflow: hidden; border-radius: 3px; background: #f6f1e4; box-shadow: 0 10px 18px -12px #000, inset 0 1px 0 #fff; -webkit-mask: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.bo-bande { display: flex; width: max-content; padding: 9px 0; animation: bo-defile 60s linear infinite; }
+.bo-telex:hover .bo-bande { animation-play-state: paused; }
+@keyframes bo-defile { to { transform: translateX(-50%); } }
+.bo-bande span { display: inline-flex; align-items: baseline; gap: 8px; padding: 0 22px; font: 500 14px/1.2 var(--f-mono); color: #1d2433; white-space: nowrap; border-right: 1px dotted color-mix(in srgb, #1d2433 30%, transparent); }
+.bo-bande b { font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+.bo-bande i { width: 8px; height: 8px; border-radius: 50%; background: var(--r); align-self: center; }
+@media (prefers-reduced-motion: reduce) { .bo-bande { animation: none; } }
+.bo-feuille { display: grid; gap: 4px; min-width: 0; padding: clamp(16px, 2.4vw, 26px) clamp(14px, 2.6vw, 30px); border-radius: 4px; color: #1d2433; background: linear-gradient(175deg, #fffdf7, #f2ead6); box-shadow: 0 26px 40px -24px #000; }
+.bo-entete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding-bottom: 10px; border-bottom: 3px double color-mix(in srgb, #1d2433 70%, transparent); }
+.bo-entete b { font: 800 clamp(22px, 2.4vw, 30px)/1 var(--f-titre); font-stretch: 85%; }
+.bo-entete span { font: 500 12.5px/1.3 var(--f-mono); color: color-mix(in srgb, #1d2433 66%, #f6f0e2); }
+.bo-table-cadre { overflow-x: auto; }
+.bo-table { width: 100%; min-width: 460px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.bo-table th { padding: 10px 8px 8px; text-align: right; font: 500 11.5px/1.2 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: color-mix(in srgb, #1d2433 62%, #f6f0e2); border-bottom: 1px solid color-mix(in srgb, #1d2433 25%, transparent); }
+.bo-table th:first-child, .bo-table td:first-child { text-align: left; }
+.bo-table td { padding: 8px; text-align: right; font: 500 14.5px/1.2 var(--f-mono); border-bottom: 1px solid color-mix(in srgb, #1d2433 10%, transparent); white-space: nowrap; }
+.bo-table tr:last-child td { border-bottom: 0; }
+.bo-carte { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: 10px; white-space: normal; }
+.bo-carte img { width: 32px; height: auto; border-radius: 3px; box-shadow: 0 2px 4px color-mix(in srgb, #000 30%, transparent); }
+.bo-carte b { display: block; font: 700 15px/1.2 var(--f-texte); }
+.bo-carte small { display: inline-flex; align-items: center; gap: 6px; font: 500 11px/1.2 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: color-mix(in srgb, #1d2433 66%, #f6f0e2); }
+.bo-carte small::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--r); }
+.bo-cote { font-weight: 500; color: #1d2433; }
+.bo-hausse { color: #1a6b42; }
+.bo-baisse { color: #b3212b; }
+.bo-egal { color: color-mix(in srgb, #1d2433 55%, #f6f0e2); }
+.bo-maj { padding-top: 8px; font: 500 12px/1.3 var(--f-mono); color: color-mix(in srgb, #1d2433 58%, #f6f0e2); }
+.bo-offres-bloc { display: grid; gap: 12px; }
+.bo-sous { font: 800 20px/1.1 var(--f-titre); }
+.bo-offres { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px 12px; }
+.bo-offres li { position: relative; display: grid; gap: 6px; min-width: 0; }
+.bo-offres img { width: 100%; height: auto; border-radius: 7% / 4.8%; }
+.bo-offres b { font-weight: 600; font-size: 14.5px; line-height: 1.25; }
+.bo-etiquette { position: absolute; top: 10px; right: -6px; padding: 5px 10px; rotate: 6deg; border-radius: 3px; color: #1d2433; background: #f6df9c; font: 500 13px/1 var(--f-mono); box-shadow: 0 4px 8px -2px color-mix(in srgb, #000 50%, transparent); }
+.bo-offres small { font: 500 12px/1.3 var(--f-mono); color: var(--brume); }
+@media (max-width: 560px) {
+  .bo-c-dernier, .bo-c-ventes, .bo-table td.bo-c-dernier, .bo-table td.bo-c-ventes { display: none; }
+  .bo-table { min-width: 0; }
+  .bo-table td, .bo-table th { padding-inline: 5px; }
+  .bo-carte { grid-template-columns: 26px minmax(0, 1fr); gap: 8px; }
+  .bo-carte img { width: 26px; }
+  .bo-carte b { font-size: 14px; overflow-wrap: anywhere; }
+  .bo-table td { font-size: 13.5px; }
+}
+
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
 
@@ -3366,6 +3467,27 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         </div>
         <p class="dk-maj" id="dk-maj"></p>
       </div>
+      <div class="dk-bourse" id="dk-bourse" aria-labelledby="t-bourse" hidden>
+        <div class="bo-tete">
+          <h3 class="dk-titre" id="t-bourse">La Bourse des cartes</h3>
+          <p>La cote de chaque carte, d'après les vraies ventes au marché du serveur depuis l'ouverture. La cote est le prix médian d'un exemplaire ; les cadeaux entre membres (moins de 1&nbsp;000 grains) n'en font pas partie.</p>
+        </div>
+        <div class="bo-telex" aria-hidden="true"><div class="bo-bande" id="bo-bande"></div></div>
+        <div class="bo-feuille">
+          <p class="bo-entete"><b>Cours des cartes</b><span id="bo-resume"></span></p>
+          <div class="bo-table-cadre">
+            <table class="bo-table">
+              <thead><tr><th scope="col">Carte</th><th scope="col">Cote</th><th scope="col" class="bo-c-dernier">Dernier cours</th><th scope="col">Variation</th><th scope="col" class="bo-c-ventes">Ventes</th></tr></thead>
+              <tbody id="bo-cours"></tbody>
+            </table>
+          </div>
+          <p class="bo-maj" id="bo-maj"></p>
+        </div>
+        <div class="bo-offres-bloc" id="bo-offres-bloc" hidden>
+          <h4 class="bo-sous">En vente en ce moment au marché</h4>
+          <ul class="bo-offres" id="bo-offres"></ul>
+        </div>
+      </div>
       <div class="dk-catalogue" id="dk-catalogue" hidden>
         <div class="dk-cat-tete">
           <h3 class="dk-titre">Toutes les cartes<span class="dk-cat-nb" id="dk-cat-nb"></span></h3>
@@ -3524,6 +3646,22 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         <li class="badge badge-reste"><div class="balance"><span class="cordon" aria-hidden="true"></span><article class="badge-carte"><span class="badge-trou" aria-hidden="true"></span><span class="badge-marque" aria-hidden="true"><svg viewBox="8 116 234 120"><use href="#p-tasse"/></svg>Le Café Français</span><p class="badge-rang">Et tous les autres</p><h3>Le reste de l'équipe</h3><p class="badge-desc">Le reste de l'équipe se trouve sur le Discord. Viens les rencontrer.</p><a class="lien-fleche" href="https://discord.gg/france" target="_blank" rel="noopener">Rejoindre le Discord<svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article></div></li>
       </ul>
       <div class="badges-points" id="badges-points" role="group" aria-label="Choisir un badge"></div>
+      <div class="idees" id="idees" aria-labelledby="t-idees" hidden>
+        <div class="id-tete">
+          <div class="id-boite" aria-hidden="true"><span class="id-fente"></span><b>Boîte à idées</b><i>Le Café Français</i></div>
+          <div class="id-texte">
+            <p class="surtitre">La boîte à idées</p>
+            <h3 class="id-titre" id="t-idees">Vos idées pour le café</h3>
+            <p>Les suggestions des membres et les votes du serveur. Pour proposer la tienne ou voter, rendez-vous dans #suggestions sur le serveur.</p>
+          </div>
+        </div>
+        <div class="id-outils">
+          <div class="id-tri" role="group" aria-label="Trier les idées"><button type="button" data-tri="recentes" aria-pressed="true">Les plus récentes</button><button type="button" data-tri="soutenues" aria-pressed="false">Les plus soutenues</button></div>
+          <p class="id-compte" id="id-compte"></p>
+        </div>
+        <ul class="id-papiers" id="id-papiers"></ul>
+        <button class="btn btn-ligne btn-petit id-plus" id="id-plus" type="button" hidden>Voir plus d'idées</button>
+      </div>
     </div>
   </section>
 
@@ -6447,6 +6585,124 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     }
     paquet.addEventListener('click', ouvrir);
     encore.addEventListener('click', () => { remettre(); ouvrir(); });
+  })();
+
+  /* ---------- Équipe : la boîte à idées ----------
+     Les suggestions du serveur et leurs votes, relevées chaque heure dans le bot (outils/idees.py, idees.json),
+     sans l'auteur. 9 idées à la fois, des plus récentes ou des plus soutenues. */
+  (function boiteAIdees() {
+    const bloc = $('#idees');
+    if (!bloc) return;
+    const liste = $('#id-papiers'), plus = $('#id-plus'), compte = $('#id-compte');
+    const STATUTS = { vote: 'Au vote', acceptee: 'Acceptée', refusee: 'Refusée' };
+    const PAS = 9;
+    let idees = [], tri = 'recentes', montrees = PAS;
+    const el = (tag, cls, texte) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texte !== undefined) e.textContent = texte; return e; };
+    function papier(x) {
+      const li = el('li', 'id-papier');
+      li.append(el('p', 'id-idee', x.texte));
+      const total = x.pour + x.contre;
+      const votes = el('div', 'id-votes');
+      if (total) {
+        const barre = el('span', 'id-barre');
+        const p = el('i', 'pour'); p.style.width = `${(100 * x.pour) / total}%`;
+        const c = el('i', 'contre'); c.style.width = `${(100 * x.contre) / total}%`;
+        barre.append(p, c);
+        const ch = el('p', 'id-chiffres');
+        ch.append(el('b', '', String(x.pour)), ` pour · `, el('b', '', String(x.contre)), ` contre`);
+        votes.append(barre, ch);
+      } else votes.append(el('p', 'id-chiffres', 'Pas encore de vote'));
+      li.append(votes);
+      const pied = el('p', 'id-pied');
+      const d = new Date(x.date);
+      const t = el('time', '', Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: d.getFullYear() === new Date().getFullYear() ? undefined : 'numeric', timeZone: 'Europe/Paris' }));
+      if (x.date) t.dateTime = x.date;
+      pied.append(t, el('span', 'id-tampon ' + x.statut, STATUTS[x.statut] || 'Idée'));
+      li.append(pied);
+      return li;
+    }
+    function afficher() {
+      const triees = [...idees].sort(tri === 'soutenues' ? (a, b) => (b.pour - b.contre) - (a.pour - a.contre) || b.pour - a.pour || b.id - a.id : (a, b) => b.id - a.id);
+      liste.replaceChildren(...triees.slice(0, montrees).map(papier));
+      const reste = triees.length - montrees;
+      plus.hidden = reste <= 0;
+      plus.textContent = `Voir plus d'idées (encore ${reste})`;
+    }
+    $$('.id-tri button', bloc).forEach((b) => b.addEventListener('click', () => {
+      tri = b.dataset.tri; montrees = PAS;
+      $$('.id-tri button', bloc).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      afficher();
+    }));
+    plus.addEventListener('click', () => { montrees += PAS; afficher(); });
+    chargerListe(['/idees.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/idees.json'])
+      .then((r) => (r ? r.json() : null)).then((d) => {
+        idees = (d && Array.isArray(d.idees) ? d.idees : []).filter((x) => x && x.texte)
+          .map((x) => ({ ...x, pour: Number(x.pour) || 0, contre: Number(x.contre) || 0, id: Number(x.id) || 0 }));
+        if (!idees.length) return;
+        const votes = idees.reduce((s, x) => s + x.pour + x.contre, 0);
+        compte.textContent = `${idees.length} idée${idees.length > 1 ? 's' : ''} · ${nf.format(votes)} vote${votes > 1 ? 's' : ''}`;
+        afficher();
+        bloc.hidden = false;
+        if (anime) ST.refresh();
+      }).catch(() => {});
+  })();
+
+  /* ---------- DeckFR : la Bourse des cartes ----------
+     La cote de chaque carte d'après les ventes au marché, relevée chaque heure dans le bot (outils/bourse.py, bourse.json) :
+     la bande du téléscripteur (dernières ventes), le cours des cartes, et les offres en cours. */
+  (function bourseCartes() {
+    const bloc = $('#dk-bourse');
+    if (!bloc) return;
+    const el = (tag, cls, texte) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texte !== undefined) e.textContent = texte; return e; };
+    const prix = (n) => nf.format(Number(n) || 0).replace(/ /g, ' ');
+    function miniature(nom, taille) { const i = el('img'); i.src = imageCarte(nom); i.alt = ''; i.width = 400; i.height = 581; i.loading = 'lazy'; i.decoding = 'async'; i.style.width = taille; return i; }
+    function ligne(c) {
+      const tr = el('tr');
+      tr.style.setProperty('--r', couleurRarete(c.rarete));
+      const carte = el('div', 'bo-carte');
+      const nom = el('div');
+      nom.append(el('b', '', c.carte), el('small', '', nomRarete(c.rarete)));
+      carte.append(miniature(c.carte), nom);
+      const td = (contenu, cls) => { const t = el('td', cls); t.append(contenu); return t; };
+      let variation;
+      const v = Number(c.variation);
+      if (c.variation === undefined || c.variation === null || !Number.isFinite(v)) variation = el('span', 'bo-egal', '—');
+      else if (v === 0) variation = el('span', 'bo-egal', '= 0 %');
+      else variation = el('span', v > 0 ? 'bo-hausse' : 'bo-baisse', `${v > 0 ? '▲ +' : '▼ −'}${nf.format(Math.abs(v)).replace(/ /g, ' ')} %`);
+      if (variation.className !== 'bo-egal') variation.title = 'Depuis la vente précédente de cette carte';
+      tr.append(td(carte), td(el('span', 'bo-cote', prix(c.cote))), td(prix(c.dernier), 'bo-c-dernier'), td(variation), td(String(c.ventes), 'bo-c-ventes'));
+      return tr;
+    }
+    chargerListe(['/bourse.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/bourse.json'])
+      .then((r) => (r ? r.json() : null)).then((d) => {
+        const cotes = d && Array.isArray(d.cotes) ? d.cotes.filter((c) => c && c.carte && !estSecrete(c.carte)) : [];
+        if (!cotes.length) return;
+        $('#bo-cours').replaceChildren(...cotes.map(ligne));
+        const ch = d.chiffres || {};
+        $('#bo-resume').textContent = `${nf.format(Number(ch.ventes) || 0)} exemplaires vendus · ${prix(ch.grains)} grains échangés`;
+        if (d.maj) $('#bo-maj').textContent = `Relevé dans le bot ${ilYa(d.maj)}.`;
+        // La bande du téléscripteur : les dernières ventes, en double pour défiler sans à-coup
+        const ventes = (Array.isArray(d.ventes) ? d.ventes : []).filter((x) => x && x.carte && !estSecrete(x.carte));
+        const bande = $('#bo-bande');
+        const morceau = () => ventes.map((x) => {
+          const s = el('span');
+          s.style.setProperty('--r', couleurRarete(x.rarete));
+          s.append(el('i'), el('b', '', x.carte), `${x.quantite > 1 ? `${x.quantite} × ` : ''}${prix(x.prix)} grains`);
+          return s;
+        });
+        if (ventes.length) bande.replaceChildren(...morceau(), ...morceau()); else $('.bo-telex', bloc).hidden = true;
+        // Les offres en cours au marché
+        const offres = (Array.isArray(d.offres) ? d.offres : []).filter((x) => x && x.carte && !estSecrete(x.carte));
+        $('#bo-offres').replaceChildren(...offres.map((o) => {
+          const li = el('li');
+          li.append(miniature(o.carte, '100%'), el('span', 'bo-etiquette', `${prix(o.prix)} gr.`), el('b', '', o.carte),
+            el('small', '', `${nomRarete(o.rarete)}${o.quantite > 1 ? ` · ${o.quantite} exemplaires` : ''}${o.vendeur && o.vendeur.nom ? ` · par ${o.vendeur.nom}` : ''}`));
+          return li;
+        }));
+        $('#bo-offres-bloc').hidden = !offres.length;
+        bloc.hidden = false;
+        if (anime) ST.refresh();
+      }).catch(() => {});
   })();
 
   /* ---------- Réduire ou réactiver les animations ---------- */

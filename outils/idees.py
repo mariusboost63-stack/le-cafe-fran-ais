@@ -21,9 +21,14 @@ import sys
 
 from classement import lire_adresse, signaler
 
-# Le statut d'une suggestion dans le bot (colonne suggestions.statut) : à confirmer sur le relevé (voir le résumé
-# de l'exécution, « Statuts des suggestions »). Un statut absent de la liste n'est pas publié.
-STATUTS = {0: "attente", 1: "acceptee", 2: "refusee"}
+# Le statut d'une suggestion dans le bot (colonne suggestions.statut). 1 : publiée et soumise au vote des membres.
+# 2 et 4 : décidées par l'équipe (lequel est « acceptée », lequel « refusée » reste à confirmer). Un statut absent de la
+# liste n'est pas publié. Le résumé de l'exécution donne la répartition (« Statuts des suggestions »).
+STATUTS = {1: "vote"}
+# Les votes (colonne votessuggestions.vote) : 1 pour, 2 contre
+POUR, CONTRE = 1, 2
+# Les idées à ne pas publier sur le site (leur numéro, colonne suggestions.id), décidées par l'équipe
+MASQUEES = set()
 LONGUEUR = 600  # caractères au plus par idée
 DISCORD_EPOQUE = 1420070400000
 
@@ -91,13 +96,14 @@ def main():
         signaler(f"Boîte à idées illisible ({type(err).__name__} {code}) : rien n'est publié.".replace(" )", ")"), "warning")
         return 2
 
-    # Les votes : pour (vote positif) et contre (vote nul ou négatif), par suggestion
+    # Les votes, pour et contre, par suggestion
     pour, contre, valeurs = collections.Counter(), collections.Counter(), collections.Counter()
-    par_vote = collections.Counter()
     for ident, vote, n in votes:
-        par_vote[(str(ident), int(vote or 0))] += int(n)
         valeurs[int(vote or 0)] += int(n)
-        (pour if int(vote or 0) > 0 else contre)[str(ident)] += int(n)
+        if int(vote or 0) == POUR:
+            pour[str(ident)] += int(n)
+        elif int(vote or 0) == CONTRE:
+            contre[str(ident)] += int(n)
 
     # Le relevé des statuts et des votes, pour vérifier STATUTS (seulement des comptes, jamais de texte)
     par_statut = collections.defaultdict(list)
@@ -110,14 +116,13 @@ def main():
 
     idees = []
     for ident, auteur, texte, message, statut in suggestions:
-        if str(auteur) in exclus:
+        if str(auteur) in exclus or statut not in STATUTS or int(ident) in MASQUEES:
             continue
         propre = nettoyer(texte)
         if len(propre) < 8:
             continue
-        idees.append({"id": int(ident), "texte": propre, "statut": STATUTS.get(statut, f"code-{statut}"), "pour": pour[str(ident)],
-                      "contre": contre[str(ident)], "date": date_message(message), "code": statut,
-                      "votes": {str(v): n for (i, v), n in par_vote.items() if i == str(ident)}})
+        idees.append({"id": int(ident), "texte": propre, "statut": STATUTS[statut], "pour": pour[str(ident)],
+                      "contre": contre[str(ident)], "date": date_message(message)})
     idees.sort(key=lambda x: -x["id"])
     totaux = dict(collections.Counter(x["statut"] for x in idees))
     sortie = pathlib.Path(sys.argv[1])
