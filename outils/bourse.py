@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """La Bourse des cartes DeckFR : la cote de chaque carte d'après les vraies ventes au marché (dernier prix, prix
-moyen, nombre de ventes, variation), les dernières ventes, et les cartes en vente en ce moment au marché, lues dans
+médian, nombre de ventes, variation), les dernières ventes, et les cartes en vente en ce moment au marché, lues dans
 la base du bot (table cartes_marches) pour la page DeckFR. Les prix sont ramenés à l'exemplaire. Seules comptent les
-ventes depuis l'ouverture officielle de DeckFR (deckfr.OUVERTURE). Les membres privés de cartes (users.blacklistCartes)
+ventes depuis l'ouverture officielle de DeckFR (deckfr.OUVERTURE), et à partir de DON grains l'exemplaire (en
+dessous, c'est un cadeau entre membres). Les membres privés de cartes (users.blacklistCartes)
 n'apparaissent pas.
 
 Lancé toutes les heures par GitHub Actions avec le classement (.github/workflows/classement.yml). Le résultat,
@@ -24,6 +25,7 @@ from classement import lire_adresse, profil, signaler
 from deckfr import OUVERTURE, date_iso
 
 VENTES = 12    # dernières ventes publiées
+DON = 1000     # en dessous de ce prix par exemplaire, c'est un cadeau entre membres, pas un prix de marché
 OFFRES = 24    # offres en cours publiées
 # Une offre sans acheteur est encore en vente, sauf si son statut dit le contraire (comparé ici, en minuscules)
 FINIES = {"annule", "annulé", "annulee", "annulée", "expire", "expiré", "expiree", "expirée", "retire", "retiré",
@@ -86,7 +88,7 @@ def main():
         vendu = bool(str(acheteur or "").strip())
         if vendu:
             quand = en_ms(maj) or en_ms(cree)
-            if quand < debut or str(vendeur) in exclus or str(acheteur) in exclus:
+            if quand < debut or str(vendeur) in exclus or str(acheteur) in exclus or unitaire < DON:
                 continue
             ventes.append({"carte": nom, "rarete": rarete, "prix": unitaire, "quantite": q, "date": date_iso(quand), "_t": quand})
         elif str(statut or "").strip().lower() not in FINIES and str(vendeur) not in exclus and en_ms(cree) >= debut:
@@ -100,7 +102,10 @@ def main():
     cotes = []
     for nom, liste in par_carte.items():
         prix = [v["prix"] for v in liste]
-        cote = {"carte": nom, "rarete": liste[-1]["rarete"], "dernier": prix[-1], "moyenne": round(sum(prix) / len(prix)),
+        tries = sorted(prix)
+        milieu = len(tries) // 2
+        mediane = tries[milieu] if len(tries) % 2 else round((tries[milieu - 1] + tries[milieu]) / 2)
+        cote = {"carte": nom, "rarete": liste[-1]["rarete"], "dernier": prix[-1], "cote": mediane,
                 "ventes": sum(v["quantite"] for v in liste), "date": liste[-1]["date"]}
         if len(prix) > 1 and prix[-2] > 0:
             cote["variation"] = round(100 * (prix[-1] - prix[-2]) / prix[-2], 1)

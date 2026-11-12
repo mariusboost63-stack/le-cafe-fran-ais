@@ -93,7 +93,9 @@ def main():
 
     # Les votes : pour (vote positif) et contre (vote nul ou négatif), par suggestion
     pour, contre, valeurs = collections.Counter(), collections.Counter(), collections.Counter()
+    par_vote = collections.Counter()
     for ident, vote, n in votes:
+        par_vote[(str(ident), int(vote or 0))] += int(n)
         valeurs[int(vote or 0)] += int(n)
         (pour if int(vote or 0) > 0 else contre)[str(ident)] += int(n)
 
@@ -108,13 +110,14 @@ def main():
 
     idees = []
     for ident, auteur, texte, message, statut in suggestions:
-        if str(auteur) in exclus or STATUTS.get(statut) is None:
+        if str(auteur) in exclus:
             continue
         propre = nettoyer(texte)
         if len(propre) < 8:
             continue
-        idees.append({"id": int(ident), "texte": propre, "statut": STATUTS[statut], "pour": pour[str(ident)],
-                      "contre": contre[str(ident)], "date": date_message(message)})
+        idees.append({"id": int(ident), "texte": propre, "statut": STATUTS.get(statut, f"code-{statut}"), "pour": pour[str(ident)],
+                      "contre": contre[str(ident)], "date": date_message(message), "code": statut,
+                      "votes": {str(v): n for (i, v), n in par_vote.items() if i == str(ident)}})
     idees.sort(key=lambda x: -x["id"])
     totaux = dict(collections.Counter(x["statut"] for x in idees))
     sortie = pathlib.Path(sys.argv[1])
