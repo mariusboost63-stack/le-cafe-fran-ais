@@ -676,11 +676,11 @@ main, .pied { position: relative; z-index: 1; }
 .dk-cat-outils { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
 .dk-filtres { display: flex; flex-wrap: wrap; gap: 8px; }
 .dk-filtre {
-  display: inline-flex; align-items: center; gap: 8px; padding: 8px 13px; border-radius: 999px; cursor: pointer;
-  border: 1px solid color-mix(in srgb, var(--r) 45%, var(--trait)); background: transparent; color: var(--r); font: 600 14px/1 var(--f-texte);
+  display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 13px; border-radius: 999px; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--r) 45%, var(--trait)); background: transparent; color: var(--r); font: 600 14px/1.15 var(--f-texte);
   transition: background-color .2s, color .2s;
 }
-.dk-filtre span { font: 500 12.5px/1 var(--f-mono); color: var(--brume); }
+.dk-filtre span { font: 500 12.5px/1 var(--f-mono); font-variant-numeric: tabular-nums; color: var(--brume); }
 .dk-filtre:hover { background: color-mix(in srgb, var(--r) 12%, transparent); }
 .dk-filtre[aria-pressed="true"] { background: var(--r); border-color: var(--r); color: var(--nuit); }
 .dk-filtre[aria-pressed="true"] span { color: color-mix(in srgb, var(--nuit) 70%, transparent); }
