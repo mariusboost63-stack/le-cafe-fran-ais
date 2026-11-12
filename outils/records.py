@@ -8,7 +8,8 @@ classement.json et deckfr.json : le site les lit là-bas.
 Lancé toutes les heures par GitHub Actions avec le classement (.github/workflows/classement.yml). Le résultat,
 records.json, est publié sur la branche « data » du dépôt, et le site le lit. Lecture seule, mêmes secrets que le
 classement (CAFE_DB_URL et DISCORD_TOKEN). Les membres privés de cartes (users.blacklistCartes) n'apparaissent
-dans aucun record.
+dans aucun record. Seuls comptent les boosters ouverts depuis l'ouverture officielle de DeckFR (deckfr.OUVERTURE) :
+les tests d'avant n'en font pas partie.
 
 Usage : python3 outils/records.py <fichier de sortie>
 Nécessite PyMySQL (pip install pymysql).
@@ -21,7 +22,7 @@ import sys
 import time
 
 from classement import lire_adresse, profil, signaler
-from deckfr import date_iso
+from deckfr import apres_ouverture, date_iso
 
 
 def lire_base(adresse):
@@ -64,7 +65,8 @@ def lire_base(adresse):
 
             # Le tout premier booster ouvert au café
             lignes = partie("premier booster", lambda: tous(
-                "SELECT user_id, cree_le, nb_boosters FROM cartes_ouvertures ORDER BY cree_le ASC, id ASC LIMIT 50"), [])
+                f"SELECT user_id, cree_le, nb_boosters FROM cartes_ouvertures WHERE {apres_ouverture('cree_le')}"
+                " ORDER BY cree_le ASC, id ASC LIMIT 50"), [])
             for u, t, n in lignes:
                 if libre(u):
                     r["premier_booster"] = {"membre": str(u), "date": date_iso(t), "boosters": int(n or 1)}
@@ -74,7 +76,7 @@ def lire_base(adresse):
             lignes = partie("première Mythique", lambda: tous(
                 "SELECT o.user_id, k.nom, o.cree_le FROM cartes_ouvertures_cartes oc"
                 " JOIN cartes_ouvertures o ON o.id = oc.ouverture_id JOIN cartes_catalogue k ON k.id = oc.carte_id"
-                " WHERE oc.rarete = 5 ORDER BY o.cree_le ASC, oc.position ASC LIMIT 50"), [])
+                f" WHERE oc.rarete = 5 AND {apres_ouverture('o.cree_le')} ORDER BY o.cree_le ASC, oc.position ASC LIMIT 50"), [])
             for u, nom, t in lignes:
                 if libre(u):
                     r["premiere_mythique"] = {"membre": str(u), "carte": str(nom), "rarete": 5, "date": date_iso(t)}
@@ -82,17 +84,17 @@ def lire_base(adresse):
 
             # La plus grosse ouverture d'un coup (le plus de boosters ouverts en une fois)
             lignes = partie("plus grosse ouverture", lambda: tous(
-                "SELECT user_id, nb_boosters, cree_le FROM cartes_ouvertures WHERE nb_boosters > 1"
+                f"SELECT user_id, nb_boosters, cree_le FROM cartes_ouvertures WHERE nb_boosters > 1 AND {apres_ouverture('cree_le')}"
                 " ORDER BY nb_boosters DESC, cree_le ASC LIMIT 50"), [])
             for u, n, t in lignes:
                 if libre(u):
                     r["grosse_ouverture"] = {"membre": str(u), "valeur": int(n), "date": date_iso(t)}
                     break
 
-            # Le plus de boosters ouverts en tout
+            # Le plus de boosters ouverts en tout (compté sur les ouvertures : le compteur des profils inclut les tests)
             lignes = partie("plus de boosters", lambda: tous(
-                "SELECT user_id, boosters_ouverts FROM cartes_profils WHERE boosters_ouverts > 0"
-                " ORDER BY boosters_ouverts DESC LIMIT 50"), [])
+                f"SELECT user_id, SUM(nb_boosters) AS n FROM cartes_ouvertures WHERE {apres_ouverture('cree_le')}"
+                " GROUP BY user_id ORDER BY n DESC, MIN(cree_le) ASC LIMIT 50"), [])
             for u, n in lignes:
                 if libre(u):
                     r["plus_de_boosters"] = {"membre": str(u), "valeur": int(n)}
@@ -101,7 +103,7 @@ def lire_base(adresse):
             # Le plus de cartes Mythiques tirées
             lignes = partie("plus de Mythiques", lambda: tous(
                 "SELECT o.user_id, COUNT(*) AS n FROM cartes_ouvertures_cartes oc JOIN cartes_ouvertures o ON o.id = oc.ouverture_id"
-                " WHERE oc.rarete = 5 GROUP BY o.user_id ORDER BY n DESC, MIN(o.cree_le) ASC LIMIT 50"), [])
+                f" WHERE oc.rarete = 5 AND {apres_ouverture('o.cree_le')} GROUP BY o.user_id ORDER BY n DESC, MIN(o.cree_le) ASC LIMIT 50"), [])
             for u, n in lignes:
                 if libre(u):
                     r["plus_de_mythiques"] = {"membre": str(u), "valeur": int(n)}
@@ -109,9 +111,10 @@ def lire_base(adresse):
 
             # Le plus beau booster : les 5 cartes d'un même booster, le plus de Mythiques puis de Légendaires (et mieux)
             lignes = partie("plus beau booster", lambda: tous(
-                "SELECT ouverture_id, booster, SUM(rarete = 5) AS m, SUM(rarete >= 4) AS l, SUM(rarete) AS s"
-                " FROM cartes_ouvertures_cartes WHERE rarete <= 5 GROUP BY ouverture_id, booster"
-                " HAVING l >= 2 ORDER BY m DESC, l DESC, s DESC, ouverture_id ASC LIMIT 50"), [])
+                "SELECT oc.ouverture_id, oc.booster, SUM(oc.rarete = 5) AS m, SUM(oc.rarete >= 4) AS l, SUM(oc.rarete) AS s"
+                " FROM cartes_ouvertures_cartes oc JOIN cartes_ouvertures o ON o.id = oc.ouverture_id"
+                f" WHERE oc.rarete <= 5 AND {apres_ouverture('o.cree_le')} GROUP BY oc.ouverture_id, oc.booster"
+                " HAVING l >= 2 ORDER BY m DESC, l DESC, s DESC, oc.ouverture_id ASC LIMIT 50"), [])
             for ouverture, booster, m, l, _ in lignes:
                 qui = partie("ouverture", lambda: tous("SELECT user_id, cree_le FROM cartes_ouvertures WHERE id = %s", (ouverture,)), [])
                 if not qui or not libre(qui[0][0]):
@@ -126,7 +129,8 @@ def lire_base(adresse):
             # La vente la plus chère au marché
             lignes = partie("vente record", lambda: tous(
                 "SELECT vendeur, acheteur, carte_id, quantite, prix, maj_le FROM cartes_marches"
-                " WHERE acheteur IS NOT NULL AND acheteur <> '' AND prix > 0 ORDER BY prix DESC, maj_le ASC LIMIT 50"), [])
+                f" WHERE acheteur IS NOT NULL AND acheteur <> '' AND prix > 0 AND {apres_ouverture('maj_le')}"
+                " ORDER BY prix DESC, maj_le ASC LIMIT 50"), [])
             for vendeur, acheteur, carte_id, quantite, prix, t in lignes:
                 if libre(vendeur) and libre(acheteur):
                     nom, rarete = carte(carte_id)
@@ -138,7 +142,8 @@ def lire_base(adresse):
             # La carte la plus rare (la moins sortie des boosters) et la plus tirée, parmi les cartes encore en jeu
             sorties = partie("cartes sorties", lambda: tous(
                 "SELECT k.nom, k.rarete, COUNT(*) AS n FROM cartes_ouvertures_cartes oc JOIN cartes_catalogue k ON k.id = oc.carte_id"
-                " WHERE k.actif = 1 GROUP BY k.id, k.nom, k.rarete ORDER BY n ASC, k.rarete DESC"), [])
+                " JOIN cartes_ouvertures o ON o.id = oc.ouverture_id"
+                f" WHERE k.actif = 1 AND {apres_ouverture('o.cree_le')} GROUP BY k.id, k.nom, k.rarete ORDER BY n ASC, k.rarete DESC"), [])
             if sorties:
                 nom, rarete, n = sorties[0]
                 r["carte_plus_rare"] = {"carte": str(nom), "rarete": int(rarete), "valeur": int(n)}

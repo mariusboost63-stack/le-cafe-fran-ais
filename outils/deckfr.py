@@ -25,6 +25,16 @@ TAILLE = 10       # collectionneurs
 TIRAGES = 8       # derniers grands tirages
 NOUVELLES = 8     # dernières cartes sorties
 
+# L'ouverture officielle de DeckFR : le samedi 7 novembre 2026 à 17 h, heure de Paris. Les boosters ouverts avant
+# étaient des tests du bot : ils ne comptent ni dans les taux de tirage, ni dans les chiffres du jeu, ni dans les records.
+OUVERTURE = datetime.datetime(2026, 11, 7, 16, 0, tzinfo=datetime.timezone.utc)
+
+
+def apres_ouverture(colonne):
+    """Condition SQL : l'horodatage `colonne` (en millisecondes ou en secondes, selon la table) est après l'ouverture."""
+    s = int(OUVERTURE.timestamp())
+    return f"({colonne} >= {s * 1000} OR ({colonne} < 100000000000 AND {colonne} >= {s}))"
+
 
 def date_iso(v):
     """Les dates du bot sont des horodatages (en millisecondes ou en secondes) : en date ISO, ou None."""
@@ -64,7 +74,8 @@ def lire_base(adresse):
             catalogue = {int(r): int(n) for r, n in c.fetchall()}
             total = sum(catalogue.values())
             # Les tirages réels : la part de chaque rareté parmi toutes les cartes sorties des boosters
-            c.execute("SELECT rarete, COUNT(*) FROM cartes_ouvertures_cartes GROUP BY rarete")
+            c.execute("SELECT oc.rarete, COUNT(*) FROM cartes_ouvertures_cartes oc JOIN cartes_ouvertures o ON o.id = oc.ouverture_id"
+                      f" WHERE {apres_ouverture('o.cree_le')} GROUP BY oc.rarete")
             tirees = {int(r): int(n) for r, n in c.fetchall()}
             nb_tirees = sum(tirees.values())
             sortie["raretes"] = [{
@@ -91,17 +102,19 @@ def lire_base(adresse):
             # Les membres privés de cartes, lus à part : la table users n'a pas la même collation que les tables
             # cartes_*, une jointure de texte entre les deux est refusée par la base (erreur 1267)
             exclus = partie("membres exclus", lambda: {str(i) for (i,) in tous("SELECT id FROM users WHERE blacklistCartes = 1")}, set())
-            # Les chiffres du jeu
-            joueurs, boosters = partie("profils", lambda: tuple(int(x) for x in un(
-                "SELECT COUNT(*), COALESCE(SUM(boosters_ouverts), 0) FROM cartes_profils WHERE boosters_ouverts > 0")), (0, 0))
+            # Les chiffres du jeu, depuis l'ouverture officielle (les compteurs de cartes_profils comptent aussi les tests)
+            joueurs, boosters = partie("ouvertures", lambda: tuple(int(x) for x in un(
+                "SELECT COUNT(DISTINCT user_id), COALESCE(SUM(nb_boosters), 0) FROM cartes_ouvertures"
+                f" WHERE {apres_ouverture('cree_le')}")), (0, 0))
             # Échanges conclus : les deux joueurs ont confirmé, ou le statut le dit (comparé ici, pas dans la base)
             faits = {"termine", "terminé", "accepte", "accepté", "conclu", "valide", "validé", "fini", "effectue", "effectué"}
             echanges = partie("échanges", lambda: sum(int(n) for statut, a, b, n in tous(
-                "SELECT statut, conf_a, conf_b, COUNT(*) FROM cartes_echanges GROUP BY statut, conf_a, conf_b")
+                f"SELECT statut, conf_a, conf_b, COUNT(*) FROM cartes_echanges WHERE {apres_ouverture('cree_le')} GROUP BY statut, conf_a, conf_b")
                 if (a and b) or str(statut or "").strip().lower() in faits), 0)
             # Ventes au marché : une carte qui a trouvé un acheteur
             ventes, grains_marche = partie("marché", lambda: tuple(int(x) for x in un(
-                "SELECT COUNT(*), COALESCE(SUM(prix), 0) FROM cartes_marches WHERE acheteur IS NOT NULL AND acheteur <> ''")), (0, 0))
+                "SELECT COUNT(*), COALESCE(SUM(prix), 0) FROM cartes_marches WHERE acheteur IS NOT NULL AND acheteur <> ''"
+                f" AND {apres_ouverture('maj_le')}")), (0, 0))
             sortie["chiffres"] = {"cartes": total, "joueurs": joueurs, "boosters": boosters, "tirees": nb_tirees,
                                   "echanges": echanges, "ventes": ventes, "grains_marche": grains_marche}
             # Les deux raretés les plus hautes qu'on peut vraiment tirer : une rareté qui n'est jamais sortie d'un booster
