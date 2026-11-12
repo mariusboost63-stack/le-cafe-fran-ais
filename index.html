@@ -5244,6 +5244,43 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
 
   // Les listes (classement, événements) sont publiées avec le site ; tant qu'il est servi par GitHub Pages, elles
   // sont lues sur le dépôt (deuxième adresse)
+  /* ---------- Chaque page ne charge que ce qu'elle montre ----------
+     Toutes les pages contiennent tout le site (une seule page HTML) : sans précaution, chacune téléchargerait les
+     images et les données de toutes les autres. Une image d'une section d'une autre page attend que sa page s'ouvre
+     (imagePlusTard), et les données propres à une page ne sont lues qu'à son ouverture (quandPage). */
+  const pageActive = () => racine.getAttribute('data-page');
+  function pageDeLElement(el) {
+    return PAGES.find((q) => q.ancres.some((a) => { const s = document.getElementById(a); return s && s.contains(el); })) || null;
+  }
+  const imagesEnAttente = new Set();
+  let posePrevue = false;
+  function poserImages() {
+    posePrevue = false;
+    imagesEnAttente.forEach((img) => {
+      if (!img.isConnected) return;
+      const q = pageDeLElement(img);
+      if (q && q.id !== pageActive()) return;
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+      imagesEnAttente.delete(img);
+    });
+  }
+  function prevoirPose() { if (!posePrevue && imagesEnAttente.size) { posePrevue = true; requestAnimationFrame(poserImages); } }
+  function imagePlusTard(img, src) {
+    img.dataset.src = src;
+    imagesEnAttente.add(img);
+    prevoirPose();
+    return img;
+  }
+  // une image ajoutée plus tard dans la page (après un chargement) est vérifiée à son arrivée
+  new MutationObserver(prevoirPose).observe(document.body, { childList: true, subtree: true });
+  addEventListener('page', poserImages);
+  function quandPage(id, faire) {
+    if (pageActive() === id) { faire(); return; }
+    const attendre = () => { if (pageActive() !== id) return; removeEventListener('page', attendre); faire(); };
+    addEventListener('page', attendre);
+  }
+
   async function chargerListe(adresses) {
     for (const a of adresses) {
       try { const r = await fetch(a, { cache: 'no-cache' }); if (r.ok) return r; } catch (e) { /* adresse suivante */ }
@@ -5300,7 +5337,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   // Un avatar Discord (seulement depuis le CDN de Discord), avec un rond vide si l'image ne répond pas
   function avatarDiscord(url, taille) {
     const img = new Image();
-    img.src = /^https:\/\/cdn\.discordapp\.com\//.test(String(url || '')) ? url : 'https://cdn.discordapp.com/embed/avatars/0.png';
+    imagePlusTard(img, /^https:\/\/cdn\.discordapp\.com\//.test(String(url || '')) ? url : 'https://cdn.discordapp.com/embed/avatars/0.png');
     img.alt = ''; img.width = img.height = taille;
     img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
     // Avatar introuvable : une silhouette neutre plutôt qu'un rond vide
@@ -5333,7 +5370,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       const v = el('div', { className: 'dk-vignette' });
       const adresse = imageCarte(x.nom);
       if (adresse) {
-        const img = el('img', { src: adresse, alt: '', loading: 'lazy', decoding: 'async', referrerPolicy: 'no-referrer' });
+        const img = imagePlusTard(el('img', { alt: '', loading: 'lazy', decoding: 'async', referrerPolicy: 'no-referrer' }), adresse);
         img.addEventListener('error', () => img.replaceWith(tasse()), { once: true });
         v.append(img);
       } else v.append(tasse());
@@ -5447,7 +5484,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       const bouton = el('button', { type: 'button', className: 'dk-cat-carte' });
       bouton.setAttribute('aria-pressed', 'false');
       bouton.setAttribute('aria-label', secrete ? `${c.nom}, ${nomRarete(c.rarete)}. Carte secrète : elle se cache dans les boosters` : `${c.nom}, ${nomRarete(c.rarete)}. Retourner la carte`);
-      const recto = el('img', { src: imageCarte(c.nom), alt: '', loading: 'lazy', decoding: 'async', width: 400, height: 581 });
+      const recto = imagePlusTard(el('img', { alt: '', loading: 'lazy', decoding: 'async', width: 400, height: 581 }), imageCarte(c.nom));
       const verso = el('img', { alt: '', decoding: 'async', width: 400, height: 581 });
       const face = (cls, img) => { const s = el('span', { className: 'dk-face ' + cls }); s.append(img); return s; };
       bouton.append(face('dk-recto', recto), face('dk-verso', verso));
@@ -5474,7 +5511,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     }
     plus.addEventListener('click', () => { montrees += PAS; afficher(); });
     cherche.addEventListener('input', () => { montrees = PAS; afficher(); });
-    fetch('/cartes/catalogue.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
+    quandPage('deckfr', () => fetch('/cartes/catalogue.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
       if (!d || !Array.isArray(d.cartes) || !d.cartes.length) return;
       cartes = d.cartes.filter((c) => c && c.nom && Number.isInteger(c.rarete))
         .sort((a, b) => b.rarete - a.rarete || String(a.nom).localeCompare(String(b.nom), 'fr'));
@@ -5493,7 +5530,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       bloc.hidden = false;
       choisir(0);
       if (anime) ST.refresh();
-    }).catch(() => { /* sans catalogue, la galerie reste cachée */ });
+    }).catch(() => { /* sans catalogue, la galerie reste cachée */ }));
   })();
 
   /* ---------- L'équipe : on recrute, présence, fiches au dos des badges, carrousel sur mobile ---------- */
@@ -5905,7 +5942,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       const visuel = el('div', 'pe-visuel');
       if (/^https:\/\/cdn\.discordapp\.com\//.test(String(e.image || ''))) {
         const img = new Image();
-        img.src = e.image; img.alt = ''; img.width = 640; img.height = 256;
+        imagePlusTard(img, e.image); img.alt = ''; img.width = 640; img.height = 256;
         img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
         img.addEventListener('error', () => img.remove(), { once: true });
         visuel.append(icone(ICONES[e.type] || 'i-micro'), img);
@@ -6049,7 +6086,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     const url = String(m.avatar_url || '');
     if (!/^https:\/\/cdn\.discordapp\.com\//.test(url)) return null;
     const img = new Image();
-    img.src = url; img.alt = String(m.username || ''); img.width = 52; img.height = 52;
+    imagePlusTard(img, url); img.alt = String(m.username || ''); img.width = 52; img.height = 52;
     img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
     return img;
   }
@@ -6443,7 +6480,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
 
     // Les pièces d'une page
     function portrait(m) { const f = el('div', 'lp-portrait'); f.append(avatarDiscord(m && m.avatar, 120)); return f; }
-    function imageDe(nom) { const i = el('img', 'lp-carte'); i.src = imageCarte(nom); i.alt = ''; i.width = 400; i.height = 581; i.decoding = 'async'; return i; }
+    function imageDe(nom) { const i = el('img', 'lp-carte'); imagePlusTard(i, imageCarte(nom)); i.alt = ''; i.width = 400; i.height = 581; i.decoding = 'async'; return i; }
     function phrase(...morceaux) {
       const p = el('p', 'lp-phrase');
       morceaux.forEach((m) => p.append(typeof m === 'string' ? m : m));
@@ -6484,7 +6521,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         const x = r.plus_beau_booster;
         liste.push(record(D, 'Le plus beau booster', () => {
           const rang = el('div', 'lp-cartes');
-          x.cartes.slice(0, 5).forEach((c) => { const i = el('img'); i.src = imageCarte(c.nom); i.alt = `${c.nom}, ${nomRarete(c.rarete)}`; i.width = 400; i.height = 581; i.decoding = 'async'; rang.append(i); });
+          x.cartes.slice(0, 5).forEach((c) => { const i = el('img'); imagePlusTard(i, imageCarte(c.nom)); i.alt = `${c.nom}, ${nomRarete(c.rarete)}`; i.width = 400; i.height = 581; i.decoding = 'async'; rang.append(i); });
           const l = Number(x.legendaires) || 0, m = Number(x.mythiques) || 0;
           const texte = l > 1 ? [gras(`${l} cartes Légendaire ou mieux`), ` dans le même booster de cinq${m > 0 ? `, dont ${m} ${pluriel(m, 'Mythique')}` : ''}.`]
             : ['Une ', gras(m ? 'carte Mythique' : 'carte Légendaire'), " : le plus beau booster ouvert jusqu'ici."];
@@ -6639,7 +6676,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       if (livre.dataset.etat === 'ouvert') afficher();
       if (anime) ST.refresh();
     }
-    charger();
+    quandPage('classement', charger);
   })();
 
   /* ---------- DeckFR : le faux booster ----------
@@ -6659,14 +6696,15 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       r.forEach((x) => { const n = Number(x.niveau), t = Number(x.tirage); if (n >= 1 && n <= 6 && t > 0) lus[n] = t; });
       if (Object.keys(lus).length >= 3) taux = lus;
     });
-    const catalogue = fetch('/cartes/catalogue.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
+    let catalogue = null;
+    const lireCatalogue = () => catalogue || (catalogue = fetch('/cartes/catalogue.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
       parRarete = {};
       (d && Array.isArray(d.cartes) ? d.cartes : []).forEach((c) => {
         const n = Number(c.rarete);
         if (!c || !c.nom || n < 1 || n > 6 || estSecrete(c.nom)) return;
         (parRarete[n] = parRarete[n] || []).push(c);
       });
-    }).catch(() => { parRarete = {}; });
+    }).catch(() => { parRarete = {}; }));
     function tirerRarete() {
       const niveaux = Object.keys(taux).map(Number).filter((n) => parRarete[n] && parRarete[n].length);
       const total = niveaux.reduce((s, n) => s + taux[n], 0);
@@ -6701,7 +6739,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     async function ouvrir() {
       if (occupe) return;
       occupe = true;
-      await catalogue;
+      await lireCatalogue();
       if (!parRarete || !Object.keys(parRarete).length) { bilan.textContent = 'Les cartes ne sont pas disponibles pour le moment.'; occupe = false; return; }
       const cartes = Array.from({ length: 5 }, () => { const n = tirerRarete(); return auHasard(parRarete[n]); })
         .sort((a, b) => a.rarete - b.rarete);
@@ -6784,7 +6822,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       afficher();
     }));
     plus.addEventListener('click', () => { montrees += PAS; afficher(); });
-    chargerListe(['/idees.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/idees.json'])
+    quandPage('equipe', () => chargerListe(['/idees.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/idees.json'])
       .then((r) => (r ? r.json() : null)).then((d) => {
         idees = (d && Array.isArray(d.idees) ? d.idees : []).filter((x) => x && x.texte)
           .map((x) => ({ ...x, pour: Number(x.pour) || 0, contre: Number(x.contre) || 0, id: Number(x.id) || 0 }));
@@ -6794,7 +6832,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         afficher();
         bloc.hidden = false;
         if (anime) ST.refresh();
-      }).catch(() => {});
+      }).catch(() => {}));
   })();
 
   /* ---------- DeckFR : la Bourse des cartes ----------
@@ -6805,7 +6843,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     if (!bloc) return;
     const el = (tag, cls, texte) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texte !== undefined) e.textContent = texte; return e; };
     const prix = (n) => nf.format(Number(n) || 0).replace(/ /g, ' ');
-    function miniature(nom, taille) { const i = el('img'); i.src = imageCarte(nom); i.alt = ''; i.width = 400; i.height = 581; i.loading = 'lazy'; i.decoding = 'async'; i.style.width = taille; return i; }
+    function miniature(nom, taille) { const i = el('img'); imagePlusTard(i, imageCarte(nom)); i.alt = ''; i.width = 400; i.height = 581; i.loading = 'lazy'; i.decoding = 'async'; i.style.width = taille; return i; }
     function ligne(c) {
       const tr = el('tr');
       tr.style.setProperty('--r', couleurRarete(c.rarete));
@@ -6823,7 +6861,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       tr.append(td(carte), td(el('span', 'bo-cote', prix(c.cote))), td(prix(c.dernier), 'bo-c-dernier'), td(variation), td(String(c.ventes), 'bo-c-ventes'));
       return tr;
     }
-    chargerListe(['/bourse.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/bourse.json'])
+    quandPage('deckfr', () => chargerListe(['/bourse.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/bourse.json'])
       .then((r) => (r ? r.json() : null)).then((d) => {
         const cotes = d && Array.isArray(d.cotes) ? d.cotes.filter((c) => c && c.carte && !estSecrete(c.carte)) : [];
         if (!cotes.length) return;
@@ -6852,7 +6890,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         $('#bo-offres-bloc').hidden = !offres.length;
         bloc.hidden = false;
         if (anime) ST.refresh();
-      }).catch(() => {});
+      }).catch(() => {}));
   })();
 
   /* ---------- Accueil : les heures d'affluence ----------
@@ -6953,7 +6991,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       b.addEventListener('click', () => { jour = i; graphe(); });
       return b;
     }));
-    chargerListe(['/affluence.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/affluence.json'])
+    quandPage('accueil', () => chargerListe(['/affluence.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/affluence.json'])
       .then((r) => (r ? r.json() : null)).then((d) => {
         if (!d || !Array.isArray(d.moyenne) || d.moyenne.length !== 7 || !(Number(d.releves) >= 24)) return;
         moyenne = d.moyenne.map((l) => (Array.isArray(l) && l.length === 24 ? l.map((x) => (Number.isFinite(x) ? x : null)) : Array(24).fill(null)));
@@ -6969,7 +7007,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         bloc.hidden = false;
         graphe(); // une fois visible, pour ouvrir le graphique sur l'heure qu'il est (téléphone)
         if (anime) ST.refresh();
-      }).catch(() => {});
+      }).catch(() => {}));
   })();
 
   /* ---------- Info du jour : le récap du dimanche ----------
@@ -7011,7 +7049,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         : 'Prochaine édition dimanche prochain, à 18 h.');
       journal.replaceChildren(une, alaune, ...(chiffres.children.length ? [chiffres] : []), col, pied);
     }
-    chargerListe(['/recap.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/recap.json'])
+    quandPage('info-du-jour', () => chargerListe(['/recap.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/recap.json'])
       .then((r) => (r ? r.json() : null)).then((d) => {
         const editions = (d && Array.isArray(d.editions) ? d.editions : []).filter((x) => x && x.une && x.semaine);
         if (!editions.length) return;
@@ -7027,7 +7065,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         }
         bloc.hidden = false;
         if (anime) ST.refresh();
-      }).catch(() => {});
+      }).catch(() => {}));
   })();
 
   /* ---------- Réduire ou réactiver les animations ---------- */
