@@ -47,7 +47,7 @@ jobs:
           [ -f out/evenements.json ] || [ -f out/salons.json ] || { echo "Rien à publier"; exit 0; }
           # Un relevé manqué garde la version précédente de son fichier
           if git -C "$GITHUB_WORKSPACE" fetch -q --depth=1 origin evenements 2>/dev/null; then
-            for f in evenements.json salons.json; do
+            for f in evenements.json evenements.ics salons.json; do
               [ -f "out/$f" ] || git -C "$GITHUB_WORKSPACE" show "FETCH_HEAD:$f" > "out/$f" 2>/dev/null || rm -f "out/$f"
             done
           fi

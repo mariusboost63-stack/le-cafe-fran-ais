@@ -214,15 +214,27 @@ Le site suit la DA de Noël du serveur : un fond qui va du bordeaux au vert sapi
 
 Pour voir une version sans rien changer, ajoute `#saison-halloween`, `#saison-noel` ou `#saison-normale` à la fin de l'adresse du site.
 
+## L'agenda des événements
+
+Avec les événements, `outils/evenements.py` écrit `evenements.ics` (branche `evenements`), publié à l'adresse `cafe-fr.com/evenements.ics`. La page Événements propose de s'y abonner (iPhone, Mac, Outlook avec `webcal://`, et Google Agenda), et chaque événement a son lien « Ajouter à mon agenda ».
+
 ## Référencement et page d'erreur
 
 - `robots.txt` autorise tous les robots et indique `sitemap.xml`, la liste des pages du site (accueil, les huit pages, `/infos/`, CGU, mentions légales). Si une page s'ajoute, ajoute-la au sitemap.
 - En haut de `index.html`, un bloc `application/ld+json` décrit le site et la communauté pour les moteurs de recherche (nom, description, lien Discord).
 - `404.html` s'affiche pour toute adresse inexistante (GitHub Pages comme Cloudflare Pages) ; ses liens sont absolus (`/polices/…`, `/`).
 
+## Chaque page ne charge que ce qu'elle montre
+
+Toutes les pages contiennent tout le site. Pour ne pas tout télécharger à chaque visite, une image placée dans la section d'une autre page attend l'ouverture de cette page (`imagePlusTard`), et les données propres à une page (Bourse, idées, récap, affluence, records, catalogue des cartes) ne sont lues qu'à son ouverture (`quandPage`). Les données dont l'accueil a besoin pour « Au menu » (classement, info du jour, événements, DeckFR) restent lues partout.
+
+## Le test avant publication
+
+À chaque push sur `main`, `.github/workflows/publier.yml` lance d'abord `outils/verifier.js` : chaque page est ouverte sur ordinateur et sur téléphone, avec les dernières données des branches `data` et `evenements`. Une erreur JavaScript, un mauvais titre, une page sans section visible ou une page qui déborde sur les côtés bloquent la publication, et le site en ligne ne change pas. En local : `node outils/verifier.js` (avec Playwright installé).
+
 ## Aperçu des liens partagés
 
-Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. L'image est dessinée par `outils/membres.js` (logo de la page, lettres du fond, nombre de membres) : pour changer sa mise en page, modifie ce script puis lance `node outils/membres.js --image`. Les balises `og:` et `canonical` en haut de `index.html` utilisent l'adresse `https://cafe-fr.com/` ; `outils/pages.py` les adapte pour chaque page (titre, description, adresse), et la page les met à jour quand on change de page. Si le domaine change, remplace-la à ces endroits et dans le fichier `CNAME`.
+Quand le lien du site est posté sur Discord ou ailleurs, l'image `apercu.png` s'affiche avec le titre et la description. L'image est dessinée par `outils/membres.js` (logo de la page, lettres du fond, nombre de membres) : pour changer sa mise en page, modifie ce script puis lance `node outils/membres.js --image`. Les balises `og:` et `canonical` en haut de `index.html` utilisent l'adresse `https://cafe-fr.com/` ; `outils/pages.py` les adapte pour chaque page (titre, description, adresse), et la page les met à jour quand on change de page. Chaque page a aussi sa propre image, `apercus/<page>.jpg` (le nom de la page, son résumé et son objet : la caisse des grains, les cartes de DeckFR…), dessinée par `outils/apercus.js` : relance-le quand une page change d'allure ou de résumé. Si le domaine change, remplace-la à ces endroits et dans le fichier `CNAME`.
 
 ## Mise en ligne : Cloudflare Pages (dépôt privé possible)
 

@@ -2330,6 +2330,12 @@ main, .pied { position: relative; z-index: 1; }
 .pe-interesses { color: var(--brume); font-size: 15px; }
 .pe-interesses b { color: var(--lait); font-variant-numeric: tabular-nums; }
 .pe-lien { will-change: auto; }
+/* ajouter l'événement à son agenda : au-dessus du lien qui couvre la carte */
+.pe-agenda { position: relative; z-index: 2; color: var(--brume); font: 600 14px/1.2 var(--f-texte); text-decoration: underline; text-underline-offset: 3px; }
+.pe-agenda:hover { color: var(--lait); }
+.pe-abonner { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; color: var(--brume); font-size: 15px; }
+.pe-abonner svg { width: 18px; height: 18px; color: var(--creme); }
+.pe-abonner a { color: var(--lait); font-weight: 600; text-underline-offset: 3px; }
 .pe-lien::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 .pe-lien:focus-visible { outline: 2px solid var(--bleu-vif); outline-offset: 3px; }
 @media (max-width: 420px) { .pe-corps { padding-inline: 18px; } .pe-date { width: 56px; height: 64px; } }
@@ -3438,6 +3444,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         <p class="surtitre">À l'agenda du serveur</p>
         <h2 class="h2" id="t-prochains">Les prochains événements</h2>
         <p class="chapo">Ils sont programmés dans l'onglet «&nbsp;Événements&nbsp;» du serveur. Clique sur «&nbsp;Intéressé&nbsp;» sur Discord pour être prévenu quand ça commence.</p>
+        <p class="pe-abonner"><svg aria-hidden="true"><use href="#i-jour"/></svg><span>Tous les événements dans ton agenda, toujours à jour&nbsp;:</span> <a href="webcal://cafe-fr.com/evenements.ics">iPhone, Mac, Outlook</a> <a href="https://calendar.google.com/calendar/r?cid=webcal%3A%2F%2Fcafe-fr.com%2Fevenements.ics" target="_blank" rel="noopener">Google Agenda</a></p>
       </div>
       <ol class="prochains-liste" id="prochains-liste"></ol>
     </div>
@@ -6003,6 +6010,17 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       if (n) interesses.append(el('b', '', nf.format(n)), n > 1 ? ' intéressés' : ' intéressé');
       else interesses.textContent = 'Sois le premier !';
       pied.append(interesses);
+      // L'événement dans son agenda Google (les autres agendas : l'abonnement en haut de la section)
+      if (Number.isFinite(debut.getTime())) {
+        const z = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+        const finAgenda = finConnue ? new Date(finConnue) : new Date(debut.getTime() + 3600e3);
+        const agenda = el('a', 'pe-agenda', 'Ajouter à mon agenda');
+        agenda.href = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({ action: 'TEMPLATE', text: String(e.nom || 'Événement'), dates: `${z(debut)}/${z(finAgenda)}`,
+          details: `${e.description ? String(e.description) + '\n\n' : ''}Sur Discord : ${e.lien || 'https://discord.gg/france'}`, location: `Le Café Français · ${e.lieu || 'Discord'}` });
+        agenda.target = '_blank'; agenda.rel = 'noopener';
+        agenda.setAttribute('aria-label', `Ajouter à mon agenda Google : ${titre.textContent}`);
+        pied.append(agenda);
+      }
       if (/^https:\/\/discord\.com\/events\//.test(String(e.lien || ''))) {
         const lien = el('a', 'btn btn-petit btn-ligne pe-lien');
         lien.href = e.lien; lien.target = '_blank'; lien.rel = 'noopener';

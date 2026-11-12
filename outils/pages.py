@@ -31,7 +31,7 @@ def remplacer(source, motif, valeur):
     return nouveau
 
 
-def page(source, p):
+def page(source, p, dossier):
     titre, description, url = html.escape(p["titre"], quote=True), html.escape(p["description"], quote=True), SITE + p["chemin"]
     source = remplacer(source, r"(<title>)[^<]*(</title>)", titre)
     source = remplacer(source, r'(<meta name="description" content=")[^"]*(")', description)
@@ -39,6 +39,11 @@ def page(source, p):
     source = remplacer(source, r'(<meta property="og:description" content=")[^"]*(")', description)
     source = remplacer(source, r'(<meta property="og:url" content=")[^"]*(")', url)
     source = remplacer(source, r'(<link rel="canonical" href=")[^"]*(")', url)
+    # L'image d'aperçu propre à la page (apercus/<page>.jpg, dessinée par outils/apercus.js), si elle existe
+    if (dossier / "apercus" / f"{p['id']}.jpg").exists():
+        source = remplacer(source, r'(<meta property="og:image" content=")[^"]*(")', f"{SITE}/apercus/{p['id']}.jpg")
+        source = remplacer(source, r'(<meta property="og:image:alt" content=")[^"]*(")',
+                           html.escape(f"{p['nom']}, au Café Français : {p['resume']}", quote=True))
     return source
 
 
@@ -52,7 +57,7 @@ def main():
         if cible.exists():
             raise SystemExit(f"{cible} existe déjà : une page porte le nom d'un dossier du site")
         cible.parent.mkdir(parents=True, exist_ok=True)
-        cible.write_text(page(source, p), encoding="utf-8")
+        cible.write_text(page(source, p, dossier), encoding="utf-8")
         print("page", p["chemin"])
 
 

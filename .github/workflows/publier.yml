@@ -1,4 +1,5 @@
-# Publie le site sur Cloudflare Pages à chaque push sur main (voir .github/actions/publier-site).
+# Publie le site sur Cloudflare Pages à chaque push sur main (voir .github/actions/publier-site), après avoir testé
+# chaque page (outils/verifier.js) : une page cassée bloque la publication.
 # Les tâches du classement, des événements et du nombre de membres republient elles-mêmes le site après leur relevé.
 # Secrets à ajouter (Settings → Secrets and variables → Actions) : CLOUDFLARE_API_TOKEN et CLOUDFLARE_ACCOUNT_ID.
 name: Publier le site
@@ -17,6 +18,21 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
+      # Le test avant publication : chaque page, sur ordinateur et sur téléphone, sans erreur (outils/verifier.js).
+      # Si une page casse, la publication s'arrête là et le site en ligne ne change pas.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Installer Playwright
+        run: npm install --no-save --no-package-lock playwright-core@1.56.1
+      - name: Reprendre les dernières données pour le test
+        run: |
+          for b in data:classement.json data:deckfr.json data:records.json data:bourse.json data:idees.json data:affluence.json data:recap.json evenements:evenements.json evenements:salons.json; do
+            branche="${b%%:*}"; fichier="${b#*:}"
+            if git fetch -q --depth=1 origin "$branche" 2>/dev/null; then git show "FETCH_HEAD:$fichier" > "$fichier" 2>/dev/null || rm -f "$fichier"; fi
+          done
+      - name: Tester les pages
+        run: node outils/verifier.js
       - uses: ./.github/actions/publier-site
         with:
           api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}

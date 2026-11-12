@@ -65,6 +65,42 @@ def nettoyer(texte, salons, roles):
     return t if len(t) <= 280 else t[:279].rsplit(" ", 1)[0].rstrip(" ,;:.") + "…"
 
 
+def calendrier(evenements, maj):
+    """Le calendrier des événements (iCalendar), pour s'y abonner depuis un agenda : cafe-fr.com/evenements.ics."""
+    def echapper(t):
+        return str(t or "").replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\r", "").replace("\n", "\\n")
+
+    def date(iso):
+        d = datetime.datetime.fromisoformat(str(iso).replace("Z", "+00:00")).astimezone(datetime.timezone.utc)
+        return d.strftime("%Y%m%dT%H%M%SZ")
+
+    def plier(ligne):
+        # une ligne d'iCalendar fait au plus 75 octets ; la suite commence par une espace
+        sortie, courant = [], ""
+        for c in ligne:
+            if len((courant + c).encode("utf-8")) > 74:
+                sortie.append(courant)
+                courant = " "
+            courant += c
+        return sortie + [courant]
+
+    lignes = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Le Café Français//Événements//FR", "CALSCALE:GREGORIAN",
+              "METHOD:PUBLISH", "X-WR-CALNAME:Le Café Français", "X-WR-TIMEZONE:Europe/Paris",
+              "REFRESH-INTERVAL;VALUE=DURATION:PT2H", "X-PUBLISHED-TTL:PT2H"]
+    estampille = date(maj)
+    for e in evenements:
+        if not e.get("debut"):
+            continue
+        debut = datetime.datetime.fromisoformat(str(e["debut"]).replace("Z", "+00:00"))
+        fin = e.get("fin") or (debut + datetime.timedelta(hours=1)).isoformat()
+        description = (e.get("description") or "") + ("\n\n" if e.get("description") else "") + f"Sur Discord : {e.get('lien', '')}"
+        lignes += ["BEGIN:VEVENT", f"UID:{e['id']}@cafe-fr.com", f"DTSTAMP:{estampille}", f"DTSTART:{date(e['debut'])}", f"DTEND:{date(fin)}",
+                   f"SUMMARY:{echapper(e.get('nom'))}", f"DESCRIPTION:{echapper(description)}", f"LOCATION:{echapper('Le Café Français · ' + str(e.get('lieu') or 'Discord'))}",
+                   f"URL:{e.get('lien', '')}", "END:VEVENT"]
+    lignes.append("END:VCALENDAR")
+    return "\r\n".join(l for ligne in lignes for l in plier(ligne)) + "\r\n"
+
+
 def main():
     if len(sys.argv) < 2:
         sys.exit(__doc__)
@@ -130,6 +166,7 @@ def main():
     sortie.parent.mkdir(parents=True, exist_ok=True)
     maj = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
     sortie.write_text(json.dumps({"maj": maj, "evenements": evenements}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    sortie.with_suffix(".ics").write_bytes(calendrier(evenements, maj).encode("utf-8"))
     signaler(f"Événements publiés : {len(evenements)}.")
     return 0
 
