@@ -785,6 +785,56 @@ main, .pied { position: relative; z-index: 1; }
   .dk-tresor-prime { grid-column: 1 / -1; grid-template-columns: auto auto auto; align-items: baseline; justify-content: start; gap: 10px; padding: 10px 0 0; border-left: 0; border-top: 1px solid var(--trait); }
   .dk-tresor-prime b { font-size: 34px; }
 }
+/* La livraison des nouvelles cartes : une caisse en bois et son étiquette d'expédition, avec un compteur à palettes */
+.dk-livraison { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: clamp(18px, 3vw, 40px); }
+.dk-livraison[hidden] { display: none; }
+.dk-caisse {
+  position: relative; display: grid; place-content: center; justify-items: center; gap: 6px; width: clamp(170px, 19vw, 240px); aspect-ratio: 1.15; box-sizing: border-box;
+  color: color-mix(in srgb, #2b1708 82%, transparent); border-radius: 4px; rotate: -2deg;
+  /* des planches horizontales, deux montants et des clous */
+  background:
+    radial-gradient(circle at 9% 12%, #3b2a1a 0 2px, transparent 2.5px), radial-gradient(circle at 91% 12%, #3b2a1a 0 2px, transparent 2.5px),
+    radial-gradient(circle at 9% 88%, #3b2a1a 0 2px, transparent 2.5px), radial-gradient(circle at 91% 88%, #3b2a1a 0 2px, transparent 2.5px),
+    linear-gradient(90deg, transparent 0 4%, color-mix(in srgb, #000 16%, transparent) 4% 4.6%, transparent 4.6% 95.4%, color-mix(in srgb, #000 16%, transparent) 95.4% 96%, transparent 96%),
+    repeating-linear-gradient(180deg, transparent 0 calc(25% - 2px), color-mix(in srgb, #000 30%, transparent) calc(25% - 2px) 25%),
+    repeating-linear-gradient(93deg, color-mix(in srgb, #000 7%, transparent) 0 2px, transparent 2px 13px, color-mix(in srgb, #fff 6%, transparent) 13px 14px, transparent 14px 27px),
+    linear-gradient(180deg, #c99a62, #b07d48 60%, #9a6a3a);
+  box-shadow: inset 0 0 0 6px color-mix(in srgb, #5b3a1c 70%, transparent), 0 26px 30px -16px #000;
+}
+.dk-caisse-marque { font: 800 clamp(30px, 3.4vw, 42px)/1 var(--f-titre); font-stretch: 80%; letter-spacing: .06em; text-transform: uppercase; }
+.dk-caisse-nb { font: 500 13px/1 var(--f-mono); letter-spacing: .22em; text-transform: uppercase; }
+.dk-caisse-fragile { position: absolute; right: -10px; bottom: 14%; padding: 4px 10px; border: 3px solid #b3212b; border-radius: 4px; color: #b3212b; font: 800 16px/1 var(--f-titre); letter-spacing: .14em; text-transform: uppercase; rotate: -12deg; background: color-mix(in srgb, #f3ead6 30%, transparent); }
+.dk-etiquette {
+  position: relative; display: grid; gap: 10px; min-width: 0; padding: clamp(20px, 2.6vw, 30px) clamp(18px, 2.8vw, 34px) clamp(20px, 2.6vw, 30px) clamp(40px, 4vw, 52px);
+  border-radius: 6px; color: #1d2433; rotate: .6deg;
+  background: linear-gradient(175deg, #fffaf0, #f2e8d2); box-shadow: inset 0 0 0 1px color-mix(in srgb, #1d2433 10%, transparent), 0 24px 34px -18px #000;
+}
+/* le trou renforcé de l'étiquette */
+.dk-etiquette::before { content: ""; position: absolute; left: 14px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--nuit); box-shadow: 0 0 0 3px #d9c79f; }
+.dk-etiquette-sur { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, #1d2433 72%, #f2e8d2); }
+.dk-etiquette-sur b { color: #b3212b; font-weight: 500; }
+.dk-etiquette h3 { font: 800 clamp(24px, 2.6vw, 34px)/1.05 var(--f-titre); letter-spacing: -.01em; }
+.dk-etiquette-theme { font: 700 clamp(20px, 2vw, 25px)/1.15 var(--f-craie, "Caveat", cursive); color: #0c3b83; }
+.dk-etiquette-raretes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; font: 600 14px/1 var(--f-texte); color: color-mix(in srgb, #1d2433 80%, #f2e8d2); }
+.dk-etiquette-raretes li { display: inline-flex; align-items: center; gap: 7px; }
+.dk-etiquette-raretes li::before { content: ""; width: 11px; height: 11px; border-radius: 50%; background: var(--r); box-shadow: inset 0 0 0 1px color-mix(in srgb, #000 25%, transparent); }
+/* le compteur à palettes */
+.dk-rebours { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.dk-rebours > span { display: grid; justify-items: center; gap: 6px; }
+.dk-rebours b {
+  position: relative; display: block; min-width: 2ch; padding: 8px 10px; border-radius: 7px; text-align: center; color: #f6f1e4;
+  font: 500 clamp(30px, 3.4vw, 44px)/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #2a2f3a 0 50%, #1d2129 50% 100%); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 12%, transparent), 0 4px 8px -2px color-mix(in srgb, #000 50%, transparent);
+}
+.dk-rebours b::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: #0e1015; }
+.dk-rebours small { font: 500 11px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: color-mix(in srgb, #1d2433 72%, #f2e8d2); }
+.dk-rebours.arrive { display: block; font: 700 clamp(22px, 2.2vw, 28px)/1.2 var(--f-craie, "Caveat", cursive); color: #b3212b; }
+@media (max-width: 640px) {
+  .dk-livraison { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .dk-caisse { width: 170px; }
+  .dk-etiquette { width: 100%; box-sizing: border-box; rotate: 0deg; }
+  .dk-rebours { gap: 8px; }
+}
 /* La carte secrète dans la galerie : floutée, avec un point d'interrogation, et on ne peut pas la retourner */
 .dk-secrete .dk-cat-carte { cursor: default; }
 .dk-secrete .dk-recto::after { content: "?"; position: absolute; inset: 0; display: grid; place-items: center; font: 800 54px/1 var(--f-titre); color: rgb(255 250 235 / .9); text-shadow: 0 3px 12px rgb(120 80 0 / .7); }
@@ -3094,6 +3144,18 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         </div>
         <p class="dk-tresor-prime"><small>Récompense</small><b>5</b><span>Nitro Boosts</span></p>
       </aside>
+      <aside class="dk-livraison" id="dk-livraison" aria-labelledby="dk-livraison-titre" hidden>
+        <div class="dk-caisse" aria-hidden="true"><span class="dk-caisse-marque">DeckFR</span><span class="dk-caisse-nb">115 cartes</span><span class="dk-caisse-fragile">Fragile</span></div>
+        <div class="dk-etiquette">
+          <p class="dk-etiquette-sur" id="dk-livraison-sur">Livraison prévue · <b>samedi 14 novembre, 17&nbsp;h</b></p>
+          <h3 id="dk-livraison-titre">115 nouvelles cartes arrivent</h3>
+          <p class="dk-etiquette-theme">Militaires, résistants et héros de guerre</p>
+          <ul class="dk-etiquette-raretes" aria-label="Raretés de la livraison">
+            <li style="--r: var(--rar-5)">Mythique</li><li style="--r: var(--rar-4)">Légendaire</li><li style="--r: var(--rar-3)">Épique</li><li style="--r: var(--rar-2)">Rare</li><li style="--r: var(--rar-1)">Commun</li>
+          </ul>
+          <p class="dk-rebours" id="dk-rebours" role="timer" aria-label="Temps avant l'arrivée des cartes"><span><b data-u="j">00</b><small>jours</small></span><span><b data-u="h">00</b><small>heures</small></span><span><b data-u="m">00</b><small>min</small></span><span><b data-u="s">00</b><small>s</small></span></p>
+        </div>
+      </aside>
       <ol class="dk-etapes">
         <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Chaque booster contient 5 cartes, à ouvrir avec <code>/ouverture</code>. Des boosters gratuits se rechargent avec le temps, et la boutique en vend à 10&nbsp;000 grains, sans limite.</p></li>
         <li><span class="dk-num">2</span><h3>Complète ta collection</h3><p><b class="dk-total">156</b> cartes à réunir, réparties en sept raretés, dont deux raretés bonus. Tes doublons te servent à échanger ou à vendre.</p></li>
@@ -4841,6 +4903,40 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     }
     charger();
     setInterval(() => { if (!document.hidden) charger(); }, 10 * 60000);
+  })();
+
+  /* ---------- DeckFR : la livraison des nouvelles cartes, avec son décompte ----------
+     Pour une prochaine livraison : change la date (heure de Paris), le nombre, le thème et les raretés dans le HTML (#dk-livraison).
+     Le bloc s'affiche jusqu'à l'arrivée, annonce « arrivées » pendant JOURS_APRES jours, puis disparaît tout seul. */
+  (function livraison() {
+    const bloc = $('#dk-livraison');
+    if (!bloc) return;
+    const ARRIVEE = Date.parse('2026-11-14T17:00:00+01:00'), JOURS_APRES = 7;
+    const rebours = $('#dk-rebours'), cases = {};
+    $$('b[data-u]', rebours).forEach((b) => { cases[b.dataset.u] = b; });
+    const deux = (n) => String(n).padStart(2, '0');
+    let minuteur = 0;
+    function maj() {
+      const reste = ARRIVEE - Date.now();
+      if (reste <= -JOURS_APRES * 864e5) { bloc.hidden = true; clearInterval(minuteur); return; }
+      bloc.hidden = false;
+      if (reste <= 0) {
+        $('#dk-livraison-sur').textContent = 'Livrées le samedi 14 novembre à 17 h';
+        $('#dk-livraison-titre').textContent = '115 nouvelles cartes sont arrivées';
+        rebours.className = 'dk-rebours arrive';
+        rebours.removeAttribute('role');
+        rebours.removeAttribute('aria-label');
+        rebours.textContent = 'Elles sont dans les boosters : à toi de jouer avec /ouverture !';
+        clearInterval(minuteur);
+        return;
+      }
+      const t = Math.floor(reste / 1000);
+      const v = { j: Math.floor(t / 86400), h: Math.floor(t / 3600) % 24, m: Math.floor(t / 60) % 60, s: t % 60 };
+      Object.entries(v).forEach(([u, n]) => { if (cases[u] && cases[u].textContent !== deux(n)) cases[u].textContent = deux(n); });
+      rebours.setAttribute('aria-label', `Arrivée dans ${v.j} jour${v.j > 1 ? 's' : ''}, ${v.h} heure${v.h > 1 ? 's' : ''} et ${v.m} minute${v.m > 1 ? 's' : ''}`);
+    }
+    maj();
+    if (!bloc.hidden && Date.now() < ARRIVEE) minuteur = setInterval(maj, 1000);
   })();
 
   /* ---------- DeckFR : toutes les cartes, recto et verso (cartes/catalogue.json et les images du bot) ---------- */
