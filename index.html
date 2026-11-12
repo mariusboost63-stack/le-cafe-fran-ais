@@ -530,7 +530,8 @@ main, .pied { position: relative; z-index: 1; }
   background: linear-gradient(90deg, var(--bleu-vif) 0 40%, var(--lait) 40% 70%, var(--rouge) 70%); }
 
 /* DeckFR, le jeu de cartes */
-.deckfr { padding-block: clamp(72px, 8vw, 120px); overflow: hidden; }
+.deckfr { padding-block: clamp(72px, 8vw, 120px); overflow-x: clip; }
+@supports not (overflow: clip) { .deckfr { overflow: hidden; } }
 .deckfr-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 72px) clamp(32px, 6vw, 96px); align-items: center; }
 .deckfr-tete { display: grid; gap: 22px; min-width: 0; }
 .deckfr-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 46ch; }
@@ -2876,6 +2877,21 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   .dimanche { rotate: 0deg; }
 }
 
+/* DeckFR : le sommaire, qui reste sous la barre du haut pendant la lecture de la page */
+.dk-sommaire {
+  grid-column: 1 / -1; position: sticky; top: calc(var(--haut-barre, 70px) + 10px); z-index: 30; justify-self: center;
+  display: flex; gap: 4px; max-width: 100%; box-sizing: border-box; padding: 5px; overflow-x: auto; scrollbar-width: none;
+  border-radius: 999px; border: 1px solid var(--trait); background: color-mix(in srgb, var(--nuit) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 14px 30px -18px #000;
+}
+.dk-sommaire::-webkit-scrollbar { display: none; }
+.dk-sommaire a { flex: none; padding: 9px 14px; border-radius: 999px; color: var(--brume); font: 700 14px/1 var(--f-titre); text-decoration: none; white-space: nowrap; transition: background-color .2s, color .2s; }
+.dk-sommaire a:hover { color: var(--lait); }
+.dk-sommaire a[aria-current="true"] { background: var(--lait); color: var(--nuit); }
+.dk-sommaire a[hidden] { display: none; }
+.dk-sommaire a:focus-visible { outline: 2px solid var(--lait); outline-offset: 2px; }
+@media (max-width: 560px) { .dk-sommaire { justify-self: stretch; border-radius: 16px; } .dk-sommaire a { padding: 9px 12px; } }
+
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
 
@@ -3506,6 +3522,9 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         <div class="dk-carte dk-photo" style="--r: var(--rar-4); --i: 1"><img src="/cartes/vitrine/legendaire-louis-ix.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
         <div class="dk-carte dk-photo dk-mythique" style="--r: var(--rar-5); --i: 2"><img src="/cartes/vitrine/mythique-charlemagne.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
       </div>
+      <nav class="dk-sommaire" id="dk-sommaire" aria-label="Sur cette page">
+        <a href="#dk-jeu">Le jeu</a><a href="#dk-raretes">Les raretés</a><a href="#dk-essai">Un booster pour de faux</a><a href="#dk-direct">En direct</a><a href="#dk-bourse">La Bourse</a><a href="#dk-catalogue">Toutes les cartes</a>
+      </nav>
       <aside class="dk-tresor" id="dk-tresor" aria-labelledby="dk-tresor-titre">
         <div class="dk-tresor-carte"><img src="/cartes/la-mascotte-recto-floue.webp" alt="" width="400" height="581" loading="lazy" decoding="async"><span aria-hidden="true">?</span></div>
         <div class="dk-tresor-texte">
@@ -3527,13 +3546,13 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           <p class="dk-rebours" id="dk-rebours" role="timer" aria-label="Temps avant l'arrivée des cartes"><span><b data-u="j">00</b><small>jours</small></span><span><b data-u="h">00</b><small>heures</small></span><span><b data-u="m">00</b><small>min</small></span><span><b data-u="s">00</b><small>s</small></span></p>
         </div>
       </aside>
-      <ol class="dk-etapes">
+      <ol class="dk-etapes" id="dk-jeu">
         <li><span class="dk-num">1</span><h3>Ouvre des boosters</h3><p>Chaque booster contient 5 cartes, à ouvrir avec <code>/ouverture</code>. Des boosters gratuits se rechargent avec le temps, et la boutique en vend à 10&nbsp;000 grains, sans limite.</p></li>
         <li><span class="dk-num">2</span><h3>Complète ta collection</h3><p><b class="dk-total">156</b> cartes à réunir, réparties en sept raretés, dont deux raretés bonus. Tes doublons te servent à échanger ou à vendre.</p></li>
         <li><span class="dk-num">3</span><h3>Une garantie pour les plus rares</h3><p>Plus tu ouvres de boosters sans tomber sur une carte légendaire ou mythique, plus elle se rapproche&nbsp;: le jeu finit par te la garantir.</p></li>
         <li><span class="dk-num">4</span><h3>Échange et vends</h3><p>Propose un échange à un membre (les deux confirment avant que les cartes changent de main), ou mets une carte en vente contre des grains.</p></li>
       </ol>
-      <div class="dk-raretes" data-revele>
+      <div class="dk-raretes" id="dk-raretes" data-revele>
         <h3 class="dk-titre">Les sept raretés</h3>
         <ol class="dk-echelle" id="dk-echelle">
           <li style="--r: var(--rar-1)"><i aria-hidden="true"></i><b>Commun</b><span class="dk-nb"></span><span class="dk-taux"></span></li>
@@ -7066,6 +7085,44 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         bloc.hidden = false;
         if (anime) ST.refresh();
       }).catch(() => {}));
+  })();
+
+  /* ---------- DeckFR : le sommaire de la page ----------
+     Un lien par partie ; une partie encore cachée (pas de données) n'a pas de lien. La partie lue est mise en avant. */
+  (function sommaireDeckfr() {
+    const nav = $('#dk-sommaire');
+    if (!nav) return;
+    const liens = $$('a', nav).map((a) => ({ a, cible: document.getElementById(a.getAttribute('href').slice(1)) })).filter((x) => x.cible);
+    const barre = $('#barre');
+    const hauteurBarre = () => { racine.style.setProperty('--haut-barre', `${barre ? barre.offsetHeight : 70}px`); };
+    hauteurBarre();
+    addEventListener('resize', hauteurBarre);
+    const majLiens = () => liens.forEach(({ a, cible }) => { a.hidden = cible.hidden; });
+    majLiens();
+    const surveille = new MutationObserver(majLiens);
+    liens.forEach(({ cible }) => surveille.observe(cible, { attributes: true, attributeFilter: ['hidden'] }));
+    const marge = () => (barre ? barre.offsetHeight : 70) + nav.offsetHeight + 24;
+    liens.forEach(({ a, cible }) => a.addEventListener('click', (e) => {
+      e.preventDefault();
+      scrollTo({ top: cible.getBoundingClientRect().top + scrollY - marge(), behavior: reduit ? 'auto' : 'smooth' });
+      try { history.replaceState(history.state, '', `#${cible.id}`); } catch (err) { /* rien */ }
+    }));
+    // la partie en cours de lecture : la dernière dont le haut est passé sous le sommaire
+    let prevu = false;
+    function enCours() {
+      prevu = false;
+      if (racine.getAttribute('data-page') !== 'deckfr') return;
+      const seuil = marge() + 40;
+      let actuel = null;
+      liens.forEach((x) => { if (!x.a.hidden && x.cible.getBoundingClientRect().top <= seuil) actuel = x; });
+      liens.forEach((x) => x.a.setAttribute('aria-current', String(x === actuel)));
+      if (actuel && nav.scrollWidth > nav.clientWidth) {
+        const g = actuel.a.offsetLeft - (nav.clientWidth - actuel.a.offsetWidth) / 2;
+        if (Math.abs(nav.scrollLeft - g) > 4) nav.scrollLeft = g;
+      }
+    }
+    addEventListener('scroll', () => { if (!prevu) { prevu = true; requestAnimationFrame(enCours); } }, { passive: true });
+    addEventListener('page', enCours);
   })();
 
   /* ---------- Réduire ou réactiver les animations ---------- */
