@@ -1,6 +1,7 @@
 # Toutes les heures, lit le top 10 des grains dans la base du bot (en lecture seule) et le publie
 # sur la branche « data » (classement.json), que le site affiche. Script : outils/classement.py
 # Relève aussi le jeu de cartes DeckFR (deckfr.json, même branche). Script : outils/deckfr.py
+# Et les records de tous les temps pour le livre d'or (records.json, même branche). Script : outils/records.py
 # Secrets à ajouter (Settings → Secrets and variables → Actions) : CAFE_DB_URL et DISCORD_TOKEN.
 # Ils ne servent qu'ici : le site n'y a jamais accès.
 # Une fois par heure (et pas plus) pour rester dans les 2 000 minutes gratuites de GitHub Actions si le dépôt est privé.
@@ -48,15 +49,21 @@ jobs:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           HISTORIQUE: ${{ runner.temp }}/out/historique.json
         run: python3 outils/deckfr.py "$RUNNER_TEMP/out/deckfr.json" || [ $? -eq 2 ]
+      # Les records de tous les temps, pour le livre d'or de la page Classement. Script : outils/records.py
+      - name: Relever les records
+        env:
+          CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: python3 outils/records.py "$RUNNER_TEMP/out/records.json" || [ $? -eq 2 ]
       - name: Publier sur la branche data
         working-directory: ${{ runner.temp }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          [ -f out/classement.json ] || [ -f out/deckfr.json ] || { echo "Rien à publier"; exit 0; }
+          [ -f out/classement.json ] || [ -f out/deckfr.json ] || [ -f out/records.json ] || { echo "Rien à publier"; exit 0; }
           # Un relevé manqué garde la version précédente de son fichier
           if git -C "$GITHUB_WORKSPACE" fetch -q --depth=1 origin data 2>/dev/null; then
-            for f in classement.json deckfr.json historique.json; do
+            for f in classement.json deckfr.json records.json historique.json; do
               [ -f "out/$f" ] || git -C "$GITHUB_WORKSPACE" show "FETCH_HEAD:$f" > "out/$f" 2>/dev/null || rm -f "out/$f"
             done
           fi

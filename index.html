@@ -2516,6 +2516,167 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
 }
 .pied-nav a[aria-current="page"] { color: var(--creme); }
 
+/* Le livre d'or : un livre relié de cuir bordeaux, titre doré, qu'on ouvre et qu'on feuillette page à page.
+   Les pages sont en papier crème ; tout leur contenu se dimensionne sur la largeur d'une page (--u : 1 % de --pw). */
+.livre-or { display: grid; justify-items: center; gap: clamp(22px, 3vw, 34px); margin-top: clamp(56px, 7vw, 100px); overflow-x: clip; }
+.livre-or[hidden] { display: none; }
+.lo-tete { display: grid; gap: 14px; justify-items: center; max-width: 640px; text-align: center; }
+.lo-titre { font: 800 var(--t-h2)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; }
+.lo-tete > p:last-child { color: var(--brume); font-size: var(--t-chapo); }
+.livre {
+  --cuir: #5a1a26; --cuir-fonce: #3a0d17; --or: #e6c06a; --papier: #fbf6ea; --encre: #2a2116;
+  --pw: min(430px, calc((100vw - 2 * var(--gouttiere-g) - 28px) / 2)); --u: calc(var(--pw) / 100); position: relative; display: grid; justify-items: center; perspective: 2400px;
+}
+/* la couverture */
+.livre-couverture {
+  position: relative; display: grid; place-content: center; justify-items: center; gap: 12px; width: var(--pw); aspect-ratio: .72; padding: 0; border: 0; border-radius: 6px 14px 14px 6px; cursor: pointer;
+  color: var(--or); transform-origin: left center; transition: transform .25s, rotate .25s;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, #000 45%, transparent) 0 3%, color-mix(in srgb, #fff 10%, transparent) 4%, transparent 9%),
+    radial-gradient(120% 80% at 30% 20%, color-mix(in srgb, #fff 10%, transparent), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    linear-gradient(160deg, var(--cuir), var(--cuir-fonce));
+  box-shadow: inset 0 0 0 14px transparent, inset 0 0 0 15px color-mix(in srgb, var(--or) 70%, transparent), inset 0 0 0 19px transparent, inset 0 0 0 20px color-mix(in srgb, var(--or) 45%, transparent),
+    6px 6px 0 -1px #e9dcc0, 7px 7px 0 -1px #c9b994, 0 40px 60px -30px #000;
+}
+.livre-couverture:hover { transform: rotateY(-8deg); }
+.livre-couverture:focus-visible { outline: 3px solid var(--or); outline-offset: 6px; }
+.lc-tasse { width: 30%; height: auto; fill: var(--or); filter: drop-shadow(0 1px 0 color-mix(in srgb, #000 50%, transparent)); }
+.lc-sur, .lc-sous { font: 500 clamp(10px, calc(2.6 * var(--u)), 13px)/1.2 var(--f-mono); letter-spacing: .24em; text-transform: uppercase; }
+.lc-titre {
+  font: 800 clamp(40px, 5vw, 64px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.01em; padding-block: 6px; border-block: 1px solid color-mix(in srgb, var(--or) 55%, transparent);
+  background: linear-gradient(180deg, #fff2c4, var(--or) 45%, #a57a28 90%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 1px 0 color-mix(in srgb, #000 20%, transparent);
+}
+.lc-ouvrir { position: absolute; bottom: 34px; left: 0; right: 0; font: 700 14px/1 var(--f-craie, "Caveat", cursive); font-size: 20px; color: color-mix(in srgb, var(--or) 85%, transparent); animation: lc-souffle 2.4s ease-in-out infinite; }
+@keyframes lc-souffle { 50% { opacity: .45; } }
+.livre[data-etat="ouvre"] .livre-couverture { transition: transform .7s cubic-bezier(.4, .1, .3, 1), opacity .3s .45s; transform: rotateY(-115deg); opacity: 0; }
+.livre:not([data-etat="ferme"]):not([data-etat="ouvre"]) .livre-couverture { display: none; }
+.livre-ouvert { display: none; gap: 18px; justify-items: center; }
+.livre[data-etat="ouvert"] .livre-ouvert { display: grid; animation: lo-apparait .45s ease-out; }
+@keyframes lo-apparait { from { opacity: 0; transform: scale(.97); } }
+/* les deux pages ouvertes, posées sur la reliure */
+.livre-pages {
+  position: relative; display: grid; grid-template-columns: repeat(2, var(--pw)); padding: 12px; border-radius: 10px; transform-style: preserve-3d;
+  background: linear-gradient(160deg, var(--cuir), var(--cuir-fonce)); box-shadow: 0 40px 60px -30px #000, inset 0 0 0 1px color-mix(in srgb, #000 40%, transparent);
+}
+.lp-page {
+  position: relative; box-sizing: border-box; width: var(--pw); aspect-ratio: .72; overflow: hidden; color: var(--encre);
+  display: grid; align-content: start; justify-items: center; gap: calc(2.6 * var(--u)); padding: calc(8 * var(--u)) calc(9 * var(--u)) calc(12 * var(--u)); text-align: center; cursor: pointer;
+  background: linear-gradient(90deg, #efe4cc, var(--papier) 12%, var(--papier) 88%, #efe4cc);
+}
+.lp-gauche { background: linear-gradient(90deg, #efe4cc, var(--papier) 10%, var(--papier) 82%, #e2d3b2); border-radius: 4px 0 0 4px; }
+.lp-droite { background: linear-gradient(90deg, #e2d3b2, var(--papier) 18%, var(--papier) 90%, #efe4cc); border-radius: 0 4px 4px 0; }
+/* la page qui tourne : un feuillet à deux faces */
+.lp-feuillet { position: absolute; top: 12px; left: calc(12px + var(--pw)); width: var(--pw); aspect-ratio: .72; transform-style: preserve-3d; transform-origin: left center; display: none; z-index: 2; pointer-events: none; }
+.lp-feuillet.sur-gauche { left: 12px; transform-origin: right center; }
+.lp-feuillet .lp-page { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 0 30px color-mix(in srgb, #000 25%, transparent); }
+.lp-feuillet .lp-verso { transform: rotateY(180deg); }
+.lp-feuillet.tourne { display: block; transition: transform .8s cubic-bezier(.45, .05, .35, 1); }
+/* le contenu des pages */
+.lp-chap { font: 500 calc(3.1 * var(--u))/1.2 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: color-mix(in srgb, var(--encre) 62%, var(--papier)); }
+.lp-titre { margin: 0; font: 800 calc(7.4 * var(--u))/1.05 var(--f-titre); font-stretch: 88%; letter-spacing: -.01em; text-wrap: balance; }
+.lp-orne { width: 34%; height: calc(2.4 * var(--u)); background: radial-gradient(circle, #b08a3a 0 calc(1.1 * var(--u)), transparent calc(1.3 * var(--u))) center / calc(3 * var(--u)) 100% no-repeat, linear-gradient(#b08a3a, #b08a3a) center / 100% 1px no-repeat; }
+.lp-portrait { width: calc(30 * var(--u)); aspect-ratio: .82; margin-top: calc(1 * var(--u)); border-radius: 50%; padding: calc(1.6 * var(--u)); box-sizing: border-box; background: linear-gradient(135deg, #f7e3a0, #b8862e 45%, #f3d27a 60%, #8a6220); box-shadow: 0 calc(2 * var(--u)) calc(4 * var(--u)) calc(-2 * var(--u)) color-mix(in srgb, #000 60%, transparent); }
+.lp-portrait img { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #26334d; }
+.lp-carte { width: calc(32 * var(--u)); height: auto; margin-top: calc(1 * var(--u)); border-radius: calc(1.8 * var(--u)); box-shadow: 0 calc(2 * var(--u)) calc(4 * var(--u)) calc(-2 * var(--u)) color-mix(in srgb, #000 60%, transparent); }
+.lp-cartes { display: flex; justify-content: center; gap: calc(1.6 * var(--u)); margin-top: calc(1 * var(--u)); }
+.lp-cartes img { width: calc(14.4 * var(--u)); height: auto; border-radius: calc(1 * var(--u)); box-shadow: 0 calc(1.4 * var(--u)) calc(2.4 * var(--u)) calc(-1.4 * var(--u)) color-mix(in srgb, #000 60%, transparent); }
+.lp-nom { font: 700 calc(8 * var(--u))/1.05 var(--f-craie, "Caveat", cursive); color: #0c3b83; overflow-wrap: anywhere; }
+.lp-valeur { font: 800 calc(9.6 * var(--u))/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.lp-valeur small { font: 600 calc(4 * var(--u))/1 var(--f-texte); letter-spacing: 0; color: color-mix(in srgb, var(--encre) 70%, var(--papier)); }
+.lp-phrase { max-width: calc(64 * var(--u)); font-size: calc(4.1 * var(--u)); line-height: 1.45; color: color-mix(in srgb, var(--encre) 78%, var(--papier)); text-wrap: balance; }
+.lp-phrase b { color: var(--encre); }
+.lp-date { font: 500 calc(3.2 * var(--u))/1.3 var(--f-mono); letter-spacing: .06em; color: color-mix(in srgb, var(--encre) 62%, var(--papier)); }
+.lp-num { position: absolute; left: 0; right: 0; bottom: calc(5 * var(--u)); font: 500 calc(3.2 * var(--u))/1 var(--f-mono); color: color-mix(in srgb, var(--encre) 55%, var(--papier)); }
+.lp-liste { list-style: none; margin: calc(1 * var(--u)) 0 0; padding: 0; width: 100%; display: grid; gap: calc(2.2 * var(--u)); text-align: left; }
+.lp-liste li { display: flex; align-items: baseline; gap: calc(2 * var(--u)); font-size: calc(3.9 * var(--u)); line-height: 1.3; }
+.lp-liste li::after { content: ""; order: 1; flex: 1; min-width: calc(4 * var(--u)); border-bottom: 1.5px dotted color-mix(in srgb, var(--encre) 35%, transparent); }
+.lp-liste li > :last-child { order: 2; font: 500 calc(3.6 * var(--u))/1 var(--f-mono); white-space: nowrap; }
+.lp-liste .lp-l-chap { font: 500 calc(3 * var(--u))/1.2 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: color-mix(in srgb, var(--encre) 60%, var(--papier)); margin-top: calc(1.6 * var(--u)); }
+.lp-liste .lp-l-chap::after { display: none; }
+.lp-ligne-nom { font-weight: 600; }
+/* le sommaire, plus serré pour tenir sur une page */
+.lp-sommaire { gap: calc(.7 * var(--u)); }
+.lp-sommaire li { font-size: calc(3.2 * var(--u)); line-height: 1.25; }
+.lp-sommaire li > :last-child { font-size: calc(3 * var(--u)); }
+.lp-sommaire .lp-l-chap { font-size: calc(2.6 * var(--u)); margin-top: calc(1.4 * var(--u)); }
+.lp-titre-livre { margin-top: calc(10 * var(--u)); font: 800 calc(13 * var(--u))/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.02em; color: #8a6220; }
+.lp-blanc { background-image: repeating-linear-gradient(180deg, transparent 0 calc(7.6 * var(--u)), color-mix(in srgb, #0c3b83 10%, transparent) calc(7.6 * var(--u)) calc(calc(7.6 * var(--u)) + 1px)); }
+.livre-nav { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px 18px; }
+.livre-nav .btn { gap: 8px; }
+.livre-nav .btn:disabled { opacity: .35; cursor: default; }
+.livre-num { margin: 0; min-width: 16ch; text-align: center; font: 500 13px/1.3 var(--f-mono); letter-spacing: .08em; color: var(--brume); }
+/* sur téléphone : une page à la fois */
+@media (max-width: 760px) {
+  .livre { --pw: min(420px, calc(100vw - 2 * var(--gouttiere-g) - 24px)); }
+  .livre-pages { grid-template-columns: var(--pw); }
+  .lp-gauche { display: none; }
+  .lp-droite { border-radius: 4px; }
+  .lp-feuillet { left: 12px; }
+  .livre-nav .ln-texte { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+/* Le faux booster : un paquet en aluminium qu'on déchire, puis cinq cartes qui se retournent une à une */
+.dk-essai { grid-column: 1 / -1; display: grid; justify-items: center; gap: 22px; text-align: center; }
+.dk-essai-tete { display: grid; gap: 10px; justify-items: center; max-width: 620px; }
+.dk-essai-tete p { color: var(--brume); }
+.dk-essai-scene { position: relative; display: grid; place-items: center; width: 100%; min-height: clamp(260px, 30vw, 330px); }
+.dk-essai-scene > * { grid-area: 1 / 1; }
+.dk-paquet {
+  --dent: 7px; position: relative; display: grid; grid-template-rows: 16% 1fr; width: clamp(170px, 17vw, 200px); aspect-ratio: .68; padding: 0; border: 0; cursor: pointer; color: #fff;
+  filter: drop-shadow(0 22px 22px color-mix(in srgb, #000 55%, transparent)); transition: transform .3s, opacity .4s, filter .3s;
+}
+.dk-paquet:hover { transform: translateY(-6px) rotate(-1.5deg); }
+.dk-paquet:focus-visible { outline: 3px solid var(--lait); outline-offset: 6px; border-radius: 6px; }
+.dk-paquet-haut, .dk-paquet-corps {
+  background:
+    linear-gradient(115deg, transparent 30%, color-mix(in srgb, #fff 35%, transparent) 45%, transparent 60%) 0 0 / 250% 100%,
+    linear-gradient(160deg, #0c3b83, #2b1d6e 45%, #c3242f);
+  animation: dk-reflet 3.5s linear infinite;
+}
+@keyframes dk-reflet { from { background-position: 120% 0, 0 0; } to { background-position: -120% 0, 0 0; } }
+.dk-paquet-haut {
+  display: block; border-bottom: 2px dashed color-mix(in srgb, #fff 55%, transparent); transition: transform .5s cubic-bezier(.3, .6, .4, 1), opacity .5s;
+  -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--dent) * 2) 51% repeat-x, linear-gradient(#000 0 0) bottom / 100% 50% no-repeat;
+          mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--dent) * 2) 51% repeat-x, linear-gradient(#000 0 0) bottom / 100% 50% no-repeat;
+}
+.dk-paquet-corps {
+  display: grid; place-content: center; justify-items: center; gap: 8px;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--dent) * 2) 51% repeat-x, linear-gradient(#000 0 0) top / 100% 50% no-repeat;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--dent) * 2) 51% repeat-x, linear-gradient(#000 0 0) top / 100% 50% no-repeat;
+}
+.dk-paquet-corps b { font: 800 clamp(34px, 3.6vw, 42px)/1 var(--f-titre); font-stretch: 82%; letter-spacing: -.01em; text-shadow: 0 2px 0 color-mix(in srgb, #000 30%, transparent); }
+.dk-paquet-corps span { font: 500 11px/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; }
+.dk-paquet-corps i { font: 700 18px/1 var(--f-craie, "Caveat", cursive); font-style: normal; opacity: .85; }
+.dk-paquet-aide { position: absolute; left: 50%; top: calc(100% + 18px); translate: -50% 0; white-space: nowrap; font: 700 20px/1 var(--f-craie, "Caveat", cursive); color: var(--creme); animation: lc-souffle 2.4s ease-in-out infinite; }
+.dk-paquet.secoue { animation: dk-secoue .45s ease-in-out; }
+@keyframes dk-secoue { 20% { rotate: -4deg; } 40% { rotate: 4deg; } 60% { rotate: -3deg; } 80% { rotate: 2deg; } }
+.dk-paquet.dechire .dk-paquet-haut { transform: translate(40px, -70px) rotate(24deg); opacity: 0; }
+.dk-paquet.vide { opacity: 0; transform: translateY(40px) scale(.92); pointer-events: none; }
+.dk-paquet[hidden] { display: none; }
+.dk-tirage { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(10px, 1.6vw, 18px); perspective: 1200px; }
+.dk-tirage li { --r: var(--lait); display: grid; gap: 7px; justify-items: center; width: clamp(100px, 13vw, 158px); opacity: 0; transform: translateY(-30px) scale(.9); transition: opacity .35s, transform .45s cubic-bezier(.3, 1.4, .5, 1); }
+.dk-tirage li.sortie { opacity: 1; transform: none; }
+.dk-tc { position: relative; width: 100%; aspect-ratio: 400 / 581; transform-style: preserve-3d; transition: transform .6s cubic-bezier(.4, .1, .3, 1); }
+.dk-tirage li.retournee .dk-tc { transform: rotateY(180deg); }
+.dk-tc > * { position: absolute; inset: 0; border-radius: 7% / 4.8%; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+/* le dos des cartes */
+.dk-tc-dos {
+  display: grid; place-items: center; color: color-mix(in srgb, #fff 85%, transparent); font: 800 clamp(16px, 2vw, 22px)/1 var(--f-titre); font-stretch: 82%;
+  background: repeating-linear-gradient(45deg, color-mix(in srgb, #fff 6%, transparent) 0 6px, transparent 6px 12px), linear-gradient(160deg, #1d2a4d, #0c1428);
+  box-shadow: inset 0 0 0 4px #0c3b83, inset 0 0 0 6px #f2f1f9, inset 0 0 0 8px #c3242f, 0 12px 20px -10px #000;
+}
+.dk-tc-face { transform: rotateY(180deg); background: #1a2336; box-shadow: 0 12px 20px -10px #000; }
+.dk-tc-face img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.dk-tirage li.brille .dk-tc-face { box-shadow: 0 0 0 2px var(--r), 0 0 26px var(--r), 0 12px 20px -10px #000; }
+.dk-tirage li.dk-myth.brille .dk-tc-face { box-shadow: 0 0 0 2px #fff, 0 0 30px #ff6fd8, 0 0 50px #4fd1ff, 0 12px 20px -10px #000; }
+.dk-tirage b { font-weight: 600; font-size: 14.5px; line-height: 1.25; opacity: 0; transition: opacity .3s .3s; }
+.dk-tirage span { font: 500 11.5px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--r); opacity: 0; transition: opacity .3s .3s; }
+.dk-tirage li.retournee b, .dk-tirage li.retournee span { opacity: 1; }
+.dk-essai-bilan { min-height: 1.5em; max-width: 60ch; font-size: var(--t-chapo); }
+.dk-essai-bilan em { font-style: normal; color: var(--creme); }
+@media (max-width: 560px) { .dk-tirage li { width: calc((100% - 20px) / 3); } }
+
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
 
@@ -3175,6 +3336,22 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         </ol>
         <p class="dk-note" id="dk-note">Les chiffres du jeu arrivent directement du bot.</p>
       </div>
+      <div class="dk-essai" id="dk-essai" aria-labelledby="t-essai">
+        <div class="dk-essai-tete">
+          <h3 class="dk-titre" id="t-essai">Ouvre un booster pour de faux</h3>
+          <p>Cinq cartes tirées avec les vrais taux du bot. Rien n'arrive dans ta collection&nbsp;: pour de vrai, c'est <code>/ouverture</code> sur le serveur. La Mascotte d'Or, elle, ne se cache que dans les vrais boosters.</p>
+        </div>
+        <div class="dk-essai-scene">
+          <button class="dk-paquet" id="dk-paquet" type="button" aria-label="Ouvrir le booster">
+            <span class="dk-paquet-haut" aria-hidden="true"></span>
+            <span class="dk-paquet-corps" aria-hidden="true"><b>DeckFR</b><span>Booster · 5 cartes</span><i>Le Café Français</i></span>
+            <span class="dk-paquet-aide">Clique pour l'ouvrir</span>
+          </button>
+          <ol class="dk-tirage" id="dk-tirage" aria-label="Les cartes du booster"></ol>
+        </div>
+        <p class="dk-essai-bilan" id="dk-essai-bilan" aria-live="polite"></p>
+        <button class="btn btn-ligne btn-petit dk-essai-encore" id="dk-essai-encore" type="button" hidden>Ouvrir un autre booster</button>
+      </div>
       <div class="dk-direct" id="dk-direct" hidden>
         <ul class="dk-chiffres" id="dk-chiffres"></ul>
         <div class="dk-colonnes">
@@ -3246,6 +3423,34 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           <p class="riches-legende">Les plus longues séries de <code>/journalier</code>, en jours d'affilée.</p>
           <ol class="top3" id="top3-serie"></ol>
           <ol class="riches-liste" id="liste-serie" start="4"></ol>
+        </div>
+      </div>
+    </div>
+    <div class="cadre livre-or" id="livre-or" aria-labelledby="t-livre" hidden>
+      <div class="lo-tete" data-revele>
+        <p class="surtitre">Le livre d'or</p>
+        <h3 class="lo-titre" id="t-livre">Les records du café</h3>
+        <p>Les records et les premières fois du café, à feuilleter. Le livre se remplit tout seul, avec les chiffres relevés chaque heure dans le bot.</p>
+      </div>
+      <div class="livre" id="livre" data-etat="ferme">
+        <button class="livre-couverture" id="livre-ouvrir" type="button" aria-label="Ouvrir le livre d'or">
+          <svg class="lc-tasse" viewBox="6 40 240 198" aria-hidden="true"><use href="#p-tasse"/><use href="#p-v1"/><use href="#p-v2"/><use href="#p-v3"/></svg>
+          <span class="lc-sur" aria-hidden="true">Le Café Français</span>
+          <b class="lc-titre" aria-hidden="true">Livre d'or</b>
+          <span class="lc-sous" aria-hidden="true">Records et premières fois</span>
+          <span class="lc-ouvrir" aria-hidden="true">Ouvrir le livre</span>
+        </button>
+        <div class="livre-ouvert">
+          <div class="livre-pages">
+            <article class="lp-page lp-gauche" id="lp-gauche"></article>
+            <article class="lp-page lp-droite" id="lp-droite"></article>
+            <div class="lp-feuillet" id="lp-feuillet" aria-hidden="true"><div class="lp-page lp-recto"></div><div class="lp-page lp-verso"></div></div>
+          </div>
+          <div class="livre-nav">
+            <button class="btn btn-ligne btn-petit" id="livre-prec" type="button"><span aria-hidden="true">‹</span><span class="ln-texte">Page précédente</span></button>
+            <p class="livre-num" id="livre-num" aria-live="polite"></p>
+            <button class="btn btn-ligne btn-petit" id="livre-suiv" type="button"><span class="ln-texte">Page suivante</span><span aria-hidden="true">›</span></button>
+          </div>
         </div>
       </div>
     </div>
@@ -5922,6 +6127,324 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     addEventListener('saison', maj);
     addEventListener('page', maj);
     addEventListener('tresor', maj);
+  })();
+
+  /* ---------- Classement : le livre d'or des records ----------
+     Les records du moment viennent de classement.json et deckfr.json ; ceux de tous les temps de records.json
+     (outils/records.py, relevé chaque heure avec le classement). Une page par record, rangées par chapitre ; un record
+     sans donnée n'a pas de page. Le livre reste caché tant qu'il n'a pas au moins trois records. */
+  (function livreDor() {
+    const bloc = $('#livre-or'), livre = $('#livre');
+    if (!bloc || !livre) return;
+    const gauche = $('#lp-gauche'), droite = $('#lp-droite'), feuillet = $('#lp-feuillet');
+    const recto = $('.lp-recto', feuillet), verso = $('.lp-verso', feuillet);
+    const prec = $('#livre-prec'), suiv = $('#livre-suiv'), num = $('#livre-num');
+    const el = (tag, cls, texte) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texte !== undefined) e.textContent = texte; return e; };
+    const nombre = (n) => nf.format(Number(n) || 0).replace(/ /g, ' ');
+    const pluriel = (n, mot, motPluriel) => (Number(n) > 1 ? (motPluriel || mot + 's') : mot);
+    const date = (iso, heure) => {
+      const d = new Date(iso);
+      if (!iso || Number.isNaN(d.getTime())) return '';
+      const jour = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' });
+      if (!heure) return `le ${jour}`;
+      const h = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).replace(':', ' h ');
+      return `le ${jour} à ${h}`;
+    };
+    const etroit = matchMedia('(max-width: 760px)');
+    let pages = [], vue = 0, occupe = false;
+
+    // Les pièces d'une page
+    function portrait(m) { const f = el('div', 'lp-portrait'); f.append(avatarDiscord(m && m.avatar, 120)); return f; }
+    function imageDe(nom) { const i = el('img', 'lp-carte'); i.src = imageCarte(nom); i.alt = ''; i.width = 400; i.height = 581; i.decoding = 'async'; return i; }
+    function phrase(...morceaux) {
+      const p = el('p', 'lp-phrase');
+      morceaux.forEach((m) => p.append(typeof m === 'string' ? m : m));
+      return p;
+    }
+    const gras = (t) => el('b', '', t);
+    // Une page de record : chapitre, titre, illustration, nom, valeur, phrase, date
+    function record(chapitre, titre, parties) {
+      return { chapitre, titre, dessiner: (page) => {
+        page.append(el('p', 'lp-chap', chapitre), el('h4', 'lp-titre', titre), el('div', 'lp-orne'));
+        parties().forEach((x) => x && page.append(x));
+      } };
+    }
+    const valeur = (n, unite) => { const p = el('p', 'lp-valeur'); p.append(typeof n === 'string' ? n : nombre(n), ' '); if (unite) p.append(el('small', '', unite)); return p; };
+
+    function construire(cl, dk, rec) {
+      const r = (rec && rec.records) || {};
+      const liste = [];
+      const premier = (l) => (Array.isArray(l) && l.length ? l[0] : null);
+      // Chapitre I : les grains
+      const riche = premier(cl && cl.classement);
+      if (riche) liste.push(record('Chapitre I · Les grains', 'La plus grande fortune', () => [portrait(riche), el('p', 'lp-nom', riche.nom), valeur(riche.grains, 'grains'), phrase('en poche et en banque, au dernier relevé.')]));
+      const ch = cl && cl.champion_semaine;
+      if (ch && ch.gain > 0) liste.push(record('Chapitre I · Les grains', 'La plus forte hausse', () => [portrait(ch), el('p', 'lp-nom', ch.nom), valeur('+' + nombre(ch.gain), 'grains'), phrase(Number(ch.jours) >= 7 ? 'gagnés en une semaine.' : `gagnés en ${ch.jours} ${pluriel(ch.jours, 'jour')}.`)]));
+      const serie = premier(cl && cl.serie_classement);
+      if (serie) liste.push(record('Chapitre I · Les grains', 'La plus longue série', () => [portrait(serie), el('p', 'lp-nom', serie.nom), valeur(serie.jours, `${pluriel(serie.jours, 'jour')} d'affilée`), phrase('à venir chercher son ', gras('/journalier'), ', sans en manquer un. Série en cours.')]));
+      // Chapitre II : #infini
+      const inf = premier(cl && cl.infini_classement);
+      if (inf) liste.push(record('Chapitre II · #infini', 'Le pilier de #infini', () => [portrait(inf), el('p', 'lp-nom', inf.nom), valeur(inf.nombres, pluriel(inf.nombres, 'nombre')), phrase('postés dans #infini', Number.isFinite(Number(cl.infini)) ? ', où la suite en est à ' : '.', ...(Number.isFinite(Number(cl.infini)) ? [gras(nombre(cl.infini)), '.'] : []))]));
+      // Chapitre III : DeckFR
+      const D = 'Chapitre III · DeckFR';
+      if (r.premier_booster) { const x = r.premier_booster; liste.push(record(D, 'Le tout premier booster', () => [portrait(x.membre), el('p', 'lp-nom', x.membre.nom), phrase('a ouvert le premier booster de DeckFR au café. Tout a commencé là.'), el('p', 'lp-date', date(x.date, true))])); }
+      if (r.premiere_mythique) { const x = r.premiere_mythique; liste.push(record(D, 'La première Mythique', () => [imageDe(x.carte), el('p', 'lp-nom', x.membre.nom), phrase('a tiré la première carte Mythique du jeu : ', gras(x.carte), '.'), el('p', 'lp-date', date(x.date, true))])); }
+      if (r.plus_de_boosters) { const x = r.plus_de_boosters; liste.push(record(D, 'Le plus de boosters', () => [portrait(x.membre), el('p', 'lp-nom', x.membre.nom), valeur(x.valeur, pluriel(x.valeur, 'booster')), phrase('ouverts depuis le début du jeu.')])); }
+      if (r.grosse_ouverture) { const x = r.grosse_ouverture; liste.push(record(D, 'La plus grosse ouverture', () => [portrait(x.membre), el('p', 'lp-nom', x.membre.nom), valeur(x.valeur, 'boosters'), phrase("ouverts d'un seul coup."), el('p', 'lp-date', date(x.date))])); }
+      if (r.plus_de_mythiques) { const x = r.plus_de_mythiques; liste.push(record(D, 'Le plus de Mythiques', () => [portrait(x.membre), el('p', 'lp-nom', x.membre.nom), valeur(x.valeur, pluriel(x.valeur, 'carte Mythique', 'cartes Mythiques')), phrase('sorties de ses boosters.')])); }
+      if (r.plus_beau_booster && Array.isArray(r.plus_beau_booster.cartes)) {
+        const x = r.plus_beau_booster;
+        liste.push(record(D, 'Le plus beau booster', () => {
+          const rang = el('div', 'lp-cartes');
+          x.cartes.slice(0, 5).forEach((c) => { const i = el('img'); i.src = imageCarte(c.nom); i.alt = `${c.nom}, ${nomRarete(c.rarete)}`; i.width = 400; i.height = 581; i.decoding = 'async'; rang.append(i); });
+          const dont = x.mythiques > 0 ? `, dont ${x.mythiques} ${pluriel(x.mythiques, 'Mythique')}` : '';
+          return [rang, el('p', 'lp-nom', x.membre.nom), phrase(gras(`${x.legendaires} cartes Légendaire ou mieux`), ` dans le même booster de cinq${dont}.`), el('p', 'lp-date', date(x.date))];
+        }));
+      }
+      const coll = premier(dk && dk.collectionneurs);
+      if (coll) liste.push(record(D, 'La plus belle collection', () => [portrait(coll), el('p', 'lp-nom', coll.nom), valeur(coll.cartes, `${pluriel(coll.cartes, 'carte')} sur ${nombre((dk.chiffres && dk.chiffres.cartes) || 0)}`), phrase(`différentes, soit ${String(coll.pourcent).replace('.', ',')} % du jeu, pour `, gras(nombre(coll.exemplaires)), ' exemplaires en tout.')]));
+      if (r.vente_record) { const x = r.vente_record; liste.push(record(D, 'La vente la plus chère', () => [imageDe(x.carte), valeur(x.valeur, 'grains'), phrase(gras(x.quantite > 1 ? `${x.quantite} × ${x.carte}` : x.carte), `, vendue par ${x.vendeur.nom} à ${x.acheteur.nom} au marché.`), el('p', 'lp-date', date(x.date))])); }
+      if (r.carte_plus_rare) { const x = r.carte_plus_rare; liste.push(record(D, 'La carte la plus rare', () => [imageDe(x.carte), phrase(gras(x.carte), ` (${nomRarete(x.rarete)}) n'est sortie que `, gras(`${nombre(x.valeur)} ${pluriel(x.valeur, 'fois', 'fois')}`), ' des boosters.')])); }
+      if (r.carte_plus_tiree) { const x = r.carte_plus_tiree; liste.push(record(D, 'La carte la plus tirée', () => [imageDe(x.carte), phrase(gras(x.carte), ` (${nomRarete(x.rarete)}) est sortie `, gras(`${nombre(x.valeur)} fois`), ' des boosters.')])); }
+      const tresors = (dk && Array.isArray(dk.tresors) ? dk.tresors : []).filter((t) => t && t.carte && !estSecrete(t.carte));
+      if (tresors.length) liste.push(record(D, 'Les premiers à les trouver', () => {
+        const ul = el('ul', 'lp-liste');
+        tresors.slice(0, 8).forEach((t) => { const li = el('li'); const n = el('span', 'lp-ligne-nom', t.carte); li.append(n, el('span', '', t.nom || 'un membre')); ul.append(li); });
+        return [phrase('Les cartes bonus, et le premier membre à avoir tiré chacune.'), ul];
+      }));
+      // Chapitre IV : le café en chiffres
+      const c = (dk && dk.chiffres) || {}, eco = (cl && cl.economie) || {};
+      const membres = String((document.getElementById('nb-final') || {}).textContent || '').trim();
+      const lignes = [
+        ['Membres', membres], ['Grains en circulation', eco.total > 0 ? nombre(eco.total) : ''], ['Boosters ouverts', c.boosters > 0 ? nombre(c.boosters) : ''],
+        ['Cartes tirées', c.tirees > 0 ? nombre(c.tirees) : ''], ['Échanges conclus', c.echanges > 0 ? nombre(c.echanges) : ''], ['Ventes au marché', c.ventes > 0 ? nombre(c.ventes) : ''],
+        ['Nombre de #infini', Number(cl && cl.infini) > 0 ? nombre(cl.infini) : ''],
+      ].filter(([, v]) => v);
+      if (lignes.length >= 3) liste.push(record('Chapitre IV · Le café', 'Le café en chiffres', () => {
+        const ul = el('ul', 'lp-liste');
+        lignes.forEach(([t, v]) => { const li = el('li'); li.append(el('span', '', t), el('span', '', v)); ul.append(li); });
+        return [ul];
+      }));
+      return liste;
+    }
+
+    // Le livre complet : page de titre, sommaire, les records, et la dernière page
+    function assembler(records, maj) {
+      const tout = [];
+      tout.push({ dessiner: (page) => {
+        page.append(el('p', 'lp-chap', 'Le Café Français'), el('p', 'lp-titre-livre', "Livre d'or"), el('div', 'lp-orne'),
+          phrase('Les records et les premières fois du café, tenus à jour par le bot.'), el('p', 'lp-date', 'Café ouvert le 8 avril 2021'));
+        if (maj) page.append(el('p', 'lp-date', `Dernier relevé : ${ilYa(maj)}`));
+      } });
+      tout.push({ dessiner: (page) => {
+        page.append(el('h4', 'lp-titre', 'Sommaire'), el('div', 'lp-orne'));
+        const ul = el('ul', 'lp-liste lp-sommaire');
+        let chapitre = '';
+        records.forEach((x, i) => {
+          if (x.chapitre !== chapitre) { chapitre = x.chapitre; ul.append(el('li', 'lp-l-chap', chapitre.replace(/^Chapitre /, ''))); }
+          const li = el('li'); li.append(el('span', '', x.titre), el('span', '', String(i + 3))); ul.append(li);
+        });
+        page.append(ul);
+      } });
+      tout.push(...records);
+      tout.push({ dessiner: (page) => {
+        page.append(el('p', 'lp-chap', 'À suivre'), el('h4', 'lp-titre', 'La suite s’écrit au café'), el('div', 'lp-orne'),
+          phrase('Ce livre se remplit tout seul, chaque heure. Le prochain record est peut-être le tien.'), el('p', 'lp-nom', 'discord.gg/france'));
+      } });
+      if (tout.length % 2) tout.push({ blanc: true, dessiner: () => {} });
+      return tout;
+    }
+
+    function dessiner(conteneur, i) {
+      conteneur.replaceChildren();
+      conteneur.classList.toggle('lp-blanc', !pages[i] || !!pages[i].blanc);
+      if (!pages[i]) return;
+      pages[i].dessiner(conteneur);
+      if (!pages[i].blanc) conteneur.append(el('p', 'lp-num', `— ${i + 1} —`));
+    }
+    const pas = () => (etroit.matches ? 1 : 2);
+    function afficher() {
+      if (etroit.matches) {
+        dessiner(droite, vue);
+        num.textContent = `Page ${vue + 1} sur ${pages.length}`;
+      } else {
+        vue -= vue % 2;
+        dessiner(gauche, vue); dessiner(droite, vue + 1);
+        num.textContent = `Pages ${vue + 1} et ${vue + 2} sur ${pages.length}`;
+      }
+      prec.querySelector('.ln-texte').textContent = vue === 0 ? 'Fermer le livre' : 'Page précédente';
+      suiv.disabled = vue + pas() >= pages.length;
+    }
+    function tourner(sens) {
+      if (occupe) return;
+      const p = pas(), cible = vue + sens * p;
+      if (sens < 0 && vue === 0) { fermer(); return; }
+      if (cible < 0 || cible >= pages.length) return;
+      if (reduit) { vue = cible; afficher(); return; }
+      occupe = true;
+      feuillet.className = 'lp-feuillet';
+      feuillet.style.transition = 'none';
+      if (etroit.matches) {
+        if (sens > 0) { dessiner(recto, vue); dessiner(verso, -1); feuillet.style.transform = 'rotateY(0deg)'; dessiner(droite, cible); }
+        else { dessiner(recto, cible); dessiner(verso, -1); feuillet.style.transform = 'rotateY(-180deg)'; }
+      } else if (sens > 0) {
+        dessiner(recto, vue + 1); dessiner(verso, cible); feuillet.style.transform = 'rotateY(0deg)'; dessiner(droite, cible + 1);
+      } else {
+        feuillet.classList.add('sur-gauche');
+        dessiner(recto, vue); dessiner(verso, cible + 1); feuillet.style.transform = 'rotateY(0deg)'; dessiner(gauche, cible);
+      }
+      feuillet.classList.add('tourne');
+      void feuillet.offsetWidth;
+      feuillet.style.transition = '';
+      feuillet.style.transform = etroit.matches ? (sens > 0 ? 'rotateY(-180deg)' : 'rotateY(0deg)') : (sens > 0 ? 'rotateY(-180deg)' : 'rotateY(180deg)');
+      let fini = false;
+      const finir = () => {
+        if (fini) return; fini = true;
+        vue = cible; afficher();
+        feuillet.className = 'lp-feuillet'; feuillet.style.transform = '';
+        occupe = false;
+      };
+      feuillet.addEventListener('transitionend', finir, { once: true });
+      setTimeout(finir, 1000);
+    }
+    function ouvrir() {
+      if (livre.dataset.etat !== 'ferme') return;
+      vue = 0; afficher();
+      if (reduit) { livre.dataset.etat = 'ouvert'; return; }
+      livre.dataset.etat = 'ouvre';
+      setTimeout(() => { livre.dataset.etat = 'ouvert'; }, 650);
+    }
+    function fermer() { livre.dataset.etat = 'ferme'; $('#livre-ouvrir').focus({ preventScroll: true }); }
+    $('#livre-ouvrir').addEventListener('click', ouvrir);
+    prec.addEventListener('click', () => tourner(-1));
+    suiv.addEventListener('click', () => tourner(1));
+    droite.addEventListener('click', () => tourner(1));
+    gauche.addEventListener('click', () => tourner(-1));
+    bloc.addEventListener('keydown', (e) => {
+      if (livre.dataset.etat !== 'ouvert' || e.target.closest('input, textarea')) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); tourner(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); tourner(-1); }
+    });
+    // Sur téléphone, un glissement du doigt tourne la page
+    let depart = null;
+    droite.addEventListener('touchstart', (e) => { depart = e.touches[0].clientX; }, { passive: true });
+    droite.addEventListener('touchend', (e) => {
+      if (depart === null) return;
+      const dx = e.changedTouches[0].clientX - depart; depart = null;
+      if (Math.abs(dx) > 40) tourner(dx < 0 ? 1 : -1);
+    });
+    etroit.addEventListener('change', () => { if (livre.dataset.etat === 'ouvert') afficher(); });
+
+    async function charger() {
+      const json = (r) => (r ? r.json().catch(() => null) : null);
+      const [cl, dk, rec] = await Promise.all([
+        chargerListe(['/classement.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/classement.json']).then(json),
+        chargerDeckfr(),
+        chargerListe(['/records.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/records.json']).then(json),
+      ]);
+      const records = construire(cl, dk, rec);
+      if (records.length < 3) return;
+      pages = assembler(records, (rec && rec.maj) || (cl && cl.maj));
+      bloc.hidden = false;
+      if (livre.dataset.etat === 'ouvert') afficher();
+      if (anime) ST.refresh();
+    }
+    charger();
+  })();
+
+  /* ---------- DeckFR : le faux booster ----------
+     Cinq cartes tirées avec les vrais taux du bot (deckfr.json : la part de chaque rareté dans toutes les cartes
+     sorties), puis une carte au hasard de cette rareté (cartes/catalogue.json). Rien n'est enregistré nulle part.
+     La carte Spécial (la Mascotte d'Or) n'en sort jamais : elle ne se trouve que dans les vrais boosters. */
+  (function fauxBooster() {
+    const bloc = $('#dk-essai');
+    if (!bloc) return;
+    const paquet = $('#dk-paquet'), tirage = $('#dk-tirage'), bilan = $('#dk-essai-bilan'), encore = $('#dk-essai-encore');
+    const TAUX = { 1: 59.99, 2: 36.64, 3: 2.46, 4: .75, 5: .14, 6: .01 };
+    let taux = { ...TAUX }, parRarete = null, occupe = false;
+    const el = (tag, cls, texte) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texte !== undefined) e.textContent = texte; return e; };
+    chargerDeckfr().then((d) => {
+      const r = d && Array.isArray(d.raretes) ? d.raretes : [];
+      const lus = {};
+      r.forEach((x) => { const n = Number(x.niveau), t = Number(x.tirage); if (n >= 1 && n <= 6 && t > 0) lus[n] = t; });
+      if (Object.keys(lus).length >= 3) taux = lus;
+    });
+    const catalogue = fetch('/cartes/catalogue.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
+      parRarete = {};
+      (d && Array.isArray(d.cartes) ? d.cartes : []).forEach((c) => {
+        const n = Number(c.rarete);
+        if (!c || !c.nom || n < 1 || n > 6 || estSecrete(c.nom)) return;
+        (parRarete[n] = parRarete[n] || []).push(c);
+      });
+    }).catch(() => { parRarete = {}; });
+    function tirerRarete() {
+      const niveaux = Object.keys(taux).map(Number).filter((n) => parRarete[n] && parRarete[n].length);
+      const total = niveaux.reduce((s, n) => s + taux[n], 0);
+      let x = Math.random() * total;
+      for (const n of niveaux) { x -= taux[n]; if (x <= 0) return n; }
+      return niveaux[0];
+    }
+    const auHasard = (l) => l[Math.floor(Math.random() * l.length)];
+    function carte(c, i) {
+      const li = el('li');
+      li.style.setProperty('--r', couleurRarete(c.rarete));
+      if (c.rarete === 5) li.classList.add('dk-myth');
+      const tc = el('div', 'dk-tc');
+      const dos = el('div', 'dk-tc-dos', 'DeckFR');
+      const face = el('div', 'dk-tc-face');
+      const img = el('img'); img.src = imageCarte(c.nom); img.alt = ''; img.width = 400; img.height = 581; img.decoding = 'async';
+      face.append(img); tc.append(dos, face);
+      li.append(tc, el('b', '', c.nom), el('span', '', nomRarete(c.rarete)));
+      li.setAttribute('aria-label', `Carte ${i + 1} : ${c.nom}, ${nomRarete(c.rarete)}`);
+      return li;
+    }
+    function resume(cartes) {
+      const compte = {};
+      cartes.forEach((c) => { compte[c.rarete] = (compte[c.rarete] || 0) + 1; });
+      const parts = Object.keys(compte).map(Number).sort((a, b) => b - a).map((n) => `${compte[n]} ${nomRarete(n)}`);
+      const meilleure = Math.max(...cartes.map((c) => c.rarete));
+      bilan.replaceChildren('Ton booster : ' + parts.join(', ') + '. ');
+      const mots = { 4: 'Une Légendaire ! Sur le serveur, elle serait pour de vrai.', 5: 'Une Mythique ! La chance est avec toi aujourd’hui.', 6: 'Une carte Mystère ! Une chance sur dix mille.' };
+      if (mots[meilleure]) bilan.append(el('em', '', mots[meilleure]));
+      encore.hidden = false;
+    }
+    async function ouvrir() {
+      if (occupe) return;
+      occupe = true;
+      await catalogue;
+      if (!parRarete || !Object.keys(parRarete).length) { bilan.textContent = 'Les cartes ne sont pas disponibles pour le moment.'; occupe = false; return; }
+      const cartes = Array.from({ length: 5 }, () => { const n = tirerRarete(); return auHasard(parRarete[n]); })
+        .sort((a, b) => a.rarete - b.rarete);
+      const lis = cartes.map(carte);
+      bilan.textContent = '';
+      encore.hidden = true;
+      const montrer = () => {
+        paquet.hidden = true;
+        tirage.replaceChildren(...lis);
+        if (reduit) { lis.forEach((li) => li.classList.add('sortie', 'retournee', 'brille')); resume(cartes); occupe = false; return; }
+        lis.forEach((li, i) => setTimeout(() => li.classList.add('sortie'), 80 + i * 110));
+        lis.forEach((li, i) => setTimeout(() => {
+          li.classList.add('retournee');
+          if (cartes[i].rarete >= 4) setTimeout(() => li.classList.add('brille'), 300);
+        }, 900 + i * 520));
+        setTimeout(() => { resume(cartes); occupe = false; encore.focus({ preventScroll: true }); }, 900 + 5 * 520 + 200);
+      };
+      if (reduit) { montrer(); return; }
+      paquet.classList.add('secoue');
+      setTimeout(() => paquet.classList.add('dechire'), 420);
+      setTimeout(() => paquet.classList.add('vide'), 820);
+      setTimeout(montrer, 1150);
+    }
+    function remettre() {
+      tirage.replaceChildren();
+      bilan.textContent = '';
+      encore.hidden = true;
+      paquet.className = 'dk-paquet';
+      paquet.hidden = false;
+      paquet.focus({ preventScroll: true });
+    }
+    paquet.addEventListener('click', ouvrir);
+    encore.addEventListener('click', () => { remettre(); ouvrir(); });
   })();
 
   /* ---------- Réduire ou réactiver les animations ---------- */
