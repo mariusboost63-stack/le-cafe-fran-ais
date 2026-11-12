@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-12",
+      "publication": "2026-11-12T12:00:00+01:00",
+      "theme": "Société",
+      "titre": "Secours catholique : 27,3 % des ménages aidés vivent sans ressources",
+      "texte": "Dans son rapport annuel publié jeudi, le Secours catholique indique que 27,3 % des ménages qu'il a accueillis en 2025 n'avaient aucune ressource, et que 36 % n'avaient pas de logement stable, contre 26 % dix ans plus tôt. Selon un sondage OpinionWay publié avec ce rapport, 63 % des Français réservent la solidarité aux personnes « les plus méritantes ».",
+      "source": {
+        "nom": "L'Express via Orange Actualités",
+        "url": "https://actu.orange.fr/france/pauvrete-en-france-pres-d-un-habitant-sur-deux-se-sent-pauvre-ou-modeste-selon-le-secours-catholique-l-express-via-6medias-CNT000002tGttF.html"
+      }
+    },
+    {
       "date": "2026-11-11",
       "publication": "2026-11-11T12:00:00+01:00",
       "theme": "Sport",
