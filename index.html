@@ -6197,8 +6197,10 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         liste.push(record(D, 'Le plus beau booster', () => {
           const rang = el('div', 'lp-cartes');
           x.cartes.slice(0, 5).forEach((c) => { const i = el('img'); i.src = imageCarte(c.nom); i.alt = `${c.nom}, ${nomRarete(c.rarete)}`; i.width = 400; i.height = 581; i.decoding = 'async'; rang.append(i); });
-          const dont = x.mythiques > 0 ? `, dont ${x.mythiques} ${pluriel(x.mythiques, 'Mythique')}` : '';
-          return [rang, el('p', 'lp-nom', x.membre.nom), phrase(gras(`${x.legendaires} cartes Légendaire ou mieux`), ` dans le même booster de cinq${dont}.`), el('p', 'lp-date', date(x.date))];
+          const l = Number(x.legendaires) || 0, m = Number(x.mythiques) || 0;
+          const texte = l > 1 ? [gras(`${l} cartes Légendaire ou mieux`), ` dans le même booster de cinq${m > 0 ? `, dont ${m} ${pluriel(m, 'Mythique')}` : ''}.`]
+            : ['Une ', gras(m ? 'carte Mythique' : 'carte Légendaire'), " : le plus beau booster ouvert jusqu'ici."];
+          return [rang, el('p', 'lp-nom', x.membre.nom), phrase(...texte), el('p', 'lp-date', date(x.date))];
         }));
       }
       const coll = premier(dk && dk.collectionneurs);

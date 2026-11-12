@@ -114,7 +114,7 @@ def lire_base(adresse):
                 "SELECT oc.ouverture_id, oc.booster, SUM(oc.rarete = 5) AS m, SUM(oc.rarete >= 4) AS l, SUM(oc.rarete) AS s"
                 " FROM cartes_ouvertures_cartes oc JOIN cartes_ouvertures o ON o.id = oc.ouverture_id"
                 f" WHERE oc.rarete <= 5 AND {apres_ouverture('o.cree_le')} GROUP BY oc.ouverture_id, oc.booster"
-                " HAVING l >= 2 ORDER BY m DESC, l DESC, s DESC, oc.ouverture_id ASC LIMIT 50"), [])
+                " HAVING l >= 1 ORDER BY m DESC, l DESC, s DESC, oc.ouverture_id ASC LIMIT 50"), [])
             for ouverture, booster, m, l, _ in lignes:
                 qui = partie("ouverture", lambda: tous("SELECT user_id, cree_le FROM cartes_ouvertures WHERE id = %s", (ouverture,)), [])
                 if not qui or not libre(qui[0][0]):
