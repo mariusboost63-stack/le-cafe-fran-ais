@@ -1370,6 +1370,9 @@ main, .pied { position: relative; z-index: 1; }
 .p-role { font: 800 var(--role-taille)/1.05 var(--f-titre); letter-spacing: -.02em; color: color-mix(in srgb, var(--role) 88%, var(--lait)); transition: color .35s; min-width: 0; overflow-wrap: anywhere; }
 .p-avantages { grid-column: 2; list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .p-avantages:empty { display: none; }
+/* chaque palier ne montre que ses nouveaux avantages ; les autres sont résumés par « + les avantages d'avant » */
+.p-avantages li.deja { display: none; }
+.p-avantages li.av-avant { background: transparent; border-style: dashed; color: var(--brume); }
 .p-avantages li, .cn-avantages li {
   display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 8px; border-radius: 999px;
   font-size: 13.5px; line-height: 1.25; color: var(--lait);
@@ -7129,6 +7132,26 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     addEventListener('page', enCours);
   })();
 
+  /* ---------- Niveaux : seulement les nouveautés de chaque palier ----------
+     Chaque palier garde dans le HTML la liste complète de ses avantages (le compteur l'affiche) ; l'échelle cache
+     ceux qui étaient déjà là au palier précédent. */
+  (function nouveautesParPalier() {
+    let avant = new Set();
+    $$('#niveaux .palier').forEach((p) => {
+      const puces = $$('.p-avantages li', p);
+      const ici = new Set(puces.map((li) => li.textContent.trim()));
+      let caches = 0;
+      puces.forEach((li) => { if (avant.has(li.textContent.trim())) { li.classList.add('deja'); caches++; } });
+      if (caches) {
+        const reste = document.createElement('li');
+        reste.className = 'av-avant';
+        reste.textContent = puces.length === caches ? 'Les mêmes avantages, avec ce rôle' : '+ les avantages d’avant';
+        $('.p-avantages', p).append(reste);
+      }
+      if (ici.size) avant = ici;
+    });
+  })();
+
   /* ---------- Réduire ou réactiver les animations ---------- */
   (function animations() {
     const btn = $('#animations'), etat = $('#anim-etat');
@@ -7396,7 +7419,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     const role = p ? $('.p-role', p).textContent : 'Pas encore de rôle';
     paliers.forEach((q, k) => { q.classList.toggle('atteint', k <= i); q.classList.toggle('actif', k === i); });
     cnRole.textContent = role; miniRole.textContent = role;
-    const puces = p ? $$('.p-avantages li', p) : [];
+    const puces = p ? $$('.p-avantages li:not(.av-avant)', p) : [];
     cnAvantages.textContent = '';
     if (puces.length) puces.forEach((li) => cnAvantages.append(li.cloneNode(true)));
     else {
