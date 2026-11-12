@@ -2779,6 +2779,10 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   .bo-table td { font-size: 13.5px; }
 }
 
+/* Quand « En direct » est affiché, les heures d'affluence le prolongent : pas de second titre, pas de second grand espace */
+.direct:not([hidden]):has(+ .affluence:not([hidden])) { padding-bottom: clamp(24px, 3vw, 36px); }
+.direct:not([hidden]) + .affluence { padding-top: 0; }
+.direct:not([hidden]) + .affluence .fq-tete { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* Les heures d'affluence (accueil) : une affichette de fréquentation, heure par heure, et la semaine en carte de chaleur */
 .affluence { padding-block: clamp(64px, 7vw, 108px); }
 .affluence[hidden] { display: none; }
@@ -7316,7 +7320,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   const carte = $('#carte');
   const piste = $('.piste', carte);
   const mm = g.matchMedia();
-  mm.add('(min-width: 900px) and (min-height: 600px)', () => {
+  mm.add('(min-width: 1180px) and (min-height: 700px)', () => {
     carte.classList.add('horizontale');
     const distance = () => Math.max(0, piste.scrollWidth - racine.clientWidth);
     const rempli = $('.progression .rempli', carte);
@@ -7343,7 +7347,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     });
     return () => carte.classList.remove('horizontale');
   });
-  mm.add('(max-width: 899px), (max-height: 599px)', () => {
+  mm.add('(max-width: 1179px), (max-height: 699px)', () => {
     $$('.salle').forEach((salle) => {
       g.from($$('.salon', salle), { x: 60, opacity: .25, stagger: .05, duration: .7, ease: 'power3.out', scrollTrigger: { trigger: $('.discord-liste', salle), start: 'top 85%', once: true } });
       g.from($('.salle-titre', salle), { yPercent: 30, skewY: 5, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: salle, start: 'top 80%', once: true } });
