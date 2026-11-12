@@ -556,12 +556,28 @@ main, .pied { position: relative; z-index: 1; }
 .dk-carte.dk-photo.dk-mythique::before { content: none; }
 @keyframes reflet { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 /* Les étapes */
-.dk-etapes { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.dk-etapes li { display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: 20px; background: var(--nuit-2); border: 1px solid var(--trait); min-width: 0; }
-.dk-etapes h3 { font: 800 21px/1.15 var(--f-titre); letter-spacing: -.01em; }
-.dk-etapes p { color: var(--brume); }
-.dk-etapes p b { color: var(--lait); }
-.dk-num { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: color-mix(in srgb, var(--rar-4) 18%, transparent); color: var(--rar-4); font: 800 16px/1 var(--f-titre); }
+/* Les quatre étapes : des cartes à jouer, avec la valeur et l'enseigne dans les coins (pique, cœur, carreau, trèfle) */
+.dk-etapes { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 24px); }
+.dk-etapes li {
+  --enseigne: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C9 6.5 4 9 4 13.2a4.2 4.2 0 0 0 7.2 2.9V17L9.5 22h5L12.8 16.1A4.2 4.2 0 0 0 20 13.2C20 9 15 6.5 12 2z'/%3E%3C/svg%3E"); --e: #1d2433;
+  position: relative; display: grid; gap: 10px; align-content: start; min-width: 0; padding: 26px 26px 54px 58px; border-radius: 14px; color: #1d2433;
+  background: radial-gradient(120% 80% at 50% 0%, #fff, #f4eedf); box-shadow: inset 0 0 0 1px color-mix(in srgb, #1d2433 10%, transparent), inset 0 0 0 7px #fbf8f0, inset 0 0 0 8px color-mix(in srgb, var(--e) 22%, transparent), 0 22px 30px -16px #000;
+  rotate: -1.2deg; transition: rotate .3s, translate .3s;
+}
+.dk-etapes li:nth-child(2) { --enseigne: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.5S3.5 16 3.5 9.8A4.6 4.6 0 0 1 12 7.2a4.6 4.6 0 0 1 8.5 2.6C20.5 16 12 21.5 12 21.5z'/%3E%3C/svg%3E"); --e: #c3242f; rotate: .8deg; }
+.dk-etapes li:nth-child(3) { --enseigne: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5 19.5 12 12 22.5 4.5 12z'/%3E%3C/svg%3E"); --e: #c3242f; rotate: -.4deg; }
+.dk-etapes li:nth-child(4) { --enseigne: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5a4.2 4.2 0 0 0-3.9 5.8 4.2 4.2 0 1 0 3.1 7.4V17L9.5 22h5l-1.7-5v-1.3a4.2 4.2 0 1 0 3.1-7.4A4.2 4.2 0 0 0 12 2.5z'/%3E%3C/svg%3E"); rotate: 1.1deg; }
+.dk-etapes li:hover { rotate: 0deg; translate: 0 -5px; }
+/* le coin en bas à droite : la même valeur, retournée */
+.dk-etapes li::after { content: ""; position: absolute; right: 18px; bottom: 16px; width: 20px; height: 20px; background: var(--e); -webkit-mask: var(--enseigne) center / contain no-repeat; mask: var(--enseigne) center / contain no-repeat; rotate: 180deg; }
+.dk-etapes li::before { content: ""; position: absolute; right: 22px; top: 50%; width: 64px; height: 64px; margin-top: -32px; background: var(--e); opacity: .06; -webkit-mask: var(--enseigne) center / contain no-repeat; mask: var(--enseigne) center / contain no-repeat; }
+.dk-etapes h3 { position: relative; font: 800 21px/1.15 var(--f-titre); letter-spacing: -.01em; }
+.dk-etapes p { position: relative; color: color-mix(in srgb, #1d2433 76%, #f6f0e2); }
+.dk-etapes p b { color: #1d2433; }
+.dk-etapes code { color: #1d2433; background: color-mix(in srgb, #1d2433 8%, transparent); }
+/* le coin en haut à gauche : la valeur et l'enseigne */
+.dk-num { position: absolute; top: 18px; left: 18px; display: grid; justify-items: center; gap: 4px; color: var(--e); font: 800 26px/1 var(--f-titre); }
+.dk-num::after { content: ""; width: 20px; height: 20px; background: currentColor; -webkit-mask: var(--enseigne) center / contain no-repeat; mask: var(--enseigne) center / contain no-repeat; }
 @media (max-width: 1000px) { .dk-etapes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 860px) { .deckfr-grille { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 560px) { .dk-main { height: 250px; } .dk-carte, .dk-main .dk-carte.dk-photo { --l: 100px; } .dk-carte:not(.dk-photo) { padding: 12px 8px 10px; } .dk-carte b { font-size: 9px; } .dk-main:hover .dk-carte { transform: translateX(calc(var(--i) * 40%)) rotate(calc(var(--i) * 11deg)) translateY(calc(var(--i) * var(--i) * 10px - 10px)); } }
@@ -569,23 +585,52 @@ main, .pied { position: relative; z-index: 1; }
 /* Les raretés */
 .dk-raretes { grid-column: 1 / -1; display: grid; gap: 16px; }
 .dk-titre { font: 800 var(--t-h3)/1.1 var(--f-titre); letter-spacing: -.01em; }
-.dk-echelle { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
-.dk-echelle li { position: relative; display: grid; gap: 6px; padding: 18px 16px 16px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--r) 45%, var(--trait)); background: linear-gradient(to bottom, color-mix(in srgb, var(--r) 14%, transparent), transparent 70%); min-width: 0; }
-.dk-echelle i { width: 26px; height: 6px; border-radius: 3px; background: var(--r); }
-.dk-echelle .dk-mythique i { background: var(--holo); }
-.dk-echelle b { font: 800 19px/1.1 var(--f-titre); color: var(--r); }
-.dk-echelle .dk-mythique b { background: var(--holo); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.dk-nb, .dk-taux { font: 500 13px/1.3 var(--f-mono); color: var(--brume); }
+/* Les sept raretés : des jetons de casino, à la couleur de chaque rareté */
+.dk-echelle { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px clamp(8px, 1.2vw, 16px); }
+.dk-echelle li {
+  --t: clamp(138px, 13.4vw, 162px); position: relative; box-sizing: border-box; display: grid; place-content: center; justify-items: center; gap: 3px;
+  width: var(--t); height: var(--t); padding: calc(var(--t) * .2); border-radius: 50%; text-align: center; min-width: 0;
+  background:
+    radial-gradient(circle closest-side, #faf5e9 0 71%, transparent 71.5%),
+    radial-gradient(circle closest-side, transparent 0 75%, color-mix(in srgb, #fff 55%, transparent) 75.5% 77%, transparent 77.5%),
+    radial-gradient(circle at 35% 30%, color-mix(in srgb, #fff 22%, var(--r)), color-mix(in srgb, #000 22%, var(--r)));
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, #000 25%, transparent), 0 4px 0 color-mix(in srgb, #000 45%, var(--r)), 0 16px 22px -10px #000;
+  transition: translate .25s;
+}
+/* les encoches blanches sur la tranche du jeton */
+.dk-echelle li::before {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: repeating-conic-gradient(from 6deg, color-mix(in srgb, #fff 88%, transparent) 0 14deg, transparent 14deg 45deg);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 85%, #000 85.5%); mask: radial-gradient(circle closest-side, transparent 85%, #000 85.5%);
+}
+.dk-echelle li:hover { translate: 0 -4px; }
+.dk-echelle li > * { position: relative; }
+.dk-echelle i { display: none; }
+.dk-echelle .dk-mythique { background: radial-gradient(circle closest-side, #faf5e9 0 71%, transparent 71.5%), radial-gradient(circle closest-side, transparent 0 75%, color-mix(in srgb, #fff 55%, transparent) 75.5% 77%, transparent 77.5%), conic-gradient(#ff5f6d, #ffb347, #f9f871, #5ef2a0, #4fd1ff, #a77bff, #ff6fd8, #ff5f6d); }
+.dk-echelle b { font: 800 16.5px/1.1 var(--f-titre); color: color-mix(in srgb, var(--r) 48%, #1d2433); }
+.dk-echelle .dk-mythique b { color: color-mix(in srgb, var(--rar-5) 70%, #1d2433); }
+.dk-nb { font: 600 12.5px/1.25 var(--f-mono); color: #1d2433; }
+.dk-taux { font: 500 11.5px/1.25 var(--f-texte); color: color-mix(in srgb, #1d2433 72%, #faf5e9); }
 .dk-nb:empty, .dk-taux:empty { display: none; }
 .dk-note { color: var(--brume); font-size: 15px; }
-@media (max-width: 860px) { .dk-echelle { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
+@media (max-width: 420px) { .dk-echelle li { --t: 146px; } }
 /* En direct du bot */
 .dk-direct { grid-column: 1 / -1; display: grid; gap: clamp(28px, 4vw, 44px); }
 .dk-direct[hidden] { display: none; }
-.dk-chiffres { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; border-radius: 18px; overflow: hidden; background: var(--trait); border: 1px solid var(--trait); }
-.dk-chiffres li { display: grid; gap: 6px; padding: 20px; background: var(--nuit); }
-.dk-chiffres b { font: 800 clamp(26px, 2.6vw, 36px)/1 var(--f-titre); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.dk-chiffres span { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--brume); }
+/* Les chiffres du jeu : une feuille de marque, comme pour la belote, remplie au stylo */
+.dk-chiffres {
+  --trait-f: color-mix(in srgb, #0c3b83 22%, transparent);
+  list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; overflow: hidden; border-radius: 4px; color: #1d2433; rotate: -.4deg;
+  background: repeating-linear-gradient(180deg, transparent 0 23px, color-mix(in srgb, #0c3b83 7%, transparent) 23px 24px), linear-gradient(175deg, #fffdf7, #f3ecdc);
+  box-shadow: 0 26px 40px -24px #000;
+}
+.dk-chiffres::before {
+  content: "Feuille de marque"; content: "Feuille de marque" / ""; flex: 1 0 100%; box-sizing: border-box; padding: 14px 20px 10px; text-align: center;
+  font: 800 18px/1 var(--f-titre); letter-spacing: .02em; border-bottom: 2px solid color-mix(in srgb, #c3242f 60%, transparent);
+}
+.dk-chiffres li { flex: 1 1 150px; box-sizing: border-box; display: grid; align-content: start; gap: 4px; padding: 14px 18px 16px; box-shadow: 1px 0 0 var(--trait-f), 0 1px 0 var(--trait-f); }
+.dk-chiffres b { order: 2; font: 700 clamp(34px, 3.4vw, 46px)/1 var(--f-craie, "Caveat", "Segoe Print", "Bradley Hand", cursive); letter-spacing: 0; font-variant-numeric: tabular-nums; color: #0c3b83; rotate: -2deg; transform-origin: left; }
+.dk-chiffres span { order: 1; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: color-mix(in srgb, #1d2433 72%, #f6f0e2); }
 .dk-colonnes { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 4vw, 56px); align-items: start; }
 .dk-colonnes:has(> .dk-bloc[hidden]) { grid-template-columns: minmax(0, 1fr); }
 @media (max-width: 860px) { .dk-colonnes { grid-template-columns: minmax(0, 1fr); } }
@@ -610,8 +655,6 @@ main, .pied { position: relative; z-index: 1; }
 .riches-onglets button[hidden] { display: none; }
 
 /* DeckFR : les raretés bonus (Mystère, Spécial) et la galerie de toutes les cartes */
-.dk-echelle .dk-bonus { border-style: dashed; }
-.dk-echelle .dk-special i { background: linear-gradient(90deg, var(--rar-7), #ffd1f4, var(--rar-7)); }
 .dk-catalogue { grid-column: 1 / -1; display: grid; gap: 18px; min-width: 0; }
 .dk-catalogue[hidden] { display: none; }
 .dk-cat-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 24px; }
@@ -1144,14 +1187,17 @@ main, .pied { position: relative; z-index: 1; }
 .copier svg { width: 18px; height: 18px; }
 .copie-etat { min-height: 1.4em; margin-top: -8px; font-size: 14px; color: var(--vert); }
 @media (max-width: 360px) { .invitation code { padding: 0 10px 0 16px; font-size: 14px; } .copier { padding-inline: 14px; } .copier svg { display: none; } }
-/* Le pot à pourboires : soutenir le café */
+/* Le pot à pourboires : le bocal posé sur le zinc, entre deux chevalets de comptoir */
 .pourboires {
-  box-sizing: border-box; width: 100%; max-width: 980px; margin-top: clamp(28px, 4vw, 52px); text-align: left;
-  display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "bocal tete" "bocal liste"; gap: 20px clamp(24px, 4vw, 48px); align-items: start;
-  padding: clamp(22px, 3vw, 40px); border-radius: 28px; border: 1px solid var(--trait);
-  background: radial-gradient(70% 90% at 0% 100%, color-mix(in srgb, var(--creme) 14%, transparent), transparent 70%), var(--nuit-2);
+  box-sizing: border-box; width: 100%; max-width: 980px; margin-top: clamp(40px, 5vw, 64px); text-align: left;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "tete tete" "bocal liste" "zinc zinc"; gap: 0 clamp(20px, 3vw, 40px); align-items: end;
 }
-.bocal { grid-area: bocal; align-self: center; width: clamp(110px, 12vw, 150px); height: auto; overflow: visible; }
+.pourboires::after {
+  content: ""; grid-area: zinc; height: 16px; border-radius: 8px; position: relative; z-index: 0;
+  background: linear-gradient(180deg, #e8ecf2, #a4adbd 40%, #6b7487 72%, #8f98aa);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .5), 0 24px 32px -18px #000;
+}
+.bocal { grid-area: bocal; position: relative; z-index: 1; width: clamp(110px, 12vw, 150px); height: auto; overflow: visible; margin-bottom: -4px; filter: drop-shadow(0 6px 4px color-mix(in srgb, #000 40%, transparent)); }
 .bc-verre { fill: color-mix(in srgb, var(--lait) 6%, transparent); stroke: color-mix(in srgb, var(--lait) 55%, transparent); stroke-width: 2.5; }
 .bc-fond { fill: color-mix(in srgb, var(--creme) 14%, transparent); }
 .bc-piece { fill: var(--or); stroke: #a8751c; stroke-width: 1.5; }
@@ -1161,24 +1207,32 @@ main, .pied { position: relative; z-index: 1; }
 .bc-col { fill: #2a3448; stroke: color-mix(in srgb, var(--lait) 55%, transparent); stroke-width: 2; }
 .bc-etiquette { fill: var(--lait); }
 .bc-texte { font: 500 9px var(--f-mono); letter-spacing: .06em; fill: var(--rouge-fonce); }
-.pb-tete { grid-area: tete; display: grid; gap: 8px; }
+.pb-tete { grid-area: tete; display: grid; gap: 8px; margin-bottom: clamp(22px, 3vw, 32px); }
 .pb-titre { font: 800 clamp(28px, 3vw, 40px)/1 var(--f-titre); font-stretch: 86%; letter-spacing: -.02em; }
 .pb-chapo { color: var(--brume); }
-.pb-liste { grid-area: liste; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-.pb-liste li { display: grid; gap: 8px; align-content: start; min-width: 0; padding: 20px; border-radius: 18px; background: color-mix(in srgb, var(--nuit) 70%, transparent); border: 1px solid var(--trait); }
-.pb-ico { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
-.pb-ico svg { width: 22px; height: 22px; }
-.pb-boost { --c: var(--a-nitro); }
-.pb-vote { --c: var(--or); }
-.pb-liste h4 { margin: 0; font: 700 21px/1.15 var(--f-titre); letter-spacing: -.01em; }
-.pb-liste p { color: var(--brume); font-size: 15.5px; }
-.pb-liste a { color: var(--lait); }
-@media (max-width: 760px) {
-  .pourboires { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "bocal tete" "liste liste"; align-items: center; }
-  .bocal { width: 84px; }
-  .pb-liste { grid-template-columns: minmax(0, 1fr); }
+.pb-liste { grid-area: liste; position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); align-items: end; }
+/* les chevalets : une carte pliée en deux, posée debout, avec sa bande de couleur sur le pli */
+.pb-liste li {
+  --c: #a23aa8; position: relative; display: grid; gap: 8px; align-content: start; min-width: 0; margin-bottom: -2px;
+  padding: 24px 20px 20px; border-radius: 3px 3px 1px 1px; color: #1d2433;
+  background: linear-gradient(180deg, #fffaf0, #efe5cf);
+  box-shadow: inset 0 6px 0 var(--c), inset 0 7px 0 color-mix(in srgb, #000 20%, transparent), 0 26px 22px -20px #000, 6px 0 0 -2px color-mix(in srgb, #000 22%, #d9cdb1);
+  transform: perspective(700px) rotateX(5deg); transform-origin: bottom;
 }
-@media (max-width: 360px) { .pourboires { grid-template-areas: "bocal" "tete" "liste"; grid-template-columns: minmax(0, 1fr); } .bocal { width: 76px; } }
+.pb-liste .pb-boost { --c: #a23aa8; }
+.pb-liste .pb-vote { --c: #b07a1f; }
+.pb-ico { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--c); color: #fff; }
+.pb-ico svg { width: 21px; height: 21px; }
+.pb-liste h4 { margin: 0; font: 800 21px/1.15 var(--f-titre); letter-spacing: -.01em; }
+.pb-liste p { color: color-mix(in srgb, #1d2433 76%, #f6f0e2); font-size: 15.5px; }
+.pb-liste a { color: #0c3b83; }
+.pb-liste code { color: #1d2433; background: color-mix(in srgb, #1d2433 8%, transparent); }
+@media (max-width: 760px) {
+  .pourboires { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tete" "bocal" "liste" "zinc"; justify-items: stretch; }
+  .bocal { width: 92px; justify-self: center; margin-bottom: 18px; }
+  .pb-liste { grid-template-columns: minmax(0, 1fr); }
+  .pb-liste li { transform: none; }
+}
 
 /* Pied de page : le store du café, puis l'enseigne, le plan du site et les petits plus */
 .pied { background: #0d1320; color: var(--brume); font-size: 15px; }
@@ -1375,24 +1429,47 @@ main, .pied { position: relative; z-index: 1; }
 .economie > .cadre { display: grid; gap: clamp(40px, 6vw, 72px); }
 .eco-tete { display: grid; gap: 22px; max-width: 760px; }
 .eco-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 48ch; }
-.gains-bloc { display: grid; gap: 16px; }
-.gains { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.gain {
-  display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: 20px; min-width: 0;
-  background: var(--nuit-2); border: 1px solid var(--trait); transition: border-color .3s, box-shadow .3s;
+.gains-bloc { display: grid; gap: 22px; }
+/* Les façons de gagner des grains : des sachets de sucre, imprimés aux couleurs du café, bords dentelés */
+.gains { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 22px); align-items: stretch; }
+.gain { --s: var(--bleu); min-width: 0; filter: drop-shadow(0 16px 18px color-mix(in srgb, #000 45%, transparent)); rotate: -.8deg; transition: rotate .3s, translate .3s; }
+.gain:nth-child(even) { rotate: .7deg; }
+.gain:nth-child(3n) { rotate: -.3deg; }
+.gain:hover { rotate: 0deg; translate: 0 -4px; }
+.gain-phare { grid-column: span 2; }
+.sachet {
+  --dent: 7px; position: relative; display: grid; grid-template-rows: auto 1fr auto; height: 100%; box-sizing: border-box; color: #1d2433;
+  background: linear-gradient(175deg, #fbf7ee, #f3ead6);
+  /* les bords dentelés du sachet, en haut et en bas */
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--dent) * 2) 51% repeat-x,
+                conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--dent) * 2) 51% repeat-x;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--dent) * 2) 51% repeat-x,
+                conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--dent) * 2) 51% repeat-x;
 }
-.gain:hover { border-color: color-mix(in srgb, var(--creme) 50%, transparent); box-shadow: 0 14px 36px color-mix(in srgb, var(--ombre) 45%, transparent); }
-.gain > svg { width: 30px; height: 30px; color: var(--creme); }
-.gain h3 { font: 800 22px/1.15 var(--f-titre); letter-spacing: -.01em; }
-.gain h3 code { font: 500 19px/1.2 var(--f-mono); letter-spacing: 0; color: var(--creme); }
-.gain p { color: var(--brume); }
-.gain-phare { grid-column: span 2; align-content: start; background: linear-gradient(160deg, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 75%); border-color: color-mix(in srgb, var(--creme) 30%, transparent); }
-.gain .gain-chiffre { font: 800 clamp(44px, 4.6vw, 68px)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; color: var(--lait); }
-.gain-chiffre span { display: block; margin-top: 10px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--creme); }
-.gain .gain-montant { font: 800 clamp(26px, 2.4vw, 32px)/1 var(--f-titre); letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--lait); }
+/* le pli soudé, près de chaque bord */
+.sachet::before, .sachet::after { content: ""; position: absolute; left: 0; right: 0; height: 6px; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, #000 16%, transparent) 0 2px, transparent 2px 5px); opacity: .55; }
+.sachet::before { top: calc(var(--dent) + 5px); mix-blend-mode: multiply; }
+.sachet::after { bottom: calc(var(--dent) + 5px); }
+.sachet-bande {
+  display: flex; align-items: center; gap: 12px; padding: calc(var(--dent) + 20px) 22px 16px; color: #fff;
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, #fff 7%, transparent) 0 8px, transparent 8px 16px), var(--s);
+}
+.sachet-bande svg { flex: none; width: 38px; height: 38px; padding: 8px; box-sizing: border-box; border-radius: 50%; background: #fff; color: var(--s); }
+.sachet-bande h3 { font: 800 22px/1.1 var(--f-titre); letter-spacing: -.01em; }
+.sachet-bande h3 code { font: 500 18px/1.2 var(--f-mono); letter-spacing: 0; color: inherit; background: none; padding: 0; }
+.sachet-corps { display: grid; gap: 10px; align-content: start; padding: 18px 22px 8px; }
+.sachet-corps p { color: color-mix(in srgb, #1d2433 76%, #f6f0e2); font-size: 15.5px; line-height: 1.5; }
+.gain .gain-chiffre { font: 800 clamp(42px, 4.4vw, 64px)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; color: var(--s); }
+.gain-chiffre span { display: block; margin-top: 10px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, #1d2433 76%, #f6f0e2); }
+.gain .gain-montant { font: 800 clamp(26px, 2.4vw, 32px)/1 var(--f-titre); letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--s); }
+.sachet-marque { padding: 10px 22px calc(var(--dent) + 16px); text-align: center; font: 500 10.5px/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: color-mix(in srgb, var(--s) 70%, #f6f0e2); }
 .virements { color: var(--brume); font-size: 15px; }
 @media (max-width: 900px) { .gains { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gain-phare { grid-column: 1 / -1; } }
-@media (max-width: 560px) { .gains { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) {
+  .gains { grid-template-columns: minmax(0, 1fr); }
+  .sachet-bande, .sachet-corps, .sachet-marque { padding-inline: 18px; }
+}
 
 .boutique { display: grid; gap: 24px; }
 .boutique-tete { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 14px 48px; align-items: end; }
@@ -1431,43 +1508,66 @@ main, .pied { position: relative; z-index: 1; }
   .a-prix { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; }
   .a-temps { flex-basis: 100%; margin: 5px 0 0; white-space: normal; }
 }
-.grains-carte {
-  position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(28px, 5vw, 72px); padding: clamp(24px, 4vw, 56px); border-radius: 28px;
-  background: linear-gradient(160deg, color-mix(in srgb, var(--cafe) 75%, var(--nuit)), var(--nuit-2) 72%);
-  border: 1px solid color-mix(in srgb, var(--creme) 25%, transparent);
-}
-.grains-pluie { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+/* Le calculateur : une caisse enregistreuse en émail crème, écran lumineux, touches et tiroir */
+.grains-carte { position: relative; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.grains-pluie { position: absolute; inset: -40px 0 0; width: 100%; height: calc(100% + 40px); pointer-events: none; z-index: 2; }
 .grains-texte, .calcul { position: relative; z-index: 1; min-width: 0; }
 .grains-texte { display: grid; gap: 18px; align-content: start; }
 .grains-carte .surtitre { color: var(--creme); }
 .grains-titre { font: 800 clamp(38px, 4.6vw, 68px)/.95 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; }
 .grains-texte p:not(.surtitre) { color: var(--brume); max-width: 44ch; }
 .grains-texte b { color: var(--lait); font-variant-numeric: tabular-nums; }
-.calcul { display: grid; gap: 16px; align-content: start; }
-.bonus { position: relative; border: 0; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; min-width: 0; }
-.bonus legend, .duree { padding: 0; margin-bottom: 8px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
-.bonus input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
-.bonus label {
-  display: grid; gap: 4px; align-content: start; padding: 12px 14px; border-radius: 14px; cursor: pointer;
-  border: 1px solid var(--trait); background: color-mix(in srgb, var(--nuit) 55%, transparent);
-  transition: border-color .2s, background-color .2s;
+.caisse {
+  --email: #efe4cc; --laiton: #b8914a; --encre: #2a2116;
+  display: grid; gap: 14px; align-content: start; padding: 20px clamp(16px, 2.4vw, 26px) 0; color: var(--encre);
+  border-radius: 28px 28px 12px 12px;
+  background: radial-gradient(90% 60% at 30% 0%, color-mix(in srgb, #fff 45%, transparent), transparent 70%), linear-gradient(180deg, var(--email), #dccaa6);
+  box-shadow: inset 0 2px 0 color-mix(in srgb, #fff 70%, transparent), inset 0 -3px 0 color-mix(in srgb, #000 12%, transparent), 0 44px 70px -34px #000;
 }
-.bonus label:hover { border-color: color-mix(in srgb, var(--creme) 60%, transparent); }
+.caisse-plaque {
+  justify-self: center; margin-top: -2px; padding: 5px 16px; border-radius: 999px; font: 500 11px/1 var(--f-mono); letter-spacing: .2em; text-transform: uppercase; color: #3a2a10;
+  background: linear-gradient(180deg, #f3d892, var(--laiton) 60%, #94702f); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 60%, transparent), 0 1px 2px color-mix(in srgb, #000 30%, transparent);
+}
+.caisse-ecran {
+  display: grid; gap: 4px; padding: 14px 20px 16px; border-radius: 14px; background: radial-gradient(120% 90% at 50% 0%, #1d2a22, #0a0f0c 70%);
+  box-shadow: 0 0 0 4px var(--laiton), 0 0 0 5px color-mix(in srgb, #000 35%, transparent), inset 0 10px 24px #000;
+}
+.caisse-etiquette { display: flex; justify-content: space-between; font: 500 11px/1 var(--f-mono); letter-spacing: .2em; text-transform: uppercase; color: color-mix(in srgb, #ffb84d 55%, transparent); }
+.caisse .resultat { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-end; gap: 4px 12px; padding: 0; border: 0; }
+.caisse .resultat b { font: 500 clamp(44px, 5.2vw, 76px)/1.05 var(--f-mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: #ffc163; text-shadow: 0 0 18px color-mix(in srgb, #ff9d1f 55%, transparent), 0 0 2px #ffcf85; }
+.caisse .resultat span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.bonus { position: relative; border: 0; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; min-width: 0; }
+.bonus legend, .duree { padding: 0; margin-bottom: 8px; font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--encre) 78%, var(--email)); }
+.bonus input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+/* les touches : elles s'enfoncent quand on les choisit */
+.bonus label {
+  display: grid; gap: 5px; align-content: start; padding: 11px 10px 12px; border-radius: 10px; cursor: pointer; text-align: center;
+  background: linear-gradient(180deg, #fffaf0, #eadfc8); color: var(--encre);
+  box-shadow: 0 5px 0 #a8946b, 0 7px 12px color-mix(in srgb, #000 22%, transparent), inset 0 1px 0 #fff;
+  transition: translate .12s, box-shadow .12s, background-color .2s;
+}
+.bonus label:hover { background: linear-gradient(180deg, #fff, #f1e7d3); }
 .bonus label b { font: 800 26px/1 var(--f-titre); }
-.bonus label span { font-size: 13px; line-height: 1.35; color: var(--brume); }
-.bonus input:checked + label { border-color: var(--creme); background: color-mix(in srgb, var(--creme) 16%, var(--nuit)); }
-.bonus input:checked + label b { color: var(--creme); }
-.bonus input:focus-visible + label { outline: 3px solid var(--bleu-vif); outline-offset: 2px; }
-.duree { display: flex; justify-content: space-between; align-items: baseline; margin: 6px 0 -6px; }
-.duree output { font: 700 18px/1 var(--f-titre); letter-spacing: 0; text-transform: none; color: var(--lait); }
-#duree { width: 100%; margin: 0; accent-color: var(--creme); }
-.resultat { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding-top: 14px; border-top: 1px solid color-mix(in srgb, var(--creme) 25%, transparent); }
-.resultat b { font: 800 clamp(52px, 5.6vw, 84px)/1 var(--f-titre); font-stretch: 84%; letter-spacing: -.03em; font-variant-numeric: tabular-nums; color: var(--creme); }
-.resultat span { color: var(--brume); }
-.calcul .petit { font-size: 14px; color: var(--brume); }
+.bonus label span { font-size: 12.5px; line-height: 1.3; color: color-mix(in srgb, var(--encre) 76%, var(--email)); }
+.bonus input:checked + label { translate: 0 4px; background: linear-gradient(180deg, #d63a40, #b3212b); color: #fff; box-shadow: 0 1px 0 #7d1520, 0 2px 4px color-mix(in srgb, #000 25%, transparent), inset 0 2px 4px color-mix(in srgb, #000 25%, transparent); }
+.bonus input:checked + label span { color: color-mix(in srgb, #fff 86%, transparent); }
+.bonus input:focus-visible + label { outline: 3px solid var(--bleu); outline-offset: 3px; }
+.duree { display: flex; justify-content: space-between; align-items: baseline; margin: 8px 0 -4px; }
+.duree output { font: 700 18px/1 var(--f-titre); letter-spacing: 0; text-transform: none; color: var(--encre); }
+/* le curseur : une rainure gravée et un bouton en laiton */
+#duree { --p: 17%; -webkit-appearance: none; appearance: none; width: 100%; height: 28px; margin: 0; background: transparent; cursor: pointer; }
+#duree::-webkit-slider-runnable-track { height: 10px; border-radius: 999px; background: linear-gradient(90deg, #c3242f var(--p), #cdbb94 var(--p)); box-shadow: inset 0 2px 3px color-mix(in srgb, #000 30%, transparent); }
+#duree::-moz-range-track { height: 10px; border-radius: 999px; background: linear-gradient(90deg, #c3242f var(--p), #cdbb94 var(--p)); box-shadow: inset 0 2px 3px color-mix(in srgb, #000 30%, transparent); }
+#duree::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; margin-top: -8px; border-radius: 50%; border: 0; background: radial-gradient(circle at 35% 30%, #fbe3a0, var(--laiton) 55%, #7d5d24); box-shadow: 0 2px 4px color-mix(in srgb, #000 40%, transparent); }
+#duree::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; border: 0; background: radial-gradient(circle at 35% 30%, #fbe3a0, var(--laiton) 55%, #7d5d24); box-shadow: 0 2px 4px color-mix(in srgb, #000 40%, transparent); }
+#duree:focus-visible { outline: 3px solid var(--bleu); outline-offset: 4px; border-radius: 999px; }
+.calcul .petit { font-size: 14px; color: color-mix(in srgb, var(--encre) 76%, var(--email)); }
+/* le tiroir-caisse, avec sa serrure */
+.caisse-tiroir { position: relative; height: 54px; margin: 4px calc(-1 * clamp(16px, 2.4vw, 26px)) 0; border-radius: 0 0 12px 12px; display: grid; place-items: center;
+  background: linear-gradient(180deg, #cdb88f, #b9a277); box-shadow: inset 0 3px 0 color-mix(in srgb, #000 18%, transparent), inset 0 4px 0 color-mix(in srgb, #fff 25%, transparent); }
+.caisse-tiroir i { width: 34%; height: 10px; border-radius: 999px; background: linear-gradient(180deg, #7d6237, #a98a52); box-shadow: inset 0 2px 2px color-mix(in srgb, #000 35%, transparent), 0 1px 0 color-mix(in srgb, #fff 35%, transparent); }
 @media (max-width: 860px) { .grains-carte { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 420px) { .bonus { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .bonus { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Équipe : badges suspendus */
 .equipe { padding-block: clamp(72px, 8vw, 120px); overflow: hidden; }
@@ -1874,38 +1974,62 @@ main, .pied { position: relative; z-index: 1; }
 .commande-tete { display: grid; gap: 22px; max-width: 760px; }
 .commande-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 46ch; }
 .comptoir { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .6fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
-.quiz { min-height: 400px; padding: clamp(22px, 3.5vw, 44px); border-radius: 26px; background: var(--nuit-2); border: 1px solid var(--trait); min-width: 0; }
+/* Le quiz : le carnet de commande du serveur, à spirale, avec sa marge rouge */
+.quiz {
+  --encre: #1d2433; --encre-doux: color-mix(in srgb, #1d2433 74%, #f6f0e2); --marge: clamp(16px, 2.6vw, 34px);
+  position: relative; min-width: 0; padding: clamp(40px, 4.6vw, 54px) clamp(20px, 3.5vw, 44px) clamp(26px, 3.2vw, 38px) calc(var(--marge) + clamp(18px, 2.4vw, 30px));
+  border-radius: 4px 4px 10px 10px; color: var(--encre);
+  background:
+    linear-gradient(90deg, transparent var(--marge), color-mix(in srgb, #d9363e 55%, transparent) var(--marge) calc(var(--marge) + 1.5px), transparent calc(var(--marge) + 1.5px)),
+    linear-gradient(175deg, #fffdf7, #f3ecdc);
+  box-shadow: 0 2px 0 #ddd2bb, 0 4px 0 #f4ecda, 0 6px 0 #d3c7ac, 0 36px 50px -28px #000;
+}
+/* les trous et la spirale */
+.quiz::before { content: ""; position: absolute; top: 12px; left: 14px; right: 14px; height: 10px; background: radial-gradient(circle at 13px 50%, #1b2130 0 4.5px, transparent 5px) 0 0 / 26px 100% repeat-x; }
+.quiz::after {
+  content: ""; position: absolute; top: -12px; left: 14px; right: 14px; height: 30px;
+  background: repeating-linear-gradient(90deg, transparent 0 10px, #6b7280 10px 11px, #eef0f3 11px 13.5px, #9ca3af 13.5px 16px, transparent 16px 26px);
+  -webkit-mask: linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0);
+}
 .quiz > div { display: grid; gap: 22px; align-content: start; animation: quiz-entree .45s cubic-bezier(.2, .8, .2, 1); }
 @keyframes quiz-entree { from { opacity: 0; transform: translateX(28px); } }
-.quiz-etape { display: flex; align-items: center; gap: 14px; font: 500 var(--t-etiquette)/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
+.quiz-etape { display: flex; align-items: center; gap: 14px; padding-bottom: 14px; border-bottom: 1.5px dashed color-mix(in srgb, #1d2433 25%, transparent); font: 500 var(--t-etiquette)/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--encre-doux); }
 .quiz-points { display: flex; gap: 6px; }
-.quiz-points i { width: 22px; height: 4px; border-radius: 4px; background: var(--trait); }
-.quiz-points i.fait { background: var(--creme); }
+.quiz-points i { width: 22px; height: 4px; border-radius: 4px; background: #ddd2bb; }
+.quiz-points i.fait { background: #c3242f; }
 .quiz-question { font: 800 clamp(30px, 3.6vw, 50px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; outline: none; }
 .quiz-reponses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .quiz-reponses button {
   width: 100%; height: 100%; display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; gap: 12px; text-align: left;
-  padding: 16px 18px; border-radius: 16px; border: 1px solid var(--trait); background: color-mix(in srgb, var(--nuit) 50%, transparent);
-  color: var(--lait); font: 600 16.5px/1.35 var(--f-texte); cursor: pointer; transition: border-color .2s, background-color .2s;
+  padding: 12px 12px; border-radius: 6px; border: 0; background: transparent;
+  color: var(--encre); font: 600 16.5px/1.35 var(--f-texte); cursor: pointer; transition: background-color .2s;
 }
-.quiz-reponses button:hover { border-color: var(--creme); background: color-mix(in srgb, var(--creme) 10%, var(--nuit)); }
-.quiz-lettre { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--trait); background: var(--nuit); font: 500 13px/1 var(--f-mono); color: var(--creme); }
+/* au survol, un coup de surligneur jaune */
+.quiz-reponses button > span:last-child { padding: 0 2px; background: linear-gradient(transparent 58%, #ffe27a 58% 92%, transparent 92%) no-repeat 0 0 / 0% 100%; transition: background-size .3s; }
+.quiz-reponses button:hover > span:last-child, .quiz-reponses button:focus-visible > span:last-child { background-size: 100% 100%; }
+.quiz-reponses button:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.quiz-lettre { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid color-mix(in srgb, #1d2433 55%, transparent); background: transparent; font: 500 13px/1 var(--f-mono); color: var(--encre); transition: background-color .2s, color .2s, border-color .2s; }
+.quiz-reponses button:hover .quiz-lettre { background: #c3242f; border-color: #c3242f; color: #fff; }
 .quiz-resultat { display: grid; grid-template-columns: 150px minmax(0, 1fr); column-gap: 30px; row-gap: 12px; align-content: start; }
 .quiz-tasse { grid-row: 1 / span 7; width: 150px; height: auto; overflow: visible; }
 .quiz-resultat > :not(svg) { grid-column: 2; }
-.quiz-tasse .contour { fill: var(--lait); }
+.quiz-tasse .contour { fill: var(--encre); }
 .quiz-tasse .boisson { fill: var(--boisson); }
 .quiz-tasse .mousse { fill: var(--mousse); }
 .quiz-tasse .liquide-q { transform: translateY(210px); transition: transform 1.6s cubic-bezier(.25, .8, .25, 1) .25s; }
 .quiz-resultat.servi .liquide-q { transform: translateY(142px); }
-.quiz-resultat .surtitre { color: var(--creme); }
+.quiz-resultat .surtitre { color: #b3212b; }
 .quiz-resultat h3 { font: 800 clamp(34px, 4vw, 54px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; outline: none; }
-.quiz-phrase { font-size: var(--t-chapo); color: var(--brume); max-width: 44ch; }
-.quiz-table { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
-.quiz-table b { color: var(--lait); }
+.quiz-phrase { font-size: var(--t-chapo); color: var(--encre-doux); max-width: 44ch; }
+.quiz-table { font: 500 var(--t-etiquette)/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--encre-doux); }
+.quiz-table b { color: var(--encre); }
 .quiz-salons { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.quiz-salons li { padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--creme) 14%, var(--nuit)); border: 1px solid color-mix(in srgb, var(--creme) 35%, transparent); font-weight: 600; font-size: 14.5px; }
-.quiz-conseil { color: var(--brume); font-size: 15px; max-width: 48ch; }
+.quiz-salons li { padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, #1d2433 6%, transparent); border: 1px solid color-mix(in srgb, #1d2433 22%, transparent); font-weight: 600; font-size: 14.5px; }
+.quiz-conseil { color: var(--encre-doux); font-size: 15px; max-width: 48ch; }
+.quiz .btn-plein { --b-fond: var(--encre); --b-texte: #fffdf7; --b-bord: var(--encre); }
+.quiz .btn-plein:hover { --b-fond: #b3212b; --b-texte: #fff; --b-bord: #b3212b; }
+.quiz .btn-ligne { --b-texte: var(--encre); --b-bord: color-mix(in srgb, #1d2433 35%, transparent); }
+.quiz .btn-ligne:hover { --b-bord: var(--encre); }
 .quiz-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
 .ticket-zone { display: grid; gap: 26px; justify-items: center; min-width: 0; }
 .ticket-zone .ticket-cadre { width: 100%; }
@@ -1934,119 +2058,171 @@ main, .pied { position: relative; z-index: 1; }
   opacity: 0; transform: rotate(-14deg) scale(2.2); transition: opacity .25s, transform .35s cubic-bezier(.3, 1.6, .5, 1);
 }
 .ticket-tampon.pose { opacity: .88; transform: rotate(-14deg) scale(1); }
-@media (max-width: 860px) { .comptoir { grid-template-columns: minmax(0, 1fr); } .ticket-zone { max-width: 360px; justify-self: center; width: 100%; } }
+@media (max-width: 860px) { .comptoir { grid-template-columns: minmax(0, 1fr); } .ticket-zone { max-width: 360px; justify-self: center; width: 100%; } .ticket-lignes { min-height: 48px; } }
 @media (max-width: 640px) { .quiz-reponses { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 560px) { .quiz-resultat { grid-template-columns: minmax(0, 1fr); } .quiz-resultat > * { grid-column: 1; } .quiz-tasse { grid-row: auto; width: 120px; } }
+@media (max-width: 560px) { .quiz-resultat { grid-template-columns: minmax(0, 1fr); } .quiz-resultat > *, .quiz-resultat > :not(svg) { grid-column: 1; } .quiz-tasse { grid-row: auto; width: 120px; } }
 
 
-/* Le classement des grains : les plus riches du café */
+/* Le classement : le mur des membres à l'honneur. Un mur tapissé de bordeaux, trois portraits encadrés
+   (or, argent, bronze) accrochés à la cimaise avec leur plaque en laiton, puis le tableau d'honneur en bois. */
 .riches { padding-block: clamp(64px, 7vw, 108px); }
-.riches-grille { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
-.riches-tete { display: grid; gap: 22px; min-width: 0; }
+.riches-grille {
+  display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-areas: "tete corps" "extras corps";
+  grid-template-rows: auto 1fr; gap: clamp(26px, 3vw, 36px) clamp(32px, 5vw, 80px); align-items: start;
+}
+.riches-tete { grid-area: tete; display: grid; gap: 22px; min-width: 0; }
 .riches-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 38ch; }
 #riches-maj { color: var(--creme); }
-.riches-corps { display: grid; gap: 22px; min-width: 0; }
+.riches-extras { grid-area: extras; display: grid; gap: 26px; align-content: start; justify-items: start; min-width: 0; filter: drop-shadow(0 18px 22px color-mix(in srgb, #000 45%, transparent)); }
+.riches-corps {
+  grid-area: corps; position: relative; display: grid; gap: 22px; min-width: 0; overflow: hidden;
+  padding: clamp(26px, 3vw, 38px) clamp(14px, 3vw, 36px) clamp(18px, 3vw, 32px); border-radius: 18px;
+  /* le papier peint : des rayures bordeaux, la lumière d'une applique en haut */
+  background:
+    radial-gradient(90% 55% at 50% 0%, color-mix(in srgb, #ffcf85 14%, transparent), transparent 70%),
+    repeating-linear-gradient(90deg, color-mix(in srgb, #000 16%, transparent) 0 2px, transparent 2px 24px, color-mix(in srgb, #fff 4%, transparent) 24px 26px, transparent 26px 48px),
+    linear-gradient(180deg, #47202b, #2c121a);
+  box-shadow: inset 0 0 70px color-mix(in srgb, #000 50%, transparent), 0 34px 60px -34px #000;
+}
+/* la cimaise en bois, d'où pendent les cadres */
+.riches-corps::before { content: ""; position: absolute; inset: 0 0 auto; height: 12px; background: linear-gradient(180deg, #9a663c, #6e4423 60%, #4f2f17); box-shadow: 0 3px 6px color-mix(in srgb, #000 45%, transparent); }
 .rg-nom { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .rg-grains { display: inline-flex; align-items: center; gap: 6px; font: 800 18px/1 var(--f-titre); font-variant-numeric: tabular-nums; }
 .rg-grains svg { width: 17px; height: 17px; color: var(--creme); }
-.riches-liste { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--trait); }
-.riches-liste li { display: grid; grid-template-columns: 28px 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--trait); }
-.rg-place { font: 500 13px/1 var(--f-mono); color: var(--brume); text-align: center; }
-.riches-liste img { width: 36px; height: 36px; border-radius: 50%; background: var(--nuit-2); }
-.riches-liste .rg-grains { font-size: 16px; }
-.riches-onglets { display: inline-flex; gap: 4px; justify-self: start; padding: 4px; border-radius: 999px; border: 1px solid var(--trait); background: var(--nuit-2); }
+.rg-grains .i-inf { color: var(--bleu-vif); }
+.rg-unite { margin-left: -3px; font: 700 .7em/1 var(--f-titre); opacity: .7; }
+.riches-onglets { display: inline-flex; gap: 4px; justify-self: center; padding: 4px; border-radius: 999px; border: 1px solid color-mix(in srgb, #f0d48a 30%, transparent); background: color-mix(in srgb, #000 35%, transparent); position: relative; }
 .riches-onglets[hidden] { display: none; }
 .riches-onglets button {
   display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 0; border-radius: 999px; cursor: pointer;
-  background: transparent; color: var(--brume); font: 700 15px/1 var(--f-titre); transition: background-color .25s, color .25s;
+  background: transparent; color: color-mix(in srgb, #f6e7c9 80%, transparent); font: 700 15px/1 var(--f-titre); transition: background-color .25s, color .25s;
 }
 .riches-onglets button svg { width: 17px; height: 17px; }
-.riches-onglets button:hover { color: var(--lait); }
-.riches-onglets button[aria-selected="true"] { background: var(--lait); color: var(--nuit); }
-.riches-onglets button[aria-selected="true"] svg { color: var(--grain); }
-.riches-panneau { display: grid; gap: 22px; min-width: 0; }
+.riches-onglets button:hover { color: #fff; }
+.riches-onglets button[aria-selected="true"] { background: linear-gradient(180deg, #f6df9c, #c9a24f); color: #2e2108; }
+.riches-onglets button[aria-selected="true"] svg { color: #6b4a14; }
+.riches-panneau { display: grid; gap: 18px; min-width: 0; position: relative; }
 .riches-panneau[hidden] { display: none; }
-.riches-legende { color: var(--brume); font-size: 15px; }
-.riches-legende b { color: var(--lait); font-variant-numeric: tabular-nums; }
-.rg-grains .i-inf { color: var(--bleu-vif); }
-/* Le podium : trois marches (or, argent, bronze), une couronne pour le premier, des tasses-trophées */
-.top3 { list-style: none; margin: 0; padding: 30px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 10px; }
-.top3 li { --m: #d39361; --h: 70px; position: relative; display: grid; justify-items: center; align-content: end; gap: 8px; min-width: 0; text-align: center; }
-.top3 li:nth-child(1) { --m: var(--ambre); --h: 118px; order: 2; }
-.top3 li:nth-child(2) { --m: #c9d1e0; --h: 92px; order: 1; }
+.riches-legende { color: color-mix(in srgb, #f6e7c9 82%, transparent); font-size: 15px; text-align: center; }
+.riches-legende b { color: #fff; font-variant-numeric: tabular-nums; }
+/* Les trois portraits */
+.top3 { list-style: none; margin: 0; padding: 8px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: clamp(6px, 2vw, 22px); }
+.top3 li {
+  --m1: #e3b98d; --m2: #8a5530; --m3: #5e3519; --img: clamp(70px, 8vw, 100px);
+  position: relative; display: grid; justify-items: center; gap: 14px; min-width: 0; margin-top: 40px; text-align: center;
+}
+.top3 li:nth-child(1) { --m1: #f7e3a0; --m2: #b8862e; --m3: #7a5414; --img: clamp(92px, 11vw, 134px); order: 2; margin-top: 0; }
+.top3 li:nth-child(2) { --m1: #f3f5f9; --m2: #9aa3b2; --m3: #5f6778; order: 1; }
 .top3 li:nth-child(3) { order: 3; }
-.top3 img { width: 64px; height: 64px; border-radius: 50%; background: var(--nuit-2); box-shadow: 0 0 0 3px var(--m), 0 12px 24px -12px #000; }
-.top3 li:nth-child(1) img { width: 84px; height: 84px; }
-.rg-couronne { width: 40px; height: 26px; margin-bottom: -12px; position: relative; z-index: 1; color: var(--ambre); filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--ambre) 55%, transparent)); transform: rotate(-8deg); }
-.top3 .rg-nom { max-width: 100%; }
-.rg-valeurs { display: grid; justify-items: center; gap: 5px; min-height: 44px; }
-.top3 .rg-grains { flex-wrap: wrap; justify-content: center; max-width: 100%; }
-.top3 li:nth-child(1) .rg-grains { font-size: clamp(16px, 2.1vw, 23px); color: var(--ambre); }
-.rg-marche {
-  display: grid; place-items: center; align-content: center; gap: 2px; width: 100%; height: var(--h); margin-top: 2px; border-radius: 14px 14px 4px 4px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--m) 28%, var(--nuit-2)), color-mix(in srgb, var(--m) 6%, var(--nuit)) 90%);
-  border: 1px solid color-mix(in srgb, var(--m) 45%, var(--trait)); border-bottom: 0;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 20%, transparent);
+.rg-cadre {
+  position: relative; display: block; margin-top: 30px; padding: clamp(6px, .8vw, 10px);
+  background: linear-gradient(135deg, var(--m1), var(--m2) 42%, var(--m1) 58%, var(--m3));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #000 35%, transparent), inset 0 0 0 3px color-mix(in srgb, #fff 30%, transparent), 0 18px 26px -10px #000;
 }
-.rg-tasse { width: 34px; height: 18px; fill: var(--m); filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--m) 45%, transparent)); }
-.rg-marche b { font: 800 26px/1 var(--f-titre); color: var(--m); }
-.top3 li:nth-child(1) .rg-tasse { width: 44px; height: 24px; }
-.top3 li:nth-child(1) .rg-marche b { font-size: 34px; }
-/* La suite du top 10 : rang, avatar, nom, progression, valeur */
-.riches-liste li { grid-template-columns: 28px 36px minmax(0, 1fr) auto auto; }
-.rg-unite { margin-left: -3px; font: 700 .7em/1 var(--f-titre); color: var(--brume); }
+.rg-cadre img { display: block; width: var(--img); height: auto; aspect-ratio: 1; object-fit: cover; box-sizing: border-box; border: clamp(4px, .6vw, 7px) solid #f3ead6; background: #26334d; }
+/* la ficelle et le clou */
+.rg-cadre::before {
+  content: ""; position: absolute; left: 50%; bottom: 100%; width: 56%; height: 26px; translate: -50% 0;
+  background: linear-gradient(to top right, transparent calc(50% - 1px), #d8c39a calc(50% - .5px) calc(50% + .5px), transparent calc(50% + 1px)) left / 50% 100% no-repeat,
+              linear-gradient(to top left, transparent calc(50% - 1px), #d8c39a calc(50% - .5px) calc(50% + .5px), transparent calc(50% + 1px)) right / 50% 100% no-repeat;
+}
+.rg-cadre::after { content: ""; position: absolute; left: 50%; bottom: calc(100% + 22px); width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f2f2f2, #8a8a8a 70%); box-shadow: 0 2px 3px color-mix(in srgb, #000 50%, transparent); }
+.rg-couronne { position: absolute; z-index: 1; top: -18px; left: -16px; width: 44px; height: 29px; color: var(--ambre); rotate: -22deg; filter: drop-shadow(0 4px 8px color-mix(in srgb, #000 50%, transparent)); }
+/* la plaque en laiton sous chaque cadre */
+.rg-plaque {
+  display: grid; justify-items: center; gap: 5px; max-width: 100%; min-width: 0; box-sizing: border-box; padding: 8px 12px 9px; border-radius: 4px; color: #2e2108;
+  background: linear-gradient(180deg, #f6df9c, #c9a24f 55%, #a8832f);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 60%, transparent), inset 0 -1px 0 color-mix(in srgb, #000 25%, transparent), 0 6px 10px -4px #000;
+}
+.rg-rang { font: 500 11px/1 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: #5a4214; }
+.top3 .rg-nom { font: 800 16px/1.15 var(--f-titre); }
+.top3 .rg-grains { flex-wrap: wrap; justify-content: center; max-width: 100%; font-size: 15px; }
+.top3 .rg-grains svg { color: #6b4a14; }
+.top3 li:nth-child(1) .rg-plaque { padding: 10px 16px 11px; }
+.top3 li:nth-child(1) .rg-nom { font-size: 19px; }
+.top3 li:nth-child(1) .rg-grains { font-size: clamp(16px, 1.7vw, 19px); }
 .rg-evo { justify-self: end; font: 600 13px/1 var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.rg-valeurs .rg-evo { justify-self: center; }
-.rg-evo.monte { color: var(--vert); }
-.rg-evo.descend { color: var(--rouge); }
-.rg-evo.stable { color: var(--brume); opacity: .6; }
-.rg-evo.nouveau { padding: 3px 7px; border-radius: 999px; background: color-mix(in srgb, var(--ambre) 18%, transparent); color: var(--ambre); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
-/* Le champion de la semaine */
-.champion { display: flex; align-items: center; gap: 16px; padding: 14px 18px 14px 14px; border-radius: 18px; max-width: 420px;
-  background: linear-gradient(120deg, color-mix(in srgb, var(--ambre) 16%, var(--nuit-2)), var(--nuit-2) 70%); border: 1px solid color-mix(in srgb, var(--ambre) 40%, var(--trait)); }
+.rg-plaque .rg-evo { justify-self: center; }
+.rg-evo.monte { color: #6fd08f; }
+.rg-evo.descend { color: #ff8a8a; }
+.rg-evo.stable { color: color-mix(in srgb, #f0d48a 55%, transparent); }
+.rg-evo.nouveau { padding: 3px 7px; border-radius: 999px; background: color-mix(in srgb, #f0d48a 20%, transparent); color: #f0d48a; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+.rg-plaque .rg-evo.monte { color: #0f4f27; }
+.rg-plaque .rg-evo.descend { color: #8a1520; }
+.rg-plaque .rg-evo.stable { color: #5a4214; }
+.rg-plaque .rg-evo.nouveau { background: #2e2108; color: #f6df9c; }
+/* Le tableau d'honneur : la suite du top 10, en lettres dorées sur bois sombre */
+.riches-liste {
+  list-style: none; margin: 4px 0 0; padding: 16px clamp(12px, 2.4vw, 24px) 12px; display: grid; border-radius: 6px; color: #f0d48a;
+  background:
+    repeating-linear-gradient(176deg, color-mix(in srgb, #000 10%, transparent) 0 2px, transparent 2px 9px, color-mix(in srgb, #fff 3%, transparent) 9px 10px, transparent 10px 19px),
+    linear-gradient(180deg, #4d2e18, #321c0d);
+  box-shadow: inset 0 0 0 3px #b8914a, inset 0 0 0 6px #2a170a, inset 0 0 0 7px color-mix(in srgb, #b8914a 45%, transparent), 0 22px 34px -16px #000;
+}
+.riches-liste::before {
+  content: "Tableau d'honneur"; content: "Tableau d'honneur" / ""; display: block; padding: 2px 0 12px; margin-bottom: 2px; text-align: center;
+  font: 800 clamp(20px, 2vw, 24px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: .02em; color: #f0d48a; text-shadow: 0 1px 0 #000;
+  border-bottom: 1px solid color-mix(in srgb, #b8914a 45%, transparent);
+}
+.riches-liste li { display: grid; grid-template-columns: 26px 32px minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 9px 4px; border-bottom: 1px solid color-mix(in srgb, #b8914a 22%, transparent); }
+.riches-liste li:last-child { border-bottom: 0; }
+.rg-place { font: 500 13px/1 var(--f-mono); color: #c9a24f; text-align: center; }
+.riches-liste img { width: 32px; height: 32px; border-radius: 50%; background: #26334d; box-shadow: 0 0 0 2px #b8914a; }
+.riches-liste .rg-nom { color: #f6e7c9; }
+.riches-liste .rg-grains { font-size: 16px; color: #f0d48a; }
+.riches-liste .rg-grains svg { color: #c9a24f; }
+/* Le champion : une cocarde tricolore autour de son portrait, sur une étiquette en papier */
+.champion { display: flex; align-items: center; gap: 18px; padding: 14px 20px 14px 14px; border-radius: 6px; max-width: 440px; color: #1d2433; rotate: -1deg;
+  background: linear-gradient(175deg, #fbf7ee, #f1e6cf); }
 .champion[hidden], .eco-chiffres[hidden] { display: none; }
-.ch-avatar img { display: block; width: 56px; height: 56px; border-radius: 50%; box-shadow: 0 0 0 3px var(--ambre); background: var(--nuit); }
+.ch-avatar { flex: none; padding: 12px; }
+.ch-avatar img { display: block; width: 52px; height: 52px; border-radius: 50%; background: #26334d; box-shadow: 0 0 0 4px #0c3b83, 0 0 0 8px #fff, 0 0 0 12px #c3242f; }
 .ch-texte { display: grid; gap: 3px; min-width: 0; }
-.ch-titre { display: inline-flex; align-items: center; gap: 7px; font: 500 var(--t-etiquette)/1.2 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ambre); }
-.ch-titre svg { width: 24px; height: 13px; fill: var(--ambre); flex: none; }
-.ch-nom { font: 800 21px/1.1 var(--f-titre); overflow-wrap: anywhere; }
-.ch-gain { color: var(--vert); font-weight: 600; font-variant-numeric: tabular-nums; }
-/* Les chiffres de l'économie */
-.eco-chiffres { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; border-radius: 16px; overflow: hidden; background: var(--trait); border: 1px solid var(--trait); max-width: 520px; }
-.eco-chiffres li { display: grid; align-content: start; gap: 5px; padding: 14px; background: var(--nuit); }
-.eco-chiffres b { font: 800 clamp(19px, 1.8vw, 24px)/1 var(--f-titre); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
-.eco-chiffres span { font-size: 13.5px; line-height: 1.3; color: var(--brume); }
-.eco-chiffres em { font-style: normal; font: 600 13px/1.2 var(--f-mono); }
-.eco-chiffres em.monte { color: var(--vert); }
-.eco-chiffres em.descend { color: var(--rouge); }
-@media (max-width: 560px) {
-  .riches-onglets { flex-wrap: wrap; border-radius: 22px; }
-  .eco-chiffres { grid-template-columns: minmax(0, 1fr); }
-  .eco-chiffres li { grid-template-columns: auto 1fr; align-items: baseline; column-gap: 10px; }
-  .eco-chiffres em { grid-column: 1 / -1; }
+.ch-titre { display: inline-flex; align-items: center; gap: 7px; font: 500 var(--t-etiquette)/1.2 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: #b3212b; }
+.ch-titre svg { width: 24px; height: 13px; fill: #b3212b; flex: none; }
+.ch-nom { font: 800 22px/1.1 var(--f-titre); overflow-wrap: anywhere; }
+.ch-gain { color: #1f7a4c; font-weight: 700; font-variant-numeric: tabular-nums; }
+/* Les chiffres de l'économie : le relevé de la banque, sur un ticket */
+.eco-chiffres {
+  list-style: none; margin: 0; padding: 18px 20px 28px; display: grid; gap: 9px; width: min(100%, 420px); box-sizing: border-box; rotate: .8deg;
+  background: #f6f1e4; color: #1d2433; font: 500 14px/1.35 var(--f-mono);
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 14px 51% repeat-x, linear-gradient(#000 0 0) top / 100% 50% no-repeat;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 14px 51% repeat-x, linear-gradient(#000 0 0) top / 100% 50% no-repeat;
+}
+.eco-chiffres::before { content: "Relevé de la banque du café"; content: "Relevé de la banque du café" / ""; display: block; padding-bottom: 10px; margin-bottom: 2px; text-align: center; font: 800 16px/1.2 var(--f-titre); border-bottom: 1px dashed color-mix(in srgb, #1d2433 40%, transparent); }
+.eco-chiffres li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.eco-chiffres span { order: 1; flex: 1; display: flex; align-items: baseline; gap: 8px; min-width: 0; color: color-mix(in srgb, #1d2433 78%, #f6f1e4); }
+.eco-chiffres span::after { content: ""; flex: 1; min-width: 12px; border-bottom: 2px dotted color-mix(in srgb, #1d2433 30%, transparent); }
+.eco-chiffres b { order: 2; font: 700 15px/1.2 var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.eco-chiffres em { order: 3; flex-basis: 100%; text-align: right; font-style: normal; font: 500 12.5px/1.2 var(--f-mono); }
+.eco-chiffres em.monte { color: #1f7a4c; }
+.eco-chiffres em.descend { color: #b3212b; }
+@media (max-width: 480px) {
+  .top3 li { --img: 58px; margin-top: 30px; }
+  .top3 li:nth-child(1) { --img: 78px; margin-top: 0; }
+  .rg-cadre { margin-top: 26px; }
+  .rg-couronne { width: 34px; height: 22px; top: -14px; left: -12px; }
+  .rg-plaque { padding: 7px 6px 8px; gap: 4px; }
+  .top3 li:nth-child(1) .rg-plaque { padding: 8px 8px 9px; }
+  .top3 .rg-grains { gap: 4px; font-size: clamp(12.5px, 3.6vw, 14px); }
+  .top3 li:nth-child(1) .rg-grains { font-size: clamp(13px, 3.9vw, 15px); }
+  .top3 .rg-grains svg { width: 13px; height: 13px; }
+  .top3 .rg-nom, .top3 li:nth-child(1) .rg-nom { font-size: 14px; }
+  .rg-rang { font-size: 10px; letter-spacing: .1em; }
+  .riches-liste li { grid-template-columns: 20px 30px minmax(0, 1fr) auto auto; gap: 8px; }
+  .riches-liste img { width: 30px; height: 30px; }
+  .riches-liste .rg-grains { font-size: 15px; }
 }
 @media (max-width: 480px) {
-  .top3 { gap: 6px; }
-  .top3 img { width: 52px; height: 52px; }
-  .top3 li:nth-child(1) img { width: 66px; height: 66px; }
-  .top3 .rg-grains { gap: 4px; font-size: clamp(13px, 4vw, 15px); }
-  .top3 li:nth-child(1) .rg-grains { font-size: clamp(13.5px, 4.4vw, 17px); }
-  .top3 .rg-grains svg { width: 14px; height: 14px; }
-  .top3 .rg-nom { font-size: 15px; }
-  .top3 li { --h: 58px; }
-  .top3 li:nth-child(1) { --h: 94px; }
-  .top3 li:nth-child(2) { --h: 74px; }
-  .riches-liste li { grid-template-columns: 22px 32px minmax(0, 1fr) auto auto; gap: 8px; }
-  .riches-liste img { width: 32px; height: 32px; }
-}
-@media (max-width: 480px) {
-  .riches-onglets { max-width: 100%; }
+  .riches-onglets { max-width: 100%; flex-wrap: wrap; justify-content: center; border-radius: 22px; }
   .riches-onglets button { padding-inline: 12px; font-size: 14px; }
 }
 @media (max-width: 360px) {
   .riches-onglets button svg { display: none; }
 }
-@media (max-width: 860px) { .riches-grille { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 860px) {
+  .riches-grille { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tete" "corps" "extras"; grid-template-rows: none; }
+}
 
 /* Les prochains événements, relevés dans l'onglet « Événements » du serveur */
 .prochains { padding-block: clamp(64px, 7vw, 108px); }
@@ -2812,12 +2988,12 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       </div>
       <div class="gains-bloc">
         <ul class="gains">
-          <li class="gain gain-phare"><svg aria-hidden="true"><use href="#i-micro"/></svg><h3>En vocal</h3><p class="gain-chiffre">5&nbsp;000 grains<span>toutes les 10 minutes</span></p><p>Micro et casque ouverts, avec au moins deux personnes actives dans le salon. Ton bonus de rôle multiplie le gain&nbsp;: ×1,5, ×2 ou ×3.</p></li>
-          <li class="gain gain-phare"><svg aria-hidden="true"><use href="#i-texte"/></svg><h3>En écrivant</h3><p class="gain-chiffre">300 grains<span>par message, au plus toutes les 36 secondes</span></p><p>Chaque message te rapporte des grains, une fois toutes les 36&nbsp;secondes au maximum. Ton bonus de rôle multiplie le gain, comme en vocal&nbsp;: ×1,5, ×2 ou ×3.</p></li>
-          <li class="gain"><svg aria-hidden="true"><use href="#i-jour"/></svg><h3><code>/journalier</code></h3><p class="gain-montant">10&#8239;000 grains</p><p>Ta récompense du jour. Repasse chaque jour pour la récupérer.</p></li>
-          <li class="gain"><svg aria-hidden="true"><use href="#i-semaine"/></svg><h3><code>/hebdomadaire</code></h3><p class="gain-montant">50&#8239;000 grains</p><p>Une récompense de plus, à récupérer une fois par semaine.</p></li>
-          <li class="gain"><svg aria-hidden="true"><use href="#i-des"/></svg><h3>Le casino</h3><p>Défis entre membres, roulette, blackjack et d'autres jeux pour miser tes grains dans #casino.</p></li>
-          <li class="gain"><svg aria-hidden="true"><use href="#i-masque"/></svg><h3><code>/voler</code></h3><p>Tente ta chance sur les grains d'un autre membre. Seuls les grains en poche peuvent être volés.</p></li>
+          <li class="gain gain-phare" style="--s: #0c3b83"><div class="sachet"><div class="sachet-bande"><svg aria-hidden="true"><use href="#i-micro"/></svg><h3>En vocal</h3></div><div class="sachet-corps"><p class="gain-chiffre">5&nbsp;000 grains<span>toutes les 10 minutes</span></p><p>Micro et casque ouverts, avec au moins deux personnes actives dans le salon. Ton bonus de rôle multiplie le gain&nbsp;: ×1,5, ×2 ou ×3.</p></div><p class="sachet-marque" aria-hidden="true">Le Café Français · grains</p></div></li>
+          <li class="gain gain-phare" style="--s: #c3242f"><div class="sachet"><div class="sachet-bande"><svg aria-hidden="true"><use href="#i-texte"/></svg><h3>En écrivant</h3></div><div class="sachet-corps"><p class="gain-chiffre">300 grains<span>par message, au plus toutes les 36 secondes</span></p><p>Chaque message te rapporte des grains, une fois toutes les 36&nbsp;secondes au maximum. Ton bonus de rôle multiplie le gain, comme en vocal&nbsp;: ×1,5, ×2 ou ×3.</p></div><p class="sachet-marque" aria-hidden="true">Le Café Français · grains</p></div></li>
+          <li class="gain" style="--s: #8a5a34"><div class="sachet"><div class="sachet-bande"><svg aria-hidden="true"><use href="#i-jour"/></svg><h3><code>/journalier</code></h3></div><div class="sachet-corps"><p class="gain-montant">10&#8239;000 grains</p><p>Ta récompense du jour. Repasse chaque jour pour la récupérer.</p></div><p class="sachet-marque" aria-hidden="true">Le Café Français · grains</p></div></li>
+          <li class="gain" style="--s: #1f7a4c"><div class="sachet"><div class="sachet-bande"><svg aria-hidden="true"><use href="#i-semaine"/></svg><h3><code>/hebdomadaire</code></h3></div><div class="sachet-corps"><p class="gain-montant">50&#8239;000 grains</p><p>Une récompense de plus, à récupérer une fois par semaine.</p></div><p class="sachet-marque" aria-hidden="true">Le Café Français · grains</p></div></li>
+          <li class="gain" style="--s: #7d1d2c"><div class="sachet"><div class="sachet-bande"><svg aria-hidden="true"><use href="#i-des"/></svg><h3>Le casino</h3></div><div class="sachet-corps"><p>Défis entre membres, roulette, blackjack et d'autres jeux pour miser tes grains dans #casino.</p></div><p class="sachet-marque" aria-hidden="true">Le Café Français · grains</p></div></li>
+          <li class="gain" style="--s: #2b3550"><div class="sachet"><div class="sachet-bande"><svg aria-hidden="true"><use href="#i-masque"/></svg><h3><code>/voler</code></h3></div><div class="sachet-corps"><p>Tente ta chance sur les grains d'un autre membre. Seuls les grains en poche peuvent être volés.</p></div><p class="sachet-marque" aria-hidden="true">Le Café Français · grains</p></div></li>
         </ul>
         <p class="virements">Tu peux aussi envoyer des grains à un autre membre&nbsp;: jusqu'à 50&nbsp;000 par jour, 100&nbsp;000 pour les boosters et dès @Connaisseur.</p>
       </div>
@@ -2830,7 +3006,12 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           <p>À l'écrit, le plafond est le même&nbsp;: 300 grains toutes les 36&nbsp;secondes, soit jusqu'à 30&nbsp;000 grains par heure, multipliés par le même bonus.</p>
           <p>Les temps affichés dans la boutique, juste en dessous, suivent le bonus que tu choisis ici.</p>
         </div>
-        <form class="calcul" id="calcul" aria-label="Calculer les grains gagnés en vocal">
+        <form class="calcul caisse" id="calcul" aria-label="Calculer les grains gagnés en vocal">
+          <p class="caisse-plaque" aria-hidden="true">Caisse n°&nbsp;1</p>
+          <div class="caisse-ecran">
+            <p class="caisse-etiquette" aria-hidden="true"><span>Total</span><span>Grains</span></p>
+            <p class="resultat" aria-live="polite"><b id="total-grains">30&#8239;000</b><span>grains gagnés</span></p>
+          </div>
           <fieldset class="bonus">
             <legend>Ton bonus de rôle</legend>
             <input type="radio" name="bonus" id="bonus-1" value="1" checked><label for="bonus-1"><b>×1</b><span>Sans bonus</span></label>
@@ -2840,8 +3021,8 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           </fieldset>
           <label class="duree" for="duree">Temps en vocal <output id="duree-aff" for="duree">1 h</output></label>
           <input type="range" id="duree" name="duree" min="10" max="300" step="10" value="60">
-          <p class="resultat"><b id="total-grains">30&#8239;000</b><span>grains gagnés</span></p>
           <p class="petit">Si tu as plusieurs rôles, seul le bonus le plus élevé compte.</p>
+          <div class="caisse-tiroir" aria-hidden="true"><i></i></div>
         </form>
       </div>
       <div class="boutique">
@@ -2948,6 +3129,8 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         <p class="surtitre">Les classements</p>
         <h2 class="h2" id="t-classement">Les champions du café</h2>
         <p class="chapo">Les plus riches en grains, les piliers de #infini, les plus grands collectionneurs de DeckFR et les plus fidèles au <code>/journalier</code>, relevés directement dans le bot. Les flèches montrent les places gagnées ou perdues depuis hier. <span id="riches-maj"></span></p>
+      </div>
+      <div class="riches-extras">
         <div class="champion" id="champion" hidden>
           <div class="ch-avatar"></div>
           <div class="ch-texte"><p class="ch-titre"><svg aria-hidden="true"><use href="#i-trophee"/></svg><span>Champion de la semaine</span></p><p class="ch-nom"></p><p class="ch-gain"></p></div>
@@ -3331,11 +3514,11 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   addEventListener('resize', majVw);
 
   /* ---------- Compteurs ---------- */
-  function compter(el, cible, duree = 1.6, depuis = 0) {
+  function compter(el, cible, duree = 1.6, depuis = 0, format = nf.format) {
     if (!el) return;
-    if (!anime) { el.textContent = nf.format(cible); return; }
+    if (!anime) { el.textContent = format(cible); return; }
     const o = { v: depuis };
-    el.compte = g.to(o, { v: cible, duration: duree, ease: 'power3.out', onUpdate: () => { el.textContent = nf.format(Math.round(o.v)); } });
+    el.compte = g.to(o, { v: cible, duration: duree, ease: 'power3.out', onUpdate: () => { el.textContent = format(Math.round(o.v)); } });
   }
 
   /* ---------- Halloween : jours restants et quêtes ---------- */
@@ -3457,6 +3640,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       const min = +duree.value;
       const val = Math.floor(min / 10) * 5000 * mult;
       dureeAff.textContent = formatDuree(min);
+      duree.style.setProperty('--p', ((min - duree.min) / (duree.max - duree.min) * 100) + '%');
       bonusAff.textContent = '×' + String(mult).replace('.', ',');
       for (const a of articles) $('.a-duree', a).textContent = formatDuree(Math.ceil(+a.dataset.prix / (5000 * mult)) * 10);
       if (verse && val > affiche) verser(Math.min(90, 10 + Math.round((val - affiche) / 2500)));
@@ -4548,7 +4732,8 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     img.src = /^https:\/\/cdn\.discordapp\.com\//.test(String(url || '')) ? url : 'https://cdn.discordapp.com/embed/avatars/0.png';
     img.alt = ''; img.width = img.height = taille;
     img.loading = 'lazy'; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
-    img.addEventListener('error', () => { img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='; }, { once: true });
+    // Avatar introuvable : une silhouette neutre plutôt qu'un rond vide
+    img.addEventListener('error', () => { img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2326334d'/%3E%3Ccircle cx='32' cy='25' r='11' fill='%23a6aec3'/%3E%3Cpath d='M11 60c2-13 10-19 21-19s19 6 21 19z' fill='%23a6aec3'/%3E%3C/svg%3E"; }, { once: true });
     return img;
   }
   function ilYa(iso) {
@@ -4816,10 +5001,12 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       return svg;
     };
     const avatar = (x, taille) => avatarDiscord(x.avatar, taille);
+    // Un vrai espace entre les milliers : l'espace fine (U+202F) disparaît presque dans la police des titres
+    const nfl = (n) => nf.format(n).replace(/\u202f/g, '\u00a0');
     // La valeur affichée : le nombre (qui défile à l'apparition), une petite unité, l'icône, et l'unité en toutes lettres
     const valeur = (n, id, unite, court) => {
       const b = el('b', { className: 'rg-grains' });
-      b.append(el('span', { className: 'rg-n', textContent: nf.format(Number(n)) }));
+      b.append(el('span', { className: 'rg-n', textContent: nfl(Number(n)) }));
       b.lastChild.dataset.v = Number(n);
       if (court) b.append(el('span', { className: 'rg-unite', textContent: court }));
       b.append(icone(id, id === '#i-infini' ? 'i-inf' : ''), el('span', { className: 'sr', textContent: ' ' + unite }));
@@ -4852,19 +5039,19 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       $('#riches-maj').textContent = minutes < 1 ? 'Mis à jour à l’instant.' : minutes < 60 ? `Mis à jour il y a ${minutes} min.`
         : `Mis à jour il y a ${Math.round(minutes / 60)} h.`;
     }
-    // Le podium : la marche (rang et tasse-trophée), la couronne du premier ; puis la suite du top 10
+    // Les trois portraits : le cadre (la couronne sur celui du premier) et la plaque ; puis le tableau d'honneur
     function remplir(liste, format, idPodium, idSuite) {
       const podium = [], suite = [];
       liste.forEach((x, i) => {
         const li = el('li'), evo = evolution(x);
         if (i < 3) {
-          if (i === 0) li.append(icone('#i-couronne', 'rg-couronne'));
-          const valeurs = el('span', { className: 'rg-valeurs' });
-          valeurs.append(format(x));
-          if (evo) valeurs.append(evo);
-          const marche = el('span', { className: 'rg-marche' });
-          marche.append(icone('#i-trophee', 'rg-tasse'), el('b', { textContent: String(i + 1) }));
-          li.append(avatar(x, i ? 64 : 84), nom(x), valeurs, marche);
+          const cadre = el('span', { className: 'rg-cadre' });
+          cadre.append(avatar(x, i ? 100 : 134));
+          if (i === 0) cadre.append(icone('#i-couronne', 'rg-couronne'));
+          const plaque = el('span', { className: 'rg-plaque' });
+          plaque.append(el('span', { className: 'rg-rang', textContent: `N°\u00a0${i + 1}` }), nom(x), format(x));
+          if (evo) plaque.append(evo);
+          li.append(cadre, plaque);
           podium.push(li);
         } else {
           li.append(el('span', { className: 'rg-place', textContent: String(i + 1) }), avatar(x, 36), nom(x), evo || el('span'), format(x));
@@ -4881,7 +5068,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         n.dataset.fait = '1';
         if (!anime) return;
         n.textContent = '0';
-        compter(n, Number(n.dataset.v), 1.4, 0);
+        compter(n, Number(n.dataset.v), 1.4, 0, nfl);
       });
     }
     if ('IntersectionObserver' in window) {
@@ -4901,7 +5088,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       $('.ch-titre span', bloc).textContent = jours >= 7 ? 'Champion de la semaine' : 'La plus forte hausse';
       $('.ch-avatar', bloc).replaceChildren(avatarDiscord(c.avatar, 56));
       $('.ch-nom', bloc).textContent = String(c.nom || 'Membre');
-      $('.ch-gain', bloc).textContent = `+${nf.format(Number(c.gain))} grains ${jours === 1 ? 'depuis hier' : `en ${jours} jours`}`;
+      $('.ch-gain', bloc).textContent = `+${nfl(Number(c.gain))} grains ${jours === 1 ? 'depuis hier' : `en ${jours} jours`}`;
       bloc.hidden = false;
     }
     // L'économie du café : grains en circulation, part en banque, membres qui ont des grains
