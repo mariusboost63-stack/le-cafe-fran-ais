@@ -2123,8 +2123,8 @@ main, .pied { position: relative; z-index: 1; }
 /* la ficelle et le clou */
 .rg-cadre::before {
   content: ""; position: absolute; left: 50%; bottom: 100%; width: 56%; height: 26px; translate: -50% 0;
-  background: linear-gradient(to top right, transparent calc(50% - 1px), #d8c39a calc(50% - .5px) calc(50% + .5px), transparent calc(50% + 1px)) left / 50% 100% no-repeat,
-              linear-gradient(to top left, transparent calc(50% - 1px), #d8c39a calc(50% - .5px) calc(50% + .5px), transparent calc(50% + 1px)) right / 50% 100% no-repeat;
+  background: linear-gradient(to bottom right, transparent calc(50% - 1px), #d8c39a calc(50% - .5px) calc(50% + .5px), transparent calc(50% + 1px)) left / 50% 100% no-repeat,
+              linear-gradient(to bottom left, transparent calc(50% - 1px), #d8c39a calc(50% - .5px) calc(50% + .5px), transparent calc(50% + 1px)) right / 50% 100% no-repeat;
 }
 .rg-cadre::after { content: ""; position: absolute; left: 50%; bottom: calc(100% + 22px); width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f2f2f2, #8a8a8a 70%); box-shadow: 0 2px 3px color-mix(in srgb, #000 50%, transparent); }
 .rg-couronne { position: absolute; z-index: 1; top: -18px; left: -16px; width: 44px; height: 29px; color: var(--ambre); rotate: -22deg; filter: drop-shadow(0 4px 8px color-mix(in srgb, #000 50%, transparent)); }
