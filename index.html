@@ -2199,40 +2199,76 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   .suite a { padding: 18px 20px; }
 }
 
-/* L'accueil « Au menu » : une carte par page, avec un aperçu en direct */
+/* L'accueil « Au menu » : la carte du bistrot, imprimée à l'encre sur papier crème.
+   Chaque page est un plat, et l'aperçu en direct est griffonné au stylo rouge par le serveur. */
 .au-menu { padding-block: clamp(48px, 6vw, 88px) clamp(64px, 7vw, 104px); }
-.au-menu .cadre { display: grid; gap: clamp(22px, 3vw, 32px); }
-.am-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 14px 40px; }
-.am-tete > div { display: grid; gap: 16px; }
-.am-tete > p { max-width: 42ch; color: var(--brume); }
-.am-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-.am-carte {
-  --c: var(--creme); position: relative; box-sizing: border-box; display: grid; grid-template-rows: auto auto 1fr auto; gap: 10px; height: 100%; min-height: 230px; padding: 22px; overflow: hidden;
-  border-radius: 22px; background: var(--nuit-2); border: 1px solid var(--trait); color: var(--lait); text-decoration: none; transition: translate .25s, border-color .25s, background-color .25s;
+.au-menu .cadre { display: grid; gap: clamp(28px, 4vw, 44px); }
+.am-tete { display: grid; gap: 18px; justify-items: center; text-align: center; }
+.am-tete .chapo { max-width: 52ch; font-size: var(--t-chapo); color: var(--brume); }
+.am-papier {
+  --papier: #f6f0e2; --encre: #1d2433; --stylo: #c3242f;
+  --encre-doux: color-mix(in srgb, var(--encre) 74%, var(--papier));
+  --filet: color-mix(in srgb, var(--encre) 26%, transparent);
+  position: relative; width: min(100%, 1080px); margin-inline: auto; box-sizing: border-box;
+  padding: clamp(34px, 4.4vw, 60px) clamp(22px, 5vw, 72px) clamp(28px, 3.6vw, 44px); border-radius: 6px; color: var(--encre);
+  /* le papier : un peu de grain et une lumière douce */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .18 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    radial-gradient(80% 60% at 20% 0%, color-mix(in srgb, #fff 55%, transparent), transparent 70%),
+    linear-gradient(170deg, #faf5ea, var(--papier) 45%, #ede3cd);
+  box-shadow: 0 40px 70px -36px #000, 0 2px 0 color-mix(in srgb, #000 25%, transparent);
 }
-.am-carte:hover { translate: 0 -4px; border-color: var(--c); background: color-mix(in srgb, var(--c) 6%, var(--nuit-2)); }
-.am-carte:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
-.am-num { position: absolute; right: 16px; top: 2px; font: 800 92px/1 var(--f-titre); font-stretch: 80%; color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--c) 40%, transparent); pointer-events: none; }
-.am-ico { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
-.am-ico svg { width: 24px; height: 24px; fill: currentColor; }
-.am-carte h3 { font: 800 25px/1.05 var(--f-titre); font-stretch: 88%; letter-spacing: -.01em; }
-.am-carte p { color: var(--brume); font-size: 15px; }
-.am-live { justify-self: start; align-self: end; display: inline-flex; align-items: flex-start; gap: 8px; max-width: 100%; padding: 7px 12px; border-radius: 999px; background: color-mix(in srgb, var(--c) 14%, transparent); font-size: 14px; font-weight: 600; }
+/* le double filet imprimé autour de la carte */
+.am-papier::before {
+  content: ""; position: absolute; inset: clamp(8px, 1vw, 12px); border: 1px solid var(--filet); border-radius: 3px; pointer-events: none;
+  box-shadow: inset 0 0 0 3px var(--papier), inset 0 0 0 4px var(--filet);
+}
+.am-enseigne { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: clamp(12px, 2vw, 24px); margin-bottom: clamp(22px, 3vw, 36px); }
+.am-enseigne b { font: 800 clamp(40px, 5vw, 64px)/1 var(--f-titre); font-stretch: 85%; letter-spacing: -.02em; }
+.am-cote { display: flex; align-items: center; gap: 12px; font: 500 12px/1.2 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--encre-doux); white-space: nowrap; }
+.am-cote:first-child { justify-content: flex-end; }
+.am-cote:first-child::before, .am-cote:last-child::after { content: ""; flex: 1; min-width: 16px; height: 1px; background: var(--filet); }
+.am-grille {
+  list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); grid-auto-flow: column;
+  column-gap: clamp(28px, 5vw, 72px); position: relative;
+}
+/* le filet vertical entre les deux colonnes */
+.am-grille::before { content: ""; position: absolute; top: 10px; bottom: 10px; left: 50%; width: 1px; background: var(--filet); }
+.am-carte {
+  position: relative; display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 10px; align-content: start;
+  margin-inline: -14px; padding: 18px 14px; border-radius: 10px; color: var(--encre); text-decoration: none; transition: background-color .25s;
+}
+.am-carte:hover { background: color-mix(in srgb, var(--encre) 6%, transparent); }
+.am-carte:focus-visible { outline: 2px solid var(--encre); outline-offset: 0; }
+.am-num { grid-row: 1 / span 3; padding-top: .55em; font: 500 13px/1 var(--f-mono); letter-spacing: .04em; color: var(--encre-doux); }
+.am-titre { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.am-carte h3 { flex: none; max-width: 75%; font: 800 clamp(22px, 2.1vw, 27px)/1.1 var(--f-titre); font-stretch: 88%; letter-spacing: -.01em; }
+.am-points { flex: 1; min-width: 20px; height: 3px; background: radial-gradient(circle, var(--filet) 1.2px, transparent 1.6px) 0 50% / 8px 3px repeat-x; transition: opacity .25s; }
+.am-fleche { flex: none; align-self: center; width: 20px; height: 20px; transition: translate .25s; }
+.am-carte:hover .am-fleche { translate: 4px 0; color: var(--stylo); }
+.am-carte p { grid-column: 2; margin-top: 4px; color: var(--encre-doux); font-size: 15.5px; line-height: 1.45; }
+.am-live { grid-column: 2; display: flex; gap: 6px; margin-top: 8px; font: 600 22px/1.05 var(--f-craie, "Caveat", "Segoe Print", "Bradley Hand", cursive); color: var(--stylo); rotate: -1.2deg; transform-origin: left center; }
+.am-live::before { content: ""; flex: none; width: 20px; height: 14px; margin-top: .22em; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 2c1 5 5 8 14 8'/%3E%3Cpath d='M12.5 6.5 16.5 10l-4 3'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 2c1 5 5 8 14 8'/%3E%3Cpath d='M12.5 6.5 16.5 10l-4 3'/%3E%3C/svg%3E") center / contain no-repeat; }
 .am-live > span { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-.am-live i { flex: none; width: 8px; height: 8px; margin-top: .45em; border-radius: 50%; background: var(--c); }
-@media (max-width: 1100px) { .am-grille { grid-template-columns: repeat(2, minmax(0, 1fr)); } .am-carte { min-height: 0; } }
+.am-pied { position: relative; margin-top: clamp(18px, 2.4vw, 28px); padding-top: 16px; border-top: 1px solid var(--filet); text-align: center; font: 500 12px/1.4 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--encre-doux); }
+@media (max-width: 820px) {
+  .am-grille { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-flow: row; }
+  .am-grille::before { display: none; }
+  .am-grille > li + li { border-top: 1px dashed var(--filet); }
+  .am-carte { border-radius: 8px; }
+}
 @media (max-width: 560px) {
-  .am-carte { padding: 18px 16px; gap: 8px; border-radius: 18px; }
-  .am-carte h3 { font-size: 21px; }
-  .am-carte p { display: none; }
-  .am-num { font-size: 64px; right: 10px; }
-  .am-ico { width: 40px; height: 40px; border-radius: 12px; }
-  .am-ico svg { width: 21px; height: 21px; }
-  .am-live { align-items: flex-start; padding: 6px 10px; border-radius: 12px; font-size: 13px; line-height: 1.3; }
-  .am-live > span { -webkit-line-clamp: 3; }
+  .am-papier { padding-inline: 20px; }
+  .am-enseigne { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 6px; }
+  .am-cote:last-child { display: none; }
+  .am-cote:first-child::before { display: none; }
+  .am-carte { grid-template-columns: 26px minmax(0, 1fr); column-gap: 8px; padding-block: 15px; margin-inline: -10px; padding-inline: 10px; }
+  .am-carte p { font-size: 15px; }
+  .am-live { font-size: 21px; }
 }
 .pied-nav a[aria-current="page"] { color: var(--creme); }
-@media (max-width: 340px) { .am-grille { grid-template-columns: minmax(0, 1fr); } }
 
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
@@ -3031,19 +3067,24 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   <section class="au-menu" id="au-menu" aria-labelledby="t-au-menu">
     <div class="cadre">
       <div class="am-tete" data-revele>
-        <div><p class="surtitre">Au menu</p><h2 class="h2" id="t-au-menu">Par où continuer&nbsp;?</h2></div>
-        <p>Une page par sujet, courte et claire. Choisis ce qui te tente&nbsp;: le menu en haut te suit sur toutes les pages.</p>
+        <p class="surtitre">Au menu</p>
+        <h2 class="h2" id="t-au-menu">Par où continuer&nbsp;?</h2>
+        <p class="chapo">Une page par sujet, courte et claire. Choisis ce qui te tente&nbsp;: le menu en haut te suit sur toutes les pages.</p>
       </div>
-      <ul class="am-grille">
-        <li><a class="am-carte" href="/niveaux/" data-page="niveaux" style="--c: var(--bleu-vif)"><span class="am-num" aria-hidden="true">1</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-etoile"/></svg></span><h3 data-nom-page="niveaux">Niveaux</h3><p data-resume-page="niveaux">Grimpe les paliers en discutant et débloque des rôles.</p><span class="am-live"><i aria-hidden="true"></i><span>10 paliers à grimper</span></span></a></li>
-        <li><a class="am-carte" href="/evenements/" data-page="evenements" style="--c: var(--rouge)"><span class="am-num" aria-hidden="true">2</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-cadeau"/></svg></span><h3><span class="seulement-normal">Événements</span><span class="seulement-noel">Noël</span><span class="seulement-halloween">Halloween</span></h3><p><span class="seulement-normal">Les grands rendez-vous et les animations du café.</span><span class="seulement-noel">Le calendrier de l'Avent et le café en habits de fête.</span><span class="seulement-halloween">Les quêtes, les citrouilles et le café déguisé.</span></p><span class="am-live"><i aria-hidden="true"></i><span>Le prochain rendez-vous</span></span></a></li>
-        <li><a class="am-carte" href="/grains/" data-page="grains" style="--c: var(--creme)"><span class="am-num" aria-hidden="true">3</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-grain"/></svg></span><h3 data-nom-page="grains">Grains</h3><p data-resume-page="grains">La monnaie du café, comment en gagner et la boutique.</p><span class="am-live"><i aria-hidden="true"></i><span>Booster à 10&#8239;000 grains</span></span></a></li>
-        <li><a class="am-carte" href="/deckfr/" data-page="deckfr" style="--c: var(--rar-3)"><span class="am-num" aria-hidden="true">4</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-cartes"/></svg></span><h3 data-nom-page="deckfr">DeckFR</h3><p data-resume-page="deckfr">Le jeu de cartes du bot : ouvre, collectionne, échange.</p><span class="am-live"><i aria-hidden="true"></i><span>7 raretés à collectionner</span></span></a></li>
-        <li><a class="am-carte" href="/classement/" data-page="classement" style="--c: var(--or)"><span class="am-num" aria-hidden="true">5</span><span class="am-ico" aria-hidden="true"><svg viewBox="0 0 40 26"><use href="#i-couronne"/></svg></span><h3 data-nom-page="classement">Classement</h3><p data-resume-page="classement">Les plus riches, les plus fidèles, les collectionneurs.</p><span class="am-live"><i aria-hidden="true"></i><span>Qui est en tête&nbsp;?</span></span></a></li>
-        <li><a class="am-carte" href="/info-du-jour/" data-page="info-du-jour" style="--c: var(--rouge)"><span class="am-num" aria-hidden="true">6</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-annonce"/></svg></span><h3 data-nom-page="info-du-jour">Info du jour</h3><p data-resume-page="info-du-jour">Une petite actu, chaque jour à midi.</p><span class="am-live"><i aria-hidden="true"></i><span>L'info de midi</span></span></a></li>
-        <li><a class="am-carte" href="/equipe/" data-page="equipe" style="--c: var(--vert)"><span class="am-num" aria-hidden="true">7</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-perso"/></svg></span><h3 data-nom-page="equipe">Équipe</h3><p data-resume-page="equipe">Ceux qui font tourner le café.</p><span class="am-live"><i aria-hidden="true"></i><span>Gérants, admins et responsables</span></span></a></li>
-        <li><a class="am-carte" href="/premiers-pas/" data-page="premiers-pas" style="--c: var(--lait)"><span class="am-num" aria-hidden="true">8</span><span class="am-ico" aria-hidden="true"><svg><use href="#i-fleche"/></svg></span><h3 data-nom-page="premiers-pas">Premiers pas</h3><p data-resume-page="premiers-pas">Comment entrer, ta boisson et les questions fréquentes.</p><span class="am-live"><i aria-hidden="true"></i><span>3 gestes pour entrer</span></span></a></li>
-      </ul>
+      <div class="am-papier" data-revele>
+        <p class="am-enseigne"><span class="am-cote" aria-hidden="true">Le Café Français</span><b>La carte</b><span class="am-cote" aria-hidden="true">Service continu</span></p>
+        <ol class="am-grille">
+          <li><a class="am-carte" href="/niveaux/" data-page="niveaux"><span class="am-num" aria-hidden="true">01</span><span class="am-titre"><h3 data-nom-page="niveaux">Niveaux</h3><span class="am-points" aria-hidden="true"></span><svg class="am-fleche" aria-hidden="true"><use href="#i-fleche"/></svg></span><p data-resume-page="niveaux">Grimpe les paliers en discutant et débloque des rôles.</p><span class="am-live"><span>10 paliers à grimper</span></span></a></li>
+          <li><a class="am-carte" href="/evenements/" data-page="evenements"><span class="am-num" aria-hidden="true">02</span><span class="am-titre"><h3><span class="seulement-normal">Événements</span><span class="seulement-noel">Noël</span><span class="seulement-halloween">Halloween</span></h3><span class="am-points" aria-hidden="true"></span><svg class="am-fleche" aria-hidden="true"><use href="#i-fleche"/></svg></span><p><span class="seulement-normal">Les grands rendez-vous et les animations du café.</span><span class="seulement-noel">Le calendrier de l'Avent et le café en habits de fête.</span><span class="seulement-halloween">Les quêtes, les citrouilles et le café déguisé.</span></p><span class="am-live"><span>Le prochain rendez-vous</span></span></a></li>
+          <li><a class="am-carte" href="/grains/" data-page="grains"><span class="am-num" aria-hidden="true">03</span><span class="am-titre"><h3 data-nom-page="grains">Grains</h3><span class="am-points" aria-hidden="true"></span><svg class="am-fleche" aria-hidden="true"><use href="#i-fleche"/></svg></span><p data-resume-page="grains">La monnaie du café, comment en gagner et la boutique.</p><span class="am-live"><span>Booster à 10&#8239;000 grains</span></span></a></li>
+          <li><a class="am-carte" href="/deckfr/" data-page="deckfr"><span class="am-num" aria-hidden="true">04</span><span class="am-titre"><h3 data-nom-page="deckfr">DeckFR</h3><span class="am-points" aria-hidden="true"></span><svg class="am-fleche" aria-hidden="true"><use href="#i-fleche"/></svg></span><p data-resume-page="deckfr">Le jeu de cartes du bot : ouvre, collectionne, échange.</p><span class="am-live"><span>7 raretés à collectionner</span></span></a></li>
+          <li><a class="am-carte" href="/classement/" data-page="classement"><span class="am-num" aria-hidden="true">05</span><span class="am-titre"><h3 data-nom-page="classement">Classement</h3><span class="am-points" aria-hidden="true"></span><svg class="am-fleche" aria-hidden="true"><use href="#i-fleche"/></svg></span><p data-resume-page="classement">Les plus riches, les plus fidèles, les collectionneurs.</p><span class="am-live"><span>Qui est en tête&nbsp;?</span></span></a></li>
+          <li><a class="am-carte" href="/info-du-jour/" data-page="info-du-jour"><span class="am-num" aria-hidden="true">06</span><span class="am-titre"><h3 data-nom-page="info-du-jour">Info du jour</h3><span class="am-points" aria-hidden="true"></span><svg class="am-fleche" aria-hidden="true"><use href="#i-fleche"/></svg></span><p data-resume-page="info-du-jour">Une petite actu, chaque jour à midi.</p><span class="am-live"><span>L'info de midi</span></span></a></li>
+          <li><a class="am-carte" href="/equipe/" data-page="equipe"><span class="am-num" aria-hidden="true">07</span><span class="am-titre"><h3 data-nom-page="equipe">Équipe</h3><span class="am-points" aria-hidden="true"></span><svg class="am-fleche" aria-hidden="true"><use href="#i-fleche"/></svg></span><p data-resume-page="equipe">Ceux qui font tourner le café.</p><span class="am-live"><span>Gérants, admins et responsables</span></span></a></li>
+          <li><a class="am-carte" href="/premiers-pas/" data-page="premiers-pas"><span class="am-num" aria-hidden="true">08</span><span class="am-titre"><h3 data-nom-page="premiers-pas">Premiers pas</h3><span class="am-points" aria-hidden="true"></span><svg class="am-fleche" aria-hidden="true"><use href="#i-fleche"/></svg></span><p data-resume-page="premiers-pas">Comment entrer, ta boisson et les questions fréquentes.</p><span class="am-live"><span>3 gestes pour entrer</span></span></a></li>
+        </ol>
+        <p class="am-pied">Prix nets, service compris. Ici, tout est offert.</p>
+      </div>
     </div>
   </section>
 
