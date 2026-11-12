@@ -74,7 +74,7 @@ h1 { margin: 0; font: 800 clamp(40px, 7vw, 72px)/.95 var(--f-titre); font-stretc
   <div class="cadre tete">
     <p class="surtitre">Informations légales</p>
     <h1>Mentions légales</h1>
-    <p class="maj">Dernière mise à jour&nbsp;: <time datetime="2026-10-21">21 octobre 2026</time></p>
+    <p class="maj">Dernière mise à jour&nbsp;: <time datetime="2026-11-12">12 novembre 2026</time></p>
     <div class="drapeau" aria-hidden="true"><i></i><i></i><i></i></div>
   </div>
   <div class="cadre texte">
@@ -86,7 +86,7 @@ h1 { margin: 0; font: 800 clamp(40px, 7vw, 72px)/.95 var(--f-titre); font-stretc
 </ul>
 
 <h2>Hébergement</h2>
-<p>Le site est hébergé par GitHub Pages, un service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis (<a href="https://pages.github.com" target="_blank" rel="noopener">pages.github.com</a>).</p>
+<p>Le site est hébergé par Cloudflare Pages, un service de Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, États-Unis (<a href="https://pages.cloudflare.com" target="_blank" rel="noopener">pages.cloudflare.com</a>). Son code et les données relevées dans le bot sont conservés sur GitHub, un service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
 
 <h2>Conception et développement</h2>
 <p>Site conçu et développé par <a href="https://mvriuus.fr" target="_blank" rel="noopener">mvriuus</a>.</p>
@@ -106,13 +106,23 @@ h1 { margin: 0; font: 800 clamp(40px, 7vw, 72px)/.95 var(--f-titre); font-stretc
 <h3>Services contactés par la page</h3>
 <p>En affichant le site, ton navigateur contacte les services suivants, qui reçoivent ton adresse IP&nbsp;:</p>
 <ul>
-  <li>GitHub, qui héberge le site, le classement des grains et l'info du jour&nbsp;;</li>
+  <li>Cloudflare, qui héberge le site et les données affichées&nbsp;;</li>
+  <li>GitHub, seulement si une donnée manque chez Cloudflare (copie de secours)&nbsp;;</li>
   <li>Discord, pour le nombre de membres, les membres en ligne et les avatars.</li>
 </ul>
 <p>Les polices et les bibliothèques d'animation sont servies par le site lui-même&nbsp;: aucun service de polices ni réseau de diffusion tiers n'est contacté.</p>
 
-<h3>Le classement des grains</h3>
-<p>La section «&nbsp;Les plus riches du café&nbsp;» affiche le pseudo, l'avatar Discord et le nombre de grains des dix membres qui en ont le plus. Ces informations viennent du bot du serveur et sont mises à jour toutes les 15 minutes, pour animer la communauté. Les membres privés de grains n'y apparaissent pas. Pour ne plus figurer dans le classement, demande-le dans #support ou écris à <a href="mailto:contact@mvriuus.fr">contact@mvriuus.fr</a>.</p>
+<h3>Ce que le site affiche sur les membres</h3>
+<p>Pour animer la communauté, le site affiche des informations venues du bot du serveur, relevées chaque heure. Il ne publie jamais d'identifiant Discord&nbsp;: seulement le pseudo et l'avatar.</p>
+<ul>
+  <li>Les classements&nbsp;: pseudo, avatar et résultat des dix premiers de chaque classement (grains, nombres postés dans #infini, série de <code>/journalier</code>, cartes DeckFR), et le champion de la semaine&nbsp;;</li>
+  <li>DeckFR&nbsp;: les meilleurs collectionneurs, les derniers grands tirages, les premiers à trouver chaque carte bonus, et le pseudo des membres qui vendent une carte au marché&nbsp;;</li>
+  <li>le livre d'or&nbsp;: les membres qui détiennent un record (premier booster, plus de boosters ouverts, vente la plus chère…)&nbsp;;</li>
+  <li>le récap du dimanche&nbsp;: le membre de la semaine, les grands tirages et les trésors trouvés dans la semaine&nbsp;;</li>
+  <li>la boîte à idées&nbsp;: le texte des suggestions et leurs votes, sans jamais le nom de leur auteur&nbsp;;</li>
+  <li>les heures d'affluence&nbsp;: seulement le nombre de membres en ligne, heure par heure, sans aucun nom.</li>
+</ul>
+<p>Les membres privés de grains, de cartes ou de suggestions n'apparaissent pas dans les sections concernées. Pour ne plus figurer sur le site, demande-le dans #support ou écris à <a href="mailto:contact@mvriuus.fr">contact@mvriuus.fr</a>.</p>
 
 <h3>Les membres en ligne</h3>
 <p>Les pseudos et les avatars des membres en ligne viennent du widget public de Discord. Leur affichage dépend des réglages de Discord et du serveur.</p>
