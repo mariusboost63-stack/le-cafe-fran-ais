@@ -2,6 +2,7 @@
 # sur la branche « data » (classement.json), que le site affiche. Script : outils/classement.py
 # Relève aussi le jeu de cartes DeckFR (deckfr.json, même branche). Script : outils/deckfr.py
 # Et les records de tous les temps pour le livre d'or (records.json, même branche). Script : outils/records.py
+# Et la Bourse des cartes (bourse.json) et la boîte à idées (idees.json). Scripts : outils/bourse.py, outils/idees.py
 # Secrets à ajouter (Settings → Secrets and variables → Actions) : CAFE_DB_URL et DISCORD_TOKEN.
 # Ils ne servent qu'ici : le site n'y a jamais accès.
 # Une fois par heure (et pas plus) pour rester dans les 2 000 minutes gratuites de GitHub Actions si le dépôt est privé.
@@ -55,15 +56,23 @@ jobs:
           CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: python3 outils/records.py "$RUNNER_TEMP/out/records.json" || [ $? -eq 2 ]
+      # La Bourse des cartes (bourse.json) et la boîte à idées (idees.json). Scripts : outils/bourse.py, outils/idees.py
+      - name: Relever la Bourse et la boîte à idées
+        env:
+          CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: |
+          python3 outils/bourse.py "$RUNNER_TEMP/out/bourse.json" || [ $? -eq 2 ]
+          python3 outils/idees.py "$RUNNER_TEMP/out/idees.json" || [ $? -eq 2 ]
       - name: Publier sur la branche data
         working-directory: ${{ runner.temp }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          [ -f out/classement.json ] || [ -f out/deckfr.json ] || [ -f out/records.json ] || { echo "Rien à publier"; exit 0; }
+          [ -f out/classement.json ] || [ -f out/deckfr.json ] || [ -f out/records.json ] || [ -f out/bourse.json ] || [ -f out/idees.json ] || { echo "Rien à publier"; exit 0; }
           # Un relevé manqué garde la version précédente de son fichier
           if git -C "$GITHUB_WORKSPACE" fetch -q --depth=1 origin data 2>/dev/null; then
-            for f in classement.json deckfr.json records.json historique.json; do
+            for f in classement.json deckfr.json records.json bourse.json idees.json historique.json; do
               [ -f "out/$f" ] || git -C "$GITHUB_WORKSPACE" show "FETCH_HEAD:$f" > "out/$f" 2>/dev/null || rm -f "out/$f"
             done
           fi
