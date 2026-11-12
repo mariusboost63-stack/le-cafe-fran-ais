@@ -2892,13 +2892,13 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
 
 /* DeckFR : le sommaire, qui reste sous la barre du haut pendant la lecture de la page */
 .dk-sommaire {
-  grid-column: 1 / -1; position: sticky; top: calc(var(--haut-barre, 70px) + 10px); z-index: 30; justify-self: center;
+  grid-column: 1 / -1; position: sticky; top: calc(var(--haut-barre, 70px) + 10px); z-index: 30; justify-self: stretch;
   display: flex; gap: 4px; max-width: 100%; box-sizing: border-box; padding: 5px; overflow-x: auto; scrollbar-width: none;
   border-radius: 999px; border: 1px solid var(--trait); background: color-mix(in srgb, var(--nuit) 86%, transparent);
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 14px 30px -18px #000;
 }
 .dk-sommaire::-webkit-scrollbar { display: none; }
-.dk-sommaire a { flex: none; padding: 9px 14px; border-radius: 999px; color: var(--brume); font: 700 14px/1 var(--f-titre); text-decoration: none; white-space: nowrap; transition: background-color .2s, color .2s; }
+.dk-sommaire a { flex: 1 0 auto; text-align: center; padding: 9px 14px; border-radius: 999px; color: var(--brume); font: 700 14px/1 var(--f-titre); text-decoration: none; white-space: nowrap; transition: background-color .2s, color .2s; }
 .dk-sommaire a:hover { color: var(--lait); }
 .dk-sommaire a[aria-current="true"] { background: var(--lait); color: var(--nuit); }
 .dk-sommaire a[hidden] { display: none; }
