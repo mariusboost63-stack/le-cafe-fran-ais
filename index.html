@@ -55,13 +55,13 @@
      outils/pages.py, qui y met aussi le titre et la description de la page). « ancres » : les sections de la page. -->
 <script type="application/json" id="pages-du-site">
 [
- {"id": "accueil", "chemin": "/", "nom": "Accueil", "titre": "Le Café Français · Serveur Discord francophone", "description": "Le Café Français, serveur Discord francophone : discussions, jeux, salons vocaux et événements. Rejoins-nous sur discord.gg/france.", "resume": "La visite du café et ce qui s'y passe en ce moment.", "ancres": ["haut", "ruban", "carte", "vocaux", "direct", "au-menu"]},
+ {"id": "accueil", "chemin": "/", "nom": "Accueil", "titre": "Le Café Français · Serveur Discord francophone", "description": "Le Café Français, serveur Discord francophone : discussions, jeux, salons vocaux et événements. Rejoins-nous sur discord.gg/france.", "resume": "La visite du café et ce qui s'y passe en ce moment.", "ancres": ["haut", "ruban", "carte", "vocaux", "direct", "affluence", "au-menu"]},
  {"id": "niveaux", "chemin": "/niveaux/", "nom": "Niveaux", "titre": "Niveaux · Le Café Français", "description": "Les niveaux du Café Français : gagne de l'XP en discutant et en vocal, et débloque un rôle et des avantages à chaque palier.", "resume": "Grimpe les paliers en discutant et débloque des rôles.", "ancres": ["niveaux"]},
  {"id": "evenements", "chemin": "/evenements/", "nom": "Événements", "titre": "Événements · Le Café Français", "description": "Les grands rendez-vous du Café Français, Halloween et Noël, et les animations de tous les jours : concours, #infini, confessions.", "resume": "Les grands rendez-vous et les animations du café.", "saisons": {"noel": {"nom": "Noël", "titre": "Noël au café · Le Café Français", "resume": "Le calendrier de l'Avent et le café en habits de fête."}, "halloween": {"nom": "Halloween", "titre": "Halloween au café · Le Café Français", "resume": "Les quêtes, les citrouilles et le café déguisé."}}, "ancres": ["evenements", "noel", "halloween", "prochains"]},
  {"id": "grains", "chemin": "/grains/", "nom": "Grains", "titre": "Grains et boutique · Le Café Français", "description": "Les grains, la monnaie du Café Français : comment en gagner et ce qu'on achète à la boutique.", "resume": "La monnaie du café, comment en gagner et la boutique.", "ancres": ["grains"]},
  {"id": "deckfr", "chemin": "/deckfr/", "nom": "DeckFR", "titre": "DeckFR, le jeu de cartes · Le Café Français", "description": "DeckFR, le jeu de cartes du Café Français : boosters, sept raretés, collection, échanges et ventes.", "resume": "Le jeu de cartes du bot : ouvre, collectionne, échange.", "ancres": ["deckfr"]},
  {"id": "classement", "chemin": "/classement/", "nom": "Classement", "titre": "Classement · Le Café Français", "description": "Les champions du Café Français : les plus riches en grains, les piliers de #infini, les collectionneurs de DeckFR et les plus fidèles.", "resume": "Les plus riches, les plus fidèles, les collectionneurs.", "ancres": ["classement"]},
- {"id": "info-du-jour", "chemin": "/info-du-jour/", "nom": "Info du jour", "titre": "L'info du jour · Le Café Français", "description": "La petite info du jour du Café Français, publiée chaque jour à midi.", "resume": "Une petite actu, chaque jour à midi.", "ancres": ["info"]},
+ {"id": "info-du-jour", "chemin": "/info-du-jour/", "nom": "Info du jour", "titre": "L'info du jour · Le Café Français", "description": "La petite info du jour du Café Français, publiée chaque jour à midi.", "resume": "Une petite actu, chaque jour à midi.", "ancres": ["info", "recap"]},
  {"id": "equipe", "chemin": "/equipe/", "nom": "Équipe", "titre": "L'équipe · Le Café Français", "description": "L'équipe du Café Français : gérants, administrateurs, responsables et modérateurs.", "resume": "Ceux qui font tourner le café.", "ancres": ["equipe"]},
  {"id": "premiers-pas", "chemin": "/premiers-pas/", "nom": "Premiers pas", "titre": "Premiers pas · Le Café Français", "description": "Rejoindre le Café Français en trois gestes, trouver sa place et les réponses aux questions fréquentes.", "resume": "Comment entrer, ta boisson et les questions fréquentes.", "ancres": ["entrer", "commande", "faq", "rejoindre"]}
 ]
@@ -2778,6 +2778,104 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   .bo-table td { font-size: 13.5px; }
 }
 
+/* Les heures d'affluence (accueil) : une affichette de fréquentation, heure par heure, et la semaine en carte de chaleur */
+.affluence { padding-block: clamp(64px, 7vw, 108px); }
+.affluence[hidden] { display: none; }
+.fq-cadre { display: grid; gap: clamp(26px, 3.4vw, 40px); }
+.fq-tete { display: grid; gap: 18px; max-width: 760px; }
+.fq-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 52ch; }
+.fq-affichette {
+  --encre: #1d2433; --doux: color-mix(in srgb, #1d2433 68%, #f6f0e2); --trait-p: color-mix(in srgb, #1d2433 13%, transparent);
+  --c1: #f1e4cb; --c2: #e2c69a; --c3: #c99263; --c4: #a8744a; --c5: #7a4a28; --c6: #4d2a14; --vif: #c3242f;
+  justify-self: center; width: min(100%, 980px); box-sizing: border-box; display: grid; gap: 18px; padding: 0 clamp(18px, 3vw, 36px) clamp(20px, 2.6vw, 30px);
+  border-radius: 6px; color: var(--encre); rotate: -.5deg; background: linear-gradient(175deg, #fffaf0, #f2e8d2); box-shadow: 0 34px 60px -32px #000;
+}
+.fq-plaque { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin: 0 calc(-1 * clamp(18px, 3vw, 36px)); padding: 16px clamp(18px, 3vw, 36px);
+  border-radius: 6px 6px 0 0; color: #f6f1e4; background: linear-gradient(180deg, #164a9c, #0c3b83); box-shadow: inset 0 0 0 3px #0c3b83, inset 0 0 0 5px #f6f1e4; }
+.fq-plaque b { font: 800 clamp(24px, 2.6vw, 32px)/1 var(--f-titre); font-stretch: 85%; }
+.fq-plaque span { font: 500 12px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
+.fq-jours { display: flex; flex-wrap: wrap; gap: 6px; }
+.fq-jours button { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--trait-p); background: transparent; color: var(--doux); font: 600 14px/1 var(--f-texte); cursor: pointer; }
+.fq-jours button[aria-pressed="true"] { background: var(--encre); border-color: var(--encre); color: #fffaf0; }
+.fq-maintenant { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; color: var(--doux); }
+.fq-maintenant b { color: var(--encre); }
+.fq-pastille { width: 9px; height: 9px; border-radius: 50%; background: #3fbf6f; box-shadow: 0 0 0 3px color-mix(in srgb, #3fbf6f 25%, transparent); align-self: center; }
+.fq-graphe { margin: 0; overflow-x: auto; }
+.fq-graphe svg { display: block; width: 100%; min-width: 520px; height: auto; font-family: var(--f-mono); }
+.fq-graphe .grille { stroke: var(--trait-p); stroke-width: 1; }
+.fq-graphe .axe { fill: var(--doux); font-size: 12px; }
+.fq-graphe .barre { fill: var(--c3); }
+.fq-graphe .barre.maintenant { fill: var(--vif); }
+.fq-graphe .barre.survol { fill: var(--c5); }
+.fq-graphe .note { fill: var(--encre); font: 700 19px var(--f-craie, "Caveat", cursive); }
+.fq-graphe .bulle rect { fill: var(--encre); }
+.fq-graphe .bulle text { fill: #fffaf0; font-size: 12.5px; }
+.fq-semaine { display: grid; gap: 8px; }
+.fq-sous { font: 500 12px/1.2 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--doux); }
+.fq-chaleur-cadre { overflow-x: auto; }
+.fq-chaleur { display: grid; grid-template-columns: 34px repeat(24, minmax(12px, 1fr)); gap: 2px; min-width: 420px; }
+.fq-chaleur span { font: 500 11px/18px var(--f-mono); color: var(--doux); white-space: nowrap; }
+.fq-chaleur i { height: 18px; border-radius: 3px; }
+.fq-chaleur i.vide { background: transparent; box-shadow: inset 0 0 0 1px var(--trait-p); }
+.fq-chaleur i.ici { outline: 2px solid var(--vif); outline-offset: 0; }
+.fq-chaleur .heures span { text-align: left; }
+.fq-echelle { display: flex; align-items: center; gap: 8px; font: 500 11px/1 var(--f-mono); color: var(--doux); }
+.fq-echelle i { width: 140px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6)); }
+.fq-note { padding-top: 12px; border-top: 1px dashed var(--trait-p); font-size: 13.5px; color: var(--doux); }
+.fq-jours button:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.fq-graphe .barre { transition: fill .15s; }
+.fq-graphe .barre.vide { fill: none; stroke: var(--trait-p); stroke-dasharray: 3 3; }
+.fq-graphe .zone { fill: transparent; cursor: default; }
+.fq-graphe .bulle { pointer-events: none; }
+.fq-graphe .bulle[hidden] { display: none; }
+
+/* Le récap du dimanche (page Info du jour) : « Le Café du dimanche », un journal de la semaine */
+.recap { padding-block: clamp(64px, 7vw, 108px); overflow-x: clip; }
+.recap[hidden] { display: none; }
+.rc-cadre { display: grid; gap: clamp(26px, 3.4vw, 40px); }
+.rc-tete { display: grid; gap: 18px; max-width: 760px; }
+.rc-tete .chapo { font-size: var(--t-chapo); color: var(--brume); max-width: 54ch; }
+.dimanche { --encre: #1d2433; --doux: color-mix(in srgb, #1d2433 70%, #f6f0e2); --filet: color-mix(in srgb, #1d2433 22%, transparent);
+  display: grid; gap: 18px; min-width: 0; width: min(100%, 860px); box-sizing: border-box; justify-self: center; padding: clamp(20px, 3vw, 36px); border-radius: 4px; color: var(--encre); rotate: -.6deg;
+  background: linear-gradient(175deg, #fbf7ec, #efe6d0); box-shadow: 0 30px 50px -28px #000; }
+.dm-une { display: grid; gap: 8px; text-align: center; padding-bottom: 12px; border-bottom: 3px double color-mix(in srgb, #1d2433 70%, transparent); }
+.dm-ligne { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding-bottom: 8px; border-bottom: 1px solid var(--filet); font: 500 11.5px/1.2 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--doux); }
+.dm-nom { font: 800 clamp(34px, 4.4vw, 60px)/.95 var(--f-titre); font-stretch: 80%; letter-spacing: -.02em; }
+.dm-sous { font: 700 clamp(18px, 1.8vw, 22px)/1.1 var(--f-craie, "Caveat", cursive); color: #b3212b; }
+.dm-rubrique { font: 500 11.5px/1.2 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: #b3212b; }
+.dm-alaune { display: grid; gap: 8px; }
+.dm-alaune h3 { font: 800 clamp(24px, 2.8vw, 36px)/1.02 var(--f-titre); font-stretch: 86%; letter-spacing: -.02em; text-wrap: balance; }
+.dm-alaune > p:last-child { font-size: 16px; line-height: 1.55; color: var(--doux); }
+.dm-chiffres { list-style: none; margin: 0; padding: 12px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-block: 1px solid var(--filet); }
+.dm-chiffres li { display: grid; gap: 4px; padding: 2px 12px; border-left: 1px solid var(--filet); }
+.dm-chiffres li:first-child { border-left: 0; padding-left: 0; }
+.dm-chiffres b { font: 800 clamp(22px, 2.4vw, 30px)/1 var(--f-titre); font-variant-numeric: tabular-nums; }
+.dm-chiffres span { font-size: 13px; line-height: 1.25; color: var(--doux); }
+.dm-colonnes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+.dm-colonnes section { display: grid; gap: 6px; align-content: start; padding-top: 10px; border-top: 1px solid var(--filet); font-size: 14.5px; line-height: 1.5; color: var(--doux); }
+.dm-gros { font: 800 22px/1.1 var(--f-titre); color: var(--encre); }
+.dm-citation { font: 700 21px/1.15 var(--f-craie, "Caveat", cursive); color: #0c3b83; }
+.dm-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.dm-liste li { display: flex; align-items: baseline; gap: 8px; }
+.dm-liste li::after { content: ""; order: 1; flex: 1; border-bottom: 1.5px dotted var(--filet); }
+.dm-liste span { font-weight: 600; color: var(--encre); }
+.dm-liste i { order: 2; font: 500 12.5px/1 var(--f-mono); font-style: normal; }
+.dm-pied { padding-top: 10px; border-top: 3px double color-mix(in srgb, #1d2433 70%, transparent); font: 500 12.5px/1.4 var(--f-mono); color: var(--doux); }
+.rc-editions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; }
+.rc-editions[hidden] { display: none; }
+.rc-editions > p { font: 500 12px/1.2 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brume); }
+.rc-editions div { display: flex; flex-wrap: wrap; gap: 6px; }
+.rc-editions button { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--trait); background: transparent; color: var(--brume); font: 600 13.5px/1 var(--f-texte); cursor: pointer; }
+.rc-editions button[aria-pressed="true"] { background: var(--lait); border-color: var(--lait); color: var(--nuit); }
+.dm-colonnes section.dm-large { grid-column: 1 / -1; }
+.dm-chiffres.trois { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 860px) { .dm-colonnes { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) {
+  .dm-chiffres, .dm-chiffres.trois { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 12px; }
+  .dm-chiffres li:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .dimanche { rotate: 0deg; }
+}
+
 /* Animations réduites, à la demande du visiteur (bouton du pied de page) */
 [data-animations="reduites"] *, [data-animations="reduites"] *::before, [data-animations="reduites"] *::after { animation: none !important; transition: none !important; }
 
@@ -3602,6 +3700,18 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     </div>
   </section>
 
+  <section class="recap" id="recap" aria-labelledby="t-recap" hidden>
+    <div class="cadre rc-cadre">
+      <div class="rc-tete" data-revele>
+        <p class="surtitre">Le récap du dimanche</p>
+        <h2 class="h2" id="t-recap">La semaine au café</h2>
+        <p class="chapo">Chaque dimanche à 18&nbsp;h, le résumé de la semaine&nbsp;: les chiffres, les grands tirages, les records et l'idée qui monte. Sur le site et sur le serveur.</p>
+      </div>
+      <article class="dimanche" id="dimanche" aria-live="polite"></article>
+      <div class="rc-editions" id="rc-editions" hidden><p>Les éditions précédentes</p><div id="rc-liste" role="group" aria-label="Choisir une édition"></div></div>
+    </div>
+  </section>
+
   <section class="vocaux" id="vocaux" aria-labelledby="t-vocaux">
     <div class="cadre vocaux-cadre">
       <div class="vocaux-texte" data-revele>
@@ -3670,6 +3780,30 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       <p class="surtitre"><span class="pastille" aria-hidden="true"></span>En direct du serveur</p>
       <h2 class="h2" id="t-direct"><span id="direct-nombre">0</span> en ligne</h2>
       <ul class="avatars" id="avatars"></ul>
+    </div>
+  </section>
+
+  <section class="affluence" id="affluence" aria-labelledby="t-affluence" hidden>
+    <div class="cadre fq-cadre">
+      <div class="fq-tete" data-revele>
+        <p class="surtitre">Les heures d'affluence</p>
+        <h2 class="h2" id="t-affluence">Quand passer au café&nbsp;?</h2>
+        <p class="chapo">Le nombre de membres en ligne, relevé chaque heure sur Discord. Moyenne des quatre dernières semaines, à l'heure de Paris.</p>
+      </div>
+      <article class="fq-affichette">
+        <header class="fq-plaque"><b>Heures d'affluence</b><span>Le Café Français · fréquentation</span></header>
+        <div class="fq-jours" id="fq-jours" role="group" aria-label="Jour de la semaine"></div>
+        <p class="fq-maintenant" id="fq-maintenant"></p>
+        <figure class="fq-graphe">
+          <svg id="fq-svg" viewBox="0 0 760 270" role="img"></svg>
+        </figure>
+        <div class="fq-semaine">
+          <p class="fq-sous">La semaine d'un coup d'œil</p>
+          <div class="fq-chaleur-cadre"><div class="fq-chaleur" id="fq-chaleur" role="img" aria-label="Membres en ligne en moyenne, chaque heure de chaque jour de la semaine"></div></div>
+          <p class="fq-echelle"><span>calme</span><i></i><span>bondé</span></p>
+        </div>
+        <p class="fq-note" id="fq-note"></p>
+      </article>
     </div>
   </section>
 
@@ -6700,6 +6834,181 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           return li;
         }));
         $('#bo-offres-bloc').hidden = !offres.length;
+        bloc.hidden = false;
+        if (anime) ST.refresh();
+      }).catch(() => {});
+  })();
+
+  /* ---------- Accueil : les heures d'affluence ----------
+     La moyenne des membres en ligne pour chaque heure de chaque jour, sur les quatre dernières semaines (affluence.json,
+     relevé chaque heure par outils/affluence.py). La section apparaît après une journée de relevés. */
+  (function heuresAffluence() {
+    const bloc = $('#affluence');
+    if (!bloc) return;
+    const svg = $('#fq-svg'), ns = 'http://www.w3.org/2000/svg';
+    const NOMS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'], LONGS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+    const TEINTES = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', 'var(--c6)'];
+    let moyenne = null, jour = 0, seuils = [];
+    const paris = () => {
+      const p = new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', weekday: 'short', hour: 'numeric', hourCycle: 'h23' }).formatToParts(new Date());
+      const w = (p.find((x) => x.type === 'weekday') || {}).value || '';
+      return { jour: Math.max(0, ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'].indexOf(w)), heure: Number((p.find((x) => x.type === 'hour') || {}).value) || 0 };
+    };
+    const el = (t, a, txt) => { const e = document.createElementNS(ns, t); Object.entries(a || {}).forEach(([k, v]) => e.setAttribute(k, v)); if (txt !== undefined) e.textContent = txt; return e; };
+    const teinte = (n) => { let k = 0; seuils.forEach((s, i) => { if (n >= s) k = i + 1; }); return TEINTES[Math.min(k, TEINTES.length - 1)]; };
+    function graphe() {
+      const v = moyenne[jour], maintenant = paris();
+      const W = 760, H = 270, g = 46, d = 10, haut = 26, bas = 34;
+      const pic = Math.max(...moyenne.flat().filter((x) => x !== null), 10);
+      const pasY = [10, 20, 25, 50, 100, 200, 250, 500].find((p) => pic / p <= 4) || 1000;
+      const max = Math.ceil(pic / pasY) * pasY;
+      const y = (n) => haut + (H - haut - bas) * (1 - n / max);
+      const pas = (W - g - d) / 24, larg = pas - 6;
+      svg.replaceChildren();
+      for (let n = 0; n <= max; n += pasY) { svg.append(el('line', { class: 'grille', x1: g, x2: W - d, y1: y(n), y2: y(n) }), el('text', { class: 'axe', x: g - 8, y: y(n) + 4, 'text-anchor': 'end' }, nf.format(n))); }
+      const bulle = el('g', { class: 'bulle' }); bulle.setAttribute('hidden', '');
+      const rect = el('rect', { rx: 6, height: 32 }), texte = el('text', {});
+      bulle.append(rect, texte);
+      const montrer = (h) => {
+        $$('.barre', svg).forEach((b) => b.classList.toggle('survol', Number(b.dataset.h) === h && Number(b.dataset.h) !== (jour === maintenant.jour ? maintenant.heure : -1)));
+        if (h === null || v[h] === null) { bulle.setAttribute('hidden', ''); return; }
+        bulle.removeAttribute('hidden');
+        texte.textContent = `${h} h · ${nf.format(v[h])} en ligne`;
+        const l = texte.getComputedTextLength(), cx = g + h * pas + 3 + larg / 2;
+        const x = Math.min(Math.max(cx - (l + 24) / 2, g), W - d - l - 24), yy = Math.max(y(v[h]) - 42, 2);
+        rect.setAttribute('x', x); rect.setAttribute('y', yy); rect.setAttribute('width', l + 24);
+        texte.setAttribute('x', x + 12); texte.setAttribute('y', yy + 21);
+      };
+      v.forEach((n, h) => {
+        const x = g + h * pas + 3, b0 = y(0);
+        if (n === null) { svg.append(el('rect', { class: 'barre vide', x, y: b0 - 6, width: larg, height: 6, 'data-h': h })); }
+        else {
+          const top = y(n), r = Math.min(4, (b0 - top) / 2);
+          const barre = el('path', { class: 'barre' + (jour === maintenant.jour && h === maintenant.heure ? ' maintenant' : ''), 'data-h': h,
+            d: `M${x},${b0} V${top + r} Q${x},${top} ${x + r},${top} H${x + larg - r} Q${x + larg},${top} ${x + larg},${top + r} V${b0} Z` });
+          barre.append(el('title', {}, `${LONGS[jour]} ${h} h : ${nf.format(n)} en ligne en moyenne`));
+          svg.append(barre);
+        }
+        if (h % 3 === 0) svg.append(el('text', { class: 'axe', x: x + larg / 2, y: H - 12, 'text-anchor': 'middle' }, `${h} h`));
+        const zone = el('rect', { class: 'zone', x: x - 3, y: haut, width: pas, height: H - haut - bas });
+        zone.addEventListener('mouseenter', () => montrer(h));
+        svg.append(zone);
+      });
+      if (jour === maintenant.jour && v[maintenant.heure] !== null) svg.append(el('text', { class: 'note', x: g + maintenant.heure * pas + 3 + larg / 2, y: y(v[maintenant.heure]) - 10, 'text-anchor': 'middle' }, 'maintenant'));
+      svg.append(bulle);
+      svg.addEventListener('mouseleave', () => montrer(null));
+      svg.setAttribute('aria-label', `Membres en ligne le ${LONGS[jour]}, heure par heure, en moyenne`);
+      const cadre = svg.parentElement;
+      if (cadre.scrollWidth > cadre.clientWidth) cadre.scrollLeft = jour === maintenant.jour ? Math.max(0, (cadre.scrollWidth * (maintenant.heure + .5)) / 24 - cadre.clientWidth / 2) : 0;
+      // la phrase du jour : quand ça s'anime, quand c'est le pic
+      const valides = v.map((n, h) => [n, h]).filter(([n]) => n !== null);
+      const phrase = $('#fq-maintenant');
+      phrase.replaceChildren();
+      if (valides.length) {
+        const [mx, hPic] = valides.reduce((a, b) => (b[0] > a[0] ? b : a));
+        const anime = valides.find(([n, h]) => h >= 8 && n >= mx * .6);
+        const suite = ` Le ${LONGS[jour]}, ${anime && anime[1] < hPic ? `ça s'anime vers ${anime[1]} h et ` : ''}le pic arrive vers ${hPic} h.`;
+        if (jour === maintenant.jour && v[maintenant.heure] !== null) {
+          const n = v[maintenant.heure], niveau = n >= mx * .8 ? 'c’est l’heure de pointe' : n >= mx * .5 ? 'ça s’anime' : 'plutôt calme';
+          const pastille = document.createElement('span'); pastille.className = 'fq-pastille';
+          const b = document.createElement('b'); b.textContent = `En ce moment : ${niveau}.`;
+          phrase.append(pastille, b, suite);
+        } else phrase.append(suite.trim());
+      }
+      $$('#fq-jours button').forEach((b, i) => b.setAttribute('aria-pressed', String(i === jour)));
+    }
+    function chaleur() {
+      const ch = $('#fq-chaleur'), maintenant = paris();
+      ch.replaceChildren();
+      NOMS.forEach((nom, j) => {
+        const s = document.createElement('span'); s.textContent = nom; ch.append(s);
+        moyenne[j].forEach((n, h) => {
+          const i = document.createElement('i');
+          if (n === null) i.className = 'vide'; else { i.style.background = teinte(n); i.title = `${LONGS[j]} ${h} h : ${nf.format(n)} en ligne`; }
+          if (j === maintenant.jour && h === maintenant.heure) i.classList.add('ici');
+          ch.append(i);
+        });
+      });
+      ch.append(document.createElement('span'));
+      for (let h = 0; h < 24; h++) { const s = document.createElement('span'); s.textContent = h % 6 === 0 ? `${h} h` : ''; ch.append(s); }
+    }
+    $('#fq-jours').append(...NOMS.map((nom, i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = nom; b.setAttribute('aria-label', LONGS[i]);
+      b.addEventListener('click', () => { jour = i; graphe(); });
+      return b;
+    }));
+    chargerListe(['/affluence.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/affluence.json'])
+      .then((r) => (r ? r.json() : null)).then((d) => {
+        if (!d || !Array.isArray(d.moyenne) || d.moyenne.length !== 7 || !(Number(d.releves) >= 24)) return;
+        moyenne = d.moyenne.map((l) => (Array.isArray(l) && l.length === 24 ? l.map((x) => (Number.isFinite(x) ? x : null)) : Array(24).fill(null)));
+        const tout = moyenne.flat().filter((x) => x !== null).sort((a, b) => a - b);
+        seuils = [1, 2, 3, 4, 5].map((k) => tout[Math.floor((tout.length * k) / 6)]);
+        jour = paris().jour;
+        graphe(); chaleur();
+        const debut = new Date(d.debut);
+        const jours = (Date.now() - debut.getTime()) / 864e5;
+        $('#fq-note').textContent = jours < 7
+          ? `Les relevés ont commencé le ${debut.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', timeZone: 'Europe/Paris' })} : la semaine se complète jour après jour, et la moyenne devient fiable au bout de quelques semaines.`
+          : `Moyenne de ${nf.format(d.releves)} relevés horaires. Dernier relevé ${ilYa(d.maj)}.`;
+        bloc.hidden = false;
+        graphe(); // une fois visible, pour ouvrir le graphique sur l'heure qu'il est (téléphone)
+        if (anime) ST.refresh();
+      }).catch(() => {});
+  })();
+
+  /* ---------- Info du jour : le récap du dimanche ----------
+     « Le Café du dimanche », fait chaque dimanche à 18 h par outils/recap.py (recap.json). La dernière édition, et les
+     précédentes d'un clic. */
+  (function recapDimanche() {
+    const bloc = $('#recap'), journal = $('#dimanche');
+    if (!bloc || !journal) return;
+    const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    const el = (tag, cls, texte) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texte !== undefined) e.textContent = texte; return e; };
+    const nb = (n) => nf.format(Number(n) || 0).replace(/ /g, ' ');
+    const court = (n) => { n = Number(n) || 0; if (n >= 1e6) return `${String(Math.round(n / 1e5) / 10).replace('.', ',')} M`; if (n >= 1e4) return `${Math.round(n / 1000)} k`; return nb(n); };
+    const jourDe = (iso) => { const [a, m, j] = String(iso).split('-').map(Number); return { a, m, j }; };
+    function rubrique(titre, ...contenu) { const s = el('section'); s.append(el('p', 'dm-rubrique', titre), ...contenu); return s; }
+    function afficher(e) {
+      const fin = jourDe(e.semaine && e.semaine.fin), deb = jourDe(e.semaine && e.semaine.debut), dt = jourDe(e.date);
+      const une = el('header', 'dm-une');
+      const ligne = el('p', 'dm-ligne');
+      ligne.append(el('span', '', `Édition n° ${e.numero}`), el('span', '', `Dimanche ${dt.j} ${MOIS[dt.m - 1]} ${dt.a}`), el('span', '', 'Gratuit'));
+      une.append(ligne, el('p', 'dm-nom', 'Le Café du dimanche'), el('p', 'dm-sous', `Le récap de la semaine du ${deb.j}${deb.m !== fin.m ? ' ' + MOIS[deb.m - 1] : ''} au ${fin.j} ${MOIS[fin.m - 1]}`));
+      const alaune = el('section', 'dm-alaune');
+      alaune.append(el('p', 'dm-rubrique', 'À la une'), el('h3', '', e.une.titre), el('p', '', e.une.texte));
+      const chiffres = el('ul', 'dm-chiffres' + ((e.chiffres || []).length === 3 ? ' trois' : ''));
+      (e.chiffres || []).forEach((c) => { const li = el('li'); li.append(el('b', '', (c.signe && c.valeur > 0 ? '+' : '') + (c.court ? court(c.valeur) : nb(c.valeur))), el('span', '', c.texte)); chiffres.append(li); });
+      const col = el('div', 'dm-colonnes');
+      if (e.membre) col.append(rubrique('Le membre de la semaine', el('p', 'dm-gros', e.membre.nom), el('p', '', `+${nb(e.membre.gain)} grains ${Number(e.membre.jours) >= 7 ? 'en une semaine' : `en ${e.membre.jours} jours`}.`)));
+      if (e.tirages && e.tirages.length) {
+        const ul = el('ul', 'dm-liste');
+        e.tirages.forEach((t) => { const li = el('li'); li.style.setProperty('--r', couleurRarete(t.rarete)); li.append(el('span', '', t.carte), el('i', '', t.nom)); ul.append(li); });
+        col.append(rubrique('Les grands tirages', ul));
+      }
+      if (e.bourse) col.append(rubrique('Bourse', el('p', 'dm-gros', e.bourse.carte), el('p', '', `Vente record de la semaine : ${nb(e.bourse.prix)} grains. ${nb(e.bourse.ventes)} carte${e.bourse.ventes > 1 ? 's' : ''} vendue${e.bourse.ventes > 1 ? 's' : ''} au marché.`)));
+      if (e.idee) col.append(rubrique('L’idée qui monte', el('p', 'dm-citation', `« ${e.idee.texte} »`), el('p', '', `${e.idee.pour} pour, ${e.idee.contre} contre. À voter dans #suggestions.`)));
+      if (e.tresors && e.tresors.length) col.append(rubrique('Les trésors trouvés', el('p', '', e.tresors.map((t) => `${t.carte}, par ${t.nom}`).join(' · ') + '.')));
+      if (e.pic) col.append(rubrique('Le pic d’affluence', el('p', 'dm-gros', `${nb(e.pic.nombre)} en ligne`), el('p', '', `${e.pic.texte.charAt(0).toUpperCase()}${e.pic.texte.slice(1)}.`)));
+      if (col.children.length % 2) col.lastElementChild.classList.add('dm-large');
+      const pied = el('p', 'dm-pied', e.records && e.records.length
+        ? `Records battus cette semaine : ${e.records.map((r) => `${r.titre.charAt(0).toLowerCase()}${r.titre.slice(1)} (${r.nom || 'un membre'}${r.valeur ? ', ' + nb(r.valeur) : ''})`).join(' · ')}.`
+        : 'Prochaine édition dimanche prochain, à 18 h.');
+      journal.replaceChildren(une, alaune, ...(chiffres.children.length ? [chiffres] : []), col, pied);
+    }
+    chargerListe(['/recap.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/recap.json'])
+      .then((r) => (r ? r.json() : null)).then((d) => {
+        const editions = (d && Array.isArray(d.editions) ? d.editions : []).filter((x) => x && x.une && x.semaine);
+        if (!editions.length) return;
+        afficher(editions[0]);
+        if (editions.length > 1) {
+          $('#rc-liste').append(...editions.map((e, i) => {
+            const b = el('button', '', new Date(`${e.date}T12:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }));
+            b.type = 'button'; b.setAttribute('aria-pressed', String(i === 0));
+            b.addEventListener('click', () => { afficher(e); $$('#rc-liste button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); });
+            return b;
+          }));
+          $('#rc-editions').hidden = false;
+        }
         bloc.hidden = false;
         if (anime) ST.refresh();
       }).catch(() => {});
