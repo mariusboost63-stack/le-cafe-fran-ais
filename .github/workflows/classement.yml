@@ -81,6 +81,7 @@ jobs:
           CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           CACHE_EQUIPE: ${{ runner.temp }}/out/equipe-cache.json
+          DONNEES: ${{ runner.temp }}/out
         run: python3 outils/equipe.py "$RUNNER_TEMP/out/equipe.json" || [ $? -eq 2 ]
       # Les heures d'affluence : membres en ligne, lus sur l'invitation publique du serveur. Script : outils/affluence.py
       - name: Relever l'affluence

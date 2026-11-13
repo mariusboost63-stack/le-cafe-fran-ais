@@ -6,6 +6,7 @@ Les membres de l'équipe sont ceux de la page (index.html, leur @pseudo sur chaq
 Discord par son pseudo :
   1. ceux déjà retrouvés à un relevé précédent : leur photo est relue directement ;
   2. sur le serveur, si le bot du jeton DISCORD_TOKEN en fait partie (la photo propre au serveur passe en premier) ;
+  2 bis. par le nom affiché sur son badge (« Moon »), dans les classements publiés, s'il a changé de pseudo depuis ;
   3. sinon, parmi les membres connus de la base du bot : d'abord le staff (tickets, candidatures, absences, quêtes),
      puis les joueurs de DeckFR et du casino, puis tous les membres connus du bot. Chaque membre n'est demandé qu'une fois à
      Discord (250 nouveaux au plus par relevé) : le relevé garde une empreinte
@@ -63,6 +64,13 @@ def pseudos():
     return sorted({p.strip().lower() for p in re.findall(r'class="profil-pseudo">@([^<]+)<', texte) if p.strip()})
 
 
+def noms_affiches():
+    """Le nom affiché sur chaque badge (« Moon »), par @pseudo : de quoi retrouver un membre qui a changé de pseudo."""
+    texte = SOURCE.read_text(encoding="utf-8")
+    return {p.strip().lower(): n.strip().lower() for n, p in
+            re.findall(r'<span class="profil-nom">([^<]+)</span><span class="profil-pseudo">@([^<]+)</span>', texte)}
+
+
 class Memoire:
     """Ce que le relevé retient d'une heure à l'autre : l'identifiant des membres de l'équipe déjà retrouvés, et une
     empreinte (non réversible, liée au secret de la base) de chaque membre déjà vu avec celle de son pseudo."""
@@ -110,6 +118,16 @@ def nom(utilisateur):
     return str((utilisateur or {}).get("username", "")).lower()
 
 
+def affiche(utilisateur):
+    u = utilisateur or {}
+    return str(u.get("global_name") or u.get("username") or "").strip().lower()
+
+
+def le_bon(utilisateur, pseudo, noms):
+    """Le membre est celui du badge : même pseudo, ou même nom affiché (pour un pseudo changé depuis le badge)."""
+    return nom(utilisateur) == pseudo or (bool(noms.get(pseudo)) and affiche(utilisateur) == noms[pseudo])
+
+
 def photo(utilisateur, membre=None):
     """L'adresse de la photo : celle propre au serveur d'abord, puis celle du compte, puis l'avatar par défaut."""
     i = str(utilisateur["id"])
@@ -120,7 +138,7 @@ def photo(utilisateur, membre=None):
     return f"https://cdn.discordapp.com/embed/avatars/{(int(i) >> 22) % 6}.png"
 
 
-def deja_trouves(cherches, jeton, memoire, trouves):
+def deja_trouves(cherches, jeton, memoire, trouves, noms):
     for p in cherches:
         i = memoire.ids.get(p)
         if not i:
@@ -129,10 +147,10 @@ def deja_trouves(cherches, jeton, memoire, trouves):
             u = appel(f"/users/{i}", jeton)
         except Exception:
             continue
-        if nom(u) == p:
+        if le_bon(u, p, noms):
             trouves[p] = photo(u)
         else:
-            del memoire.ids[p]  # il a changé de pseudo : on le recherchera
+            del memoire.ids[p]  # il a changé de pseudo et de nom : on le recherchera
         time.sleep(.3)
 
 
@@ -149,6 +167,49 @@ def par_le_serveur(cherches, jeton, memoire, trouves):
             if nom(u) == p:
                 trouves[p] = photo(u, m)
                 memoire.ids[p] = str(u["id"])
+        time.sleep(.3)
+
+
+def par_les_classements(cherches, noms, jeton, memoire, trouves):
+    """Un membre qui a changé de pseudo depuis son badge : cherché par le nom du badge dans les classements que le
+    relevé vient de publier (classement.json, deckfr.json…, dossier DONNEES), s'il n'y a qu'un membre de ce nom."""
+    dossier = os.environ.get("DONNEES")
+    if not dossier:
+        return
+    par_nom = {}
+
+    def parcourir(x):
+        if isinstance(x, dict):
+            n, a = x.get("nom"), x.get("avatar")
+            if isinstance(n, str) and isinstance(a, str):
+                m = re.search(r"/(?:avatars|users)/(\d{15,21})/", a)
+                if m:
+                    par_nom.setdefault(n.strip().lower(), set()).add(m.group(1))
+            for v in x.values():
+                parcourir(v)
+        elif isinstance(x, list):
+            for v in x:
+                parcourir(v)
+
+    for f in ("classement.json", "deckfr.json", "records.json", "bourse.json", "recap.json"):
+        try:
+            parcourir(json.loads((pathlib.Path(dossier) / f).read_text(encoding="utf-8")))
+        except (OSError, ValueError):
+            continue
+    for p in cherches:
+        ids = par_nom.get(noms.get(p) or "", set())
+        if len(ids) != 1:
+            continue  # absent des classements, ou plusieurs membres du même nom : on ne devine pas
+        i = next(iter(ids))
+        try:
+            u = appel(f"/users/{i}", jeton)
+        except Exception:
+            continue
+        if le_bon(u, p, noms):
+            trouves[p] = photo(u)
+            memoire.ids[p] = i
+            signaler(f"@{p} retrouvé par son nom « {noms[p]} » : son nom d'utilisateur Discord est maintenant @{nom(u)}, "
+                     "à corriger sur son badge (index.html).")
         time.sleep(.3)
 
 
@@ -226,10 +287,13 @@ def main():
         signaler("Aucun @pseudo trouvé sur les badges de l'équipe (index.html).", "warning")
         return 2
     memoire = Memoire(os.environ.get("CACHE_EQUIPE"))
+    noms = noms_affiches()
     trouves = {}
-    deja_trouves(cherches, jeton, memoire, trouves)
+    deja_trouves(cherches, jeton, memoire, trouves, noms)
     if any(p not in trouves for p in cherches):
         par_le_serveur([p for p in cherches if p not in trouves], jeton, memoire, trouves)
+    if any(p not in trouves for p in cherches):
+        par_les_classements([p for p in cherches if p not in trouves], noms, jeton, memoire, trouves)
     if any(p not in trouves for p in cherches) and adresse:
         par_la_base([p for p in cherches if p not in trouves], adresse, jeton, memoire, trouves)
     memoire.ecrire()
