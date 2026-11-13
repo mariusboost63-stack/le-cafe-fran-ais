@@ -1,6 +1,17 @@
 {
   "infos": [
     {
+      "date": "2026-11-13",
+      "publication": "2026-11-13T12:00:00+01:00",
+      "theme": "Économie",
+      "titre": "Portée par l'énergie, la hausse des prix atteint 3,4 % sur un an",
+      "texte": "Les prix à la consommation ont augmenté de 3,4 % sur un an en octobre, a confirmé vendredi l'Insee dans ses résultats définitifs, au même niveau que sa première estimation de fin octobre. L'énergie reste le principal moteur de cette hausse : ses prix ont bondi de 24,1 % en un an, après +21,3 % en septembre.",
+      "source": {
+        "nom": "Insee",
+        "url": "https://www.insee.fr/fr/statistiques/9131332"
+      }
+    },
+    {
       "date": "2026-11-12",
       "publication": "2026-11-12T12:00:00+01:00",
       "theme": "Société",
