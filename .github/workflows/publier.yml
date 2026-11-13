@@ -27,7 +27,7 @@ jobs:
         run: npm install --no-save --no-package-lock playwright-core@1.56.1
       - name: Reprendre les dernières données pour le test
         run: |
-          for b in data:classement.json data:deckfr.json data:records.json data:bourse.json data:idees.json data:affluence.json data:recap.json evenements:evenements.json evenements:salons.json; do
+          for b in data:classement.json data:deckfr.json data:records.json data:bourse.json data:idees.json data:equipe.json data:affluence.json data:recap.json evenements:evenements.json evenements:salons.json; do
             branche="${b%%:*}"; fichier="${b#*:}"
             if git fetch -q --depth=1 origin "$branche" 2>/dev/null; then git show "FETCH_HEAD:$fichier" > "$fichier" 2>/dev/null || rm -f "$fichier"; fi
           done

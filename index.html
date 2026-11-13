@@ -5596,6 +5596,11 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     });
   }
   (function equipe() {
+    // Chaque photo porte le @pseudo de son membre, pour la remplacer par sa photo Discord du moment (plus bas)
+    $$('.badge .profil').forEach((p) => {
+      const pseudo = $('.profil-pseudo', p), img = $('img', p);
+      if (pseudo && img) img.dataset.pseudo = pseudo.textContent.trim().replace(/^@/, '').toLowerCase();
+    });
     // Le dos des badges : chaque profil peut porter data-depuis, data-mot et data-boisson (à remplir dans le HTML)
     $$('.badge-carte').forEach((carte) => {
       const profils = $$('.profil', carte).filter((p) => p.dataset.depuis || p.dataset.mot || p.dataset.boisson);
@@ -5660,6 +5665,20 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     rail.addEventListener('scroll', () => requestAnimationFrame(marquer), { passive: true });
     addEventListener('resize', marquer);
     marquer();
+    // Les photos de profil, relevées chaque heure sur Discord (outils/equipe.py, equipe.json) : la nouvelle remplace
+    // celle de la page une fois chargée ; si Discord ne répond pas, celle de la page reste.
+    quandPage('equipe', () => chargerListe(['/equipe.json', 'https://raw.githubusercontent.com/mariusboost63-stack/le-cafe-fran-ais/data/equipe.json'])
+      .then((r) => (r ? r.json() : null)).then((d) => {
+        const avatars = d && d.avatars && typeof d.avatars === 'object' ? d.avatars : {};
+        Object.entries(avatars).forEach(([pseudo, url]) => {
+          if (!/^https:\/\/cdn\.discordapp\.com\//.test(String(url))) return;
+          const imgs = $$('img[data-pseudo]').filter((i) => i.dataset.pseudo === pseudo);
+          if (!imgs.length) return;
+          const neuve = new Image();
+          neuve.onload = () => imgs.forEach((i) => { i.src = url; });
+          neuve.src = url;
+        });
+      }).catch(() => {}));
   })();
 
   /* ---------- Le classement des grains ---------- */
