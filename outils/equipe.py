@@ -7,7 +7,7 @@ Discord par son pseudo :
   1. ceux déjà retrouvés à un relevé précédent : leur photo est relue directement ;
   2. sur le serveur, si le bot du jeton DISCORD_TOKEN en fait partie (la photo propre au serveur passe en premier) ;
   3. sinon, parmi les membres connus de la base du bot : d'abord le staff (tickets, candidatures, absences, quêtes),
-     puis les joueurs du casino, puis tous les membres connus du bot. Chaque membre n'est demandé qu'une fois à
+     puis les joueurs de DeckFR et du casino, puis tous les membres connus du bot. Chaque membre n'est demandé qu'une fois à
      Discord (250 nouveaux au plus par relevé) : le relevé garde une empreinte
      de ceux déjà vus (jamais leur identifiant ni leur pseudo en clair).
 Un membre introuvable garde la photo enregistrée dans la page. Pour ajouter ou retirer quelqu'un, il suffit de
@@ -38,7 +38,8 @@ from classement import API, lire_adresse, signaler
 
 SERVEUR = "829698572927762432"
 SOURCE = pathlib.Path(__file__).resolve().parent.parent / "index.html"
-# Où chercher des membres de l'équipe dans la base, dans l'ordre : le staff d'abord, puis les joueurs du casino, puis tous
+# Où chercher des membres de l'équipe dans la base, dans l'ordre : le staff d'abord, puis les joueurs de DeckFR et du
+# casino, puis tous
 REQUETES = [
     "SELECT DISTINCT `staff` FROM `tickets_stats`",
     "SELECT DISTINCT `fermePar` FROM `tickets_stats`",
@@ -48,6 +49,7 @@ REQUETES = [
     "SELECT DISTINCT `user_id` FROM `staff_absences`",
     "SELECT DISTINCT `staff` FROM `halloween_soumissions`",
     "SELECT DISTINCT `staff` FROM `halloween_ajustements`",
+    "SELECT DISTINCT `user_id` FROM `cartes_profils`",
     "SELECT `id` FROM `users` WHERE `casino` IS NOT NULL AND `casino` <> 0 ORDER BY `casino` DESC",
     # en dernier, tous les membres connus du bot, des plus riches en grains aux moins riches
     "SELECT `id` FROM `users` ORDER BY COALESCE(`grains`, 0) + COALESCE(`banque`, 0) DESC",
