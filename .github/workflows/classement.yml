@@ -29,7 +29,7 @@ concurrency:
 jobs:
   classement:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -44,7 +44,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/out"
           if git fetch -q --depth=1 origin data 2>/dev/null; then
             # L'historique des classements, des heures d'affluence et les éditions du récap du dimanche
-            for f in historique.json affluence.json recap.json; do
+            for f in historique.json affluence.json recap.json equipe-cache.json; do
               git show "FETCH_HEAD:$f" > "$RUNNER_TEMP/out/$f" 2>/dev/null || rm -f "$RUNNER_TEMP/out/$f"
             done
           fi
@@ -80,6 +80,7 @@ jobs:
         env:
           CAFE_DB_URL: ${{ secrets.CAFE_DB_URL }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          CACHE_EQUIPE: ${{ runner.temp }}/out/equipe-cache.json
         run: python3 outils/equipe.py "$RUNNER_TEMP/out/equipe.json" || [ $? -eq 2 ]
       # Les heures d'affluence : membres en ligne, lus sur l'invitation publique du serveur. Script : outils/affluence.py
       - name: Relever l'affluence
@@ -106,7 +107,7 @@ jobs:
           [ -f out/classement.json ] || [ -f out/deckfr.json ] || [ -f out/records.json ] || [ -f out/bourse.json ] || [ -f out/idees.json ] || [ -f out/affluence.json ] || { echo "Rien à publier"; exit 0; }
           # Un relevé manqué garde la version précédente de son fichier
           if git -C "$GITHUB_WORKSPACE" fetch -q --depth=1 origin data 2>/dev/null; then
-            for f in classement.json deckfr.json records.json bourse.json idees.json equipe.json historique.json affluence.json recap.json recap-test.json; do
+            for f in classement.json deckfr.json records.json bourse.json idees.json equipe.json equipe-cache.json historique.json affluence.json recap.json recap-test.json; do
               [ -f "out/$f" ] || git -C "$GITHUB_WORKSPACE" show "FETCH_HEAD:$f" > "out/$f" 2>/dev/null || rm -f "out/$f"
             done
           fi
