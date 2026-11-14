@@ -674,23 +674,6 @@ main, .pied { position: relative; z-index: 1; }
 .dk-cat-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 24px; }
 .dk-cat-tete p { color: var(--brume); font-size: 15px; }
 .dk-cat-nb { font: 500 14px/1 var(--f-mono); color: var(--brume); margin-left: 6px; }
-.dk-cat-outils { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
-.dk-filtres { display: flex; flex-wrap: wrap; gap: 8px; }
-.dk-filtre {
-  display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 13px; border-radius: 999px; cursor: pointer;
-  border: 1px solid color-mix(in srgb, var(--r) 45%, var(--trait)); background: transparent; color: var(--r); font: 600 14px/1.15 var(--f-texte);
-  transition: background-color .2s, color .2s;
-}
-.dk-filtre span { font: 500 12.5px/1 var(--f-mono); font-variant-numeric: tabular-nums; color: var(--brume); }
-.dk-filtre:hover { background: color-mix(in srgb, var(--r) 12%, transparent); }
-.dk-filtre[aria-pressed="true"] { background: var(--r); border-color: var(--r); color: var(--nuit); }
-.dk-filtre[aria-pressed="true"] span { color: color-mix(in srgb, var(--nuit) 70%, transparent); }
-.dk-filtre:focus-visible { outline: 2px solid var(--lait); outline-offset: 2px; }
-.dk-cherche input {
-  width: min(260px, 100%); box-sizing: border-box; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--trait);
-  background: var(--nuit-2); color: var(--lait); font: 400 15px/1.2 var(--f-texte);
-}
-.dk-cherche input:focus { outline: 2px solid var(--lait); outline-offset: 2px; }
 .dk-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 14px; }
 .dk-grille li { display: grid; gap: 6px; min-width: 0; align-content: start; }
 .dk-grille b { font-weight: 600; font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
@@ -708,7 +691,6 @@ main, .pied { position: relative; z-index: 1; }
 .dk-cat-carte[aria-pressed="true"] .dk-verso { rotate: y 0deg; }
 .dk-cat-carte:hover .dk-face { box-shadow: 0 16px 26px -12px rgb(0 0 0 / .8), 0 0 0 2px var(--r); }
 .dk-cat-carte:focus-visible { outline: 2px solid var(--r); outline-offset: 4px; border-radius: 8px; }
-.dk-vide { color: var(--brume); }
 .dk-plus { justify-self: center; }
 @media (max-width: 340px) { .dk-grille, .dk-nouvelles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .dk-grands li:has(.dk-vignette) { grid-template-columns: 38px minmax(0, 1fr) 34px auto; }
@@ -717,7 +699,6 @@ main, .pied { position: relative; z-index: 1; }
   .dk-grille, .dk-nouvelles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 10px; }
   .dk-grille b, .dk-nouvelles b { font-size: 13.5px; }
   .dk-grille span { font-size: 11px; letter-spacing: .05em; }
-  .dk-cherche, .dk-cherche input { width: 100%; }
   .dk-grands li:has(.dk-vignette) { grid-template-columns: 34px minmax(0, 1fr) 30px; }
   .dk-grands li:has(.dk-vignette) time { grid-column: 2 / -1; }
   .dk-grands .dk-vignette { width: 30px; }
@@ -2915,7 +2896,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   .journal-ligne, .journal-source, .gazette-liste time, .dk-salons span { font-size: 13px; }
   /* les blocs de la carte, de la visite, des niveaux, des grains, de DeckFR, du classement, de l'équipe et du récap */
   .salon .desc, .sc-nom, .salle-entree, .am-cote, .am-pied, .cn-mini, .sachet-marque, .caisse-plaque, .caisse-etiquette,
-  .bonus label span, .dk-nb, .dk-taux, .dk-rebours small, .dk-tirage span, .dk-paquet-corps span, .dk-filtre span, .dk-grille span,
+  .bonus label span, .dk-nb, .dk-taux, .dk-rebours small, .dk-tirage span, .dk-paquet-corps span, .dk-grille span,
   .bo-carte small, .bo-entete span, .bo-table th, .bo-maj, .rg-evo, .rg-rang, .fq-plaque span, .fq-sous, .fq-chaleur span,
   .fq-echelle, .dm-ligne, .dm-rubrique, .dm-liste i, .dm-pied, .id-chiffres, .id-pied time, .id-tampon, .eco-chiffres em { font-size: 13px; }
   /* le livre d'or : ses textes suivent la largeur de la page, sans descendre sous 13 px */
@@ -3635,12 +3616,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           <h3 class="dk-titre">Toutes les cartes<span class="dk-cat-nb" id="dk-cat-nb"></span></h3>
           <p>Clique sur une carte pour la retourner.</p>
         </div>
-        <div class="dk-cat-outils">
-          <div class="dk-filtres" id="dk-filtres" role="group" aria-label="Filtrer par rareté"></div>
-          <label class="dk-cherche"><span class="sr">Chercher une carte</span><input type="search" id="dk-cherche" placeholder="Chercher une carte…" autocomplete="off"></label>
-        </div>
         <ul class="dk-grille" id="dk-grille"></ul>
-        <p class="dk-vide" id="dk-vide" hidden>Aucune carte ne porte ce nom.</p>
         <button class="btn btn-ligne btn-petit dk-plus" id="dk-plus" type="button" hidden>Voir plus de cartes</button>
       </div>
     </div>
@@ -5498,15 +5474,13 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   })();
 
   /* ---------- DeckFR : toutes les cartes, recto et verso (cartes/catalogue.json et les images du bot) ---------- */
-  // Les plus rares d'abord. Un filtre par rareté, une recherche par nom, 24 cartes à la fois ; un clic retourne la
-  // carte (son verso ne se charge qu'à ce moment-là).
+  // Les plus rares d'abord, 24 cartes à la fois ; un clic retourne la carte (son verso ne se charge qu'à ce moment-là).
   (function catalogueDeckfr() {
     const bloc = $('#dk-catalogue');
     if (!bloc) return;
-    const grille = $('#dk-grille'), plus = $('#dk-plus'), cherche = $('#dk-cherche'), filtres = $('#dk-filtres'), vide = $('#dk-vide');
+    const grille = $('#dk-grille'), plus = $('#dk-plus');
     const PAS = 24;
-    const simple = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-    let cartes = [], filtre = 0, montrees = PAS;
+    let cartes = [], montrees = PAS;
     const el = (tag, props) => Object.assign(document.createElement(tag), props || {});
     function carte(c) {
       const li = el('li');
@@ -5529,39 +5503,19 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
       return li;
     }
     function afficher() {
-      const q = simple(cherche.value.trim());
-      const liste = cartes.filter((c) => (!filtre || c.rarete === filtre) && (!q || simple(c.nom).includes(q)));
-      grille.replaceChildren(...liste.slice(0, montrees).map(carte));
-      const reste = liste.length - montrees;
+      grille.replaceChildren(...cartes.slice(0, montrees).map(carte));
+      const reste = cartes.length - montrees;
       plus.hidden = reste <= 0;
       plus.textContent = `Voir plus de cartes (encore ${nf.format(reste)})`;
-      vide.hidden = liste.length > 0;
-    }
-    function choisir(niveau) {
-      filtre = niveau; montrees = PAS;
-      $$('button', filtres).forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.niveau) === niveau)));
-      afficher();
     }
     plus.addEventListener('click', () => { montrees += PAS; afficher(); });
-    cherche.addEventListener('input', () => { montrees = PAS; afficher(); });
     quandPage('deckfr', () => fetch('/cartes/catalogue.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
       if (!d || !Array.isArray(d.cartes) || !d.cartes.length) return;
       cartes = d.cartes.filter((c) => c && c.nom && Number.isInteger(c.rarete))
         .sort((a, b) => b.rarete - a.rarete || String(a.nom).localeCompare(String(b.nom), 'fr'));
-      const compte = (n) => cartes.filter((c) => c.rarete === n).length;
-      const bouton = (niveau, texte, n) => {
-        const b = el('button', { type: 'button', className: 'dk-filtre' });
-        b.dataset.niveau = niveau;
-        b.style.setProperty('--r', niveau ? couleurRarete(niveau) : 'var(--lait)');
-        b.append(texte, el('span', { textContent: nf.format(n) }));
-        b.addEventListener('click', () => choisir(niveau));
-        return b;
-      };
-      const niveaux = [...new Set(cartes.map((c) => c.rarete))].sort((a, b) => a - b);
-      filtres.replaceChildren(bouton(0, 'Toutes', cartes.length), ...niveaux.map((n) => bouton(n, nomRarete(n), compte(n))));
       $('#dk-cat-nb').textContent = nf.format(cartes.length);
       bloc.hidden = false;
-      choisir(0);
+      afficher();
       if (anime) ST.refresh();
     }).catch(() => { /* sans catalogue, la galerie reste cachée */ }));
   })();
