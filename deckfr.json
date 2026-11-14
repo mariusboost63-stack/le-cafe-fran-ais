@@ -1,0 +1,301 @@
+{
+  "maj": "2026-11-14T14:42:32+00:00",
+  "raretes": [
+    {
+      "niveau": 1,
+      "cartes": 75,
+      "tirees": 46089,
+      "tirage": 60.0
+    },
+    {
+      "niveau": 2,
+      "cartes": 37,
+      "tirees": 28115,
+      "tirage": 36.6
+    },
+    {
+      "niveau": 3,
+      "cartes": 23,
+      "tirees": 1936,
+      "tirage": 2.52
+    },
+    {
+      "niveau": 4,
+      "cartes": 10,
+      "tirees": 545,
+      "tirage": 0.71
+    },
+    {
+      "niveau": 5,
+      "cartes": 5,
+      "tirees": 113,
+      "tirage": 0.15
+    },
+    {
+      "niveau": 6,
+      "cartes": 5,
+      "tirees": 17,
+      "tirage": 0.02
+    },
+    {
+      "niveau": 7,
+      "cartes": 1,
+      "tirees": 0,
+      "tirage": 0.0
+    }
+  ],
+  "chiffres": {
+    "cartes": 156,
+    "joueurs": 68,
+    "boosters": 15363,
+    "tirees": 76815,
+    "echanges": 23,
+    "ventes": 19,
+    "grains_marche": 22540007
+  },
+  "nouvelles": [
+    {
+      "nom": "La Mascotte",
+      "rarete": 7,
+      "image": "LaMascotte_recto_1794409285479.png",
+      "date": "2026-11-11T15:01:25+00:00"
+    },
+    {
+      "nom": "Cyrnaxx",
+      "rarete": 6,
+      "image": "Cyrnaxx_recto_1794407893115.png",
+      "date": "2026-11-11T14:38:13+00:00"
+    },
+    {
+      "nom": "Rodenzo",
+      "rarete": 6,
+      "image": "Rodenzo_recto_1794407860321.png",
+      "date": "2026-11-11T14:37:42+00:00"
+    },
+    {
+      "nom": "Mvrius",
+      "rarete": 6,
+      "image": "Mvrius_recto_1794407841320.png",
+      "date": "2026-11-11T14:37:21+00:00"
+    },
+    {
+      "nom": "Ninoo",
+      "rarete": 6,
+      "image": "Ninoo_recto_1794407809516.png",
+      "date": "2026-11-11T14:36:51+00:00"
+    },
+    {
+      "nom": "Lithgow",
+      "rarete": 6,
+      "image": "Lithgow_recto_1794407782548.png",
+      "date": "2026-11-11T14:36:23+00:00"
+    },
+    {
+      "nom": "Joseph Laniel",
+      "rarete": 1,
+      "image": "carte150_recto_1794161836336.png",
+      "date": "2026-11-05T18:51:53+00:00"
+    },
+    {
+      "nom": "André Marie",
+      "rarete": 1,
+      "image": "carte149_recto_1794161822342.png",
+      "date": "2026-11-05T18:51:32+00:00"
+    }
+  ],
+  "collectionneurs": [
+    {
+      "rang": 1,
+      "nom": "Soulex",
+      "avatar": "https://cdn.discordapp.com/avatars/1147177630974627932/bf80f1bd7ae2f6c1cd28b9de4521ff6a.png?size=128",
+      "cartes": 152,
+      "pourcent": 97.4,
+      "exemplaires": 4804,
+      "evolution": 7
+    },
+    {
+      "rang": 2,
+      "nom": "ZNZ Torvic",
+      "avatar": "https://cdn.discordapp.com/avatars/1339509812823851021/6ca3294330dc7ba780e796da37562e00.png?size=128",
+      "cartes": 152,
+      "pourcent": 97.4,
+      "exemplaires": 152,
+      "evolution": -1
+    },
+    {
+      "rang": 3,
+      "nom": "Lithgow",
+      "avatar": "https://cdn.discordapp.com/avatars/1052168196003741756/20b03caa6ef3fbd79a84a163265201a4.png?size=128",
+      "cartes": 151,
+      "pourcent": 96.8,
+      "exemplaires": 910,
+      "evolution": -1
+    },
+    {
+      "rang": 4,
+      "nom": "Mvrius",
+      "avatar": "https://cdn.discordapp.com/avatars/1038171351325872158/2a722330be277d72fa8cf4a0631698e3.png?size=128",
+      "cartes": 150,
+      "pourcent": 96.2,
+      "exemplaires": 765,
+      "evolution": 2
+    },
+    {
+      "rang": 5,
+      "nom": "Moon",
+      "avatar": "https://cdn.discordapp.com/avatars/1407051266097414254/763f0b0f00d749041e1019ba1625bf54.png?size=128",
+      "cartes": 150,
+      "pourcent": 96.2,
+      "exemplaires": 8075,
+      "evolution": -2
+    },
+    {
+      "rang": 6,
+      "nom": "Lyven",
+      "avatar": "https://cdn.discordapp.com/avatars/1384898080184340550/913d826cf54784a976f0db23ea1f1d20.png?size=128",
+      "cartes": 150,
+      "pourcent": 96.2,
+      "exemplaires": 785,
+      "evolution": -2
+    },
+    {
+      "rang": 7,
+      "nom": "TitiLb",
+      "avatar": "https://cdn.discordapp.com/avatars/971384102718677032/a_966326780b5db030ce761f58d7dd9ded.png?size=128",
+      "cartes": 150,
+      "pourcent": 96.2,
+      "exemplaires": 5017,
+      "evolution": 0
+    },
+    {
+      "rang": 8,
+      "nom": "Cahtounet",
+      "avatar": "https://cdn.discordapp.com/avatars/995388612701065288/4eb7be24d42b8099425b9acbd9b81be9.png?size=128",
+      "cartes": 150,
+      "pourcent": 96.2,
+      "exemplaires": 4929,
+      "evolution": 2
+    },
+    {
+      "rang": 9,
+      "nom": "Lar_Lardon",
+      "avatar": "https://cdn.discordapp.com/avatars/1246490616255217754/a_cdb34094c527d38c963f550a2c89efab.png?size=128",
+      "cartes": 150,
+      "pourcent": 96.2,
+      "exemplaires": 2889,
+      "evolution": -4
+    },
+    {
+      "rang": 10,
+      "nom": "Lucas",
+      "avatar": "https://cdn.discordapp.com/avatars/1324013060914151486/dda9de54ce152f8e2c45b74349161cf0.png?size=128",
+      "cartes": 149,
+      "pourcent": 95.5,
+      "exemplaires": 3585,
+      "evolution": -1
+    }
+  ],
+  "grands_tirages": [
+    {
+      "nom": "Kurly2Sebi",
+      "avatar": "https://cdn.discordapp.com/avatars/1201154153393705041/a6ca3190982b9b0d4213a11d4d8d2166.png?size=128",
+      "carte": "Henri IV",
+      "rarete": 4,
+      "image": "HenriIV_recto_1793899935422.png",
+      "date": "2026-11-14T14:36:35+00:00"
+    },
+    {
+      "nom": "TitiLb",
+      "avatar": "https://cdn.discordapp.com/avatars/971384102718677032/a_966326780b5db030ce761f58d7dd9ded.png?size=128",
+      "carte": "François Ier",
+      "rarete": 5,
+      "image": "FrancoisIer_recto_1793899883551.png",
+      "date": "2026-11-14T14:33:52+00:00"
+    },
+    {
+      "nom": "Moon",
+      "avatar": "https://cdn.discordapp.com/avatars/1407051266097414254/763f0b0f00d749041e1019ba1625bf54.png?size=128",
+      "carte": "Napoléon III",
+      "rarete": 4,
+      "image": "NapoleonIII_recto_1793900113395.png",
+      "date": "2026-11-14T14:25:31+00:00"
+    },
+    {
+      "nom": "Lyven",
+      "avatar": "https://cdn.discordapp.com/avatars/1384898080184340550/913d826cf54784a976f0db23ea1f1d20.png?size=128",
+      "carte": "Huges Capet",
+      "rarete": 4,
+      "image": "HugesCapet_recto_1793900136840.png",
+      "date": "2026-11-14T13:47:32+00:00"
+    },
+    {
+      "nom": "Lucas",
+      "avatar": "https://cdn.discordapp.com/avatars/1324013060914151486/dda9de54ce152f8e2c45b74349161cf0.png?size=128",
+      "carte": "Henri IV",
+      "rarete": 4,
+      "image": "HenriIV_recto_1793899935422.png",
+      "date": "2026-11-14T13:21:06+00:00"
+    },
+    {
+      "nom": "Cahtounet",
+      "avatar": "https://cdn.discordapp.com/avatars/995388612701065288/4eb7be24d42b8099425b9acbd9b81be9.png?size=128",
+      "carte": "Charles VII",
+      "rarete": 4,
+      "image": "CharlesVII_recto_1793900206303.png",
+      "date": "2026-11-14T12:59:13+00:00"
+    },
+    {
+      "nom": "Kurly2Sebi",
+      "avatar": "https://cdn.discordapp.com/avatars/1201154153393705041/a6ca3190982b9b0d4213a11d4d8d2166.png?size=128",
+      "carte": "Huges Capet",
+      "rarete": 4,
+      "image": "HugesCapet_recto_1793900136840.png",
+      "date": "2026-11-14T12:21:51+00:00"
+    },
+    {
+      "nom": "Cahtounet",
+      "avatar": "https://cdn.discordapp.com/avatars/995388612701065288/4eb7be24d42b8099425b9acbd9b81be9.png?size=128",
+      "carte": "Napoléon III",
+      "rarete": 4,
+      "image": "NapoleonIII_recto_1793900113395.png",
+      "date": "2026-11-14T12:14:44+00:00"
+    }
+  ],
+  "tresors": [
+    {
+      "carte": "Cyrnaxx",
+      "rarete": 6,
+      "date": "2026-11-11T16:47:21+00:00",
+      "nom": "Cyrnaxx.",
+      "avatar": "https://cdn.discordapp.com/avatars/629410780584083456/480a30251892f3af90535142513ea728.png?size=128"
+    },
+    {
+      "carte": "Mvrius",
+      "rarete": 6,
+      "date": "2026-11-11T21:34:55+00:00",
+      "nom": "ZNZ Torvic",
+      "avatar": "https://cdn.discordapp.com/avatars/1339509812823851021/6ca3294330dc7ba780e796da37562e00.png?size=128"
+    },
+    {
+      "carte": "Ninoo",
+      "rarete": 6,
+      "date": "2026-11-12T04:57:11+00:00",
+      "nom": "ZNZ Torvic",
+      "avatar": "https://cdn.discordapp.com/avatars/1339509812823851021/6ca3294330dc7ba780e796da37562e00.png?size=128"
+    },
+    {
+      "carte": "Rodenzo",
+      "rarete": 6,
+      "date": "2026-11-12T06:40:28+00:00",
+      "nom": "𝖓𝖔𝖓𝖔",
+      "avatar": "https://cdn.discordapp.com/avatars/1370097099785506867/7625be58e06af4228fecbdcda23f02b4.png?size=128"
+    },
+    {
+      "carte": "Lithgow",
+      "rarete": 6,
+      "date": "2026-11-13T06:08:52+00:00",
+      "nom": "Cahtounet",
+      "avatar": "https://cdn.discordapp.com/avatars/995388612701065288/4eb7be24d42b8099425b9acbd9b81be9.png?size=128"
+    }
+  ]
+}

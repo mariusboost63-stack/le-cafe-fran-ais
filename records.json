@@ -1,0 +1,100 @@
+{
+  "maj": "2026-11-14T14:42:40+00:00",
+  "records": {
+    "premier_booster": {
+      "membre": {
+        "nom": "Moon",
+        "avatar": "https://cdn.discordapp.com/avatars/1407051266097414254/763f0b0f00d749041e1019ba1625bf54.png?size=128"
+      },
+      "date": "2026-11-07T16:00:55+00:00",
+      "boosters": 1
+    },
+    "premiere_mythique": {
+      "membre": {
+        "nom": "Cahtounet",
+        "avatar": "https://cdn.discordapp.com/avatars/995388612701065288/4eb7be24d42b8099425b9acbd9b81be9.png?size=128"
+      },
+      "carte": "Clovis Ier",
+      "rarete": 5,
+      "date": "2026-11-07T16:11:24+00:00"
+    },
+    "grosse_ouverture": {
+      "membre": {
+        "nom": "Mvrius",
+        "avatar": "https://cdn.discordapp.com/avatars/1038171351325872158/2a722330be277d72fa8cf4a0631698e3.png?size=128"
+      },
+      "valeur": 25,
+      "date": "2026-11-07T17:01:44+00:00"
+    },
+    "plus_de_boosters": {
+      "membre": {
+        "nom": "Moon",
+        "avatar": "https://cdn.discordapp.com/avatars/1407051266097414254/763f0b0f00d749041e1019ba1625bf54.png?size=128"
+      },
+      "valeur": 1631
+    },
+    "plus_de_mythiques": {
+      "membre": {
+        "nom": "Soulex",
+        "avatar": "https://cdn.discordapp.com/avatars/1147177630974627932/bf80f1bd7ae2f6c1cd28b9de4521ff6a.png?size=128"
+      },
+      "valeur": 12
+    },
+    "plus_beau_booster": {
+      "membre": {
+        "nom": "Cahtounet",
+        "avatar": "https://cdn.discordapp.com/avatars/995388612701065288/4eb7be24d42b8099425b9acbd9b81be9.png?size=128"
+      },
+      "date": "2026-11-07T16:11:24+00:00",
+      "mythiques": 1,
+      "legendaires": 1,
+      "cartes": [
+        {
+          "nom": "Blanche de Castille",
+          "rarete": 1
+        },
+        {
+          "nom": "Jeanne de Navarre",
+          "rarete": 1
+        },
+        {
+          "nom": "Pierre Bérégovoy",
+          "rarete": 1
+        },
+        {
+          "nom": "Clovis II",
+          "rarete": 2
+        },
+        {
+          "nom": "Clovis Ier",
+          "rarete": 5
+        }
+      ]
+    },
+    "vente_record": {
+      "vendeur": {
+        "nom": "𝖓𝖔𝖓𝖔",
+        "avatar": "https://cdn.discordapp.com/avatars/1370097099785506867/7625be58e06af4228fecbdcda23f02b4.png?size=128"
+      },
+      "acheteur": {
+        "nom": "JSB",
+        "avatar": "https://cdn.discordapp.com/avatars/1102558517002510376/3d02ed4d4f249b70529a7153f3b9ba1a.png?size=128"
+      },
+      "carte": "Louis XIV",
+      "rarete": 5,
+      "quantite": 1,
+      "valeur": 15000000,
+      "date": "2026-11-12T12:06:27+00:00"
+    },
+    "carte_plus_rare": {
+      "carte": "Mvrius",
+      "rarete": 6,
+      "valeur": 2
+    },
+    "carte_plus_tiree": {
+      "carte": "Clotaire II",
+      "rarete": 2,
+      "valeur": 803
+    }
+  }
+}

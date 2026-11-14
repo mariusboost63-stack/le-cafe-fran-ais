@@ -1,0 +1,181 @@
+{
+  "maj": "2026-11-14T14:42:41+00:00",
+  "chiffres": {
+    "ventes": 16,
+    "grains": 22540000,
+    "offres": 0
+  },
+  "cotes": [
+    {
+      "carte": "Louis XIV",
+      "rarete": 5,
+      "dernier": 15000000,
+      "cote": 8000000,
+      "ventes": 2,
+      "date": "2026-11-12T12:06:27+00:00",
+      "variation": 1400.0
+    },
+    {
+      "carte": "Clovis Ier",
+      "rarete": 5,
+      "dernier": 1000000,
+      "cote": 1000000,
+      "ventes": 2,
+      "date": "2026-11-08T00:28:34+00:00",
+      "variation": 0.0
+    },
+    {
+      "carte": "François Ier",
+      "rarete": 5,
+      "dernier": 1000000,
+      "cote": 150000,
+      "ventes": 4,
+      "date": "2026-11-08T09:29:59+00:00",
+      "variation": 400.0
+    },
+    {
+      "carte": "Charlemagne",
+      "rarete": 5,
+      "dernier": 300000,
+      "cote": 300000,
+      "ventes": 1,
+      "date": "2026-11-07T22:38:45+00:00"
+    },
+    {
+      "carte": "Napoléon Ier",
+      "rarete": 5,
+      "dernier": 200000,
+      "cote": 537500,
+      "ventes": 2,
+      "date": "2026-11-08T18:07:29+00:00",
+      "variation": -77.1
+    },
+    {
+      "carte": "Charles VII",
+      "rarete": 4,
+      "dernier": 200000,
+      "cote": 200000,
+      "ventes": 1,
+      "date": "2026-11-08T18:06:19+00:00"
+    },
+    {
+      "carte": "Louis IX",
+      "rarete": 4,
+      "dernier": 50000,
+      "cote": 50000,
+      "ventes": 1,
+      "date": "2026-11-07T18:58:24+00:00"
+    },
+    {
+      "carte": "Louis XVI",
+      "rarete": 4,
+      "dernier": 50000,
+      "cote": 50000,
+      "ventes": 1,
+      "date": "2026-11-07T19:09:01+00:00"
+    },
+    {
+      "carte": "Huges Capet",
+      "rarete": 4,
+      "dernier": 15000,
+      "cote": 15000,
+      "ventes": 1,
+      "date": "2026-11-12T12:13:35+00:00"
+    },
+    {
+      "carte": "Charles VI",
+      "rarete": 3,
+      "dernier": 1500000,
+      "cote": 1500000,
+      "ventes": 1,
+      "date": "2026-11-12T12:09:38+00:00"
+    }
+  ],
+  "ventes": [
+    {
+      "carte": "Huges Capet",
+      "rarete": 4,
+      "prix": 15000,
+      "quantite": 1,
+      "date": "2026-11-12T12:13:35+00:00"
+    },
+    {
+      "carte": "Charles VI",
+      "rarete": 3,
+      "prix": 1500000,
+      "quantite": 1,
+      "date": "2026-11-12T12:09:38+00:00"
+    },
+    {
+      "carte": "Louis XIV",
+      "rarete": 5,
+      "prix": 15000000,
+      "quantite": 1,
+      "date": "2026-11-12T12:06:27+00:00"
+    },
+    {
+      "carte": "Napoléon Ier",
+      "rarete": 5,
+      "prix": 200000,
+      "quantite": 1,
+      "date": "2026-11-08T18:07:29+00:00"
+    },
+    {
+      "carte": "Charles VII",
+      "rarete": 4,
+      "prix": 200000,
+      "quantite": 1,
+      "date": "2026-11-08T18:06:19+00:00"
+    },
+    {
+      "carte": "Napoléon Ier",
+      "rarete": 5,
+      "prix": 875000,
+      "quantite": 1,
+      "date": "2026-11-08T12:07:16+00:00"
+    },
+    {
+      "carte": "François Ier",
+      "rarete": 5,
+      "prix": 1000000,
+      "quantite": 1,
+      "date": "2026-11-08T09:29:59+00:00"
+    },
+    {
+      "carte": "Louis XIV",
+      "rarete": 5,
+      "prix": 1000000,
+      "quantite": 1,
+      "date": "2026-11-08T00:35:09+00:00"
+    },
+    {
+      "carte": "Clovis Ier",
+      "rarete": 5,
+      "prix": 1000000,
+      "quantite": 1,
+      "date": "2026-11-08T00:28:34+00:00"
+    },
+    {
+      "carte": "François Ier",
+      "rarete": 5,
+      "prix": 200000,
+      "quantite": 1,
+      "date": "2026-11-07T22:47:28+00:00"
+    },
+    {
+      "carte": "Charlemagne",
+      "rarete": 5,
+      "prix": 300000,
+      "quantite": 1,
+      "date": "2026-11-07T22:38:45+00:00"
+    },
+    {
+      "carte": "Clovis Ier",
+      "rarete": 5,
+      "prix": 1000000,
+      "quantite": 1,
+      "date": "2026-11-07T22:35:57+00:00"
+    }
+  ],
+  "offres": []
+}

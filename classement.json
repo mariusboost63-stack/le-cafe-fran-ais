@@ -1,0 +1,234 @@
+{
+  "maj": "2026-11-14T14:42:23+00:00",
+  "classement": [
+    {
+      "rang": 1,
+      "nom": "Soulex",
+      "avatar": "https://cdn.discordapp.com/avatars/1147177630974627932/bf80f1bd7ae2f6c1cd28b9de4521ff6a.png?size=128",
+      "grains": 3820000,
+      "evolution": 0
+    },
+    {
+      "rang": 2,
+      "nom": "jadelaboss",
+      "avatar": "https://cdn.discordapp.com/avatars/1094001402260492308/efcb75cbe7e0032911a41d7676623745.png?size=128",
+      "grains": 2537159,
+      "evolution": 0
+    },
+    {
+      "rang": 3,
+      "nom": "Camm",
+      "avatar": "https://cdn.discordapp.com/avatars/1357077446398181509/17009921a2f52c0d23a6bccfa07a27dc.png?size=128",
+      "grains": 2483193,
+      "evolution": 0
+    },
+    {
+      "rang": 4,
+      "nom": "ayriie",
+      "avatar": "https://cdn.discordapp.com/avatars/1178744057858641971/4182f39cc4572c1b537d37e3170d1667.png?size=128",
+      "grains": 2301321,
+      "evolution": 0
+    },
+    {
+      "rang": 5,
+      "nom": "Lucas",
+      "avatar": "https://cdn.discordapp.com/avatars/1324013060914151486/dda9de54ce152f8e2c45b74349161cf0.png?size=128",
+      "grains": 2213986,
+      "evolution": 0
+    },
+    {
+      "rang": 6,
+      "nom": "roro",
+      "avatar": "https://cdn.discordapp.com/avatars/1272237443956871178/5cf3288263f792b1ab950c2fbe3122c6.png?size=128",
+      "grains": 2156816,
+      "evolution": 0
+    },
+    {
+      "rang": 7,
+      "nom": "𝖓𝖔𝖓𝖔",
+      "avatar": "https://cdn.discordapp.com/avatars/1370097099785506867/7625be58e06af4228fecbdcda23f02b4.png?size=128",
+      "grains": 1934612,
+      "evolution": 0
+    },
+    {
+      "rang": 8,
+      "nom": "Cyrnaxx.",
+      "avatar": "https://cdn.discordapp.com/avatars/629410780584083456/480a30251892f3af90535142513ea728.png?size=128",
+      "grains": 1583009,
+      "evolution": 1
+    },
+    {
+      "rang": 9,
+      "nom": "ZNZ Torvic",
+      "avatar": "https://cdn.discordapp.com/avatars/1339509812823851021/6ca3294330dc7ba780e796da37562e00.png?size=128",
+      "grains": 1468590,
+      "evolution": 1
+    },
+    {
+      "rang": 10,
+      "nom": "nefus",
+      "avatar": "https://cdn.discordapp.com/avatars/1459627174788075543/2932905d4e630152b300fa5dd42a4691.png?size=128",
+      "grains": 1181740,
+      "evolution": 1
+    }
+  ],
+  "economie": {
+    "total": 49433468,
+    "banque": 32067286,
+    "detenteurs": 1334,
+    "evolution": -13692992,
+    "jours": 4
+  },
+  "infini": 5209,
+  "infini_classement": [
+    {
+      "rang": 1,
+      "nom": "ZNZ Torvic",
+      "avatar": "https://cdn.discordapp.com/avatars/1339509812823851021/6ca3294330dc7ba780e796da37562e00.png?size=128",
+      "nombres": 1467,
+      "evolution": 0
+    },
+    {
+      "rang": 2,
+      "nom": "nqwey",
+      "avatar": "https://cdn.discordapp.com/avatars/644923230964154398/25cd9678854234d77ab42b9973ebe907.png?size=128",
+      "nombres": 323,
+      "evolution": 0
+    },
+    {
+      "rang": 3,
+      "nom": "delfaut",
+      "avatar": "https://cdn.discordapp.com/avatars/233231558255837184/e1613ceee52c372308d50775c2bdd48f.png?size=128",
+      "nombres": 320,
+      "evolution": 0
+    },
+    {
+      "rang": 4,
+      "nom": "Soulex",
+      "avatar": "https://cdn.discordapp.com/avatars/1147177630974627932/bf80f1bd7ae2f6c1cd28b9de4521ff6a.png?size=128",
+      "nombres": 299,
+      "evolution": 0
+    },
+    {
+      "rang": 5,
+      "nom": "Snomii.",
+      "avatar": "https://cdn.discordapp.com/avatars/1118460003913830440/905817da592439f576bd82ccf2559576.png?size=128",
+      "nombres": 257,
+      "evolution": 0
+    },
+    {
+      "rang": 6,
+      "nom": "Thaiss",
+      "avatar": "https://cdn.discordapp.com/avatars/1518350903566930034/6ab8bcbe71b8bd3a9656630aeadb60f2.png?size=128",
+      "nombres": 229,
+      "evolution": 0
+    },
+    {
+      "rang": 7,
+      "nom": "Ninoo",
+      "avatar": "https://cdn.discordapp.com/avatars/533333961594896394/2e8220155c459df73d571d9542829bf6.png?size=128",
+      "nombres": 229,
+      "evolution": 0
+    },
+    {
+      "rang": 8,
+      "nom": "Cyrnaxx.",
+      "avatar": "https://cdn.discordapp.com/avatars/629410780584083456/480a30251892f3af90535142513ea728.png?size=128",
+      "nombres": 190,
+      "evolution": 0
+    },
+    {
+      "rang": 9,
+      "nom": "Moon",
+      "avatar": "https://cdn.discordapp.com/avatars/1407051266097414254/763f0b0f00d749041e1019ba1625bf54.png?size=128",
+      "nombres": 183,
+      "evolution": 0
+    },
+    {
+      "rang": 10,
+      "nom": "𓂃✧Naho᠂ 𓏲",
+      "avatar": "https://cdn.discordapp.com/avatars/1338918825726312519/07534f72c53e17971ad4429cd1c7a586.png?size=128",
+      "nombres": 173,
+      "evolution": 0
+    }
+  ],
+  "serie_classement": [
+    {
+      "rang": 1,
+      "nom": "CallStix",
+      "avatar": "https://cdn.discordapp.com/avatars/1066322973126045710/d14767f6ffa0eb16a2b7455afb999c57.png?size=128",
+      "jours": 38,
+      "evolution": 1
+    },
+    {
+      "rang": 2,
+      "nom": "JSB",
+      "avatar": "https://cdn.discordapp.com/avatars/1102558517002510376/3d02ed4d4f249b70529a7153f3b9ba1a.png?size=128",
+      "jours": 37,
+      "evolution": -1
+    },
+    {
+      "rang": 3,
+      "nom": "Soulex",
+      "avatar": "https://cdn.discordapp.com/avatars/1147177630974627932/bf80f1bd7ae2f6c1cd28b9de4521ff6a.png?size=128",
+      "jours": 37,
+      "evolution": 0
+    },
+    {
+      "rang": 4,
+      "nom": "ZNZ Torvic",
+      "avatar": "https://cdn.discordapp.com/avatars/1339509812823851021/6ca3294330dc7ba780e796da37562e00.png?size=128",
+      "jours": 14,
+      "evolution": 0
+    },
+    {
+      "rang": 5,
+      "nom": "nqwey",
+      "avatar": "https://cdn.discordapp.com/avatars/644923230964154398/25cd9678854234d77ab42b9973ebe907.png?size=128",
+      "jours": 12,
+      "evolution": 0
+    },
+    {
+      "rang": 6,
+      "nom": "Lucas",
+      "avatar": "https://cdn.discordapp.com/avatars/1324013060914151486/dda9de54ce152f8e2c45b74349161cf0.png?size=128",
+      "jours": 9,
+      "evolution": 1
+    },
+    {
+      "rang": 7,
+      "nom": "kozi2k",
+      "avatar": "https://cdn.discordapp.com/avatars/1396945608949895248/357eacffc8473bc044587613c261757d.png?size=128",
+      "jours": 9,
+      "evolution": -1
+    },
+    {
+      "rang": 8,
+      "nom": "Quraw",
+      "avatar": "https://cdn.discordapp.com/avatars/1209074575766323221/2dc64a512116d68e4a5247ec385f66c3.png?size=128",
+      "jours": 7,
+      "evolution": 3
+    },
+    {
+      "rang": 9,
+      "nom": "ours du fraca",
+      "avatar": "https://cdn.discordapp.com/avatars/1491772503486365777/ac5a82082b806ac0be26762debf4f568.png?size=128",
+      "jours": 7,
+      "evolution": 1
+    },
+    {
+      "rang": 10,
+      "nom": "TitiLb",
+      "avatar": "https://cdn.discordapp.com/avatars/971384102718677032/a_966326780b5db030ce761f58d7dd9ded.png?size=128",
+      "jours": 7,
+      "evolution": -1
+    }
+  ],
+  "champion_semaine": {
+    "nom": "𝖓𝖔𝖓𝖔",
+    "avatar": "https://cdn.discordapp.com/avatars/1370097099785506867/7625be58e06af4228fecbdcda23f02b4.png?size=128",
+    "gain": 1650405,
+    "jours": 4
+  },
+  "recrutement": []
+}

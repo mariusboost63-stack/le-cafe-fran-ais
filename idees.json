@@ -1,0 +1,192 @@
+{
+  "maj": "2026-11-14T14:42:42+00:00",
+  "totaux": {
+    "vote": 23
+  },
+  "idees": [
+    {
+      "id": 38,
+      "texte": "il faudrait ajouter une commande avec laquelle nous pourront voir combien d'exemplaires existent sur une carte par exemple je pourrais voir combien de Louis XIV existent acruellement",
+      "statut": "vote",
+      "pour": 3,
+      "contre": 0,
+      "date": "2026-11-12T22:39:41+00:00"
+    },
+    {
+      "id": 37,
+      "texte": "Je propose d'ajouter quelques avantages pour les boosteurs de serveur (boost) pour le jeu deckfr, par exemple des booster en plus ou différent, ou bien moins de cooldown ou quelques choses de ce style.",
+      "statut": "vote",
+      "pour": 6,
+      "contre": 2,
+      "date": "2026-11-11T17:46:10+00:00"
+    },
+    {
+      "id": 36,
+      "texte": "Faire une commande ou on peut voir les cartes qu'ont a pas",
+      "statut": "vote",
+      "pour": 9,
+      "contre": 0,
+      "date": "2026-11-08T18:36:11+00:00"
+    },
+    {
+      "id": 35,
+      "texte": "Dans la commande /recherche, ça serait bien d’ajouter un bouton permettant de voir les personnes qui possèdent la carte (et marquer un x2 pour ceux qui l’ont en double)",
+      "statut": "vote",
+      "pour": 6,
+      "contre": 0,
+      "date": "2026-11-08T12:42:52+00:00"
+    },
+    {
+      "id": 34,
+      "texte": "Retirer le DM automatique du bot lors d'un retrait/approvisonnement jsp quoi dans le casino Le bot nous le dit déjà dans le channel ça sert à rien de se faire dm ET CEST CHIANT PUTAIN",
+      "statut": "vote",
+      "pour": 6,
+      "contre": 1,
+      "date": "2026-11-08T11:49:44+00:00"
+    },
+    {
+      "id": 33,
+      "texte": "Je suggère d’ajouter dans la commande /profil, à la suite du nombre de cartes « Légendaires » qu’on possède, la totalité que nous pouvons en obtenir. Concrètement ça donnerait : Légendaire : 2 / xx Rare : 7 / xx Ça permet de voir ce qui nous reste à débloquer.",
+      "statut": "vote",
+      "pour": 7,
+      "contre": 0,
+      "date": "2026-11-08T08:19:47+00:00"
+    },
+    {
+      "id": 32,
+      "texte": "Ajout de la source CNEWS qui est actuellement la source la plus utilisée par les français donc ça me paraît bien de l’ajouter",
+      "statut": "vote",
+      "pour": 2,
+      "contre": 11,
+      "date": "2026-11-03T22:22:40+00:00"
+    },
+    {
+      "id": 20,
+      "texte": "On gagne des grains en comptant dans l’infini. On pourrait donc aussi y activer l’XP ?",
+      "statut": "vote",
+      "pour": 8,
+      "contre": 1,
+      "date": "2026-10-10T12:14:36+00:00"
+    },
+    {
+      "id": 19,
+      "texte": "Etant donné qu'un salon vocal \"Only women\" existe sur ce serveur, je suggère qu'un salon vocal \"Only men\" soit créé également. Dans un pays où l'on prône l'égalité Homme Femme, je trouve ça important de veiller à ce que celle-ci soit entièrement respectée.",
+      "statut": "vote",
+      "pour": 11,
+      "contre": 5,
+      "date": "2026-09-28T16:22:31+00:00"
+    },
+    {
+      "id": 18,
+      "texte": "Sa serait intéressant de voir plus d'événements ou d'animation sur le serveur pour une meilleure activité",
+      "statut": "vote",
+      "pour": 5,
+      "contre": 0,
+      "date": "2026-09-27T22:33:30+00:00"
+    },
+    {
+      "id": 15,
+      "texte": "Se serait pas mal d’avoir plus d’animation du style d’aujourd’hui c’est chill et en même temps drôle et fort actif et des récompenses pour le top10/20 pas forcément des truc gros juste un rôle Gagnant animation",
+      "statut": "vote",
+      "pour": 5,
+      "contre": 0,
+      "date": "2026-09-26T19:41:31+00:00"
+    },
+    {
+      "id": 14,
+      "texte": "mettre un salon où on peut faire des battles de profils (entre 2 personnes) et les autres votent",
+      "statut": "vote",
+      "pour": 4,
+      "contre": 6,
+      "date": "2026-09-26T18:56:16+00:00"
+    },
+    {
+      "id": 13,
+      "texte": "Créer un Channel vocal réservé pour les personnes ayant le TAG du serveur, cela renforcerait l’activité vocal du serveur.",
+      "statut": "vote",
+      "pour": 3,
+      "contre": 4,
+      "date": "2026-09-26T17:53:50+00:00"
+    },
+    {
+      "id": 12,
+      "texte": "Proposer un léger boost d'XP temporaire à l'occasion des 9 000 membres sur le serveur.",
+      "statut": "vote",
+      "pour": 9,
+      "contre": 1,
+      "date": "2026-09-26T17:45:21+00:00"
+    },
+    {
+      "id": 11,
+      "texte": "Un salon Anglais, Français, etc pour que les gens puissent se repérer",
+      "statut": "vote",
+      "pour": 8,
+      "contre": 4,
+      "date": "2026-09-26T17:44:07+00:00"
+    },
+    {
+      "id": 9,
+      "texte": "Je propose des animations comme des : devine le personnage, devine le drapeau , du geogessr ou bien encore des gartic phone",
+      "statut": "vote",
+      "pour": 4,
+      "contre": 0,
+      "date": "2026-09-26T17:35:06+00:00"
+    },
+    {
+      "id": 8,
+      "texte": "Salut ! Je propose que les VIPS (VIP/Boosters/Invités) aient plus d’avantages. Comme par exemple : Des avantages au niveau des permissions Des avantages au niveau des casinos Un salon vocal privé Des événements / soirées VIP",
+      "statut": "vote",
+      "pour": 6,
+      "contre": 0,
+      "date": "2026-09-26T17:32:45+00:00"
+    },
+    {
+      "id": 7,
+      "texte": "Vague de recrutement pour les animateurs afin d'y animer le serveur",
+      "statut": "vote",
+      "pour": 7,
+      "contre": 0,
+      "date": "2026-09-26T17:32:35+00:00"
+    },
+    {
+      "id": 6,
+      "texte": "On fair une animation avec le plus de monde possible dont le staff comme un loup garoup",
+      "statut": "vote",
+      "pour": 3,
+      "contre": 1,
+      "date": "2026-09-26T17:31:44+00:00"
+    },
+    {
+      "id": 5,
+      "texte": "Vu que Lithgow oublie tout le temps le petit savoir, je propose de créer un rôle de journaliste. Il aurait pour mission de rédiger des journaux tous les 2 jours ou, si c’est trop fréquent, une fois par semaine, afin de tenir les membres régulièrement informés.",
+      "statut": "vote",
+      "pour": 9,
+      "contre": 0,
+      "date": "2026-09-26T17:28:29+00:00"
+    },
+    {
+      "id": 4,
+      "texte": "Un salon “🎯・défis” avec un petit défi chaque semaine pour faire participer les membres",
+      "statut": "vote",
+      "pour": 6,
+      "contre": 0,
+      "date": "2026-09-26T17:28:20+00:00"
+    },
+    {
+      "id": 2,
+      "texte": "Salut ! Je pense que plus d’animation serai réellement bien pour le serveur. Je trouve que les soirées jeux étais reelment bien.",
+      "statut": "vote",
+      "pour": 8,
+      "contre": 0,
+      "date": "2026-09-26T17:27:27+00:00"
+    },
+    {
+      "id": 1,
+      "texte": "Le bot envoie un message une fois le ticket fermer dans les MP du membre qui à crée le ticket pour noter sur 5 le service support et peut laisser un commentaire ;)",
+      "statut": "vote",
+      "pour": 2,
+      "contre": 0,
+      "date": "2026-09-25T18:21:15+00:00"
+    }
+  ]
+}
