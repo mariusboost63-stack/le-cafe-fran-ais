@@ -668,37 +668,13 @@ main, .pied { position: relative; z-index: 1; }
 .dk-maj { color: var(--brume); font-size: 14px; }
 .riches-onglets button[hidden] { display: none; }
 
-/* DeckFR : les raretés bonus (Mystère, Spécial) et la galerie de toutes les cartes */
-.dk-catalogue { grid-column: 1 / -1; display: grid; gap: 18px; min-width: 0; }
-.dk-catalogue[hidden] { display: none; }
-.dk-cat-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 24px; }
-.dk-cat-tete p { color: var(--brume); font-size: 15px; }
-.dk-cat-nb { font: 500 14px/1 var(--f-mono); color: var(--brume); margin-left: 6px; }
-.dk-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 14px; }
-.dk-grille li { display: grid; gap: 6px; min-width: 0; align-content: start; }
-.dk-grille b { font-weight: 600; font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
-.dk-grille span { font: 500 12.5px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--r); }
-.dk-grille .dk-mythique > span { background: var(--holo); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.dk-cat-carte { position: relative; display: block; width: 100%; aspect-ratio: 400 / 581; padding: 0; border: 0; background: none; cursor: pointer; perspective: 900px; }
-.dk-face {
-  position: absolute; inset: 0; border-radius: 6% / 4.2%; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  background: linear-gradient(160deg, color-mix(in srgb, var(--r) 25%, var(--nuit-2)), var(--nuit)); box-shadow: 0 10px 18px -10px rgb(0 0 0 / .7);
-  transition: rotate .6s cubic-bezier(.3, 1.2, .5, 1);
-}
-.dk-face img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.dk-verso { rotate: y 180deg; }
-.dk-cat-carte[aria-pressed="true"] .dk-recto { rotate: y -180deg; }
-.dk-cat-carte[aria-pressed="true"] .dk-verso { rotate: y 0deg; }
-.dk-cat-carte:hover .dk-face { box-shadow: 0 16px 26px -12px rgb(0 0 0 / .8), 0 0 0 2px var(--r); }
-.dk-cat-carte:focus-visible { outline: 2px solid var(--r); outline-offset: 4px; border-radius: 8px; }
-.dk-plus { justify-self: center; }
-@media (max-width: 340px) { .dk-grille, .dk-nouvelles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* DeckFR : les raretés bonus (Mystère, Spécial) */
+@media (max-width: 340px) { .dk-nouvelles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .dk-grands li:has(.dk-vignette) { grid-template-columns: 38px minmax(0, 1fr) 34px auto; }
 .dk-grands .dk-vignette { width: 34px; border-width: 1px; }
 @media (max-width: 560px) {
-  .dk-grille, .dk-nouvelles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 10px; }
-  .dk-grille b, .dk-nouvelles b { font-size: 13.5px; }
-  .dk-grille span { font-size: 11px; letter-spacing: .05em; }
+  .dk-nouvelles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 10px; }
+  .dk-nouvelles b { font-size: 13.5px; }
   .dk-grands li:has(.dk-vignette) { grid-template-columns: 34px minmax(0, 1fr) 30px; }
   .dk-grands li:has(.dk-vignette) time { grid-column: 2 / -1; }
   .dk-grands .dk-vignette { width: 30px; }
@@ -817,12 +793,9 @@ main, .pied { position: relative; z-index: 1; }
   .dk-etiquette { width: 100%; box-sizing: border-box; rotate: 0deg; }
   .dk-rebours { gap: 8px; }
 }
-/* La carte secrète dans la galerie : floutée, avec un point d'interrogation, et on ne peut pas la retourner */
-.dk-secrete .dk-cat-carte { cursor: default; }
-.dk-secrete .dk-recto::after { content: "?"; position: absolute; inset: 0; display: grid; place-items: center; font: 800 54px/1 var(--f-titre); color: rgb(255 250 235 / .9); text-shadow: 0 3px 12px rgb(120 80 0 / .7); }
-.dk-secrete .dk-face { box-shadow: 0 0 0 2px #f0c04a, 0 0 22px rgb(240 192 74 / .45); }
+/* La carte secrète dans les dernières sorties : floutée, avec un point d'interrogation */
 .dk-nouvelles .dk-secrete .dk-vignette::after { content: "?"; position: absolute; inset: 0; display: grid; place-items: center; font: 800 40px/1 var(--f-titre); color: rgb(255 250 235 / .9); text-shadow: 0 3px 12px rgb(120 80 0 / .7); }
-.tresor-revele .dk-secrete .dk-recto::after, .tresor-revele .dk-nouvelles .dk-secrete .dk-vignette::after { content: none; }
+.tresor-revele .dk-nouvelles .dk-secrete .dk-vignette::after { content: none; }
 
 /* Noël */
 .noel { position: relative; overflow: hidden; padding-block: clamp(72px, 9vw, 128px); }
@@ -2896,7 +2869,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
   .journal-ligne, .journal-source, .gazette-liste time, .dk-salons span { font-size: 13px; }
   /* les blocs de la carte, de la visite, des niveaux, des grains, de DeckFR, du classement, de l'équipe et du récap */
   .salon .desc, .sc-nom, .salle-entree, .am-cote, .am-pied, .cn-mini, .sachet-marque, .caisse-plaque, .caisse-etiquette,
-  .bonus label span, .dk-nb, .dk-taux, .dk-rebours small, .dk-tirage span, .dk-paquet-corps span, .dk-grille span,
+  .bonus label span, .dk-nb, .dk-taux, .dk-rebours small, .dk-tirage span, .dk-paquet-corps span,
   .bo-carte small, .bo-entete span, .bo-table th, .bo-maj, .rg-evo, .rg-rang, .fq-plaque span, .fq-sous, .fq-chaleur span,
   .fq-echelle, .dm-ligne, .dm-rubrique, .dm-liste i, .dm-pied, .id-chiffres, .id-pied time, .id-tampon, .eco-chiffres em { font-size: 13px; }
   /* le livre d'or : ses textes suivent la largeur de la page, sans descendre sous 13 px */
@@ -3518,7 +3491,7 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
         <div class="dk-carte dk-photo dk-mythique" style="--r: var(--rar-5); --i: 2"><img src="/cartes/vitrine/mythique-charlemagne.webp" alt="" width="420" height="610" loading="lazy" decoding="async"></div>
       </div>
       <nav class="dk-sommaire" id="dk-sommaire" aria-label="Sur cette page">
-        <a href="#dk-jeu">Le jeu</a><a href="#dk-raretes">Les raretés</a><a href="#dk-essai">Un booster pour de faux</a><a href="#dk-direct">En direct</a><a href="#dk-bourse">La Bourse</a><a href="#dk-catalogue">Toutes les cartes</a>
+        <a href="#dk-jeu">Le jeu</a><a href="#dk-raretes">Les raretés</a><a href="#dk-essai">Un booster pour de faux</a><a href="#dk-direct">En direct</a><a href="#dk-bourse">La Bourse</a>
       </nav>
       <aside class="dk-tresor" id="dk-tresor" aria-labelledby="dk-tresor-titre">
         <div class="dk-tresor-carte"><img src="/cartes/la-mascotte-recto-floue.webp" alt="" width="400" height="581" loading="lazy" decoding="async"><span aria-hidden="true">?</span></div>
@@ -3610,14 +3583,6 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
           <h4 class="bo-sous">En vente en ce moment au marché</h4>
           <ul class="bo-offres" id="bo-offres"></ul>
         </div>
-      </div>
-      <div class="dk-catalogue" id="dk-catalogue" hidden>
-        <div class="dk-cat-tete">
-          <h3 class="dk-titre">Toutes les cartes<span class="dk-cat-nb" id="dk-cat-nb"></span></h3>
-          <p>Clique sur une carte pour la retourner.</p>
-        </div>
-        <ul class="dk-grille" id="dk-grille"></ul>
-        <button class="btn btn-ligne btn-petit dk-plus" id="dk-plus" type="button" hidden>Voir plus de cartes</button>
       </div>
     </div>
   </section>
@@ -5471,53 +5436,6 @@ html[data-page]:not([data-page="accueil"]) .suite { display: block; padding-bloc
     }
     maj();
     if (!bloc.hidden && Date.now() < ARRIVEE) minuteur = setInterval(maj, 1000);
-  })();
-
-  /* ---------- DeckFR : toutes les cartes, recto et verso (cartes/catalogue.json et les images du bot) ---------- */
-  // Les plus rares d'abord, 24 cartes à la fois ; un clic retourne la carte (son verso ne se charge qu'à ce moment-là).
-  (function catalogueDeckfr() {
-    const bloc = $('#dk-catalogue');
-    if (!bloc) return;
-    const grille = $('#dk-grille'), plus = $('#dk-plus');
-    const PAS = 24;
-    let cartes = [], montrees = PAS;
-    const el = (tag, props) => Object.assign(document.createElement(tag), props || {});
-    function carte(c) {
-      const li = el('li');
-      li.style.setProperty('--r', couleurRarete(c.rarete));
-      if (c.rarete === 5) li.classList.add('dk-mythique');
-      const secrete = estSecrete(c.nom);
-      if (secrete) li.classList.add('dk-secrete');
-      const bouton = el('button', { type: 'button', className: 'dk-cat-carte' });
-      bouton.setAttribute('aria-pressed', 'false');
-      bouton.setAttribute('aria-label', secrete ? `${c.nom}, ${nomRarete(c.rarete)}. Carte secrète : elle se cache dans les boosters` : `${c.nom}, ${nomRarete(c.rarete)}. Retourner la carte`);
-      const recto = imagePlusTard(el('img', { alt: '', loading: 'lazy', decoding: 'async', width: 400, height: 581 }), imageCarte(c.nom));
-      const verso = el('img', { alt: '', decoding: 'async', width: 400, height: 581 });
-      const face = (cls, img) => { const s = el('span', { className: 'dk-face ' + cls }); s.append(img); return s; };
-      bouton.append(face('dk-recto', recto), face('dk-verso', verso));
-      if (!secrete) bouton.addEventListener('click', () => {
-        if (!verso.getAttribute('src')) verso.src = imageCarte(c.nom, 'verso');
-        bouton.setAttribute('aria-pressed', String(bouton.getAttribute('aria-pressed') !== 'true'));
-      });
-      li.append(bouton, el('b', { textContent: c.nom }), el('span', { textContent: nomRarete(c.rarete) }));
-      return li;
-    }
-    function afficher() {
-      grille.replaceChildren(...cartes.slice(0, montrees).map(carte));
-      const reste = cartes.length - montrees;
-      plus.hidden = reste <= 0;
-      plus.textContent = `Voir plus de cartes (encore ${nf.format(reste)})`;
-    }
-    plus.addEventListener('click', () => { montrees += PAS; afficher(); });
-    quandPage('deckfr', () => fetch('/cartes/catalogue.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
-      if (!d || !Array.isArray(d.cartes) || !d.cartes.length) return;
-      cartes = d.cartes.filter((c) => c && c.nom && Number.isInteger(c.rarete))
-        .sort((a, b) => b.rarete - a.rarete || String(a.nom).localeCompare(String(b.nom), 'fr'));
-      $('#dk-cat-nb').textContent = nf.format(cartes.length);
-      bloc.hidden = false;
-      afficher();
-      if (anime) ST.refresh();
-    }).catch(() => { /* sans catalogue, la galerie reste cachée */ }));
   })();
 
   /* ---------- L'équipe : on recrute, présence, fiches au dos des badges, carrousel sur mobile ---------- */
