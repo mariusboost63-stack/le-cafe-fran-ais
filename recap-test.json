@@ -1,0 +1,99 @@
+{
+  "maj": "2026-11-12T14:00:02+01:00",
+  "editions": [
+    {
+      "numero": 0,
+      "date": "2026-11-12",
+      "publication": "2026-11-12T14:00:02+01:00",
+      "semaine": {
+        "debut": "2026-11-09",
+        "fin": "2026-11-12"
+      },
+      "pic": {
+        "nombre": 594,
+        "texte": "jeudi vers 14 h"
+      },
+      "chiffres": [
+        {
+          "valeur": 5653,
+          "texte": "boosters ouverts"
+        },
+        {
+          "valeur": 28265,
+          "texte": "cartes tirées"
+        },
+        {
+          "valeur": 16515000,
+          "texte": "grains échangés au marché",
+          "court": true
+        },
+        {
+          "valeur": 1,
+          "texte": "nouvelle idée"
+        }
+      ],
+      "membre": {
+        "nom": "𝖓𝖔𝖓𝖔",
+        "avatar": "https://cdn.discordapp.com/avatars/1370097099785506867/7625be58e06af4228fecbdcda23f02b4.png?size=128",
+        "gain": 1626405,
+        "jours": 2
+      },
+      "tirages": [
+        {
+          "carte": "Napoléon Ier",
+          "rarete": 5,
+          "nom": "Mvrius"
+        },
+        {
+          "carte": "François Ier",
+          "rarete": 5,
+          "nom": "TitiLb"
+        },
+        {
+          "carte": "Louis XIV",
+          "rarete": 5,
+          "nom": "JSB"
+        },
+        {
+          "carte": "Clovis Ier",
+          "rarete": 5,
+          "nom": "Moon"
+        }
+      ],
+      "bourse": {
+        "carte": "Louis XIV",
+        "rarete": 5,
+        "prix": 15000000,
+        "ventes": 3
+      },
+      "tresors": [
+        {
+          "carte": "Cyrnaxx",
+          "nom": "Cyrnaxx."
+        },
+        {
+          "carte": "Mvrius",
+          "nom": "ZNZ Torvic"
+        },
+        {
+          "carte": "Ninoo",
+          "nom": "ZNZ Torvic"
+        },
+        {
+          "carte": "Rodenzo",
+          "nom": "𝖓𝖔𝖓𝖔"
+        }
+      ],
+      "idee": {
+        "texte": "Faire une commande ou on peut voir les cartes qu'ont a pas",
+        "pour": 9,
+        "contre": 0
+      },
+      "records": [],
+      "une": {
+        "titre": "6 nouvelles cartes débarquent dans DeckFR",
+        "texte": "La plus grosse arrivée de la semaine. Le jeu compte maintenant 156 cartes, de quoi relancer la chasse."
+      }
+    }
+  ]
+}

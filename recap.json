@@ -1,0 +1,125 @@
+{
+  "maj": "2026-11-15T18:38:06+01:00",
+  "photo": {
+    "plus_de_boosters": [
+      "Moon",
+      1935
+    ],
+    "plus_de_mythiques": [
+      "Soulex",
+      12
+    ],
+    "grosse_ouverture": [
+      "Mvrius",
+      25
+    ],
+    "vente_record": [
+      "JSB",
+      15000000
+    ]
+  },
+  "editions": [
+    {
+      "numero": 1,
+      "date": "2026-11-15",
+      "publication": "2026-11-15T18:38:06+01:00",
+      "semaine": {
+        "debut": "2026-11-09",
+        "fin": "2026-11-15"
+      },
+      "pic": {
+        "nombre": 1246,
+        "texte": "samedi vers 21 h"
+      },
+      "chiffres": [
+        {
+          "valeur": 11443,
+          "texte": "boosters ouverts"
+        },
+        {
+          "valeur": 57215,
+          "texte": "cartes tirées"
+        },
+        {
+          "valeur": 16715000,
+          "texte": "grains échangés au marché",
+          "court": true
+        },
+        {
+          "valeur": 3,
+          "texte": "nouvelles idées"
+        }
+      ],
+      "membre": {
+        "nom": "Soulex",
+        "avatar": "https://cdn.discordapp.com/avatars/1147177630974627932/bf80f1bd7ae2f6c1cd28b9de4521ff6a.png?size=128",
+        "gain": 2550600,
+        "jours": 5
+      },
+      "tirages": [
+        {
+          "carte": "Napoléon Ier",
+          "rarete": 5,
+          "nom": "ZNZ Torvic"
+        },
+        {
+          "carte": "Louis XIV",
+          "rarete": 5,
+          "nom": "kozi2k"
+        },
+        {
+          "carte": "Charlemagne",
+          "rarete": 5,
+          "nom": "𝖓𝖔𝖓𝖔"
+        },
+        {
+          "carte": "Louis XIV",
+          "rarete": 5,
+          "nom": "Herz ❀"
+        }
+      ],
+      "bourse": {
+        "carte": "Louis XIV",
+        "rarete": 5,
+        "prix": 15000000,
+        "ventes": 4
+      },
+      "tresors": [
+        {
+          "carte": "Cyrnaxx",
+          "nom": "Cyrnaxx."
+        },
+        {
+          "carte": "Mvrius",
+          "nom": "ZNZ Torvic"
+        },
+        {
+          "carte": "Ninoo",
+          "nom": "ZNZ Torvic"
+        },
+        {
+          "carte": "Rodenzo",
+          "nom": "𝖓𝖔𝖓𝖔"
+        },
+        {
+          "carte": "Lithgow",
+          "nom": "Cahtounet"
+        },
+        {
+          "carte": "La Mascotte",
+          "nom": "TitiLb"
+        }
+      ],
+      "idee": {
+        "texte": "Salut ! Aujourd’hui, je vous propose un nouveau rôle à obtenir : le rôle Collectionneur. Pour l’obtenir, il faudra faire partie du TOP 5…",
+        "pour": 7,
+        "contre": 0
+      },
+      "records": [],
+      "une": {
+        "titre": "6 nouvelles cartes débarquent dans DeckFR",
+        "texte": "La plus grosse arrivée de la semaine. Le jeu compte maintenant 156 cartes, de quoi relancer la chasse."
+      }
+    }
+  ]
+}
